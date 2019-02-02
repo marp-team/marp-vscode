@@ -1,0 +1,4 @@
+*
+*/**
+!.vscodeignore
+!lib/*

@@ -1,0 +1,79 @@
+{
+  "name": "@marp-team/marp-vscode",
+  "displayName": "Marp for VSCode",
+  "publisher": "marp-team",
+  "version": "0.0.0",
+  "description": "Marp VSCode plugin",
+  "categories": [
+    "Other"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Marp team",
+    "url": "https://github.com/marp-team"
+  },
+  "contributors": [
+    {
+      "name": "Yuki Hattori",
+      "url": "https://github.com/yhatt"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marp-team/marp-vscode"
+  },
+  "engines": {
+    "vscode": "^1.31.0"
+  },
+  "main": "./lib/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "markdown.markdownItPlugins": true,
+    "markdown.previewScripts": [
+      "./lib/preview.js"
+    ],
+    "markdown.previewStyles": [
+      "./style.css"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "scripts": {
+    "build": "yarn -s clean && rollup -c ./rollup.config.js",
+    "clean": "rimraf lib",
+    "check-audit": "yarn audit",
+    "check-ts": "tsc --noEmit",
+    "format": "prettier \"**/*.{css,js,json,md,scss,ts,yaml,yml}\"",
+    "format:check": "yarn -s format -c",
+    "format:write": "yarn -s format --write",
+    "lint:ts": "tslint \"{src,test}/**/*.ts\"",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "preversion": "npm-run-all --npm-path yarn --parallel check-audit check-ts format:check lint:*",
+    "version": "node version.js && git add -A CHANGELOG.md",
+    "watch": "rollup -w -c ./rollup.config.js"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.16.3",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.1.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "^4.0.3",
+    "rollup-plugin-typescript": "^1.0.0",
+    "tslint": "^5.12.1",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.3.1",
+    "vsce": "^1.55.0",
+    "vscode": "^1.1.28"
+  },
+  "dependencies": {
+    "@marp-team/marp-core": "^0.5.2",
+    "@marp-team/marpit-svg-polyfill": "^0.2.0"
+  }
+}
