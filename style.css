@@ -4,6 +4,11 @@
   margin: 20px;
 }
 
+#marp-vscode svg[data-marpit-svg] > foreignObject > section {
+  /* Workaround for wrong hit area caused by Chromium's rendering bug */
+  overflow: visible;
+}
+
 #code-csp-warning {
   background-color: #444444;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
