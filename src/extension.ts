@@ -6,11 +6,13 @@ const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
 function extendMarkdownIt(md: any) {
   const marp: any = new Marp({
     container: { tag: 'div', id: 'marp-vscode' },
-    emoji: { twemoji: { ext: "png" } },
+    emoji: { twemoji: { ext: 'png' } },
   })
 
   md.use(marp.markdownItPlugins).use(instance => {
     instance.core.ruler.before('normalize', 'marp_vscode_toggle', state => {
+      if (state.inlineMode) return
+
       const fmMatch = frontMatterRegex.exec(state.src)
       state.marpit(!!(fmMatch && marpDirectiveRegex.exec(fmMatch[1].trim())))
     })
