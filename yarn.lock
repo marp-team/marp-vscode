@@ -37,20 +37,20 @@
     reflect-metadata "^0.1.12"
     tslib "^1.8.1"
 
-"@marp-team/marp-core@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@marp-team/marp-core/-/marp-core-0.5.2.tgz#3fff02d94f16c9142b2e0fe692de1d9f471c4fa3"
-  integrity sha512-SgPX9GcSFqdRzbUvmbiwjv1529RysUsni9iwxCVbhwQXGUFcLRzRxjpGgu0GP3QTh14gZuJjc+px5mouGEKiVg==
+"@marp-team/marp-core@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@marp-team/marp-core/-/marp-core-0.6.0.tgz#4bc2f07a40b9e30bbc6be62cd50116b0d264ff82"
+  integrity sha512-Pe9XjAmuLgJ0/doc+0DiY4481KlPI6PHbBatQTizvBOwfv9fEEstfeV1ceWyJMaxm71eDSUvi75aPqx5TFlffg==
   dependencies:
-    "@marp-team/marpit" "^0.7.0"
+    "@marp-team/marpit" "^0.7.1"
     "@marp-team/marpit-svg-polyfill" "^0.2.0"
     emoji-regex "^7.0.3"
-    highlight.js "^9.14.1"
+    highlight.js "^9.14.2"
     katex "^0.10.0"
     markdown-it "^8.4.2"
     markdown-it-emoji "^1.4.0"
     postcss "^7.0.14"
-    twemoji "^11.2.0"
+    twemoji "^11.3.0"
     xss "^1.0.3"
 
 "@marp-team/marpit-svg-polyfill@^0.2.0":
@@ -60,10 +60,10 @@
   dependencies:
     detect-browser "^3.0.1"
 
-"@marp-team/marpit@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@marp-team/marpit/-/marpit-0.7.0.tgz#bd54a3b531fd1eebe9f243f96130f8593de3148b"
-  integrity sha512-j1kNhvyZjsdV4UpO+DtcHSPiVgtNx03BP+hiYXsiTbzFAL641FSBt70QngT1nvWXmglERbp/izVcC9excbkgZQ==
+"@marp-team/marpit@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@marp-team/marpit/-/marpit-0.7.1.tgz#2a9b5323f7e6dd4db32130c9dbb8c9ceed68f5da"
+  integrity sha512-SJWaS/jvzJxLaePPyth7iyXXG23jGUsPIX78iW0+95a2jRrGNL3azbXlOr9/p+VZiA9kypxpAeOqm9b7/sc0nA==
   dependencies:
     color-string "^1.5.3"
     js-yaml "^3.12.1"
@@ -88,9 +88,9 @@ acorn@^6.0.5:
   integrity sha512-5M3G/A4uBSMIlfJ+h9W125vJvPFH/zirISsW5qfxF5YzEvXJCtolLoQvM5yZft0DvMcUrPGKPOlgEu55I6iUtA==
 
 ajv@^6.5.5:
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.7.0.tgz#e3ce7bb372d6577bb1839f1dfdfcbf5ad2948d96"
-  integrity sha512-RZXPviBTtfmtka9n9sy1N5M5b82CbxWIR6HIis4s3WQTXDJamc/0gpCWNGz6EWdWp4DOfjzJfhz/AS9zVPjjWg==
+  version "6.8.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.8.1.tgz#0890b93742985ebf8973cd365c5b23920ce3cb20"
+  integrity sha512-eqxCp82P+JfqL683wwsL73XmFs1eG6qjw+RD3YHx+Jll1r0jNd4dh8QG9NYAeNGA/hnZjeEDgtTskgJULbxpWQ==
   dependencies:
     fast-deep-equal "^2.0.1"
     fast-json-stable-stringify "^2.0.0"
@@ -1086,7 +1086,7 @@ he@1.1.1:
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
   integrity sha1-k0EP0hsAlzUVH4howvJx80J+I/0=
 
-highlight.js@^9.14.1:
+highlight.js@^9.14.2:
   version "9.14.2"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.14.2.tgz#efbfb22dc701406e4da406056ef8c2b70ebe5b26"
   integrity sha512-Nc6YNECYpxyJABGYJAyw7dBAYbXEuIzwzkqoJnwbc1nIpCiN+3ioYf0XrBnLiyyG0JLuJhpPtt2iTSbXiKLoyA==
@@ -1483,11 +1483,11 @@ lodash@^4.15.0, lodash@^4.17.10:
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
 
 magic-string@^0.25.1:
-  version "0.25.1"
-  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.1.tgz#b1c248b399cd7485da0fe7385c2fc7011843266e"
-  integrity sha512-sCuTz6pYom8Rlt4ISPFn6wuFodbKMIHUMv4Qko9P17dpxb7s52KJTmRuZZqHdGmLCK9AOcDare039nRIcfdkEg==
+  version "0.25.2"
+  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.2.tgz#139c3a729515ec55e96e69e82a11fe890a293ad9"
+  integrity sha512-iLs9mPjh9IuTtRsqqhNGYcZXGei0Nh/A4xirrsqW7c+QhKVFL2vm7U09ru6cHRD22azaP/wMDgI+HCqbETMTtg==
   dependencies:
-    sourcemap-codec "^1.4.1"
+    sourcemap-codec "^1.4.4"
 
 map-stream@0.0.7:
   version "0.0.7"
@@ -1880,10 +1880,10 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha1-gV7R9uvGWSb4ZbMQwHE7yzMVzks=
 
-prettier@^1.16.3:
-  version "1.16.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.3.tgz#8c62168453badef702f34b45b6ee899574a6a65d"
-  integrity sha512-kn/GU6SMRYPxUakNXhpP0EedT/KmaPzr0H5lIsDogrykbaxOpOfAFfk5XA7DZrJyMAv1wlMV3CPcZruGXVVUZw==
+prettier@^1.16.4:
+  version "1.16.4"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.4.tgz#73e37e73e018ad2db9c76742e2647e21790c9717"
+  integrity sha512-ZzWuos7TI5CKUeQAtFd6Zhm2s6EpAD/ZLApIhsF9pRvRtM1RFo61dM/4MSRUA0SuLugA/zgrZD8m0BaY46Og7g==
 
 process-nextick-args@^2.0.0, process-nextick-args@~2.0.0:
   version "2.0.0"
@@ -2226,7 +2226,7 @@ source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-sourcemap-codec@^1.4.1:
+sourcemap-codec@^1.4.4:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/sourcemap-codec/-/sourcemap-codec-1.4.4.tgz#c63ea927c029dd6bd9a2b7fa03b3fec02ad56e9f"
   integrity sha512-CYAPYdBu34781kLHkaW3m6b/uUSyMOC2R61gcYMWooeuaGtjof86ZA/8T+qVPPt7np1085CR9hmMGrySwEc8Xg==
@@ -2576,7 +2576,7 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
 
-twemoji@^11.2.0:
+twemoji@^11.3.0:
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/twemoji/-/twemoji-11.3.0.tgz#8c520094fe94849db10fd5687f50c936183c4fad"
   integrity sha512-xN/vlR6+gDmfjt6LInAqwGAv3Agwrmzx5TD1jEFwKS19IOGDrX0/3OB8GP1wUYPVIdkaer5hw6qd+52jzvz0Lg==
