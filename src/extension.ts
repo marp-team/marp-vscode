@@ -20,7 +20,9 @@ function extendMarkdownIt(md: any) {
 
   marp.markdown = md
   marp.use(instance => {
-    instance.core.ruler.push('marp_vscode_style', ({ Token, tokens }) => {
+    instance.core.ruler.push('marp_vscode_style', ({ Token, tokens, inlineMode }) => {
+      if (inlineMode) return
+
       const css = marp.renderStyle(marp.lastGlobalDirectives.theme)
       const token = new Token('marp_vscode_style', '', 0)
 
