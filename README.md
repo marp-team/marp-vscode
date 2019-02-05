@@ -1,6 +1,6 @@
 # Marp for VS Code
 
-[![CircleCI](https://img.shields.io/circleci/project/github/marp-team/marp- /master.svg?style=flat-square&logo=circleci)](https://circleci.com/gh/marp-team/marp-vscode/)
+[![CircleCI](https://img.shields.io/circleci/project/github/marp-team/marp-vscode/master.svg?style=flat-square&logo=circleci)](https://circleci.com/gh/marp-team/marp-vscode/)
 [![Codecov](https://img.shields.io/codecov/c/github/marp-team/marp-vscode/master.svg?style=flat-square&logo=codecov)](https://codecov.io/gh/marp-team/marp-vscode)
 [![LICENSE](https://img.shields.io/github/license/marp-team/marp-vscode.svg?style=flat-square)](./LICENSE)
 
