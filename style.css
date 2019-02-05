@@ -1,33 +1,51 @@
-#marp-vscode svg[data-marpit-svg] {
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
-  display: block;
-  margin: 20px;
+#marp-vscode {
+  all: initial;
 }
 
-#marp-vscode svg[data-marpit-svg] > foreignObject > section {
-  /* Workaround for wrong hit area caused by Chromium's rendering bug */
-  overflow: visible;
+@media screen {
+  #marp-vscode svg[data-marpit-svg] {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+    display: block;
+    margin: 20px;
+  }
+
+  #marp-vscode svg[data-marpit-svg] > foreignObject > section {
+    /* Workaround for wrong hit area caused by Chromium's rendering bug */
+    overflow: visible;
+  }
+
+  /* from https://github.com/Microsoft/vscode-docs-authoring/blob/master/docs-preview/media/markdown.css */
+  #code-csp-warning {
+    background-color: #444444;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+    color: white;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 22px;
+    margin: 16px;
+    padding: 6px;
+    position: fixed;
+    right: 0;
+    text-align: center;
+    top: 0;
+    word-wrap: break-word;
+  }
+
+  #code-csp-warning:hover {
+    text-decoration: none;
+    background-color: #007acc;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+  }
 }
 
-#code-csp-warning {
-  background-color: #444444;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
-  color: white;
-  cursor: pointer;
-  font-family: sans-serif;
-  font-size: 12px;
-  line-height: 22px;
-  margin: 16px;
-  padding: 6px;
-  position: fixed;
-  right: 0;
-  text-align: center;
-  top: 0;
-  word-wrap: break-word;
-}
+@media print {
+  #code-csp-warning {
+    display: none;
+  }
 
-#code-csp-warning:hover {
-  text-decoration: none;
-  background-color: #007acc;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+  #marp-vscode svg[data-marpit-svg] > foreignObject > section {
+    /* Disable WebKit polyfill */
+    transform: none !important;
+  }
 }
