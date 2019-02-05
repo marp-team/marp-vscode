@@ -41,6 +41,22 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-config-prettier"
+    ],
+    "rules": {
+      "selector-type-no-unknown": [
+        true,
+        {
+          "ignoreTypes": [
+            "foreignobject"
+          ]
+        }
+      ]
+    }
+  },
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.ts",
@@ -65,6 +81,7 @@
     "format": "prettier \"**/*.{css,js,json,md,scss,ts,yaml,yml}\"",
     "format:check": "yarn -s format -c",
     "format:write": "yarn -s format --write",
+    "lint:css": "stylelint \"./*.{css,scss}\"",
     "lint:ts": "tslint \"{src,test}/**/*.ts\"",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "preversion": "npm-run-all --npm-path yarn --parallel check-audit check-ts format:check lint:* test:*:coverage",
@@ -90,6 +107,9 @@
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.3",
     "rollup-plugin-typescript": "^1.0.0",
+    "stylelint": "^9.10.1",
+    "stylelint-config-prettier": "^4.0.0",
+    "stylelint-config-standard": "^18.2.0",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.11.1",

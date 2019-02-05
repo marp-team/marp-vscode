@@ -2,3 +2,4 @@
 */**
 !.vscodeignore
 !lib/*
+!style.css
