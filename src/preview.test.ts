@@ -31,7 +31,7 @@ describe('Preview HTML', () => {
     document.head.innerHTML = `
       <style id="_defaultStyles"></style>
       <link rel="stylesheet" href="vscode-resource:/user/defined.css" />
-      <link rel="stylesheet" href="vscode-resource:/marp-vscode/style.css" />
+      <link rel="stylesheet" href="vscode-resource:/marp-team.marp-vscode-x.x.x/style.css" />
     `.trim()
 
     document.body.innerHTML = `
