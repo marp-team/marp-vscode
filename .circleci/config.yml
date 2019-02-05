@@ -1,6 +1,6 @@
 references:
   base: &base
-    working_directory: ~/marp-cli
+    working_directory: ~/marp-vscode
     steps:
       # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#upgradingdowngrading-yarn
       - run:
