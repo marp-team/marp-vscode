@@ -68,14 +68,21 @@ function extendMarkdownIt(md: any) {
     `<style id="marp-vscode-style">${token[i].content}</style>`
 
   // Override default highlighter to fix wrong background color
-  const originalHighlighter = md.options.highlight
+  const { highlight } = md.options
 
   md.set({
-    highlight: function marpHighlighter(...args) {
-      return (
-        (md[marpVscodeEnabled] && marp.highlighter(...args)) ||
-        originalHighlighter(...args)
-      )
+    highlight: function marpHighlighter(code, lang) {
+      if (md[marpVscodeEnabled]) {
+        const marpHighlight = marp.highlighter(code, lang)
+        if (marpHighlight) return marpHighlight
+
+        // Special support for mermaid plugin
+        if (lang && lang.toLowerCase() === 'mermaid') {
+          return `<div class="mermaid">${md.utils.escapeHtml(code)}</div>`
+        }
+        return ''
+      }
+      return highlight(code, lang)
     },
   })
 
