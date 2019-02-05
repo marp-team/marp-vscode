@@ -41,6 +41,22 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "src/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      ".*\\.d\\.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 95
+      }
+    },
+    "preset": "ts-jest"
+  },
   "scripts": {
     "build": "yarn -s clean && rollup -c ./rollup.config.js",
     "clean": "rimraf lib",
@@ -51,11 +67,20 @@
     "format:write": "yarn -s format --write",
     "lint:ts": "tslint \"{src,test}/**/*.ts\"",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "preversion": "npm-run-all --npm-path yarn --parallel check-audit check-ts format:check lint:*",
+    "preversion": "npm-run-all --npm-path yarn --parallel check-audit check-ts format:check lint:* test:*:coverage",
+    "test:unit": "jest",
+    "test:unit:coverage": "jest --coverage",
     "version": "node version.js && git add -A CHANGELOG.md",
     "watch": "rollup -w -c ./rollup.config.js"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.0",
+    "@types/markdown-it": "^0.0.7",
+    "codecov": "^3.1.0",
+    "jest": "^24.1.0",
+    "jest-junit": "^6.2.1",
+    "markdown-it": "^8.4.2",
+    "markdown-it-emoji": "^1.4.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.16.4",
     "rimraf": "^2.6.3",
@@ -65,6 +90,7 @@
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.3",
     "rollup-plugin-typescript": "^1.0.0",
+    "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.17.0",

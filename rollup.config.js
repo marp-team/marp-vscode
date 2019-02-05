@@ -24,7 +24,7 @@ export default [
     plugins,
   },
   {
-    input: 'src/preview.ts',
+    input: 'preview.js',
     output: { file: 'lib/preview.js', format: 'iife', sourcemap },
     plugins,
   },

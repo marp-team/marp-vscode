@@ -4,7 +4,7 @@ const frontMatterRegex = /^---\s*([^]*)?(?:-{3}|\.{3})\s*/
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
 const marpVscodeEnabled = Symbol()
 
-function extendMarkdownIt(md: any) {
+export function extendMarkdownIt(md: any) {
   const marp: any = new Marp({
     container: { tag: 'div', id: 'marp-vscode' },
     emoji: { twemoji: { ext: 'png' } },
