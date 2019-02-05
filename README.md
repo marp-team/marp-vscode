@@ -1,5 +1,9 @@
 # Marp for VSCode
 
+[![CircleCI](https://img.shields.io/circleci/project/github/marp-team/marp-vscode/master.svg?style=flat-square&logo=circleci)](https://circleci.com/gh/marp-team/marp-vscode/)
+[![Codecov](https://img.shields.io/codecov/c/github/marp-team/marp-vscode/master.svg?style=flat-square&logo=codecov)](https://codecov.io/gh/marp-team/marp-vscode)
+[![LICENSE](https://img.shields.io/github/license/marp-team/marp-vscode.svg?style=flat-square)](./LICENSE)
+
 **[Marp](https://marp.app) VSCode plugin.** You can preview Marp slide deck in the native preview pane.
 
 ### :warning: Currently Marp VSCode plugin is under developing.
