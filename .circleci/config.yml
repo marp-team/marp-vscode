@@ -1,0 +1,76 @@
+references:
+  base: &base
+    working_directory: ~/marp-cli
+    steps:
+      # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#upgradingdowngrading-yarn
+      - run:
+          name: Upgrade yarn
+          command: |
+            sudo -E sh -c 'curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+                           && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+                           && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+                           && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+                           && rm yarn-v$YARN_VERSION.tar.gz'
+          environment:
+            YARN_VERSION: 1.13.0
+
+      - checkout
+
+      - restore_cache:
+          keys:
+            - dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+            - dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-
+            - dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-
+
+      - run: yarn install
+      - run: yarn audit
+
+      - save_cache:
+          key: dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+          paths:
+            - node_modules
+            - ~/.cache/yarn
+
+      - run:
+          name: Prettier formatting
+          command: yarn format:check
+
+      - run:
+          name: TypeScript type checking
+          command: yarn check-ts
+
+      - run:
+          name: TSLint
+          command: yarn lint:ts
+
+      # - run:
+      #     name: stylelint
+      #     command: yarn lint:css
+
+      - run:
+          name: Unit test
+          command: yarn test:unit:coverage --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          environment:
+            JEST_JUNIT_OUTPUT: tmp/test-results/jest.xml
+
+      - run: yarn codecov
+
+      - store_test_results:
+          path: tmp/test-results
+
+      - store_artifacts:
+          path: ./coverage
+          destination: coverage
+
+version: 2
+jobs:
+  '10.2.0':
+    <<: *base
+    docker:
+      - image: circleci/node:10.2.0
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - 10.2.0
