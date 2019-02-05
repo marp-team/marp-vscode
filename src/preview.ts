@@ -7,7 +7,7 @@ if (marpEnabled) {
   // Remove default styles
   const styles = document.querySelectorAll('style:not(#marp-vscode-style)')
   const links = document.querySelectorAll(
-    'link[rel="stylesheet"]:not([href*="/marp-vscode/"]'
+    'link[rel="stylesheet"]:not([href*="/marp-vscode/"])'
   )
   styles.forEach(elm => elm.remove())
   links.forEach(elm => elm.remove())
