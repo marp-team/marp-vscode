@@ -1,5 +1,10 @@
 *
 */**
+!node_modules/**
 !.vscodeignore
+!images/icon.png
 !lib/*
+!CHANGELOG.md
+!LICENSE
+!README.md
 !style.css

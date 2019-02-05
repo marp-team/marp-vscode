@@ -1,14 +1,22 @@
-# Marp for VSCode
+# Marp for VS Code
 
-[![CircleCI](https://img.shields.io/circleci/project/github/marp-team/marp-vscode/master.svg?style=flat-square&logo=circleci)](https://circleci.com/gh/marp-team/marp-vscode/)
+[![CircleCI](https://img.shields.io/circleci/project/github/marp-team/marp- /master.svg?style=flat-square&logo=circleci)](https://circleci.com/gh/marp-team/marp-vscode/)
 [![Codecov](https://img.shields.io/codecov/c/github/marp-team/marp-vscode/master.svg?style=flat-square&logo=codecov)](https://codecov.io/gh/marp-team/marp-vscode)
 [![LICENSE](https://img.shields.io/github/license/marp-team/marp-vscode.svg?style=flat-square)](./LICENSE)
 
-**[Marp](https://marp.app) VSCode plugin.** You can preview Marp slide deck in the native preview pane.
+**Preview [Marp] Markdown slide deck in VS Code.**
 
-### :warning: Currently Marp VSCode plugin is under developing.
+We will enhance your VS Code as the slide deck writer. Mark `marp: true`, and write your deck!
 
-![](https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/screenshot.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/screenshot.png" width="800" />
+</p>
+
+See the documentation of [Marpit Markdown](https://marpit.marp.app/markdown) and [the features of Marp Core](https://github.com/marp-team/marp-core#features) about how to write.
+
+> Please refer **[https://marp.app/][marp]** for more details of Marp ecosystem. We have powerful tools for Marp Markdown: [Marpit Framework](https://marpit.marp.app/), [CLI tool](https://github.com/marp-team/marp-cli), [Web interface](https://web.marp.app/) and so on.
+
+[marp]: https://marp.app/
 
 ## Usage
 
