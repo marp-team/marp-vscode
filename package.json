@@ -1,9 +1,9 @@
 {
-  "name": "@marp-team/marp-vscode",
-  "displayName": "Marp for VSCode",
+  "name": "marp-vscode",
+  "displayName": "Marp for VS Code",
   "publisher": "marp-team",
   "version": "0.0.0",
-  "description": "Marp VSCode plugin",
+  "description": "Preview Marp markdown presentation in VS Code",
   "categories": [
     "Other"
   ],
@@ -26,6 +26,11 @@
     "vscode": "^1.31.0"
   },
   "main": "./lib/extension.js",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#d9edf8",
+    "theme": "light"
+  },
   "activationEvents": [],
   "contributes": {
     "markdown.markdownItPlugins": true,
@@ -36,6 +41,7 @@
       "./style.css"
     ]
   },
+  "private": true,
   "prettier": {
     "semi": false,
     "singleQuote": true,
@@ -83,11 +89,13 @@
     "format:write": "yarn -s format --write",
     "lint:css": "stylelint \"./*.{css,scss}\"",
     "lint:ts": "tslint \"{src,test}/**/*.ts\"",
+    "package": "vsce package",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "preversion": "npm-run-all --npm-path yarn --parallel check-audit check-ts format:check lint:* test:*:coverage",
     "test:unit": "jest",
     "test:unit:coverage": "jest --coverage",
     "version": "node version.js && git add -A CHANGELOG.md",
+    "vscode:prepublish": "yarn -s preversion",
     "watch": "rollup -w -c ./rollup.config.js"
   },
   "devDependencies": {

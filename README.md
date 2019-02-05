@@ -8,7 +8,7 @@
 
 ### :warning: Currently Marp VSCode plugin is under developing.
 
-![](https://raw.githubusercontent.com/marp-team/marp-vscode/master/screenshot.png)
+![](https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/screenshot.png)
 
 ## Usage
 
