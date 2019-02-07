@@ -1,11 +1,15 @@
+body.marp-vscode {
+  padding: 0;
+  margin: 0;
+}
+
 #marp-vscode {
   all: initial;
 }
 
 @media screen {
-  body {
+  body.marp-vscode {
     overflow-y: scroll;
-    padding: 0;
   }
 
   #marp-vscode svg[data-marpit-svg] {
@@ -45,7 +49,7 @@
 }
 
 @media print {
-  #code-csp-warning {
+  body.marp-vscode #code-csp-warning {
     display: none;
   }
 

@@ -5,6 +5,8 @@ export default function preview() {
   const marpEnabled = document.getElementById('marp-vscode')
 
   if (marpEnabled) {
+    document.body.classList.add('marp-vscode')
+
     // Remove default styles
     const styles = document.querySelectorAll(
       'style:not(#marp-vscode-style):not(#_defaultStyles)'
