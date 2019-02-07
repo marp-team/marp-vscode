@@ -6,7 +6,9 @@ export default function preview() {
 
   if (marpEnabled) {
     // Remove default styles
-    const styles = document.querySelectorAll('style:not(#marp-vscode-style)')
+    const styles = document.querySelectorAll(
+      'style:not(#marp-vscode-style):not(#_defaultStyles)'
+    )
     const links = document.querySelectorAll(
       'link[rel="stylesheet"]:not([href*="marp-vscode"])'
     )

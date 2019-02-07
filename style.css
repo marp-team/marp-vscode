@@ -3,6 +3,11 @@
 }
 
 @media screen {
+  body {
+    overflow-y: scroll;
+    padding: 0;
+  }
+
   #marp-vscode svg[data-marpit-svg] {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
     display: block;
