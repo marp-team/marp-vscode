@@ -10,6 +10,7 @@ beforeEach(() => {
 
   document.head.innerHTML = ''
   document.body.innerHTML = ''
+  document.body.className = ''
 })
 
 describe('Preview HTML', () => {
@@ -23,6 +24,7 @@ describe('Preview HTML', () => {
     document.body.innerHTML = '<div id="marp-vscode"></div>'
 
     preview()
+    expect(document.body.classList.contains('marp-vscode')).toBe(true)
     expect(browserCjs).toBeCalled()
     expect(webkit).toBeCalled()
   })
@@ -45,8 +47,9 @@ describe('Preview HTML', () => {
 
     preview()
 
-    expect(document.querySelectorAll('style')).toHaveLength(1)
+    expect(document.querySelectorAll('style')).toHaveLength(2)
     expect(document.getElementById('marp-vscode-style')).toBeTruthy()
+    expect(document.getElementById('_defaultStyles')).toBeTruthy()
     expect(document.querySelectorAll('link')).toHaveLength(1)
     expect(document.querySelector('link')!.href).toContain('marp-vscode')
   })
