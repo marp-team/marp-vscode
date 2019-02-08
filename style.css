@@ -2,8 +2,8 @@
   all: initial;
 }
 
-/* Override VS Code default CSS rules reverting to initial */
-/* https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/contrib/webview/electron-browser/webview-pre.js#L412 */
+/* Override VS Code default CSS rules reverting to initial
+   https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/contrib/webview/electron-browser/webview-pre.js#L412 */
 body.marp-vscode {
   padding: 0;
 }
