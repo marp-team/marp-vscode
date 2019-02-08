@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.0.3 - 2019-02-08
+
 ### Fixed
 
 - Incorrect theme styles caused by VS Code default styles ([#2](https://github.com/marp-team/marp-vscode/issues/2), [#3](https://github.com/marp-team/marp-vscode/pull/3))
