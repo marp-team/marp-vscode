@@ -1,10 +1,27 @@
-body.marp-vscode {
-  padding: 0;
-  margin: 0;
-}
-
 #marp-vscode {
   all: initial;
+}
+
+/* Override VS Code default CSS rules reverting to initial
+   https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/contrib/webview/electron-browser/webview-pre.js#L412 */
+body.marp-vscode {
+  padding: 0;
+}
+
+body.marp-vscode img {
+  max-width: initial;
+  max-height: initial;
+}
+
+body.marp-vscode a,
+body.marp-vscode a:hover,
+body.marp-vscode code {
+  color: initial;
+}
+
+body.marp-vscode blockquote {
+  background: initial;
+  border-color: initial;
 }
 
 @media screen {
