@@ -101,7 +101,7 @@
     "preversion": "npm-run-all --npm-path yarn --parallel check-audit check-ts format:check lint:* test:*:coverage",
     "test:unit": "jest",
     "test:unit:coverage": "jest --coverage",
-    "version": "node version.js && git add -A CHANGELOG.md",
+    "version": "curl https://raw.githubusercontent.com/marp-team/marp/master/version.js | node && git add -A CHANGELOG.md",
     "vsce:publish": "vsce publish --yarn",
     "vscode:prepublish": "yarn -s preversion && yarn -s build",
     "watch": "rollup -w -c ./rollup.config.js"
