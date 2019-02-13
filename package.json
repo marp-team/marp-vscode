@@ -7,6 +7,13 @@
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "marp",
+    "markdown",
+    "slide",
+    "deck",
+    "presentation"
+  ],
   "license": "MIT",
   "author": {
     "name": "Marp team",
