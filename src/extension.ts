@@ -7,7 +7,6 @@ const marpVscodeEnabled = Symbol()
 export function extendMarkdownIt(md: any) {
   const marp: any = new Marp({
     container: { tag: 'div', id: 'marp-vscode' },
-    emoji: { twemoji: { ext: 'png' } },
   })
 
   md.use(marp.markdownItPlugins)
