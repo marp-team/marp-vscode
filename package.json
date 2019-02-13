@@ -100,9 +100,9 @@
     "watch": "rollup -w -c ./rollup.config.js"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.0",
+    "@types/jest": "^24.0.3",
     "@types/markdown-it": "^0.0.7",
-    "codecov": "^3.1.0",
+    "codecov": "^3.2.0",
     "jest": "^24.1.0",
     "jest-junit": "^6.2.1",
     "markdown-it": "^8.4.2",
@@ -124,11 +124,11 @@
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.3.3",
-    "vsce": "^1.56.0",
+    "vsce": "^1.57.0",
     "vscode": "^1.1.29"
   },
   "dependencies": {
-    "@marp-team/marp-core": "^0.6.0",
+    "@marp-team/marp-core": "^0.6.1",
     "@marp-team/marpit-svg-polyfill": "^0.2.0"
   }
 }
