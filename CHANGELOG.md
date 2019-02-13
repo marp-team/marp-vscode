@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.0.4 - 2019-02-13
+
 ### Changed
 
 - Revert to use SVG twemoji image ([#5](https://github.com/marp-team/marp-vscode/pull/5))
