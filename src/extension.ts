@@ -22,6 +22,15 @@ export function extendMarkdownIt(md: any) {
 
         instance[marpVscodeEnabled] = enabled
         state.marpit(enabled)
+
+        // Avoid collision to the other math plugins (markdown-it-katex)
+        if (enabled) {
+          md.block.ruler.disable('math_block', true)
+          md.inline.ruler.disable('math_inline', true)
+        } else {
+          md.block.ruler.enable('math_block', true)
+          md.inline.ruler.enable('math_inline', true)
+        }
       })
     })
     .use(instance => {

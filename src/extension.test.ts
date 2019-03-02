@@ -1,4 +1,5 @@
 /** @jest-environment node */
+import markdownItKatex from '@neilsustc/markdown-it-katex'
 import { Marp } from '@marp-team/marp-core'
 import markdownIt from 'markdown-it'
 import markdownItEmoji from 'markdown-it-emoji'
@@ -42,6 +43,27 @@ describe('#extendMarkdownIt', () => {
 
       expect(md.render(':+1:')).not.toContain('data-marp-twemoji')
       expect(md.render(marpMd(':+1:'))).toContain('data-marp-twemoji')
+    })
+  })
+
+  describe('Math rendering', () => {
+    // @neilsustc/markdown-it-katex is used by Markdown All in One.
+    // https://github.com/yzhang-gh/vscode-markdown
+    const mdMath = extendMarkdownIt(new markdownIt().use(markdownItKatex))
+    const markdown = '$y=ax^2$\n\n$$ y=ax^2 $$'
+
+    it('renders math via Marp with marp front-matter', () => {
+      const html = mdMath.render(marpMd(markdown))
+
+      expect(html).toContain('<span class="katex">')
+      expect(html).toContain('data-marp-fitting-math')
+    })
+
+    it('renders math via existed plugin without marp front-matter', () => {
+      const html = mdMath.render(markdown)
+
+      expect(html).toContain('<span class="katex">')
+      expect(html).not.toContain('data-marp-fitting-math')
     })
   })
 
