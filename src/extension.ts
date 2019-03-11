@@ -1,4 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
+import * as vscode from 'vscode'
 
 const frontMatterRegex = /^---\s*([^]*)?(?:-{3}|\.{3})\s*/
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
@@ -11,8 +12,12 @@ export function extendMarkdownIt(md: any) {
 
   md.use(marp.markdownItPlugins)
     .use(instance => {
+      let originalOptions
+
       // Detect `marp: true` front-matter option
       instance.core.ruler.before('normalize', 'marp_vscode_toggle', state => {
+        originalOptions = instance.options
+
         if (state.inlineMode) return
 
         const fmMatch = frontMatterRegex.exec(state.src)
@@ -23,14 +28,28 @@ export function extendMarkdownIt(md: any) {
         instance[marpVscodeEnabled] = enabled
         state.marpit(enabled)
 
-        // Avoid collision to the other math plugins (markdown-it-katex)
         if (enabled) {
+          // Avoid collision to the other math plugins (markdown-it-katex)
           md.block.ruler.disable('math_block', true)
           md.inline.ruler.disable('math_inline', true)
+
+          // Override HTML option
+          instance.set({
+            html: vscode.workspace
+              .getConfiguration('markdown.marp')
+              .get('enableHtml')
+              ? true
+              : marp.options.html,
+          })
         } else {
           md.block.ruler.enable('math_block', true)
           md.inline.ruler.enable('math_inline', true)
         }
+      })
+
+      instance.core.ruler.push('marp_vscode_restore_options', state => {
+        if (state.inlineMode) return
+        instance.set(originalOptions)
       })
     })
     .use(instance => {
