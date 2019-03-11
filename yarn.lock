@@ -150,16 +150,16 @@
     reflect-metadata "^0.1.12"
     tslib "^1.8.1"
 
-"@marp-team/marp-core@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@marp-team/marp-core/-/marp-core-0.6.1.tgz#bf0987529664ddddb6e540d72ccf95236ad91677"
-  integrity sha512-J23WaRROntWTgnMpppLuLRPT9UyMSR42DKwfZx1QIiblbHisn04lMWo9FNASFukSf+QtEa6RMLerFecFzWxP4A==
+"@marp-team/marp-core@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@marp-team/marp-core/-/marp-core-0.6.2.tgz#6a78a71217fdb2a5a03d28238a9a1ba490c1e0ed"
+  integrity sha512-J7zVK5ihhdqtotDyM1tAvtwT+Jk5hJzjiAVf1/4baTBhXPUMd6pOMTzk1eD/aY3JRaO1gGvUgNu/2+JHlUa2nQ==
   dependencies:
     "@marp-team/marpit" "^0.7.2"
     "@marp-team/marpit-svg-polyfill" "^0.2.0"
     emoji-regex "^7.0.3"
-    highlight.js "^9.14.2"
-    katex "^0.10.0"
+    highlight.js "^9.15.6"
+    katex "^0.10.1"
     markdown-it "^8.4.2"
     markdown-it-emoji "^1.4.0"
     twemoji "^11.3.0"
@@ -2111,7 +2111,7 @@ he@1.1.1:
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
   integrity sha1-k0EP0hsAlzUVH4howvJx80J+I/0=
 
-highlight.js@^9.14.2:
+highlight.js@^9.15.6:
   version "9.15.6"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.15.6.tgz#72d4d8d779ec066af9a17cb14360c3def0aa57c4"
   integrity sha512-zozTAWM1D6sozHo8kqhfYgsac+B+q0PmsjXeyDrYIHHcBN0zTVT66+s2GW1GZv7DbyaROdLXKdabwS/WqPyIdQ==
@@ -3095,7 +3095,7 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-katex@^0.10.0:
+katex@^0.10.0, katex@^0.10.1:
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/katex/-/katex-0.10.1.tgz#5bb0b72bf19cecfc1fa217a9261760e5d301efff"
   integrity sha512-iZXZ2L8pEP7HXBLAaeWkdLxnoRQ8Fdks8IuIVt01tYb+D8e0em5JYgfe6J48wXsuEr512IRCN5Kvwb9FjZH6kg==
