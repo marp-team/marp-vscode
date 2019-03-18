@@ -3,8 +3,23 @@ import markdownItKatex from '@neilsustc/markdown-it-katex'
 import { Marp } from '@marp-team/marp-core'
 import markdownIt from 'markdown-it'
 import markdownItEmoji from 'markdown-it-emoji'
+import { workspace } from 'vscode'
 import { activate, extendMarkdownIt } from './extension'
 
+jest.mock('vscode')
+
+const mockWorkspaceConfig = (conf: { [key: string]: any } = {}) =>
+  jest.spyOn<any, any>(workspace, 'getConfiguration').mockImplementation(
+    () =>
+      new Map<string, any>(
+        Object.entries({
+          'markdown.marp.enableHtml': false,
+          ...conf,
+        })
+      )
+  )
+
+beforeEach(() => mockWorkspaceConfig())
 afterEach(() => jest.restoreAllMocks())
 
 describe('#activate', () => {
@@ -106,6 +121,33 @@ describe('#extendMarkdownIt', () => {
 
       expect(marpHighlighter).toReturnWith('')
       expect(html).toContain('<code class="language-unknownlang">')
+    })
+  })
+
+  describe('Workspace config', () => {
+    const md = extendMarkdownIt(new markdownIt())
+
+    describe('markdown.marp.enableHtml', () => {
+      it('does not render HTML elements when disabled', () => {
+        mockWorkspaceConfig({ 'markdown.marp.enableHtml': false })
+
+        const html = md.render(marpMd('<b>Hi</b>'))
+        expect(html).not.toContain('<b>Hi</b>')
+      })
+
+      it("allows Marp Core's whitelisted HTML elements when disabled", () => {
+        mockWorkspaceConfig({ 'markdown.marp.enableHtml': false })
+
+        const html = md.render(marpMd('line<br>break'))
+        expect(html).toContain('line<br>break')
+      })
+
+      it('renders HTML elements when enabled', () => {
+        mockWorkspaceConfig({ 'markdown.marp.enableHtml': true })
+
+        const html = md.render(marpMd('<b>Hi</b>'))
+        expect(html).toContain('<b>Hi</b>')
+      })
     })
   })
 })

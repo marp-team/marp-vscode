@@ -1,5 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
-import * as vscode from 'vscode'
+import { workspace } from 'vscode'
 
 const frontMatterRegex = /^---\s*([^]*)?(?:-{3}|\.{3})\s*/
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
@@ -35,9 +35,9 @@ export function extendMarkdownIt(md: any) {
 
           // Override HTML option
           instance.set({
-            html: vscode.workspace
-              .getConfiguration('markdown.marp')
-              .get('enableHtml')
+            html: workspace
+              .getConfiguration()
+              .get<boolean>('markdown.marp.enableHtml')
               ? true
               : marp.options.html,
           })
