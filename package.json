@@ -40,6 +40,17 @@
   },
   "activationEvents": [],
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Marp for VS Code",
+      "properties": {
+        "markdown.marp.enableHtml": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enables all HTML elements in Marp Markdown."
+        }
+      }
+    },
     "markdown.markdownItPlugins": true,
     "markdown.previewScripts": [
       "./lib/preview.js"
