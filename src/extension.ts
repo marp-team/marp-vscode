@@ -46,9 +46,4 @@ export function extendMarkdownIt(md: any) {
   return md
 }
 
-export const activate = ({ subscriptions }: ExtensionContext) => {
-  // TODO: Re-render preview when opening Marp preview
-  // subscriptions.push(workspace.onDidChangeConfiguration(() => {}))
-
-  return { extendMarkdownIt }
-}
+export const activate = () => ({ extendMarkdownIt })

@@ -12,7 +12,6 @@ const mockWorkspaceConfig = (conf: { [key: string]: any } = {}) => {
   }
 
   const confSpy = jest.spyOn(workspace, 'getConfiguration') as jest.SpyInstance
-
   confSpy.mockImplementation((section?: string) => {
     const entries: any[] = Object.entries(config)
       .map(([k, v]) => {
@@ -33,9 +32,7 @@ afterEach(() => jest.restoreAllMocks())
 
 describe('#activate', () => {
   it('contains #extendMarkdownIt', () =>
-    expect((activate as any)({})).toEqual(
-      expect.objectContaining({ extendMarkdownIt })
-    ))
+    expect(activate()).toEqual(expect.objectContaining({ extendMarkdownIt })))
 })
 
 describe('#extendMarkdownIt', () => {
