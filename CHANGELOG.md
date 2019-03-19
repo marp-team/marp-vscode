@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- Marp renderer can no longer extend by VSCode extensions ([#17](https://github.com/marp-team/marp-vscode/pull/17))
+
+### Changed
+
+- Simplify Marp integration by using independent instance ([#17](https://github.com/marp-team/marp-vscode/pull/17))
+
 ## v0.0.6 - 2019-03-19
 
 ### Added
