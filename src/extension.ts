@@ -1,117 +1,47 @@
 import { Marp } from '@marp-team/marp-core'
-import { workspace } from 'vscode'
+import { ExtensionContext, workspace } from 'vscode'
 
 const frontMatterRegex = /^---\s*([^]*)?(?:-{3}|\.{3})\s*/
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
-const marpVscodeEnabled = Symbol()
+const marpConfiguration = () => workspace.getConfiguration('markdown.marp')
+const marpVscode = Symbol('marp-vscode')
 
 export function extendMarkdownIt(md: any) {
-  const marp: any = new Marp({
-    container: { tag: 'div', id: 'marp-vscode' },
-  })
+  const { parse, renderer } = md
+  const { render } = renderer
 
-  md.use(marp.markdownItPlugins)
-    .use(instance => {
-      let originalOptions
+  md[marpVscode] = false
+  md.parse = (markdown: string, env: any) => {
+    // Detect `marp: true` front-matter option
+    const fmMatch = frontMatterRegex.exec(markdown)
+    const enabled = !!(fmMatch && marpDirectiveRegex.exec(fmMatch[1].trim()))
 
-      // Detect `marp: true` front-matter option
-      instance.core.ruler.before('normalize', 'marp_vscode_toggle', state => {
-        originalOptions = instance.options
-
-        if (state.inlineMode) return
-
-        const fmMatch = frontMatterRegex.exec(state.src)
-        const enabled = !!(
-          fmMatch && marpDirectiveRegex.exec(fmMatch[1].trim())
-        )
-
-        instance[marpVscodeEnabled] = enabled
-        state.marpit(enabled)
-
-        if (enabled) {
-          // Avoid collision to the other math plugins (markdown-it-katex)
-          md.block.ruler.disable('math_block', true)
-          md.inline.ruler.disable('math_inline', true)
-
-          // Override HTML option
-          instance.set({
-            html: workspace
-              .getConfiguration()
-              .get<boolean>('markdown.marp.enableHtml')
-              ? true
-              : marp.options.html,
-          })
-        } else {
-          md.block.ruler.enable('math_block', true)
-          md.inline.ruler.enable('math_inline', true)
-        }
+    // Generate tokens by Marp if enabled
+    md[marpVscode] =
+      enabled &&
+      new Marp({
+        container: { tag: 'div', id: 'marp-vscode' },
+        html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       })
 
-      instance.core.ruler.push('marp_vscode_restore_options', state => {
-        if (state.inlineMode) return
-        instance.set(originalOptions)
-      })
-    })
-    .use(instance => {
-      let originalEmojiRule
+    if (md[marpVscode]) return md[marpVscode].markdown.parse(markdown, env)
 
-      instance.core.ruler.push('marp_vscode_postprocess', state => {
-        if (state.inlineMode) return
+    // Fallback to original instance if Marp was not enabled
+    return parse.call(md, markdown, env)
+  }
 
-        // Override markdown-it-emoji renderer provided by other plugin
-        if (
-          !originalEmojiRule &&
-          Object.prototype.hasOwnProperty.call(instance.renderer.rules, 'emoji')
-        ) {
-          originalEmojiRule = instance.renderer.rules.emoji
-          instance.renderer.rules.emoji = function(...args) {
-            if (instance[marpVscodeEnabled]) {
-              return instance.renderer.rules.marp_emoji(...args)
-            }
-            return originalEmojiRule(...args)
-          }
-        }
-      })
-    })
+  renderer.render = (tokens: any[], options: any, env: any) => {
+    const marp = md[marpVscode]
 
-  // Render converted CSS together with Markdown
-  marp.markdown = md
-  marp.use(instance => {
-    instance.core.ruler.push(
-      'marp_vscode_style',
-      ({ Token, tokens, inlineMode }) => {
-        if (inlineMode) return
+    if (marp) {
+      const style = marp.renderStyle(marp.lastGlobalDirectives.theme)
+      const html = marp.markdown.renderer.render(tokens, options, env)
 
-        const css = marp.renderStyle(marp.lastGlobalDirectives.theme)
-        const token = new Token('marp_vscode_style', '', 0)
+      return `<style id="marp-vscode-style">${style}</style>${html}`
+    }
 
-        token.content = css
-        tokens.unshift(token)
-      }
-    )
-  })
-
-  md.renderer.rules.marp_vscode_style = (token, i) =>
-    `<style id="marp-vscode-style">${token[i].content}</style>`
-
-  // Override default highlighter to fix wrong background color
-  const { highlight } = md.options
-
-  md.set({
-    highlight: function marpHighlighter(code, lang) {
-      if (md[marpVscodeEnabled]) {
-        const marpHighlight = marp.highlighter(code, lang)
-        if (marpHighlight) return marpHighlight
-
-        // Special support for mermaid plugin
-        if (lang && lang.toLowerCase() === 'mermaid') {
-          return `<div class="mermaid">${md.utils.escapeHtml(code)}</div>`
-        }
-        return ''
-      }
-      return highlight(code, lang)
-    },
-  })
+    return render.call(renderer, tokens, options, env)
+  }
 
   return md
 }

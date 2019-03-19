@@ -18,7 +18,7 @@ const sourcemap = !!process.env.ROLLUP_WATCH
 
 export default [
   {
-    external: [...Object.keys(pkg.dependencies)],
+    external: [...Object.keys(pkg.dependencies), 'vscode'],
     input: `src/${path.basename(pkg.main, '.js')}.ts`,
     output: { exports: 'named', file: pkg.main, format: 'cjs', sourcemap },
     plugins,
