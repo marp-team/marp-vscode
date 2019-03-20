@@ -145,7 +145,7 @@
     "vscode": "^1.1.30"
   },
   "dependencies": {
-    "@marp-team/marp-core": "^0.7.0",
-    "@marp-team/marpit-svg-polyfill": "^0.2.0"
+    "@marp-team/marp-core": "^0.7.1",
+    "@marp-team/marpit-svg-polyfill": "^0.3.0"
   }
 }

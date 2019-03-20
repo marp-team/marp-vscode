@@ -295,13 +295,13 @@
     "@types/istanbul-lib-coverage" "^1.1.0"
     "@types/yargs" "^12.0.9"
 
-"@marp-team/marp-core@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@marp-team/marp-core/-/marp-core-0.7.0.tgz#4812a1657b04ea61ba4763941b0f221c79fbe04b"
-  integrity sha512-1d41qnEpkQw3GA32QeIm7DvRziyhqilB2BITnOjUj0Bh9hzYq6j4VbmjFzqug3W7b4jdUlreojkLSnVUYEFqaQ==
+"@marp-team/marp-core@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@marp-team/marp-core/-/marp-core-0.7.1.tgz#2dda763d2181c4105186237b8860dce2faa40c0d"
+  integrity sha512-/vSqEpIchvXr1Gtc9J54L02L9Shb0TfCuZJ7OYN1MfKhSr50MGoQXuyNJmF6N5qscA7SaGPPHcAMiRtCK1gOSw==
   dependencies:
     "@marp-team/marpit" "^0.8.0"
-    "@marp-team/marpit-svg-polyfill" "^0.2.0"
+    "@marp-team/marpit-svg-polyfill" "^0.3.0"
     emoji-regex "^8.0.0"
     highlight.js "^9.15.6"
     katex "^0.10.1"
@@ -310,12 +310,12 @@
     twemoji "^11.3.0"
     xss "^1.0.3"
 
-"@marp-team/marpit-svg-polyfill@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@marp-team/marpit-svg-polyfill/-/marpit-svg-polyfill-0.2.0.tgz#e5bbf2ea9cc6ac21068019d88816fc5cd87410e4"
-  integrity sha512-OczYQQYUGPVuPPD/vQa0gS8UutIo5QOa1WiXgh80D8K8hBiSAJfKxViz0HKUUhwyURJRYiTioNYFcKQ1Ikjuww==
+"@marp-team/marpit-svg-polyfill@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@marp-team/marpit-svg-polyfill/-/marpit-svg-polyfill-0.3.0.tgz#33c38089549fc335d6924f55306468e798300cf1"
+  integrity sha512-lQU/wOodM1RusiwkDMCEoTnS/BOEyvKPyNkLsuYA4lda4AtVBe0ZEJKm9a7D9e9CWNwvynyYDeWs0/UJj5IYIw==
   dependencies:
-    detect-browser "^3.0.1"
+    detect-browser "^4.1.0"
 
 "@marp-team/marpit@^0.8.0":
   version "0.8.0"
@@ -1420,10 +1420,10 @@ denodeify@^1.2.1:
   resolved "https://registry.yarnpkg.com/denodeify/-/denodeify-1.2.1.tgz#3a36287f5034e699e7577901052c2e6c94251631"
   integrity sha1-OjYof1A05pnnV3kBBSwubJQlFjE=
 
-detect-browser@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-3.0.1.tgz#39beead014347a8a2be1f3c4cb30a0aef2127c44"
-  integrity sha512-L6b76EfUxnoxGHM5Vz7nrshQPIbOHtitDWpGufrp5srQdJrEYi1xpUVZeFbfssWAJvUWo/iDIVlz8hOP4Z8OCw==
+detect-browser@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-4.1.0.tgz#4f1cd47952be8fb16511053c37275f513b96d74a"
+  integrity sha512-YKQf1QQDXXJrwNE07xHujoD+meBnjhsYFdPwxFEXS1ylJWD9GKd21lKBjuqtXzAkz4CQjwBO3DYXBU/wWwZCGA==
 
 detect-newline@^2.1.0:
   version "2.1.0"
