@@ -2,9 +2,9 @@ import browserCjs from '@marp-team/marp-core/lib/browser.cjs'
 import { webkit } from '@marp-team/marpit-svg-polyfill'
 
 export default function preview() {
-  const marpEnabled = document.getElementById('marp-vscode')
+  const marpVscode = document.getElementById('marp-vscode')
 
-  if (marpEnabled) {
+  if (marpVscode) {
     document.body.classList.add('marp-vscode')
 
     // Remove default styles
@@ -22,7 +22,7 @@ export default function preview() {
 
     // VSCode has the same rendering bug as WebKit.
     const observer = () => {
-      webkit()
+      webkit(Number.parseFloat(marpVscode.dataset.zoom || '1') || 1)
       window.requestAnimationFrame(observer)
     }
     observer()

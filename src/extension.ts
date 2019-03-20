@@ -1,5 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
-import { ExtensionContext, workspace } from 'vscode'
+import { workspace } from 'vscode'
 
 const frontMatterRegex = /^---\s*([^]*)?(?:-{3}|\.{3})\s*/
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
@@ -10,23 +10,26 @@ export function extendMarkdownIt(md: any) {
   const { parse, renderer } = md
   const { render } = renderer
 
-  md[marpVscode] = false
   md.parse = (markdown: string, env: any) => {
     // Detect `marp: true` front-matter option
     const fmMatch = frontMatterRegex.exec(markdown)
     const enabled = !!(fmMatch && marpDirectiveRegex.exec(fmMatch[1].trim()))
 
     // Generate tokens by Marp if enabled
-    md[marpVscode] =
-      enabled &&
-      new Marp({
-        container: { tag: 'div', id: 'marp-vscode' },
+    if (enabled) {
+      const zoom =
+        workspace.getConfiguration('window').get<number>('zoomLevel') || 0
+
+      md[marpVscode] = new Marp({
+        container: { tag: 'div', id: 'marp-vscode', 'data-zoom': 1.2 ** zoom },
         html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       })
 
-    if (md[marpVscode]) return md[marpVscode].markdown.parse(markdown, env)
+      return md[marpVscode].markdown.parse(markdown, env)
+    }
 
     // Fallback to original instance if Marp was not enabled
+    md[marpVscode] = false
     return parse.call(md, markdown, env)
   }
 
