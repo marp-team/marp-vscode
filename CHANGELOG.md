@@ -10,6 +10,10 @@
 
 - Simplify Marp integration by using independent instance ([#17](https://github.com/marp-team/marp-vscode/pull/17))
 
+### Fixed
+
+- Fix misdetection of front-matter in code block ([#18](https://github.com/marp-team/marp-vscode/pull/18))
+
 ## v0.0.6 - 2019-03-19
 
 ### Added
