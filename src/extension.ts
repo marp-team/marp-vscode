@@ -1,22 +1,23 @@
 import { Marp } from '@marp-team/marp-core'
 import { workspace } from 'vscode'
 
-const frontMatterRegex = /^---\s*([^]*)?(?:-{3}|\.{3})\s*/
+const frontMatterRegex = /^-{3,}\s*([^]*?)^\s*-{3}/m
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
 const marpConfiguration = () => workspace.getConfiguration('markdown.marp')
 const marpVscode = Symbol('marp-vscode')
+
+const detectMarpFromFrontMatter = (markdown: string): boolean => {
+  const m = markdown.match(frontMatterRegex)
+  return !!(m && m.index === 0 && marpDirectiveRegex.exec(m[0].trim()))
+}
 
 export function extendMarkdownIt(md: any) {
   const { parse, renderer } = md
   const { render } = renderer
 
   md.parse = (markdown: string, env: any) => {
-    // Detect `marp: true` front-matter option
-    const fmMatch = frontMatterRegex.exec(markdown)
-    const enabled = !!(fmMatch && marpDirectiveRegex.exec(fmMatch[1].trim()))
-
     // Generate tokens by Marp if enabled
-    if (enabled) {
+    if (detectMarpFromFrontMatter(markdown)) {
       const zoom =
         workspace.getConfiguration('window').get<number>('zoomLevel') || 0
 
