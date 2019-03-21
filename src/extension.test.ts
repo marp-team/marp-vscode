@@ -39,19 +39,24 @@ describe('#extendMarkdownIt', () => {
   const marpMd = (md: string) => `---\nmarp: true\n---\n\n${md}`
 
   describe('Marp Core', () => {
-    const markdown = '# Hello :wave:\n\n<!-- header: Hi -->'
+    const baseMd = '# Hello :wave:\n\n<!-- header: Hi -->'
 
-    it('uses default engine without marp front-matter', () => {
-      const html = extendMarkdownIt(new markdownIt()).render(markdown)
+    it('uses default engine when not enabled marp front-matter', () => {
+      const confusingMd =
+        '---\nmarp: false\n---\n\n```markdown\n---\nmarp: true\n---\n```'
 
-      expect(html).not.toContain('<div id="marp-vscode">')
-      expect(html).not.toContain('<style id="marp-vscode-style">')
-      expect(html).not.toContain('svg')
-      expect(html).not.toContain('img')
+      for (const markdown of [baseMd, confusingMd]) {
+        const html = extendMarkdownIt(new markdownIt()).render(markdown)
+
+        expect(html).not.toContain('<div id="marp-vscode">')
+        expect(html).not.toContain('<style id="marp-vscode-style">')
+        expect(html).not.toContain('svg')
+        expect(html).not.toContain('img')
+      }
     })
 
-    it('uses Marp engine with marp front-matter', () => {
-      const html = extendMarkdownIt(new markdownIt()).render(marpMd(markdown))
+    it('uses Marp engine when enabled marp front-matter', () => {
+      const html = extendMarkdownIt(new markdownIt()).render(marpMd(baseMd))
 
       expect(html).toContain('<div id="marp-vscode">')
       expect(html).toContain('<style id="marp-vscode-style">')
