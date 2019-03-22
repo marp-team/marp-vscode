@@ -15,19 +15,22 @@ export function extendMarkdownIt(md: any) {
   const { parse, renderer } = md
   const { render } = renderer
 
-  md[marpVscode] = false
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
-    md[marpVscode] =
-      detectMarpFromFrontMatter(markdown) &&
-      new Marp({
-        container: { tag: 'div', id: 'marp-vscode' },
+    if (detectMarpFromFrontMatter(markdown)) {
+      const zoom =
+        workspace.getConfiguration('window').get<number>('zoomLevel') || 0
+
+      md[marpVscode] = new Marp({
+        container: { tag: 'div', id: 'marp-vscode', 'data-zoom': 1.2 ** zoom },
         html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       })
 
-    if (md[marpVscode]) return md[marpVscode].markdown.parse(markdown, env)
+      return md[marpVscode].markdown.parse(markdown, env)
+    }
 
     // Fallback to original instance if Marp was not enabled
+    md[marpVscode] = false
     return parse.call(md, markdown, env)
   }
 

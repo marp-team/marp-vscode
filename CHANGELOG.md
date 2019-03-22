@@ -4,15 +4,17 @@
 
 ### Breaking
 
-- Marp renderer can no longer extend by VSCode extensions ([#17](https://github.com/marp-team/marp-vscode/pull/17))
+- Marp renderer can no longer extend by VS Code extensions ([#17](https://github.com/marp-team/marp-vscode/pull/17))
 
 ### Changed
 
 - Simplify Marp integration by using independent instance ([#17](https://github.com/marp-team/marp-vscode/pull/17))
+- Upgrade dependent packages to the latest ([#19](https://github.com/marp-team/marp-vscode/pull/19))
 
 ### Fixed
 
 - Fix misdetection of front-matter in code block ([#18](https://github.com/marp-team/marp-vscode/pull/18))
+- Take into account a zoom level when scaling slide via polyfill ([#8](https://github.com/marp-team/marp-vscode/issues/8), [#19](https://github.com/marp-team/marp-vscode/pull/19))
 
 ## v0.0.6 - 2019-03-19
 

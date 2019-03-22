@@ -8,6 +8,7 @@ jest.mock('vscode')
 const mockWorkspaceConfig = (conf: { [key: string]: any } = {}) => {
   const config = {
     'markdown.marp.enableHtml': false,
+    'window.zoomLevel': 0,
     ...conf,
   }
 
@@ -48,7 +49,7 @@ describe('#extendMarkdownIt', () => {
       for (const markdown of [baseMd, confusingMd]) {
         const html = extendMarkdownIt(new markdownIt()).render(markdown)
 
-        expect(html).not.toContain('<div id="marp-vscode">')
+        expect(html).not.toContain('<div id="marp-vscode" data-zoom="1">')
         expect(html).not.toContain('<style id="marp-vscode-style">')
         expect(html).not.toContain('svg')
         expect(html).not.toContain('img')
@@ -58,7 +59,7 @@ describe('#extendMarkdownIt', () => {
     it('uses Marp engine when enabled marp front-matter', () => {
       const html = extendMarkdownIt(new markdownIt()).render(marpMd(baseMd))
 
-      expect(html).toContain('<div id="marp-vscode">')
+      expect(html).toContain('<div id="marp-vscode" data-zoom="1">')
       expect(html).toContain('<style id="marp-vscode-style">')
       expect(html).toContain('svg')
       expect(html).toContain('img')
@@ -67,6 +68,16 @@ describe('#extendMarkdownIt', () => {
 
   describe('Workspace config', () => {
     const md = extendMarkdownIt(new markdownIt())
+
+    describe('window.zoomLevel', () => {
+      it('assigns the calculated scale to data-zoom attribute', () => {
+        mockWorkspaceConfig({ 'window.zoomLevel': 1 })
+        expect(md.render(marpMd(''))).toContain('data-zoom="1.2"')
+
+        mockWorkspaceConfig({ 'window.zoomLevel': 2 })
+        expect(md.render(marpMd(''))).toContain('data-zoom="1.44"')
+      })
+    })
 
     describe('markdown.marp.enableHtml', () => {
       it('does not render HTML elements when disabled', () => {
