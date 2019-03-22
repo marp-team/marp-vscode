@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.1.0 - 2019-03-22
+
 ### Breaking
 
 - Marp renderer can no longer extend by VS Code extensions ([#17](https://github.com/marp-team/marp-vscode/pull/17))
