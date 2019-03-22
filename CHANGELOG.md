@@ -9,6 +9,7 @@
 ### Changed
 
 - Simplify Marp integration by using independent instance ([#17](https://github.com/marp-team/marp-vscode/pull/17))
+- Upgrade dependent packages to the latest ([#19](https://github.com/marp-team/marp-vscode/pull/19))
 
 ### Fixed
 
