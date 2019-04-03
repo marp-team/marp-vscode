@@ -1,10 +1,11 @@
 import { Marp } from '@marp-team/marp-core'
-import { workspace } from 'vscode'
+import { ExtensionContext, commands, workspace } from 'vscode'
 
 const frontMatterRegex = /^-{3,}\s*([^]*?)^\s*-{3}/m
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
 const marpConfiguration = () => workspace.getConfiguration('markdown.marp')
 const marpVscode = Symbol('marp-vscode')
+const shouldRefreshConfs = ['markdown.marp.enableHtml', 'window.zoomLevel']
 
 const detectMarpFromFrontMatter = (markdown: string): boolean => {
   const m = markdown.match(frontMatterRegex)
@@ -51,4 +52,14 @@ export function extendMarkdownIt(md: any) {
   return md
 }
 
-export const activate = () => ({ extendMarkdownIt })
+export const activate = ({ subscriptions }: ExtensionContext) => {
+  subscriptions.push(
+    workspace.onDidChangeConfiguration(e => {
+      if (shouldRefreshConfs.some(c => e.affectsConfiguration(c))) {
+        commands.executeCommand('markdown.preview.refresh')
+      }
+    })
+  )
+
+  return { extendMarkdownIt }
+}
