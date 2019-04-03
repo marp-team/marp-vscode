@@ -32,8 +32,18 @@ beforeEach(() => mockWorkspaceConfig())
 afterEach(() => jest.restoreAllMocks())
 
 describe('#activate', () => {
-  it('contains #extendMarkdownIt', () =>
-    expect(activate()).toEqual(expect.objectContaining({ extendMarkdownIt })))
+  const extContext: any = { subscriptions: { push: jest.fn() } }
+
+  it('contains #extendMarkdownIt', () => {
+    expect(activate(extContext)).toEqual(
+      expect.objectContaining({ extendMarkdownIt })
+    )
+  })
+
+  it('starts tracking to change of configurations', () => {
+    const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
+    expect(onDidChgConf).toBeCalledWith(expect.any(Function))
+  })
 })
 
 describe('#extendMarkdownIt', () => {
