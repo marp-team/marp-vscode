@@ -39,8 +39,9 @@ export function extendMarkdownIt(md: any) {
     const marp = md[marpVscode]
 
     if (marp) {
+      const { markdown } = marp
       const style = marp.renderStyle(marp.lastGlobalDirectives.theme)
-      const html = marp.markdown.renderer.render(tokens, options, env)
+      const html = markdown.renderer.render(tokens, markdown.options, env)
 
       return `<style id="marp-vscode-style">${style}</style>${html}`
     }
