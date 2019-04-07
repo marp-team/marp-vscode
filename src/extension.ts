@@ -1,5 +1,6 @@
 import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, commands, workspace } from 'vscode'
+import outlinePlugin from './plugins/outline'
 
 const frontMatterRegex = /^-{3,}\s*([^]*?)^\s*-{3}/m
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
@@ -25,7 +26,7 @@ export function extendMarkdownIt(md: any) {
       md[marpVscode] = new Marp({
         container: { tag: 'div', id: 'marp-vscode', 'data-zoom': 1.2 ** zoom },
         html: marpConfiguration().get<boolean>('enableHtml') || undefined,
-      })
+      }).use(outlinePlugin)
 
       return md[marpVscode].markdown.parse(markdown, env)
     }
