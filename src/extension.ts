@@ -5,7 +5,12 @@ const frontMatterRegex = /^-{3,}\s*([^]*?)^\s*-{3}/m
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
 const marpConfiguration = () => workspace.getConfiguration('markdown.marp')
 const marpVscode = Symbol('marp-vscode')
-const shouldRefreshConfs = ['markdown.marp.enableHtml', 'window.zoomLevel']
+const shouldRefreshConfs = [
+  'markdown.marp.breaks',
+  'markdown.marp.enableHtml',
+  // 'markdown.preview.breaks',
+  'window.zoomLevel',
+]
 
 const detectMarpFromFrontMatter = (markdown: string): boolean => {
   const m = markdown.match(frontMatterRegex)
@@ -19,12 +24,27 @@ export function extendMarkdownIt(md: any) {
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
     if (detectMarpFromFrontMatter(markdown)) {
+      const breaks = (() => {
+        const marpBreaks = marpConfiguration().get<string>('breaks')
+
+        if (marpBreaks === 'off') return false
+        if (marpBreaks === 'inherit') {
+          return (
+            workspace
+              .getConfiguration('markdown.preview')
+              .get<boolean>('breaks') || false
+          )
+        }
+        return true
+      })()
+
       const zoom =
         workspace.getConfiguration('window').get<number>('zoomLevel') || 0
 
       md[marpVscode] = new Marp({
         container: { tag: 'div', id: 'marp-vscode', 'data-zoom': 1.2 ** zoom },
         html: marpConfiguration().get<boolean>('enableHtml') || undefined,
+        markdown: { breaks },
       })
 
       return md[marpVscode].markdown.parse(markdown, env)
