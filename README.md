@@ -46,7 +46,7 @@ Marp for VS Code can preview your Marp Markdown with a same way as native Markdo
 We extend a native outline view to support slide pages in Marp Markdown.
 
 <p align="center">
-  <img src="./images/outline.png" alt="Outline view for each slide" width="400" />
+  <img src="./images/outline.png" alt="Outline view for each slide" width="480" />
 </p>
 
 > :information_source: Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order,
@@ -56,7 +56,7 @@ We extend a native outline view to support slide pages in Marp Markdown.
 You can fold the content of slide in editor while editing Marp Markdown.
 
 <p align="center">
-  <img src="./images/fold.gif" alt="Slide folding in editor" width="300" />
+  <img src="./images/fold.gif" alt="Slide folding in editor" width="400" />
 </p>
 
 ## Author
