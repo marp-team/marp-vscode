@@ -1,6 +1,6 @@
 /** @jest-environment node */
 import markdownIt from 'markdown-it'
-import { workspace } from 'vscode'
+import { commands, workspace } from 'vscode'
 
 jest.mock('vscode')
 
@@ -15,6 +15,7 @@ const extension = () => {
 
 const mockWorkspaceConfig = (conf: { [key: string]: any } = {}) => {
   const config = {
+    'markdown.marp.breaks': 'on',
     'markdown.marp.enableHtml': false,
     'window.zoomLevel': 0,
     ...conf,
@@ -52,6 +53,16 @@ describe('#activate', () => {
       expect.any(Function)
     )
   })
+
+  it('refreshes Markdown preview when affected configuration has changed', () => {
+    extension().activate(extContext)
+
+    const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
+    const [event] = onDidChgConf.mock.calls[0]
+
+    event({ affectsConfiguration: jest.fn(() => true) })
+    expect(commands.executeCommand).toBeCalledWith('markdown.preview.refresh')
+  })
 })
 
 describe('#extendMarkdownIt', () => {
@@ -87,15 +98,25 @@ describe('#extendMarkdownIt', () => {
   })
 
   describe('Workspace config', () => {
-    const md = () => extension().extendMarkdownIt(new markdownIt())
+    const md = (opts = {}) => extension().extendMarkdownIt(new markdownIt(opts))
 
-    describe('window.zoomLevel', () => {
-      it('assigns the calculated scale to data-zoom attribute', () => {
-        mockWorkspaceConfig({ 'window.zoomLevel': 1 })
-        expect(md().render(marpMd(''))).toContain('data-zoom="1.2"')
+    describe('markdown.marp.breaks', () => {
+      it('renders line-breaks when setting "on"', () => {
+        mockWorkspaceConfig({ 'markdown.marp.breaks': 'on' })
+        expect(md().render(marpMd('foo\nbar'))).toContain('<br />')
+      })
 
-        mockWorkspaceConfig({ 'window.zoomLevel': 2 })
-        expect(md().render(marpMd(''))).toContain('data-zoom="1.44"')
+      it('ignores line-breaks when setting "off"', () => {
+        mockWorkspaceConfig({ 'markdown.marp.breaks': 'off' })
+        expect(md().render(marpMd('foo\nbar'))).not.toContain('<br />')
+      })
+
+      it('uses inherited breaks option when setting "inherit"', () => {
+        mockWorkspaceConfig({ 'markdown.marp.breaks': 'inherit' })
+
+        const text = marpMd('foo\nbar')
+        expect(md({ breaks: false }).render(text)).not.toContain('<br />')
+        expect(md({ breaks: true }).render(text)).toContain('<br />')
       })
     })
 
@@ -119,6 +140,16 @@ describe('#extendMarkdownIt', () => {
 
         const html = md().render(marpMd('<b>Hi</b>'))
         expect(html).toContain('<b>Hi</b>')
+      })
+    })
+
+    describe('window.zoomLevel', () => {
+      it('assigns the calculated scale to data-zoom attribute', () => {
+        mockWorkspaceConfig({ 'window.zoomLevel': 1 })
+        expect(md().render(marpMd(''))).toContain('data-zoom="1.2"')
+
+        mockWorkspaceConfig({ 'window.zoomLevel': 2 })
+        expect(md().render(marpMd(''))).toContain('data-zoom="1.44"')
       })
     })
   })
