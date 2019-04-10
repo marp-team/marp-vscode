@@ -10,12 +10,13 @@
 
 ### Fixed
 
-- Refresh Markdown preview on updating configuration (for VSCode >= 1.34) ([#20](https://github.com/marp-team/marp-vscode/pull/20))
+- Refresh Markdown preview on updating configuration (for VS Code >= 1.34) ([#20](https://github.com/marp-team/marp-vscode/pull/20))
 - Use Marp Core options when rendering by Marp ([#21](https://github.com/marp-team/marp-vscode/pull/21))
 
 ### Changed
 
 - Upgrade Marp Core to [v0.8.0](https://github.com/marp-team/marp-core/releases/v0.8.0) ([#23](https://github.com/marp-team/marp-vscode/pull/23))
+- Upgrade dependent packages to the latest version ([#24](https://github.com/marp-team/marp-vscode/pull/24))
 
 ## v0.1.0 - 2019-03-22
 
