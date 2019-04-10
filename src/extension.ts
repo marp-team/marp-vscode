@@ -19,18 +19,14 @@ const detectMarpFromFrontMatter = (markdown: string): boolean => {
   return !!(m && m.index === 0 && marpDirectiveRegex.exec(m[0].trim()))
 }
 
-const marpOption = (): MarpOptions => {
+const marpOption = (baseOpts): MarpOptions => {
   if (!cachedMarpOption) {
-    const breaks = (() => {
+    const breaks: boolean = (() => {
       switch (marpConfiguration().get<string>('breaks')) {
         case 'off':
           return false
         case 'inherit':
-          return (
-            workspace
-              .getConfiguration('markdown.preview')
-              .get<boolean>('breaks') || false
-          )
+          return baseOpts.breaks
         default:
           return true
       }
@@ -55,7 +51,7 @@ export function extendMarkdownIt(md: any) {
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
     if (detectMarpFromFrontMatter(markdown)) {
-      md[marpVscode] = new Marp(marpOption())
+      md[marpVscode] = new Marp(marpOption(md.options))
       return md[marpVscode].markdown.parse(markdown, env)
     }
 
