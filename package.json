@@ -44,6 +44,21 @@
       "type": "object",
       "title": "Marp for VS Code",
       "properties": {
+        "markdown.marp.breaks": {
+          "type": "string",
+          "enum": [
+            "off",
+            "on",
+            "inherit"
+          ],
+          "default": "on",
+          "description": "Sets how line-breaks are rendered in Marp Markdown. It can set separately because the default setting of Marp ecosystem is different from VS Code.",
+          "enumDescriptions": [
+            "Ignore line-breaks in rendered Marp Markdown preview.",
+            "Show line-breaks in rendered Marp Markdown preview. It is the default setting of Marp ecosystem.",
+            "Use inherited setting from markdown.preview.breaks."
+          ]
+        },
         "markdown.marp.enableHtml": {
           "type": "boolean",
           "default": false,
