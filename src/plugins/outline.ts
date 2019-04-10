@@ -8,7 +8,7 @@ export default function marpVSCodeOutline(instance) {
         tokens.push(
           Object.assign(new state.Token('heading_open', '', 1), {
             hidden: true,
-            map: token.map || [0, 0],
+            map: token.map || [0, 1],
             markup: '',
           }),
           Object.assign(new state.Token('heading_close', '', -1), {
