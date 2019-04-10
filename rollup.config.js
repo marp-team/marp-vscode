@@ -8,7 +8,7 @@ import pkg from './package.json'
 
 const plugins = [
   json({ preferConst: true }),
-  nodeResolve({ jsnext: true }),
+  nodeResolve({ mainFields: ['module', 'jsnext:main', 'main'] }),
   commonjs(),
   typescript({ resolveJsonModule: false }),
   !process.env.ROLLUP_WATCH && terser(),
