@@ -1,5 +1,6 @@
 import { Marp, MarpOptions } from '@marp-team/marp-core'
 import { ExtensionContext, commands, workspace } from 'vscode'
+import outline from './plugins/outline'
 
 let cachedMarpOption: MarpOptions | undefined
 
@@ -51,7 +52,7 @@ export function extendMarkdownIt(md: any) {
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
     if (detectMarpFromFrontMatter(markdown)) {
-      md[marpVscode] = new Marp(marpOption(md.options))
+      md[marpVscode] = new Marp(marpOption(md.options)).use(outline)
       return md[marpVscode].markdown.parse(markdown, env)
     }
 

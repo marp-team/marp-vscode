@@ -35,6 +35,30 @@ marp: true
 Start writing!
 ```
 
+## Features
+
+### Preview Marp Markdown
+
+Marp for VS Code can preview your Marp Markdown with a same way as native Markdown preview.
+
+### Outline view for each slide
+
+We extend a native outline view to support slide pages in Marp Markdown.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/outline.png" alt="Outline view for each slide" width="480" />
+</p>
+
+> :information_source: Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order,
+
+### Slide folding in editor
+
+You can fold the content of slide in editor while editing Marp Markdown.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/fold.gif" alt="Slide folding in editor" width="400" />
+</p>
+
 ## Author
 
 Managed by [@marp-team](https://github.com/marp-team).
@@ -43,4 +67,4 @@ Managed by [@marp-team](https://github.com/marp-team).
 
 ## License
 
-This plugin releases under the [MIT License](LICENSE).
+This extension releases under the [MIT License](LICENSE).
