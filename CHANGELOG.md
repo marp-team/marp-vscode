@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.2.0 - 2019-04-10
+
 ### Added
 
 - A separated breaks option `markdown.marp.breaks` for Marp Markdown ([#16](https://github.com/marp-team/marp-vscode/issues/16), [#22](https://github.com/marp-team/marp-vscode/pull/22))
