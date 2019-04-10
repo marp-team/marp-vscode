@@ -5,11 +5,17 @@
 ### Added
 
 - A separated breaks option `markdown.marp.breaks` for Marp Markdown ([#16](https://github.com/marp-team/marp-vscode/issues/16), [#22](https://github.com/marp-team/marp-vscode/pull/22))
+- Outline view support for each slide ([#23](https://github.com/marp-team/marp-vscode/pull/23))
+- Make each slide be foldable in editor ([#23](https://github.com/marp-team/marp-vscode/pull/23))
 
 ### Fixed
 
 - Refresh Markdown preview on updating configuration (for VSCode >= 1.34) ([#20](https://github.com/marp-team/marp-vscode/pull/20))
 - Use Marp Core options when rendering by Marp ([#21](https://github.com/marp-team/marp-vscode/pull/21))
+
+### Changed
+
+- Upgrade Marp Core to [v0.8.0](https://github.com/marp-team/marp-core/releases/v0.8.0) ([#23](https://github.com/marp-team/marp-vscode/pull/23))
 
 ## v0.1.0 - 2019-03-22
 
