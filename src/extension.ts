@@ -57,6 +57,16 @@ export function extendMarkdownIt(md: any) {
         .use(outline)
         .use(lineNumber)
 
+      const marpMarkdown = md[marpVscode].markdown
+
+      // Use image stabilizer and link normalizer from VS Code
+      marpMarkdown.renderer.rules.image = md.renderer.rules.image
+      marpMarkdown.normalizeLink = md.normalizeLink
+
+      // validateLink prefers Marp's default. If overridden by VS Code's it,
+      // does not return compatible result with the other Marp tools.
+      // marpMarkdown.validateLink = md.validateLink
+
       return md[marpVscode].markdown.parse(markdown, env)
     }
 

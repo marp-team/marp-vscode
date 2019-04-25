@@ -5,6 +5,7 @@
 ### Fixed
 
 - Improve scroll sync by re-implemented line number mapping to each page ([#25](https://github.com/marp-team/marp-vscode/pull/25))
+- Improve engine compatibility with VS Code ([#27](https://github.com/marp-team/marp-vscode/pull/27))
 
 ## v0.2.0 - 2019-04-10
 
