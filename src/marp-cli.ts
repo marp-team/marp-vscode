@@ -87,8 +87,13 @@ export default async function runMarpCli(...opts: string[]): Promise<void> {
     if (exitCode !== 0) {
       for (const err of errors) {
         if (err.toString().includes('Chromium revision is not downloaded.')) {
+          const chromium =
+            process.platform === 'linux'
+              ? ' or [Chromium](https://www.chromium.org/)'
+              : ''
+
           throw new MarpCLIError(
-            'It requires to install Google Chrome or Chromium for exporting.'
+            `It requires to install [Google Chrome](https://www.google.com/chrome/)${chromium} for exporting.`
           )
         }
       }
