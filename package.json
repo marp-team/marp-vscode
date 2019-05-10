@@ -159,6 +159,9 @@
     "vsce": "^1.61.0",
     "vscode": "^1.1.34"
   },
+  "resolutions": {
+    "braces": "^3.0.2"
+  },
   "dependencies": {
     "@marp-team/marp-core": "^0.9.0",
     "@marp-team/marpit-svg-polyfill": "^0.3.0"
