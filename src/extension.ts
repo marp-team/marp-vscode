@@ -1,6 +1,6 @@
 import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, commands, workspace } from 'vscode'
-import exportCommand from './commands/export'
+import exportCommand from './commands/export' // tslint:disable-line: import-name
 import lineNumber from './plugins/line-number'
 import outline from './plugins/outline'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
