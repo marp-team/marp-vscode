@@ -1,5 +1,5 @@
 import path from 'path'
-import { TextEditor, Uri, window, ProgressLocation } from 'vscode'
+import { env, ProgressLocation, TextEditor, Uri, window } from 'vscode'
 import marpCli, {
   createConfigFile,
   createWorkFile,
@@ -34,6 +34,7 @@ export default async function exportCommand() {
 
             try {
               await marpCli('-c', conf.path, input.path, '-o', saveURI.fsPath)
+              env.openExternal(saveURI)
             } finally {
               conf.cleanup()
             }
