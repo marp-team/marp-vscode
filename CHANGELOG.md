@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp Core to [v0.9.0](https://github.com/marp-team/marp-core/releases/v0.9.0) ([#29](https://github.com/marp-team/marp-vscode/pull/29))
+- Upgrade dependent packages to the latest version ([#29](https://github.com/marp-team/marp-vscode/pull/29))
+
 ## v0.2.1 - 2019-04-25
 
 ### Fixed
