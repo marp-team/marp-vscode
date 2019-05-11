@@ -3,7 +3,7 @@
   "displayName": "Marp for VS Code",
   "publisher": "marp-team",
   "version": "0.2.1",
-  "description": "Preview Marp Markdown slide deck in VS Code",
+  "description": "Create slide deck written in Marp Markdown on VS Code",
   "categories": [
     "Other"
   ],
