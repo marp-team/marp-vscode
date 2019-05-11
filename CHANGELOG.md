@@ -6,11 +6,12 @@
 
 - Add command to export PDF, HTML, and images via Marp CLI integration (`markdown.marp.export`) ([#4](https://github.com/marp-team/marp-vscode/issues/4), [#30](https://github.com/marp-team/marp-vscode/pull/30))
 - Add contributing guideline ([#31](https://github.com/marp-team/marp-vscode/pull/31))
+- Automate GitHub release ([#32](https://github.com/marp-team/marp-vscode/pull/32))
 
 ### Changed
 
 - Upgrade Marp Core to [v0.9.0](https://github.com/marp-team/marp-core/releases/v0.9.0) ([#29](https://github.com/marp-team/marp-vscode/pull/29))
-- Upgrade dependent packages to the latest version ([#29](https://github.com/marp-team/marp-vscode/pull/29))
+- Upgrade dependent packages to the latest version ([#29](https://github.com/marp-team/marp-vscode/pull/29), [#32](https://github.com/marp-team/marp-vscode/pull/32))
 
 ## v0.2.1 - 2019-04-25
 
