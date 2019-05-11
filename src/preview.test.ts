@@ -1,3 +1,4 @@
+/** @jest-environment jsdom */
 import browserCjs from '@marp-team/marp-core/lib/browser.cjs'
 import { webkit } from '@marp-team/marpit-svg-polyfill'
 import preview from './preview'
@@ -6,8 +7,6 @@ jest.mock('@marp-team/marp-core/lib/browser.cjs')
 jest.mock('@marp-team/marpit-svg-polyfill')
 
 beforeEach(() => {
-  jest.clearAllMocks()
-
   document.head.innerHTML = ''
   document.body.innerHTML = ''
   document.body.className = ''

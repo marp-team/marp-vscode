@@ -3,7 +3,7 @@
   "displayName": "Marp for VS Code",
   "publisher": "marp-team",
   "version": "0.2.1",
-  "description": "Preview Marp Markdown slide deck in VS Code",
+  "description": "Create slide deck written in Marp Markdown on VS Code",
   "categories": [
     "Other"
   ],
@@ -38,8 +38,17 @@
     "color": "#d9edf8",
     "theme": "light"
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:markdown.marp.export"
+  ],
   "contributes": {
+    "commands": [
+      {
+        "category": "Marp",
+        "command": "markdown.marp.export",
+        "title": "Export slide deck..."
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "Marp for VS Code",
@@ -97,6 +106,7 @@
     }
   },
   "jest": {
+    "clearMocks": true,
     "collectCoverageFrom": [
       "src/**/*.ts",
       "src/**/*.js"
@@ -110,7 +120,9 @@
         "lines": 95
       }
     },
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "restoreMocks": true,
+    "testEnvironment": "node"
   },
   "scripts": {
     "build": "yarn -s clean && rollup -c ./rollup.config.js",
@@ -163,7 +175,9 @@
     "braces": "^3.0.2"
   },
   "dependencies": {
+    "@marp-team/marp-cli": "^0.9.2",
     "@marp-team/marp-core": "^0.9.0",
-    "@marp-team/marpit-svg-polyfill": "^0.3.0"
+    "@marp-team/marpit-svg-polyfill": "^0.3.0",
+    "nanoid": "^2.0.1"
   }
 }

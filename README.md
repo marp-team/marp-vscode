@@ -5,9 +5,7 @@
 [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/marp-team.marp-vscode.svg?style=flat-square&logo=visual-studio-code&label=VS%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=marp-team.marp-vscode)
 [![LICENSE](https://img.shields.io/github/license/marp-team/marp-vscode.svg?style=flat-square)](./LICENSE)
 
-> ℹ️ Marp extension requires VS Code >= 1.31 ([January 2019 release](https://code.visualstudio.com/updates/v1_31)) to install.
-
-**Preview [Marp] Markdown slide deck in VS Code.**
+**Create slide deck written in [Marp] Markdown on VS Code.**
 
 We will enhance your VS Code as the slide deck writer. Mark `marp: true`, and write your deck!
 
@@ -39,17 +37,33 @@ Start writing!
 
 ### Preview Marp Markdown
 
-Marp for VS Code can preview your Marp Markdown with a same way as native Markdown preview.
+Marp for VS Code can preview your Marp Markdown with the same way as [a native Markdown preview](https://code.visualstudio.com/docs/languages/markdown#_markdown-preview).
+
+### Export slide deck to PDF, HTML, and image
+
+We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
+
+To export the content of active Markdown editor, open the Command Palette (<kbd>F1</kbd> or <kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and select **"Marp: Export slide deck..."**. (`marp.markdown.export`)
+
+[marp-cli]: https://github.com/marp-team/marp-cli/
+
+#### Supported file types
+
+- **PDF**: for publishing your deck
+- **HTML**: for playing your deck on the browser
+- **PNG**, **JPEG** (_First slide only)_: for creating an image of title slide
+
+> ⚠️ Export to PDF and image formats requires to install [Google Chrome](https://www.google.com/chrome/) (or [Chromium](https://www.chromium.org/)).
 
 ### Outline view for each slide
 
-We extend a native outline view to support slide pages in Marp Markdown.
+We extend [a native outline view](https://code.visualstudio.com/docs/languages/markdown#_outline-view) to support slide pages in Marp Markdown.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/outline.png" alt="Outline view for each slide" width="480" />
 </p>
 
-> :information_source: Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order,
+> ℹ️ Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order.
 
 ### Slide folding in editor
 
