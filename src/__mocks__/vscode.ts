@@ -1,3 +1,4 @@
+/* tslint:disable: variable-name */
 type MockedConf = Record<string, any>
 
 const defaultConf: MockedConf = {
@@ -8,9 +9,23 @@ const defaultConf: MockedConf = {
 
 let currentConf: MockedConf = {}
 
+export const ProgressLocation = {
+  Notification: 'notification',
+}
+
+export const Uri = {
+  file: (path: string) => ({ fsPath: path }),
+}
+
 export const commands = {
   executeCommand: jest.fn(),
   registerCommand: jest.fn(),
+}
+
+export const window = {
+  activeTextEditor: undefined,
+  showSaveDialog: jest.fn(),
+  withProgress: jest.fn(),
 }
 
 export const workspace = {
@@ -27,4 +42,7 @@ export const workspace = {
   },
 }
 
-beforeEach(() => workspace._setConfiguration())
+beforeEach(() => {
+  window.activeTextEditor = undefined
+  workspace._setConfiguration()
+})

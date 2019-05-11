@@ -1,33 +1,24 @@
 import markdownIt from 'markdown-it'
 import { commands, workspace } from 'vscode'
+import { activate, extendMarkdownIt } from './extension'
 
+jest.mock('./option') // Shut up cache
 jest.mock('vscode')
 
 const setConfiguration: (conf?: object) => void = (workspace as any)
   ._setConfiguration
 
-const extension = () => {
-  let ext
-
-  // Shut up cache of configuration
-  jest.isolateModules(() => (ext = require('./extension')))
-
-  return ext
-}
-
 describe('#activate', () => {
   const extContext: any = { subscriptions: { push: jest.fn() } }
 
   it('contains #extendMarkdownIt', () => {
-    const { activate, extendMarkdownIt } = extension()
-
     expect(activate(extContext)).toEqual(
       expect.objectContaining({ extendMarkdownIt })
     )
   })
 
   it('refreshes Markdown preview when affected configuration has changed', () => {
-    extension().activate(extContext)
+    activate(extContext)
 
     const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
     expect(onDidChgConf).toBeCalledWith(expect.any(Function))
@@ -49,7 +40,6 @@ describe('#extendMarkdownIt', () => {
         '---\nmarp: false\n---\n\n```markdown\n---\nmarp: true\n---\n```'
 
       for (const markdown of [baseMd, confusingMd]) {
-        const { extendMarkdownIt } = extension()
         const html = extendMarkdownIt(new markdownIt()).render(markdown)
 
         expect(html).not.toContain('<div id="marp-vscode" data-zoom="1">')
@@ -60,7 +50,6 @@ describe('#extendMarkdownIt', () => {
     })
 
     it('uses Marp engine when enabled marp front-matter', () => {
-      const { extendMarkdownIt } = extension()
       const html = extendMarkdownIt(new markdownIt()).render(marpMd(baseMd))
 
       expect(html).toContain('<div id="marp-vscode" data-zoom="1">')
@@ -71,7 +60,7 @@ describe('#extendMarkdownIt', () => {
   })
 
   describe('Workspace config', () => {
-    const md = (opts = {}) => extension().extendMarkdownIt(new markdownIt(opts))
+    const md = (opts = {}) => extendMarkdownIt(new markdownIt(opts))
 
     describe('markdown.marp.breaks', () => {
       it('renders line-breaks when setting "on"', () => {
