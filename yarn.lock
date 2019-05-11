@@ -4362,6 +4362,11 @@ os-tmpdir@^1.0.0, os-tmpdir@~1.0.1:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
 
+os-tmpdir@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-2.0.0.tgz#610a70c5c2a986d5fef3830c429a837c4c4b2968"
+  integrity sha512-wZojVQP1fR3zW/Z9YLGJz4etXiu5d2tm4D6R4w2FTx1BAx9F1T+tEBb4+0deWQoskF1xe9zgBr/9mYwE+KY3xw==
+
 os@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/os/-/os-0.1.1.tgz#208845e89e193ad4d971474b93947736a56d13f3"
@@ -5040,7 +5045,7 @@ remark@^10.0.1:
     remark-stringify "^6.0.0"
     unified "^7.0.0"
 
-remove-trailing-separator@^1.0.1:
+remove-trailing-separator@^1.0.1, remove-trailing-separator@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
   integrity sha1-wkvOKig62tW8P1jg1IJJuSN52O8=
