@@ -4,6 +4,9 @@ import { commands, workspace } from 'vscode'
 
 jest.mock('vscode')
 
+const setConfiguration: (conf?: object) => void = (workspace as any)
+  ._setConfiguration
+
 const extension = () => {
   let ext
 
@@ -13,31 +16,6 @@ const extension = () => {
   return ext
 }
 
-const mockWorkspaceConfig = (conf: { [key: string]: any } = {}) => {
-  const config = {
-    'markdown.marp.breaks': 'on',
-    'markdown.marp.enableHtml': false,
-    'window.zoomLevel': 0,
-    ...conf,
-  }
-
-  const confSpy = jest.spyOn(workspace, 'getConfiguration') as jest.SpyInstance
-  confSpy.mockImplementation((section?: string) => {
-    const entries: any[] = Object.entries(config)
-      .map(([k, v]) => {
-        if (!section) return [k, v]
-
-        return k.startsWith(`${section}.`)
-          ? [k.slice(section.length + 1), v]
-          : undefined
-      })
-      .filter(tuple => tuple)
-
-    return new Map<string, any>(entries)
-  })
-}
-
-beforeEach(() => mockWorkspaceConfig())
 afterEach(() => jest.restoreAllMocks())
 
 describe('#activate', () => {
@@ -49,17 +27,15 @@ describe('#activate', () => {
     expect(activate(extContext)).toEqual(
       expect.objectContaining({ extendMarkdownIt })
     )
-    expect(workspace.onDidChangeConfiguration).toBeCalledWith(
-      expect.any(Function)
-    )
   })
 
   it('refreshes Markdown preview when affected configuration has changed', () => {
     extension().activate(extContext)
 
     const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
-    const [event] = onDidChgConf.mock.calls[0]
+    expect(onDidChgConf).toBeCalledWith(expect.any(Function))
 
+    const [event] = onDidChgConf.mock.calls[0]
     event({ affectsConfiguration: jest.fn(() => true) })
     expect(commands.executeCommand).toBeCalledWith('markdown.preview.refresh')
   })
@@ -102,17 +78,17 @@ describe('#extendMarkdownIt', () => {
 
     describe('markdown.marp.breaks', () => {
       it('renders line-breaks when setting "on"', () => {
-        mockWorkspaceConfig({ 'markdown.marp.breaks': 'on' })
+        setConfiguration({ 'markdown.marp.breaks': 'on' })
         expect(md().render(marpMd('foo\nbar'))).toContain('<br />')
       })
 
       it('ignores line-breaks when setting "off"', () => {
-        mockWorkspaceConfig({ 'markdown.marp.breaks': 'off' })
+        setConfiguration({ 'markdown.marp.breaks': 'off' })
         expect(md().render(marpMd('foo\nbar'))).not.toContain('<br />')
       })
 
       it('uses inherited breaks option when setting "inherit"', () => {
-        mockWorkspaceConfig({ 'markdown.marp.breaks': 'inherit' })
+        setConfiguration({ 'markdown.marp.breaks': 'inherit' })
 
         const text = marpMd('foo\nbar')
         expect(md({ breaks: false }).render(text)).not.toContain('<br />')
@@ -122,21 +98,21 @@ describe('#extendMarkdownIt', () => {
 
     describe('markdown.marp.enableHtml', () => {
       it('does not render HTML elements when disabled', () => {
-        mockWorkspaceConfig({ 'markdown.marp.enableHtml': false })
+        setConfiguration({ 'markdown.marp.enableHtml': false })
 
         const html = md().render(marpMd('<b>Hi</b>'))
         expect(html).not.toContain('<b>Hi</b>')
       })
 
       it("allows Marp Core's whitelisted HTML elements when disabled", () => {
-        mockWorkspaceConfig({ 'markdown.marp.enableHtml': false })
+        setConfiguration({ 'markdown.marp.enableHtml': false })
 
         const html = md().render(marpMd('line<br>break'))
         expect(html).toContain('line<br />break')
       })
 
       it('renders HTML elements when enabled', () => {
-        mockWorkspaceConfig({ 'markdown.marp.enableHtml': true })
+        setConfiguration({ 'markdown.marp.enableHtml': true })
 
         const html = md().render(marpMd('<b>Hi</b>'))
         expect(html).toContain('<b>Hi</b>')
@@ -145,10 +121,10 @@ describe('#extendMarkdownIt', () => {
 
     describe('window.zoomLevel', () => {
       it('assigns the calculated scale to data-zoom attribute', () => {
-        mockWorkspaceConfig({ 'window.zoomLevel': 1 })
+        setConfiguration({ 'window.zoomLevel': 1 })
         expect(md().render(marpMd(''))).toContain('data-zoom="1.2"')
 
-        mockWorkspaceConfig({ 'window.zoomLevel': 2 })
+        setConfiguration({ 'window.zoomLevel': 2 })
         expect(md().render(marpMd(''))).toContain('data-zoom="1.44"')
       })
     })
