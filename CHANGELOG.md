@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix prevented activation of extension ([#34](https://github.com/marp-team/marp-vscode/issues/34))
+
 ## v0.3.0 - 2019-05-11
 
 ### Added
