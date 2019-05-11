@@ -1,5 +1,6 @@
-import { window } from 'vscode'
+import { env, window } from 'vscode'
 import * as exportModule from './export'
+import * as marpCli from '../marp-cli'
 
 const exportCommand = exportModule.default
 
@@ -24,6 +25,26 @@ describe('Export command', () => {
 
     await exportCommand()
     expect(saveDialog).toBeCalledWith(window.activeTextEditor!.document)
+  })
+
+  describe('when active text editor is not Markdown', () => {
+    beforeEach(() => {
+      window.activeTextEditor = { document: { languageId: 'plaintext' } } as any
+    })
+
+    it('shows warning notification', async () => {
+      await exportCommand()
+      expect(saveDialog).not.toBeCalled()
+      expect(window.showWarningMessage).toBeCalled()
+    })
+
+    it('continues exporting when reacted on the notification to continue', async () => {
+      const { showWarningMessage }: any = window
+      showWarningMessage.mockResolvedValue(exportModule.ITEM_CONTINUE_TO_EXPORT)
+
+      await exportCommand()
+      expect(saveDialog).toBeCalledWith(window.activeTextEditor!.document)
+    })
   })
 })
 
@@ -55,5 +76,27 @@ describe('#saveDialog', () => {
     )
     ;(window.withProgress as any).mock.calls[0][1]()
     expect(doExportMock).toBeCalledWith(saveURI, document)
+  })
+})
+
+describe('#doExport', () => {
+  const saveURI: any = { fsPath: '/tmp/to.pdf' }
+  const document: any = { uri: { scheme: 'file', fsPath: '/tmp/md.md' } }
+
+  it('exports passed document via Marp CLI and opens it', async () => {
+    const runMarpCLI = jest.spyOn(marpCli, 'default').mockImplementation()
+
+    await exportModule.doExport(saveURI, document)
+    expect(runMarpCLI).toBeCalled()
+    expect(env.openExternal).toBeCalledWith(saveURI)
+  })
+
+  it('shows warning when Marp CLI throws error', async () => {
+    jest.spyOn(marpCli, 'default').mockRejectedValue(new Error('ERROR'))
+
+    await exportModule.doExport(saveURI, document)
+    expect(window.showErrorMessage).toBeCalledWith(
+      expect.stringContaining('Error: ERROR')
+    )
   })
 })

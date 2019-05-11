@@ -1,14 +1,11 @@
 import marpCli from '@marp-team/marp-cli'
-import fs from 'fs'
+import { unlink, writeFile } from 'fs'
 import nanoid from 'nanoid'
 import { tmpdir } from 'os'
 import path from 'path'
 import { promisify } from 'util'
 import { TextDocument, workspace } from 'vscode'
 import { marpCoreOptionForCLI } from './option'
-
-const unlink = promisify(fs.unlink)
-const writeFile = promisify(fs.writeFile)
 
 interface WorkFile {
   path: string
@@ -25,13 +22,13 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
 
   const text = doc.getText()
   const tmpFileName = `.marp-vscode-tmp-${nanoid()}`
-  const createCleanup = (target: string) => () => unlink(target)
+  const createCleanup = (target: string) => () => promisify(unlink)(target)
 
   // Try to create tmp file to the same directory as a document
   const sameDirTmpPath = path.join(path.dirname(doc.uri.fsPath), tmpFileName)
 
   try {
-    await writeFile(sameDirTmpPath, text)
+    await promisify(writeFile)(sameDirTmpPath, text)
     return { path: sameDirTmpPath, cleanup: createCleanup(sameDirTmpPath) }
   } catch (e) {}
 
@@ -43,7 +40,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
     const workspaceDirTmpPath = path.join(workspaceDir, tmpFileName)
 
     try {
-      await writeFile(workspaceDirTmpPath, text)
+      await promisify(writeFile)(workspaceDirTmpPath, text)
       return {
         path: workspaceDirTmpPath,
         cleanup: createCleanup(workspaceDirTmpPath),
@@ -54,7 +51,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
   // If it fails, create to OS specific tmp directory
   const tmpPath = path.join(tmpdir(), tmpFileName)
 
-  await writeFile(tmpPath, text)
+  await promisify(writeFile)(tmpPath, text)
   return { path: tmpPath, cleanup: createCleanup(tmpPath) }
 }
 
@@ -64,8 +61,11 @@ export async function createConfigFile(
   const tmpFileName = `.marp-vscode-cli-conf-${nanoid()}.json`
   const tmpPath = path.join(tmpdir(), tmpFileName)
 
-  await writeFile(tmpPath, JSON.stringify(marpCoreOptionForCLI(target)))
-  return { path: tmpPath, cleanup: () => unlink(tmpPath) }
+  await promisify(writeFile)(
+    tmpPath,
+    JSON.stringify(marpCoreOptionForCLI(target))
+  )
+  return { path: tmpPath, cleanup: () => promisify(unlink)(tmpPath) }
 }
 
 export default async function runMarpCli(...opts: string[]): Promise<void> {

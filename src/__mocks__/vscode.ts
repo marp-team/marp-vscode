@@ -22,9 +22,15 @@ export const commands = {
   registerCommand: jest.fn(),
 }
 
+export const env = {
+  openExternal: jest.fn(),
+}
+
 export const window = {
   activeTextEditor: undefined,
+  showErrorMessage: jest.fn(),
   showSaveDialog: jest.fn(),
+  showWarningMessage: jest.fn(),
   withProgress: jest.fn(),
 }
 
@@ -35,6 +41,7 @@ export const workspace = {
         currentConf[[section, subSection].filter(s => s).join('.')]
     ),
   })),
+  getWorkspaceFolder: jest.fn(),
   onDidChangeConfiguration: jest.fn(),
 
   _setConfiguration: (conf: MockedConf = {}) => {
