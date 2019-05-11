@@ -23,7 +23,9 @@ references:
             - dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-
 
       - run: yarn install
-      - run: yarn audit
+
+      # TODO: Use `yarn audit` to report audit of devDependencies
+      - run: yarn check:audit
 
       - save_cache:
           key: dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}

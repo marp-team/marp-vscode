@@ -127,7 +127,7 @@
   "scripts": {
     "build": "yarn -s clean && rollup -c ./rollup.config.js",
     "clean": "rimraf lib",
-    "check:audit": "yarn audit --level moderate",
+    "check:audit": "yarn audit --groups dependencies",
     "check:format": "yarn -s format -c",
     "check:ts": "tsc --noEmit",
     "format": "prettier \"**/*.{css,js,json,md,scss,ts,yaml,yml}\"",
