@@ -47,6 +47,15 @@
         "category": "Marp",
         "command": "markdown.marp.export",
         "title": "Export slide deck..."
+      },
+      {
+        "category": "Marp",
+        "command": "markdown.marp.showQuickPick",
+        "title": "Show quick pick for Marp commands",
+        "icon": {
+          "dark": "./images/icon.png",
+          "light": "./images/icon.png"
+        }
       }
     ],
     "configuration": {
@@ -81,7 +90,16 @@
     ],
     "markdown.previewStyles": [
       "./style.css"
-    ]
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "markdown.marp.showQuickPick",
+          "group": "navigation",
+          "when": "editorLangId == markdown"
+        }
+      ]
+    }
   },
   "private": true,
   "prettier": {
