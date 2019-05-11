@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.3.2 - 2019-05-11
+
 ### Removed
 
 - Remove `vsce` from devDependencies to fix incorrect packaging about `tmp` ([#35](https://github.com/marp-team/marp-vscode/pull/35))
