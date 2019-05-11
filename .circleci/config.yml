@@ -33,11 +33,11 @@ references:
 
       - run:
           name: Prettier formatting
-          command: yarn format:check
+          command: yarn check:format
 
       - run:
           name: TypeScript type checking
-          command: yarn check-ts
+          command: yarn check:ts
 
       - run:
           name: TSLint
