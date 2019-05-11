@@ -106,6 +106,7 @@
     }
   },
   "jest": {
+    "clearMocks": true,
     "collectCoverageFrom": [
       "src/**/*.ts",
       "src/**/*.js"
@@ -119,7 +120,9 @@
         "lines": 95
       }
     },
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "restoreMocks": true,
+    "testEnvironment": "node"
   },
   "scripts": {
     "build": "yarn -s clean && rollup -c ./rollup.config.js",

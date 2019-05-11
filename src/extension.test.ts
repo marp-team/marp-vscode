@@ -1,4 +1,3 @@
-/** @jest-environment node */
 import markdownIt from 'markdown-it'
 import { commands, workspace } from 'vscode'
 
@@ -15,8 +14,6 @@ const extension = () => {
 
   return ext
 }
-
-afterEach(() => jest.restoreAllMocks())
 
 describe('#activate', () => {
   const extContext: any = { subscriptions: { push: jest.fn() } }
