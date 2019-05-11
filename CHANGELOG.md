@@ -5,6 +5,7 @@
 ### Added
 
 - Add command to export PDF, HTML, and images via Marp CLI integration (`markdown.marp.export`) ([#4](https://github.com/marp-team/marp-vscode/issues/4), [#30](https://github.com/marp-team/marp-vscode/pull/30))
+- Add contributing guideline ([#31](https://github.com/marp-team/marp-vscode/pull/31))
 
 ### Changed
 
