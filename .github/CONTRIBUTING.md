@@ -31,7 +31,7 @@ yarn test:unit
 
 ## Release
 
-### Publish to Visual Studio Marketplace
+### Publish to Visual Studio Marketplace (_For maintainer_)
 
 A way to release is different from other projects of Marp Team targeted to npm.
 
