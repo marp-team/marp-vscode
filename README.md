@@ -73,6 +73,10 @@ You can fold the content of slide in editor while editing Marp Markdown.
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/fold.gif" alt="Slide folding in editor" width="400" />
 </p>
 
+## Contributing
+
+Are you interested in contributing? Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md).
+
 ## Author
 
 Managed by [@marp-team](https://github.com/marp-team).
