@@ -2,7 +2,7 @@
   "name": "marp-vscode",
   "displayName": "Marp for VS Code",
   "publisher": "marp-team",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "Create slide deck written in Marp Markdown on VS Code",
   "categories": [
     "Other"
@@ -158,13 +158,13 @@
     "format:write": "yarn -s format --write",
     "lint:css": "stylelint \"./*.{css,scss}\"",
     "lint:ts": "tslint \"{src,test}/**/*.ts\"",
-    "package": "vsce package --yarn",
+    "package": "npx vsce package --yarn",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "preversion": "run-p check:* lint:* test:*:coverage",
     "test:unit": "jest",
     "test:unit:coverage": "jest --coverage",
     "version": "curl https://raw.githubusercontent.com/marp-team/marp/master/version.js | node && git add -A CHANGELOG.md",
-    "vsce:publish": "vsce publish --yarn",
+    "vsce:publish": "npx vsce publish --yarn",
     "vscode:prepublish": "run-s preversion build",
     "watch": "rollup -w -c ./rollup.config.js"
   },
@@ -192,7 +192,6 @@
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.4.5",
-    "vsce": "^1.61.0",
     "vscode": "^1.1.34"
   },
   "dependencies": {

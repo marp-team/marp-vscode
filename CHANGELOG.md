@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## v0.3.2 - 2019-05-11
+
+### Removed
+
+- Remove `vsce` from devDependencies to fix incorrect packaging about `tmp` ([#35](https://github.com/marp-team/marp-vscode/pull/35))
+
+## v0.3.1 - 2019-05-11
+
+### Fixed
+
+- Fix prevented activation of extension ([#34](https://github.com/marp-team/marp-vscode/issues/34))
+
 ## v0.3.0 - 2019-05-11
 
 ### Added
