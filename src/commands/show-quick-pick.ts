@@ -18,5 +18,7 @@ export default async function showQuickPick() {
     placeHolder: 'Select available command in Marp for VS Code...',
   })
 
-  if (command) commands.executeCommand(command.description!)
+  if (command && command.description) {
+    commands.executeCommand(command.description)
+  }
 }
