@@ -1,6 +1,7 @@
 import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, commands, workspace } from 'vscode'
 import exportCommand from './commands/export' // tslint:disable-line: import-name
+import showQuickPick from './commands/show-quick-pick'
 import lineNumber from './plugins/line-number'
 import outline from './plugins/outline'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
@@ -69,6 +70,10 @@ export function extendMarkdownIt(md: any) {
 export const activate = ({ subscriptions }: ExtensionContext) => {
   subscriptions.push(
     commands.registerCommand('markdown.marp.export', exportCommand)
+  )
+
+  subscriptions.push(
+    commands.registerCommand('markdown.marp.showQuickPick', showQuickPick)
   )
 
   subscriptions.push(

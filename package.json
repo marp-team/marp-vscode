@@ -39,7 +39,8 @@
     "theme": "light"
   },
   "activationEvents": [
-    "onCommand:markdown.marp.export"
+    "onCommand:markdown.marp.export",
+    "onCommand:markdown.marp.showQuickPick"
   ],
   "contributes": {
     "commands": [
@@ -51,7 +52,7 @@
       {
         "category": "Marp",
         "command": "markdown.marp.showQuickPick",
-        "title": "Show quick pick for Marp commands",
+        "title": "Show quick picker for Marp commands...",
         "icon": {
           "dark": "./images/icon.png",
           "light": "./images/icon.png"
