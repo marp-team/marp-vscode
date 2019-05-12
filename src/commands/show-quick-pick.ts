@@ -19,6 +19,6 @@ export default async function showQuickPick() {
   })
 
   if (command && command.description) {
-    commands.executeCommand(command.description)
+    await commands.executeCommand(command.description)
   }
 }
