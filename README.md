@@ -43,13 +43,13 @@ Marp for VS Code can preview your Marp Markdown with the same way as [a native M
 
 We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
 
-To export the content of active Markdown editor, open the quick pick from Marp icon on toolbar and select **"Export slide deck..."**. (`markdown.marp.export`)
+To export the content of active Markdown editor, open the quick pick from Marp icon on toolbar <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/icon.png" width="16" height="16" /> and select **"Export slide deck..."**. (`markdown.marp.export`)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/export.gif" alt="Export slide deck" width="600" />
 </p>
 
-You can also execute command from Command Palette (<kbd>F1</kbd> or <kbd>Ctrl/Cmd+Shift+P</kbd>).
+You can also execute command from the Command Palette (<kbd>F1</kbd> or <kbd>Ctrl/Cmd+Shift+P</kbd>).
 
 [marp-cli]: https://github.com/marp-team/marp-cli/
 
