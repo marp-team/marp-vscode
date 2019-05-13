@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.4.0 - 2019-05-13
+
 ### Added
 
 - Add toolbar button for quick pick of Marp commands ([#33](https://github.com/marp-team/marp-vscode/issues/33), [#36](https://github.com/marp-team/marp-vscode/pull/36))
