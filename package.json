@@ -39,7 +39,8 @@
     "theme": "light"
   },
   "activationEvents": [
-    "onCommand:markdown.marp.export"
+    "onCommand:markdown.marp.export",
+    "onCommand:markdown.marp.showQuickPick"
   ],
   "contributes": {
     "commands": [
@@ -47,6 +48,15 @@
         "category": "Marp",
         "command": "markdown.marp.export",
         "title": "Export slide deck..."
+      },
+      {
+        "category": "Marp",
+        "command": "markdown.marp.showQuickPick",
+        "title": "Show quick pick of Marp commands...",
+        "icon": {
+          "dark": "./images/icon.png",
+          "light": "./images/icon.png"
+        }
       }
     ],
     "configuration": {
@@ -72,6 +82,11 @@
           "type": "boolean",
           "default": false,
           "description": "Enables all HTML elements in Marp Markdown."
+        },
+        "markdown.marp.toolbarButtonForQuickPick": {
+          "type": "boolean",
+          "default": true,
+          "description": "Shows editor toolbar button to Markdown document, for accessing quick pick of Marp commands."
         }
       }
     },
@@ -81,7 +96,16 @@
     ],
     "markdown.previewStyles": [
       "./style.css"
-    ]
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "markdown.marp.showQuickPick",
+          "group": "navigation",
+          "when": "config.markdown.marp.toolbarButtonForQuickPick && editorLangId == markdown"
+        }
+      ]
+    }
   },
   "private": true,
   "prettier": {

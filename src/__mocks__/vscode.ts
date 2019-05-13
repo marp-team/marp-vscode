@@ -29,6 +29,7 @@ export const env = {
 export const window = {
   activeTextEditor: undefined,
   showErrorMessage: jest.fn(),
+  showQuickPick: jest.fn(),
   showSaveDialog: jest.fn(),
   showWarningMessage: jest.fn(),
   withProgress: jest.fn(),

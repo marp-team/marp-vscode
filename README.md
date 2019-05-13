@@ -43,7 +43,13 @@ Marp for VS Code can preview your Marp Markdown with the same way as [a native M
 
 We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
 
-To export the content of active Markdown editor, open the Command Palette (<kbd>F1</kbd> or <kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and select **"Marp: Export slide deck..."**. (`marp.markdown.export`)
+To export the content of active Markdown editor, open the quick pick from Marp icon on toolbar <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/icon.png" width="16" height="16" /> and select **"Export slide deck..."**. (`markdown.marp.export`)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/export.gif" alt="Export slide deck" width="600" />
+</p>
+
+You can also execute command from the Command Palette (<kbd>F1</kbd> or <kbd>Ctrl/Cmd+Shift+P</kbd>).
 
 [marp-cli]: https://github.com/marp-team/marp-cli/
 
@@ -60,7 +66,7 @@ To export the content of active Markdown editor, open the Command Palette (<kbd>
 We extend [a native outline view](https://code.visualstudio.com/docs/languages/markdown#_outline-view) to support slide pages in Marp Markdown.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/outline.png" alt="Outline view for each slide" width="480" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/outline.png" alt="Outline view for each slide" width="400" />
 </p>
 
 > ℹ️ Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order.
@@ -70,7 +76,7 @@ We extend [a native outline view](https://code.visualstudio.com/docs/languages/m
 You can fold the content of slide in editor while editing Marp Markdown.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/fold.gif" alt="Slide folding in editor" width="400" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/fold.gif" alt="Slide folding in editor" width="360" />
 </p>
 
 ## Contributing
