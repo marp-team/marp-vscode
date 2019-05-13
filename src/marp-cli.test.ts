@@ -1,6 +1,7 @@
 // tslint:disable-next-line: import-name
 import * as marpCliModule from '@marp-team/marp-cli'
 import fs from 'fs'
+import path from 'path'
 import { tmpdir } from 'os'
 import { workspace } from 'vscode'
 import * as marpCli from './marp-cli'
@@ -72,7 +73,9 @@ describe('#createWorkFile', () => {
       uri: { scheme: 'file', fsPath: '/tmp/dirty.md' },
     } as any)
 
-    expect(workFile.path).toMatch(/^\/tmp\/\.marp-vscode-tmp.+$/)
+    expect(
+      workFile.path.startsWith(path.join('/tmp', '.marp-vscode-tmp'))
+    ).toBe(true)
     expect(fsMock.writeFile).toBeCalledWith(
       workFile.path,
       'example',
@@ -101,7 +104,9 @@ describe('#createWorkFile', () => {
       uri: { scheme: 'file', fsPath: '/workspace/tmp/dirty.md' },
     } as any)
 
-    expect(workFile.path).toMatch(/^\/workspace\/\.marp-vscode-tmp.+$/)
+    expect(
+      workFile.path.startsWith(path.join('/workspace', '.marp-vscode-tmp'))
+    ).toBe(true)
   })
 
   it('creates tmpfile to os specific directory when failed all creations', async () => {
