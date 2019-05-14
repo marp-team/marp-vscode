@@ -12,6 +12,9 @@ interface WorkFile {
   cleanup: () => Promise<void>
 }
 
+const marpCliAsync = async (): Promise<typeof marpCli> =>
+  (await import('@marp-team/marp-cli')).default
+
 export class MarpCLIError extends Error {}
 
 export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
@@ -82,7 +85,8 @@ export default async function runMarpCli(...opts: string[]): Promise<void> {
   }
 
   try {
-    const exitCode = await marpCli(argv)
+    const marpCliInstance = await marpCliAsync()
+    const exitCode = await marpCliInstance(argv)
 
     if (exitCode !== 0) {
       for (const err of errors) {

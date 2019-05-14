@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Improve activation performance of extension by lazy-loaded Marp CLI ([#37](https://github.com/marp-team/marp-vscode/pull/37))
+
 ## v0.4.0 - 2019-05-13
 
 ### Added

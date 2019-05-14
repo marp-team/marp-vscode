@@ -169,12 +169,14 @@
     "watch": "rollup -w -c ./rollup.config.js"
   },
   "devDependencies": {
+    "@marp-team/marpit-svg-polyfill": "^0.3.0",
     "@types/jest": "^24.0.12",
     "@types/markdown-it": "^0.0.7",
     "codecov": "^3.4.0",
     "jest": "^24.8.0",
     "jest-junit": "^6.4.0",
     "markdown-it": "^8.4.2",
+    "nanoid": "^2.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.17.0",
     "rimraf": "^2.6.3",
@@ -196,8 +198,6 @@
   },
   "dependencies": {
     "@marp-team/marp-cli": "^0.9.2",
-    "@marp-team/marp-core": "^0.9.0",
-    "@marp-team/marpit-svg-polyfill": "^0.3.0",
-    "nanoid": "^2.0.1"
+    "@marp-team/marp-core": "^0.9.0"
   }
 }

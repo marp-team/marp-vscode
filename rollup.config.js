@@ -20,6 +20,7 @@ export default [
   {
     external: [
       ...Object.keys(pkg.dependencies),
+      'crypto',
       'fs',
       'os',
       'path',
