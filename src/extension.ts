@@ -1,4 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
+import colorString from 'color-string'
 import { ExtensionContext, commands, workspace } from 'vscode'
 import exportCommand from './commands/export' // tslint:disable-line: import-name
 import showQuickPick from './commands/show-quick-pick'
@@ -28,21 +29,25 @@ export function extendMarkdownIt(md: any) {
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
     if (detectMarpFromFrontMatter(markdown)) {
-      md[marpVscode] = new Marp(marpCoreOptionForPreview(md.options))
+      const marp = new Marp(marpCoreOptionForPreview(md.options))
         .use(outline)
         .use(lineNumber)
 
-      const marpMarkdown = md[marpVscode].markdown
+      const { markdown: marpMarkdown } = marp
 
       // Use image stabilizer and link normalizer from VS Code
       marpMarkdown.renderer.rules.image = md.renderer.rules.image
-      marpMarkdown.normalizeLink = md.normalizeLink
+      marpMarkdown.normalizeLink = (url: string) =>
+        colorString.get(url) || url.toLowerCase() === 'currentcolor'
+          ? url
+          : md.normalizeLink.call(marpMarkdown, url)
 
       // validateLink prefers Marp's default. If overridden by VS Code's it,
       // does not return compatible result with the other Marp tools.
       // marpMarkdown.validateLink = md.validateLink
 
-      return md[marpVscode].markdown.parse(markdown, env)
+      md[marpVscode] = marp
+      return marpMarkdown.parse(markdown, env)
     }
 
     // Fallback to original instance if Marp was not enabled
