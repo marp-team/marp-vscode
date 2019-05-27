@@ -57,6 +57,19 @@ describe('#extendMarkdownIt', () => {
       expect(html).toContain('svg')
       expect(html).toContain('img')
     })
+
+    it('renders resources with correct normalization', () => {
+      const md = new markdownIt()
+      md.normalizeLink = url => `vscode-resource:${url}`
+
+      const html = extendMarkdownIt(md).render(
+        marpMd('![bg](test.png)![bg](white)![](#000)')
+      )
+
+      expect(html).toContain('vscode-resource:test.png')
+      expect(html).toContain('color:#000;')
+      expect(html).toContain('background-color:white;')
+    })
   })
 
   describe('Workspace config', () => {
