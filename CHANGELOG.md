@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.5.0 - 2019-06-03
+
 ### Fixed
 
 - Fix not-working Marpit color shorthand ([#40](https://github.com/marp-team/marp-vscode/issues/40), [#42](https://github.com/marp-team/marp-vscode/pull/42))
