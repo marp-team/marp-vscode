@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix not-working Marpit color shorthand ([#40](https://github.com/marp-team/marp-vscode/issues/40), [#42](https://github.com/marp-team/marp-vscode/pull/42))
+
+### Changed
+
+- Upgrade Marp Core to [v0.10.0](https://github.com/marp-team/marp-core/releases/v0.10.0) ([#42](https://github.com/marp-team/marp-vscode/pull/42))
+- Upgrade dependent packages to the latest version ([#42](https://github.com/marp-team/marp-vscode/pull/42))
+
 ## v0.4.1 - 2019-05-14
 
 ### Fixed
