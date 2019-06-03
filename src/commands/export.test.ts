@@ -7,7 +7,7 @@ const exportCommand = exportModule.default
 jest.mock('vscode')
 
 describe('Export command', () => {
-  let saveDialog: jest.Mock
+  let saveDialog: jest.SpyInstance
 
   beforeEach(() => {
     saveDialog = jest.spyOn(exportModule, 'saveDialog').mockImplementation()
@@ -65,7 +65,7 @@ describe('#saveDialog', () => {
     const saveURI: any = { path: 'PATH', fsPath: '/tmp/saveTo.pdf' }
     jest.spyOn(window, 'showSaveDialog').mockImplementation(() => saveURI)
 
-    const doExportMock: jest.Mock = jest
+    const doExportMock: jest.SpyInstance = jest
       .spyOn(exportModule, 'doExport')
       .mockImplementation()
 

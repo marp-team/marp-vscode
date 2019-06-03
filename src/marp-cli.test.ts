@@ -43,7 +43,7 @@ describe('Marp CLI integration', () => {
 describe('#createWorkFile', () => {
   const { createWorkFile } = marpCli
 
-  let fsMock: Record<string, jest.Mock>
+  let fsMock: Record<string, jest.SpyInstance>
 
   beforeEach(() => {
     fsMock = {
