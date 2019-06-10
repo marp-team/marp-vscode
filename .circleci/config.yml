@@ -1,7 +1,7 @@
 references:
   base: &base
     docker:
-      - image: circleci/node:10.2.0
+      - image: circleci/node:10.16.0
     working_directory: ~/marp-vscode
     steps:
       # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#upgradingdowngrading-yarn
