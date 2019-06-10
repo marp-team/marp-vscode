@@ -68,8 +68,15 @@ references:
 
 version: 2
 jobs:
-  test:
+  electron3:
     <<: *base
+    docker:
+      - image: circleci/node:10.2.0
+
+  electron4:
+    <<: *base
+    docker:
+      - image: circleci/node:10.11.0
 
   github-release:
     <<: *base
@@ -83,7 +90,8 @@ workflows:
   version: 2
   build:
     jobs:
-      - test
+      - electron3
+      - electron4
       - github-release:
           context: github-release
           filters:
