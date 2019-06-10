@@ -5,7 +5,7 @@ import { tmpdir } from 'os'
 import path from 'path'
 import { promisify } from 'util'
 import { TextDocument, workspace } from 'vscode'
-import { marpCoreOptionForCLI } from './option'
+import { marpConfiguration, marpCoreOptionForCLI } from './option'
 
 interface WorkFile {
   path: string
@@ -86,7 +86,16 @@ export default async function runMarpCli(...opts: string[]): Promise<void> {
 
   try {
     const marpCliInstance = await marpCliAsync()
-    const exitCode = await marpCliInstance(argv)
+    const { CHROME_PATH } = process.env
+
+    let exitCode: number
+
+    try {
+      process.env.CHROME_PATH = marpConfiguration().get<string>('chromePath')
+      exitCode = await marpCliInstance(argv)
+    } finally {
+      process.env.CHROME_PATH = CHROME_PATH
+    }
 
     if (exitCode !== 0) {
       for (const err of errors) {
