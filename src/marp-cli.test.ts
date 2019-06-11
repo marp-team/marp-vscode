@@ -8,6 +8,9 @@ import * as marpCli from './marp-cli'
 
 jest.mock('vscode')
 
+const setConfiguration: (conf?: object) => void = (workspace as any)
+  ._setConfiguration
+
 describe('Marp CLI integration', () => {
   const runMarpCli = marpCli.default
 
@@ -37,6 +40,26 @@ describe('Marp CLI integration', () => {
     })
 
     expect(runMarpCli('--version')).rejects.toThrow(/Google Chrome/)
+  })
+
+  describe('with markdown.marp.chromePath preference', () => {
+    it('runs Marp CLI with overridden CHROME_PATH environment', async () => {
+      const { CHROME_PATH } = process.env
+      expect(process.env.CHROME_PATH).toBe(CHROME_PATH)
+
+      setConfiguration({ 'markdown.marp.chromePath': __filename })
+
+      const marpCliSpy = jest
+        .spyOn(marpCliModule, 'default')
+        .mockImplementation(async () => {
+          expect(process.env.CHROME_PATH).toBe(__filename)
+          return 0
+        })
+
+      await runMarpCli('--version')
+      expect(marpCliSpy).toBeCalled()
+      expect(process.env.CHROME_PATH).toBe(CHROME_PATH)
+    })
   })
 })
 

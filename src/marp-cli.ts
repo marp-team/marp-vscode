@@ -93,6 +93,7 @@ export default async function runMarpCli(...opts: string[]): Promise<void> {
     try {
       process.env.CHROME_PATH =
         marpConfiguration().get<string>('chromePath') || CHROME_PATH
+
       exitCode = await marpCliInstance(argv)
     } finally {
       process.env.CHROME_PATH = CHROME_PATH
