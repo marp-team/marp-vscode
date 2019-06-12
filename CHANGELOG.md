@@ -5,6 +5,11 @@
 ### Added
 
 - Add `markdown.marp.chromePath` preference to allow setting custom Chrome path ([#44](https://github.com/marp-team/marp-vscode/issues/44), [#46](https://github.com/marp-team/marp-vscode/pull/46))
+- Test environment against Node v10.11.0 (Electron 4) ([#48](https://github.com/marp-team/marp-vscode/pull/48))
+
+### Changed
+
+- Upgrade Node for development to v10.16.0 ([#48](https://github.com/marp-team/marp-vscode/pull/48))
 
 ## v0.5.0 - 2019-06-03
 
