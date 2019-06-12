@@ -20,11 +20,13 @@ export default function preview() {
     // Run Marp observer
     browserCjs()
 
-    // VSCode has the same rendering bug as WebKit.
-    const observer = () => {
-      webkit(Number.parseFloat(marpVscode.dataset.zoom || '1') || 1)
-      window.requestAnimationFrame(observer)
+    // WebKit polyfill (for Electron 3)
+    if (marpVscode.dataset.polyfill) {
+      const observer = () => {
+        webkit(Number.parseFloat(marpVscode.dataset.zoom || '1') || 1)
+        window.requestAnimationFrame(observer)
+      }
+      observer()
     }
-    observer()
   }
 }
