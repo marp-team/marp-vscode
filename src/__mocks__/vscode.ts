@@ -3,6 +3,7 @@ type MockedConf = Record<string, any>
 
 const defaultConf: MockedConf = {
   'markdown.marp.breaks': 'on',
+  'markdown.marp.chromePath': '',
   'markdown.marp.enableHtml': false,
   'window.zoomLevel': 0,
 }

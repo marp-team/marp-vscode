@@ -78,6 +78,11 @@
             "Use inherited setting from markdown.preview.breaks."
           ]
         },
+        "markdown.marp.chromePath": {
+          "type": "string",
+          "default": "",
+          "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF and image. If it's empty, Marp will find out the installed Google Chrome."
+        },
         "markdown.marp.enableHtml": {
           "type": "boolean",
           "default": false,

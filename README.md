@@ -59,7 +59,7 @@ You can also execute command from the Command Palette (<kbd>F1</kbd> or <kbd>Ctr
 - **HTML**: for playing your deck on the browser
 - **PNG**, **JPEG** (_First slide only)_: for creating an image of title slide
 
-> ⚠️ Export to PDF and image formats requires to install [Google Chrome](https://www.google.com/chrome/) (or [Chromium](https://www.chromium.org/)).
+> ⚠️ Export to PDF and image formats requires to install [Google Chrome](https://www.google.com/chrome/) (or [Chromium](https://www.chromium.org/)). You may also specify the custom path for Chrome and Chromium-based browser by preference `markdown.marp.chromePath` (e.g. [Microsoft Edge Insider](https://www.microsoftedgeinsider.com/)).
 
 ### Outline view for each slide
 
