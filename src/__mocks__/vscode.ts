@@ -1,6 +1,7 @@
 /* tslint:disable: variable-name */
 type MockedConf = Record<string, any>
 
+const defaultVSCodeVersion = 'v1.36.0'
 const defaultConf: MockedConf = {
   'markdown.marp.breaks': 'on',
   'markdown.marp.chromePath': '',
@@ -25,6 +26,11 @@ export const commands = {
 
 export const env = {
   openExternal: jest.fn(),
+}
+
+export let version: string = defaultVSCodeVersion
+export const _setVSCodeVersion = (value: string) => {
+  version = value
 }
 
 export const window = {
@@ -54,4 +60,5 @@ export const workspace = {
 beforeEach(() => {
   window.activeTextEditor = undefined
   workspace._setConfiguration()
+  _setVSCodeVersion(defaultVSCodeVersion)
 })

@@ -34,16 +34,17 @@ export const marpCoreOptionForPreview = (
   baseOption: Options & MarpOptions
 ): MarpOptions => {
   if (!cachedPreviewOption) {
-    const zoom =
-      workspace.getConfiguration('window').get<number>('zoomLevel') || 0
+    const containerBaseArgs = (() => {
+      if (!isRequiredPolyfill) return {}
+
+      const zoom =
+        workspace.getConfiguration('window').get<number>('zoomLevel') || 0
+
+      return { 'data-polyfill': 'true', 'data-zoom': 1.2 ** zoom }
+    })()
 
     cachedPreviewOption = {
-      container: {
-        tag: 'div',
-        id: 'marp-vscode',
-        'data-zoom': 1.2 ** zoom,
-        ...(isRequiredPolyfill ? { 'data-polyfill': 'true' } : {}),
-      },
+      container: { ...containerBaseArgs, tag: 'div', id: 'marp-vscode' },
       html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       markdown: { breaks: breaks(!!baseOption.breaks) },
     }

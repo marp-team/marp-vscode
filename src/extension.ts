@@ -13,7 +13,7 @@ const shouldRefreshConfs = [
   'markdown.marp.breaks',
   'markdown.marp.enableHtml',
   'markdown.preview.breaks',
-  'window.zoomLevel',
+  'window.zoomLevel', // for WebKit polyfill
 ]
 
 const detectMarpFromFrontMatter = (markdown: string): boolean => {

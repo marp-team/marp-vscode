@@ -19,12 +19,20 @@ describe('Preview HTML', () => {
     expect(webkit).not.toBeCalled()
   })
 
-  it('calls browser context JS when HTML has Marp slide', () => {
+  it('calls only browser context JS when HTML has Marp slide', () => {
     document.body.innerHTML = '<div id="marp-vscode"></div>'
 
     preview()
     expect(document.body.classList.contains('marp-vscode')).toBe(true)
     expect(browserCjs).toBeCalled()
+    expect(webkit).not.toBeCalled()
+  })
+
+  it('applies webkit polyfill when Marp slide has data-polyfill attribute', () => {
+    document.body.innerHTML =
+      '<div id="marp-vscode" data-polyfill="true"></div>'
+
+    preview()
     expect(webkit).toBeCalled()
   })
 
