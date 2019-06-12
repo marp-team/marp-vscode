@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add `markdown.marp.chromePath` preference to allow setting custom Chrome path ([#44](https://github.com/marp-team/marp-vscode/issues/44), [#46](https://github.com/marp-team/marp-vscode/pull/46))
+
 ## v0.5.0 - 2019-06-03
 
 ### Fixed
