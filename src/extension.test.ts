@@ -1,24 +1,34 @@
 import markdownIt from 'markdown-it'
 import { commands, workspace } from 'vscode'
-import { activate, extendMarkdownIt } from './extension'
 
-jest.mock('./option') // Shut up cache
 jest.mock('vscode')
+
+const extension = (): typeof import('./extension') => {
+  let ext
+  jest.isolateModules(() => (ext = require('./extension'))) // Shut up cache
+
+  return ext
+}
 
 const setConfiguration: (conf?: object) => void = (workspace as any)
   ._setConfiguration
+
+const setVSCodeVersion: (version: string) => void = require('vscode')
+  ._setVSCodeVersion
 
 describe('#activate', () => {
   const extContext: any = { subscriptions: { push: jest.fn() } }
 
   it('contains #extendMarkdownIt', () => {
+    const { activate, extendMarkdownIt } = extension()
+
     expect(activate(extContext)).toEqual(
       expect.objectContaining({ extendMarkdownIt })
     )
   })
 
   it('refreshes Markdown preview when affected configuration has changed', () => {
-    activate(extContext)
+    extension().activate(extContext)
 
     const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
     expect(onDidChgConf).toBeCalledWith(expect.any(Function))
@@ -40,9 +50,11 @@ describe('#extendMarkdownIt', () => {
         '---\nmarp: false\n---\n\n```markdown\n---\nmarp: true\n---\n```'
 
       for (const markdown of [baseMd, confusingMd]) {
-        const html = extendMarkdownIt(new markdownIt()).render(markdown)
+        const html = extension()
+          .extendMarkdownIt(new markdownIt())
+          .render(markdown)
 
-        expect(html).not.toContain('<div id="marp-vscode" data-zoom="1">')
+        expect(html).not.toContain('<div id="marp-vscode">')
         expect(html).not.toContain('<style id="marp-vscode-style">')
         expect(html).not.toContain('svg')
         expect(html).not.toContain('img')
@@ -50,9 +62,11 @@ describe('#extendMarkdownIt', () => {
     })
 
     it('uses Marp engine when enabled marp front-matter', () => {
-      const html = extendMarkdownIt(new markdownIt()).render(marpMd(baseMd))
+      const html = extension()
+        .extendMarkdownIt(new markdownIt())
+        .render(marpMd(baseMd))
 
-      expect(html).toContain('<div id="marp-vscode" data-zoom="1">')
+      expect(html).toContain('<div id="marp-vscode">')
       expect(html).toContain('<style id="marp-vscode-style">')
       expect(html).toContain('svg')
       expect(html).toContain('img')
@@ -60,7 +74,7 @@ describe('#extendMarkdownIt', () => {
   })
 
   describe('Workspace config', () => {
-    const md = (opts = {}) => extendMarkdownIt(new markdownIt(opts))
+    const md = (opts = {}) => extension().extendMarkdownIt(new markdownIt(opts))
 
     describe('markdown.marp.breaks', () => {
       it('renders line-breaks when setting "on"', () => {
@@ -106,12 +120,35 @@ describe('#extendMarkdownIt', () => {
     })
 
     describe('window.zoomLevel', () => {
+      const render = () => md().render(marpMd(''))
+
+      it('does not assign data-zoom and data-polyfill when using VS Code >= 1.36', () => {
+        setVSCodeVersion('v1.35.99')
+        expect(render()).toContain('data-zoom')
+        expect(render()).toContain('data-polyfill')
+
+        setVSCodeVersion('v1.36.0-insider')
+        expect(render()).not.toContain('data-zoom')
+        expect(render()).not.toContain('data-polyfill')
+
+        setVSCodeVersion('v1.36.0')
+        expect(render()).not.toContain('data-zoom')
+        expect(render()).not.toContain('data-polyfill')
+
+        // Disable polyfill if passed version is invalid
+        setVSCodeVersion('invalid')
+        expect(render()).not.toContain('data-zoom')
+        expect(render()).not.toContain('data-polyfill')
+      })
+
       it('assigns the calculated scale to data-zoom attribute', () => {
+        setVSCodeVersion('v1.35.0')
+
         setConfiguration({ 'window.zoomLevel': 1 })
-        expect(md().render(marpMd(''))).toContain('data-zoom="1.2"')
+        expect(render()).toContain('data-zoom="1.2"')
 
         setConfiguration({ 'window.zoomLevel': 2 })
-        expect(md().render(marpMd(''))).toContain('data-zoom="1.44"')
+        expect(render()).toContain('data-zoom="1.44"')
       })
     })
   })
