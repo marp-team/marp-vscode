@@ -29,7 +29,7 @@ export default function marpVSCodeLineNumber(md) {
     return renderer.call(self, tokens, idx, opts, env, self)
   }
 
-  // Enables better line sync only when disabled poiyfill 
+  // Enables better line sync only when disabled poiyfill
   // (There are wrong DOM positions if enabled polyfill)
   if (!isRequiredPolyfill) {
     for (const rule of rules) {
