@@ -1,6 +1,8 @@
 import { isRequiredPolyfill } from '../option'
 
-// https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/src/markdownEngine.ts
+// Based on the original line-number rendering rule of VS Code.
+// https://github.com/microsoft/vscode/blob/5466f27d95c52e8d7c34ed445c682b5d71f049d9/extensions/markdown-language-features/src/markdownEngine.ts#L102-L104
+
 const rules = [
   'paragraph_open',
   'heading_open',
