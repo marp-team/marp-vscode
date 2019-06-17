@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.5.2 - 2019-06-17
+
 ### Fixed
 
 - Fix wrong hit area for link caused by Marpit polyfill when using VS Code >= 1.36 ([#45](https://github.com/marp-team/marp-vscode/issues/45), [#49](https://github.com/marp-team/marp-vscode/pull/49))
