@@ -117,9 +117,9 @@ describe('#createWorkFile', () => {
 
     jest
       .spyOn(workspace, 'getWorkspaceFolder')
-      .mockImplementationOnce(
-        (): any => ({ uri: { scheme: 'file', fsPath: '/workspace/' } })
-      )
+      .mockImplementationOnce((): any => ({
+        uri: { scheme: 'file', fsPath: '/workspace/' },
+      }))
 
     const workFile = await createWorkFile({
       getText: jest.fn(),
