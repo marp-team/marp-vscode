@@ -35,19 +35,8 @@ export function extendMarkdownIt(md: any) {
       const marpMarkdown = md[marpVscode].markdown
 
       // Use image stabilizer and link normalizer from VS Code
+      marpMarkdown.renderer.rules.image = md.renderer.rules.image
       marpMarkdown.normalizeLink = md.normalizeLink
-      marpMarkdown.renderer.rules.image = (tokens, idx, ...args) => {
-        const token = tokens[idx]
-        const originalSrc = token.attrGet('src')
-
-        // Marpit v1.1.0 stores src attr as String object but VS Code does not
-        // allow, so we have to convert attribute to string literal.
-        if (originalSrc && typeof originalSrc !== 'string') {
-          token.attrSet('src', originalSrc.toString())
-        }
-
-        return md.renderer.rules.image(tokens, idx, ...args)
-      }
 
       // validateLink prefers Marp's default. If overridden by VS Code's it,
       // does not return compatible result with the other Marp tools.
