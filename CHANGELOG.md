@@ -7,6 +7,11 @@
 - Fix wrong hit area for link caused by Marpit polyfill when using VS Code >= 1.36 ([#45](https://github.com/marp-team/marp-vscode/issues/45), [#49](https://github.com/marp-team/marp-vscode/pull/49))
 - Better scroll-sync when using VS Code >= 1.36 ([#50](https://github.com/marp-team/marp-vscode/pull/50))
 
+### Changed
+
+- Upgrade Marp Core to [v0.10.1](https://github.com/marp-team/marp-core/releases/v0.10.1) ([#51](https://github.com/marp-team/marp-vscode/pull/51))
+- Upgrade dependent packages to the latest version ([#51](https://github.com/marp-team/marp-vscode/pull/51))
+
 ## v0.5.1 - 2019-06-12
 
 ### Added
