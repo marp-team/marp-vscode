@@ -175,10 +175,13 @@
   },
   "devDependencies": {
     "@marp-team/marpit-svg-polyfill": "^0.3.0",
+    "@types/cheerio": "^0.22.11",
     "@types/jest": "^24.0.13",
     "@types/markdown-it": "^0.0.7",
     "@types/semver": "^6.0.0",
+    "cheerio": "^1.0.0-rc.3",
     "codecov": "^3.5.0",
+    "dedent": "^0.7.0",
     "jest": "^24.8.0",
     "jest-junit": "^6.4.0",
     "markdown-it": "^8.4.2",
