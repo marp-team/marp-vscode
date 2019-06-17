@@ -35,7 +35,7 @@ body.marp-vscode blockquote {
     margin: 20px;
   }
 
-  #marp-vscode svg[data-marpit-svg] > foreignobject > section {
+  #marp-vscode[data-polyfill] svg[data-marpit-svg] > foreignobject > section {
     /* Workaround for wrong hit area caused by Chromium's rendering bug */
     overflow: visible;
   }
@@ -70,7 +70,7 @@ body.marp-vscode blockquote {
     display: none;
   }
 
-  #marp-vscode svg[data-marpit-svg] > foreignobject > section {
+  #marp-vscode[data-polyfill] svg[data-marpit-svg] > foreignobject > section {
     /* Disable WebKit polyfill */
     transform: none !important;
   }

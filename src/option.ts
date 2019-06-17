@@ -6,6 +6,8 @@ import { MarpOptions } from '@marp-team/marp-core'
 let cachedPreviewOption: MarpOptions | undefined
 let cachedCLIOption: any
 
+const coercedVer = coerce(version)
+
 // WebKit polyfill requires in VS Code < 1.36 (Electron 3).
 //
 // NOTE: Electron 3 has got a stable rendering by applying WebKit polyfill. And
@@ -13,8 +15,7 @@ let cachedCLIOption: any
 // remains glitch when used CSS 3D transform and video component. Electron 5
 // also has a glitch in video, and we have to wait for stable rendering until
 // Electron 6.
-const coercedVer = coerce(version)
-const isRequiredPolyfill = coercedVer ? lt(coercedVer, '1.36.0') : false
+export const isRequiredPolyfill = coercedVer ? lt(coercedVer, '1.36.0') : false
 
 export const marpConfiguration = () =>
   workspace.getConfiguration('markdown.marp')

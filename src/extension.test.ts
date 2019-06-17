@@ -1,3 +1,5 @@
+import cheerio from 'cheerio'
+import dedent from 'dedent'
 import markdownIt from 'markdown-it'
 import { commands, workspace } from 'vscode'
 
@@ -70,6 +72,57 @@ describe('#extendMarkdownIt', () => {
       expect(html).toContain('<style id="marp-vscode-style">')
       expect(html).toContain('svg')
       expect(html).toContain('img')
+    })
+  })
+
+  describe('Plugins', () => {
+    describe('Line number', () => {
+      const markdown = dedent`
+        ---
+        marp: true
+        ---
+
+        # Hello
+
+        Paragraph
+
+        ---
+
+        ## Marp for VS Code
+      `
+
+      it('adds code-line class and data-line attribute to DOM', () => {
+        const $ = cheerio.load(
+          extension()
+            .extendMarkdownIt(new markdownIt())
+            .render(markdown)
+        )
+
+        // SVG slides
+        const svg = $('svg.code-line')
+        expect(svg.eq(0).data('line')).toBe(0)
+        expect(svg.eq(1).data('line')).toBe(8)
+
+        // Contents
+        expect($('h1').data('line')).toBe(4)
+        expect($('p').data('line')).toBe(6)
+        expect($('h2').data('line')).toBe(10)
+      })
+
+      it('adds code-line class and data-line attribute only to SVG when enabled polyfill', () => {
+        setVSCodeVersion('v1.35.0')
+
+        const $ = cheerio.load(
+          extension()
+            .extendMarkdownIt(new markdownIt())
+            .render(markdown)
+        )
+
+        expect($('svg.code-line[data-line]')).toHaveLength(2)
+        expect($('h1[data-line]')).toHaveLength(0)
+        expect($('p[data-line]')).toHaveLength(0)
+        expect($('h2[data-line]')).toHaveLength(0)
+      })
     })
   })
 
