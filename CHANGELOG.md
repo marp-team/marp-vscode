@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Migrate to [`@types/vscode`](https://www.npmjs.com/package/@types/vscode) package ([#54](https://github.com/marp-team/marp-vscode/pull/54))
+
 ## v0.5.2 - 2019-06-17
 
 ### Fixed
