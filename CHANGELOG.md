@@ -2,9 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+
+- [`size` global directive](https://github.com/marp-team/marp-core#size-global-directive) for 4:3 slide deck, from an updated [Marp Core v0.11.0](https://github.com/marp-team/marp-core/releases/v0.11.0) ([#55](https://github.com/marp-team/marp-vscode/pull/55))
+
 ### Changed
 
 - Migrate to [`@types/vscode`](https://www.npmjs.com/package/@types/vscode) package ([#54](https://github.com/marp-team/marp-vscode/pull/54))
+- Upgrade Marp Core to [v0.11.0](https://github.com/marp-team/marp-core/releases/v0.11.0) and Marp CLI to [v0.11.1](https://github.com/marp-team/marp-cli/releases/v0.11.1) ([#55](https://github.com/marp-team/marp-vscode/pull/55))
+- Upgrade dependent packages to the latest version ([#55](https://github.com/marp-team/marp-vscode/pull/55))
 
 ## v0.5.2 - 2019-06-17
 
