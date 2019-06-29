@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.6.0 - 2019-06-29
+
 ### Added
 
 - [`size` global directive](https://github.com/marp-team/marp-core#size-global-directive) for 4:3 slide deck, from an updated [Marp Core v0.11.0](https://github.com/marp-team/marp-core/releases/v0.11.0) ([#55](https://github.com/marp-team/marp-vscode/pull/55))
