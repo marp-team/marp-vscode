@@ -1,10 +1,13 @@
-import { env, window } from 'vscode'
+import { env, window, workspace } from 'vscode'
 import * as exportModule from './export'
 import * as marpCli from '../marp-cli'
 
 const exportCommand = exportModule.default
 
 jest.mock('vscode')
+
+const setConfiguration: (conf?: object) => void = (workspace as any)
+  ._setConfiguration
 
 describe('Export command', () => {
   let saveDialog: jest.SpyInstance
@@ -59,6 +62,16 @@ describe('#saveDialog', () => {
         defaultUri: expect.objectContaining({ fsPath: '/tmp/test' }),
       })
     )
+  })
+
+  it('opens save dialog with configured default type', async () => {
+    setConfiguration({ 'markdown.marp.exportType': 'pptx' })
+
+    await exportModule.saveDialog(document)
+    expect(window.showSaveDialog).toBeCalled()
+
+    const { filters } = (window.showSaveDialog as jest.Mock).mock.calls[0][0]
+    expect(Object.values(filters)[0]).toStrictEqual(['pptx'])
   })
 
   it('runs exporting with notification when file path is specified', async () => {

@@ -6,6 +6,7 @@ const defaultConf: MockedConf = {
   'markdown.marp.breaks': 'on',
   'markdown.marp.chromePath': '',
   'markdown.marp.enableHtml': false,
+  'markdown.marp.exportType': 'pdf',
   'window.zoomLevel': 0,
 }
 
