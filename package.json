@@ -206,7 +206,7 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^0.11.1",
+    "@marp-team/marp-cli": "^0.12.0",
     "@marp-team/marp-core": "^0.11.0"
   }
 }

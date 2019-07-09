@@ -39,6 +39,7 @@ export const saveDialog = async (document: TextDocument) => {
     filters: {
       'PDF slide deck': ['pdf'],
       'HTML slide deck': ['html'],
+      'PowerPoint document': ['pptx'],
       'PNG image (first slide only)': ['png'],
       'JPEG image (first slide only)': ['jpg', 'jpeg'],
     },
