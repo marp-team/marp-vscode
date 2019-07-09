@@ -39,7 +39,7 @@ Start writing!
 
 Marp for VS Code can preview your Marp Markdown with the same way as [a native Markdown preview](https://code.visualstudio.com/docs/languages/markdown#_markdown-preview).
 
-### Export slide deck to PDF, HTML, and image
+### Export slide deck to HTML, PDF, PPTX, and image
 
 We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
 
@@ -55,11 +55,15 @@ You can also execute command from the Command Palette (<kbd>F1</kbd> or <kbd>Ctr
 
 #### Supported file types
 
-- **PDF**: for publishing your deck
-- **HTML**: for playing your deck on the browser
-- **PNG**, **JPEG** (_First slide only)_: for creating an image of title slide
+- **HTML**
+- **PDF**
+- **PPTX** (PowerPoint document)
+- **PNG** (_First slide only)_
+- **JPEG** (_First slide only)_
 
-> ⚠️ Export to PDF and image formats requires to install [Google Chrome](https://www.google.com/chrome/) (or [Chromium](https://www.chromium.org/)). You may also specify the custom path for Chrome and Chromium-based browser by preference `markdown.marp.chromePath` (e.g. [Microsoft Edge Insider](https://www.microsoftedgeinsider.com/)).
+Default file type can choose by `markdown.marp.exportType` preference.
+
+> ⚠️ Export except HTML requires to install [Google Chrome](https://www.google.com/chrome/) (or [Chromium](https://www.chromium.org/)). You may also specify the custom path for Chrome and Chromium-based browser by preference `markdown.marp.chromePath` (e.g. [Microsoft Edge Insider](https://www.microsoftedgeinsider.com/)).
 
 ### Outline view for each slide
 
