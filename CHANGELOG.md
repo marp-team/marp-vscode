@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+
+- Support export to PowerPoint document (`.pptx`) ([#56](https://github.com/marp-team/marp-vscode/pull/56))
+- `markdown.marp.exportType` configuration to set the default export type ([#56](https://github.com/marp-team/marp-vscode/pull/56))
+
+### Changed
+
+- Upgrade Marp CLI to [v0.12.0](https://github.com/marp-team/marp-cli/releases/v0.12.0) ([#56](https://github.com/marp-team/marp-vscode/pull/56))
+
 ## v0.6.0 - 2019-06-29
 
 ### Added
