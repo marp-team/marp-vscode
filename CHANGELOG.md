@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.7.0 - 2019-07-09
+
 ### Added
 
 - Support export to PowerPoint document (`.pptx`) ([#56](https://github.com/marp-team/marp-vscode/pull/56))
