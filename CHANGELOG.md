@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.7.1 - 2019-07-09
+
 ### Fixed
 
 - v0.7.0 cannot export slide deck to any types ([#57](https://github.com/marp-team/marp-vscode/issues/57))
