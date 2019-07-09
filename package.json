@@ -88,6 +88,25 @@
           "default": false,
           "description": "Enables all HTML elements in Marp Markdown."
         },
+        "markdown.marp.exportType": {
+          "type": "string",
+          "enum": [
+            "html",
+            "pdf",
+            "pptx",
+            "png",
+            "jpeg"
+          ],
+          "default": "pdf",
+          "description": "Sets default export type.",
+          "enumDescriptions": [
+            "HTML slide deck",
+            "PDF slide deck",
+            "PowerPoint document",
+            "PNG image (first slide only)",
+            "JPEG image (first slide only)"
+          ]
+        },
         "markdown.marp.toolbarButtonForQuickPick": {
           "type": "boolean",
           "default": true,

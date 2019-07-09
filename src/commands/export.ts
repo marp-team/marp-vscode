@@ -1,10 +1,35 @@
 import path from 'path'
 import { env, ProgressLocation, TextDocument, Uri, window } from 'vscode'
+import { marpConfiguration } from './../option'
 import marpCli, {
   createConfigFile,
   createWorkFile,
   MarpCLIError,
 } from '../marp-cli'
+
+export enum Types {
+  html = 'html',
+  pdf = 'pdf',
+  pptx = 'pptx',
+  png = 'png',
+  jpeg = 'jpeg',
+}
+
+const extensions = {
+  [Types.html]: ['html'],
+  [Types.pdf]: ['pdf'],
+  [Types.pptx]: ['pptx'],
+  [Types.png]: ['png'],
+  [Types.jpeg]: ['jpg', 'jpeg'],
+}
+
+const descriptions = {
+  [Types.html]: 'HTML slide deck',
+  [Types.pdf]: 'PDF slide deck',
+  [Types.pptx]: 'PowerPoint document',
+  [Types.png]: 'PNG image (first slide only)',
+  [Types.jpeg]: 'JPEG image (first slide only)',
+}
 
 export const ITEM_CONTINUE_TO_EXPORT = 'Continue to export...'
 
@@ -34,15 +59,16 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 export const saveDialog = async (document: TextDocument) => {
   const { fsPath } = document.uri
 
+  const defaultType = marpConfiguration().get<string>('exportType')!
+  const baseTypes = Object.keys(extensions)
+  const types = [...new Set<string>([defaultType, ...baseTypes])]
+
   const saveURI = await window.showSaveDialog({
     defaultUri: Uri.file(fsPath.slice(0, -path.extname(fsPath).length)),
-    filters: {
-      'PDF slide deck': ['pdf'],
-      'HTML slide deck': ['html'],
-      'PowerPoint document': ['pptx'],
-      'PNG image (first slide only)': ['png'],
-      'JPEG image (first slide only)': ['jpg', 'jpeg'],
-    },
+    filters: types.reduce((f, t) => {
+      if (baseTypes.includes(t)) f[descriptions[t]] = extensions[t]
+      return f
+    }, {}),
     saveLabel: 'Export',
   })
 
