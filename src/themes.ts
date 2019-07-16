@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { promisify } from 'util'
 import axios from 'axios'
-import { Uri } from 'vscode'
+import { Disposable, RelativePattern, Uri, commands, workspace } from 'vscode'
 import { marpConfiguration } from './option'
 
 enum ThemeType {
@@ -12,9 +12,11 @@ enum ThemeType {
 
 interface Theme {
   readonly css: string
+  readonly onDidChange?: Disposable
+  readonly onDidDelete?: Disposable
   readonly path: string
-  readonly type: ThemeType
   readonly registered?: boolean
+  readonly type: ThemeType
 }
 
 // TODO: Consider using VS Code's `workspace.fs` API in future.
@@ -38,7 +40,11 @@ export class Themes {
   }
 
   dispose() {
-    // TODO: Make file watcher disposable.
+    this.observedThemes.forEach(theme => {
+      if (theme.onDidChange) theme.onDidChange.dispose()
+      if (theme.onDidDelete) theme.onDidDelete.dispose()
+    })
+    this.observedThemes.clear()
   }
 
   private normalizePaths(paths: string[], rootDirectory: Uri): string[] {
@@ -73,29 +79,48 @@ export class Themes {
     return []
   }
 
-  private async registerTheme(path: string): Promise<Theme> {
-    const theme = this.observedThemes.get(path)
+  private async registerTheme(themePath: string): Promise<Theme> {
+    const theme = this.observedThemes.get(themePath)
     if (theme) return theme
 
-    console.log('Fetching theme CSS:', path)
+    console.log('Fetching theme CSS:', themePath)
 
-    const type: ThemeType = isRemotePath(path)
+    const type: ThemeType = isRemotePath(themePath)
       ? ThemeType.Remote
       : ThemeType.File
 
     const css = await (async (): Promise<string> => {
       switch (type) {
         case ThemeType.File:
-          return (await readFile(path)).toString()
+          return (await readFile(themePath)).toString()
         case ThemeType.Remote:
-          return (await axios.get(path, { timeout: 5000 })).data
+          return (await axios.get(themePath, { timeout: 5000 })).data
       }
     })()
 
-    const registeredTheme: Theme = { css, type, path }
-    this.observedThemes.set(path, registeredTheme)
+    const registeredTheme: Theme = { css, type, path: themePath }
+    this.observedThemes.set(themePath, registeredTheme)
 
-    // TODO: Watch changes of local file
+    if (type === ThemeType.File) {
+      const fsWatcher = workspace.createFileSystemWatcher(
+        new RelativePattern(path.dirname(themePath), path.basename(themePath))
+      )
+
+      const onDidChange = fsWatcher.onDidChange(async () => {
+        onDidChange.dispose()
+        this.observedThemes.delete(themePath)
+
+        await this.registerTheme(themePath)
+        commands.executeCommand('markdown.preview.refresh')
+      })
+
+      const onDidDelete = fsWatcher.onDidDelete(() => {
+        onDidDelete.dispose()
+        this.observedThemes.delete(themePath)
+      })
+
+      Object.assign(registeredTheme, { onDidChange, onDidDelete })
+    }
 
     return { ...registeredTheme, registered: true }
   }

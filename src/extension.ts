@@ -117,14 +117,9 @@ export function extendMarkdownIt(md: any) {
 
 export const activate = ({ subscriptions }: ExtensionContext) => {
   subscriptions.push(
-    commands.registerCommand('markdown.marp.export', exportCommand)
-  )
-
-  subscriptions.push(
-    commands.registerCommand('markdown.marp.showQuickPick', showQuickPick)
-  )
-
-  subscriptions.push(
+    commands.registerCommand('markdown.marp.export', exportCommand),
+    commands.registerCommand('markdown.marp.showQuickPick', showQuickPick),
+    themes,
     workspace.onDidChangeConfiguration(e => {
       if (shouldRefreshConfs.some(c => e.affectsConfiguration(c))) {
         clearMarpCoreOptionCache()
