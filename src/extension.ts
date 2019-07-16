@@ -38,6 +38,19 @@ export function extendMarkdownIt(md: any) {
         .use(outline)
         .use(lineNumber)
 
+      const originalThemes = [...marp.themeSet.themes()].map(t => t.name)
+      const { addTheme } = marp.themeSet
+
+      marp.themeSet.addTheme = theme => {
+        if (originalThemes.includes(theme.name)) {
+          throw new Error(
+            `Custom theme cannot override "${theme.name}" built-in theme.`
+          )
+        } else {
+          return addTheme.call(marp.themeSet, theme)
+        }
+      }
+
       // Load custom themes
       let shouldRefresh = false
 
