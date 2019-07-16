@@ -12,12 +12,18 @@ const defaultConf: MockedConf = {
 
 let currentConf: MockedConf = {}
 
+const uriInstance = (path: string) => {
+  const uri = { fsPath: path, with: jest.fn(() => uri) }
+  return uri
+}
+
 export const ProgressLocation = {
   Notification: 'notification',
 }
 
 export const Uri = {
-  file: (path: string) => ({ fsPath: path }),
+  file: uriInstance,
+  parse: uriInstance,
 }
 
 export const commands = {
