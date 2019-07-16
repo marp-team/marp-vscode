@@ -99,7 +99,6 @@ export class Themes {
     })()
 
     const registeredTheme: Theme = { css, type, path: themePath }
-    this.observedThemes.set(themePath, registeredTheme)
 
     if (type === ThemeType.File) {
       const fsWatcher = workspace.createFileSystemWatcher(
@@ -121,6 +120,8 @@ export class Themes {
 
       Object.assign(registeredTheme, { onDidChange, onDidDelete })
     }
+
+    this.observedThemes.set(themePath, registeredTheme)
 
     return { ...registeredTheme, registered: true }
   }
