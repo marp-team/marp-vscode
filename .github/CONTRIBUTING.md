@@ -29,6 +29,14 @@ yarn test:unit
 
 > _NOTE:_ It seems to be difficult to run VSCode's E2E test on Jest. We're welcome to contribute for supporting E2E tests.
 
+### Package VSIX
+
+```bash
+yarn package
+```
+
+> _NOTE:_ Packaging tasks will run `vsce` via `npx` to avoid some troubles while bundling. (e.g. [#35](https://github.com/marp-team/marp-vscode/pull/35), [#57](https://github.com/marp-team/marp-vscode/issues/57))
+
 ## Release
 
 ### Publish to Visual Studio Marketplace (_For maintainer_)
