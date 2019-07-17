@@ -43,7 +43,7 @@ export function extendMarkdownIt(md: any) {
 
       marp.themeSet.addTheme = theme => {
         if (originalThemes.includes(theme.name)) {
-          throw new Error(
+          console.warn(
             `Custom theme cannot override "${theme.name}" built-in theme.`
           )
         } else {
