@@ -230,8 +230,8 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
-    "axios": "^0.19.0",
     "@marp-team/marp-cli": "^0.12.0",
-    "@marp-team/marp-core": "^0.11.0"
+    "@marp-team/marp-core": "^0.11.0",
+    "axios": "^0.19.0"
   }
 }

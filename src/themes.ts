@@ -5,12 +5,12 @@ import axios from 'axios'
 import { Disposable, RelativePattern, Uri, commands, workspace } from 'vscode'
 import { marpConfiguration } from './option'
 
-enum ThemeType {
+export enum ThemeType {
   File = 'File',
   Remote = 'Remote',
 }
 
-interface Theme {
+export interface Theme {
   readonly css: string
   readonly onDidChange?: Disposable
   readonly onDidDelete?: Disposable
@@ -29,22 +29,32 @@ const isRemotePath = (path: string) =>
 export class Themes {
   observedThemes = new Map<string, Theme>()
 
-  async loadStyles(rootDirectory: Uri): Promise<Promise<Theme>[]> {
-    return this.pathsFromConf(rootDirectory).map(p => this.registerTheme(p))
-  }
-
-  getRegisteredStyles(rootDirectory: Uri): Theme[] {
-    return this.pathsFromConf(rootDirectory)
-      .map(p => this.observedThemes.get(p))
-      .filter(t => t) as Theme[]
-  }
-
   dispose() {
     this.observedThemes.forEach(theme => {
       if (theme.onDidChange) theme.onDidChange.dispose()
       if (theme.onDidDelete) theme.onDidDelete.dispose()
     })
     this.observedThemes.clear()
+  }
+
+  getRegisteredStyles(rootDirectory: Uri): Theme[] {
+    return this.getPathsFromConf(rootDirectory)
+      .map(p => this.observedThemes.get(p))
+      .filter(t => t) as Theme[]
+  }
+
+  loadStyles(rootDirectory: Uri): Promise<Theme>[] {
+    return this.getPathsFromConf(rootDirectory).map(p => this.registerTheme(p))
+  }
+
+  private getPathsFromConf(rootDirectory: Uri): string[] {
+    const themes = marpConfiguration().get<string[]>('themes')
+
+    if (Array.isArray(themes) && themes.length > 0) {
+      return this.normalizePaths(themes, rootDirectory)
+    }
+
+    return []
   }
 
   private normalizePaths(paths: string[], rootDirectory: Uri): string[] {
@@ -67,16 +77,6 @@ export class Themes {
     }
 
     return [...normalizedPaths.values()]
-  }
-
-  private pathsFromConf(rootDirectory: Uri): string[] {
-    const themes = marpConfiguration().get<string[]>('themes')
-
-    if (Array.isArray(themes) && themes.length > 0) {
-      return this.normalizePaths(themes, rootDirectory)
-    }
-
-    return []
   }
 
   private async registerTheme(themePath: string): Promise<Theme> {

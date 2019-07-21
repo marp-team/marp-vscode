@@ -2,6 +2,7 @@ import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, Uri, commands, workspace } from 'vscode'
 import exportCommand from './commands/export' // tslint:disable-line: import-name
 import showQuickPick from './commands/show-quick-pick'
+import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline from './plugins/outline'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
@@ -35,41 +36,24 @@ export function extendMarkdownIt(md: any) {
       const baseFolder = workspaceFolder ? workspaceFolder.uri : mdFolder
 
       const marp = new Marp(marpCoreOptionForPreview(md.options))
+        .use(customTheme)
         .use(outline)
         .use(lineNumber)
-
-      const originalThemes = [...marp.themeSet.themes()].map(t => t.name)
-      const { addTheme } = marp.themeSet
-
-      marp.themeSet.addTheme = theme => {
-        if (originalThemes.includes(theme.name)) {
-          console.warn(
-            `Custom theme cannot override "${theme.name}" built-in theme.`
-          )
-        } else {
-          return addTheme.call(marp.themeSet, theme)
-        }
-      }
 
       // Load custom themes
       let shouldRefresh = false
 
-      themes
-        .loadStyles(baseFolder)
-        .then(promises =>
-          Promise.all(
-            promises.map(promise =>
-              promise
-                .then(theme => {
-                  if (theme.registered) shouldRefresh = true
-                })
-                .catch(e => console.error(e))
-            )
-          )
+      Promise.all(
+        themes.loadStyles(baseFolder).map(promise =>
+          promise
+            .then(theme => {
+              if (theme.registered) shouldRefresh = true
+            })
+            .catch(e => console.error(e))
         )
-        .then(() => {
-          if (shouldRefresh) commands.executeCommand('markdown.preview.refresh')
-        })
+      ).then(() => {
+        if (shouldRefresh) commands.executeCommand('markdown.preview.refresh')
+      })
 
       for (const theme of themes.getRegisteredStyles(baseFolder)) {
         try {

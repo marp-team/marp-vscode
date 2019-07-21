@@ -5,15 +5,13 @@ import { tmpdir } from 'os'
 import path from 'path'
 import { promisify } from 'util'
 import { TextDocument, workspace } from 'vscode'
-import { marpConfiguration, marpCoreOptionForCLI } from './option'
-
-interface WorkFile {
-  path: string
-  cleanup: () => Promise<void>
-}
+import { WorkFile, marpConfiguration, marpCoreOptionForCLI } from './option'
 
 const marpCliAsync = async (): Promise<typeof marpCli> =>
   (await import('@marp-team/marp-cli')).default
+
+const promiseWriteFile = promisify(writeFile)
+const promiseUnlink = promisify(unlink)
 
 export class MarpCLIError extends Error {}
 
@@ -25,13 +23,13 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
 
   const text = doc.getText()
   const tmpFileName = `.marp-vscode-tmp-${nanoid()}`
-  const createCleanup = (target: string) => () => promisify(unlink)(target)
+  const createCleanup = (target: string) => () => promiseUnlink(target)
 
   // Try to create tmp file to the same directory as a document
   const sameDirTmpPath = path.join(path.dirname(doc.uri.fsPath), tmpFileName)
 
   try {
-    await promisify(writeFile)(sameDirTmpPath, text)
+    await promiseWriteFile(sameDirTmpPath, text)
     return { path: sameDirTmpPath, cleanup: createCleanup(sameDirTmpPath) }
   } catch (e) {}
 
@@ -43,7 +41,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
     const workspaceDirTmpPath = path.join(workspaceDir, tmpFileName)
 
     try {
-      await promisify(writeFile)(workspaceDirTmpPath, text)
+      await promiseWriteFile(workspaceDirTmpPath, text)
       return {
         path: workspaceDirTmpPath,
         cleanup: createCleanup(workspaceDirTmpPath),
@@ -54,7 +52,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
   // If it fails, create to OS specific tmp directory
   const tmpPath = path.join(tmpdir(), tmpFileName)
 
-  await promisify(writeFile)(tmpPath, text)
+  await promiseWriteFile(tmpPath, text)
   return { path: tmpPath, cleanup: createCleanup(tmpPath) }
 }
 
@@ -63,12 +61,19 @@ export async function createConfigFile(
 ): Promise<WorkFile> {
   const tmpFileName = `.marp-vscode-cli-conf-${nanoid()}.json`
   const tmpPath = path.join(tmpdir(), tmpFileName)
+  const cliOpts = await marpCoreOptionForCLI(target)
 
-  await promisify(writeFile)(
-    tmpPath,
-    JSON.stringify(marpCoreOptionForCLI(target))
-  )
-  return { path: tmpPath, cleanup: () => promisify(unlink)(tmpPath) }
+  await promiseWriteFile(tmpPath, JSON.stringify(cliOpts))
+
+  return {
+    path: tmpPath,
+    cleanup: async () => {
+      await Promise.all([
+        promiseUnlink(tmpPath),
+        ...cliOpts.vscode.themeFiles.map((w: WorkFile) => w.cleanup()),
+      ])
+    },
+  }
 }
 
 export default async function runMarpCli(...opts: string[]): Promise<void> {
