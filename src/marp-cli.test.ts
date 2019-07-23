@@ -6,6 +6,7 @@ import { tmpdir } from 'os'
 import { workspace } from 'vscode'
 import * as marpCli from './marp-cli'
 
+jest.mock('fs')
 jest.mock('vscode')
 
 const setConfiguration: (conf?: object) => void = (workspace as any)
@@ -66,17 +67,6 @@ describe('Marp CLI integration', () => {
 describe('#createWorkFile', () => {
   const { createWorkFile } = marpCli
 
-  let fsMock: Record<string, jest.SpyInstance>
-
-  beforeEach(() => {
-    fsMock = {
-      unlink: jest.spyOn(fs, 'unlink').mockImplementation((_, cb) => cb(null)),
-      writeFile: jest
-        .spyOn(fs, 'writeFile')
-        .mockImplementation((_, __, cb) => cb(null)),
-    }
-  })
-
   it('returns to use an original when passed a clean file', async () => {
     const workFile = await createWorkFile({
       isDirty: false,
@@ -86,7 +76,7 @@ describe('#createWorkFile', () => {
     expect(workFile.path).toEqual('/tmp/clean.md')
 
     await workFile.cleanup()
-    expect(fsMock.unlink).not.toBeCalled()
+    expect(fs.unlink).not.toBeCalled()
   })
 
   it('creates tmpfile to same directory of file when passed a dirty file', async () => {
@@ -99,19 +89,20 @@ describe('#createWorkFile', () => {
     expect(
       workFile.path.startsWith(path.join('/tmp', '.marp-vscode-tmp'))
     ).toBe(true)
-    expect(fsMock.writeFile).toBeCalledWith(
+
+    expect(fs.writeFile).toBeCalledWith(
       workFile.path,
       'example',
       expect.any(Function)
     )
 
     await workFile.cleanup()
-    expect(fsMock.unlink).toBeCalledWith(workFile.path, expect.any(Function))
+    expect(fs.unlink).toBeCalledWith(workFile.path, expect.any(Function))
   })
 
   it('creates tmpfile to workspace root when failed creating to same dir', async () => {
     // Simulate that creation to same directory is not permited
-    const err = fsMock.writeFile.mockImplementationOnce((_, __, cb) =>
+    const err = (fs as any).writeFile.mockImplementationOnce((_, __, cb) =>
       cb(new Error())
     )
 
@@ -133,7 +124,9 @@ describe('#createWorkFile', () => {
   })
 
   it('creates tmpfile to os specific directory when failed all creations', async () => {
-    fsMock.writeFile.mockImplementationOnce((_, __, cb) => cb(new Error()))
+    ;(fs as any).writeFile.mockImplementationOnce((_, __, cb) =>
+      cb(new Error())
+    )
 
     const workFile = await createWorkFile({
       getText: jest.fn(),
