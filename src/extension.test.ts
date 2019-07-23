@@ -1,13 +1,24 @@
+import fs from 'fs'
+import path from 'path'
+import axios from 'axios'
 import cheerio from 'cheerio'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
-import { commands, workspace } from 'vscode'
+import { Uri, commands, workspace } from 'vscode'
 
+jest.mock('fs')
+jest.mock('axios')
 jest.mock('vscode')
+
+let themes: typeof import('./themes')['default']
 
 const extension = (): typeof import('./extension') => {
   let ext
-  jest.isolateModules(() => (ext = require('./extension'))) // Shut up cache
+
+  jest.isolateModules(() => {
+    ext = require('./extension') // Shut up cache
+    themes = require('./themes').default
+  })
 
   return ext
 }
@@ -169,6 +180,81 @@ describe('#extendMarkdownIt', () => {
 
         const html = md().render(marpMd('<b>Hi</b>'))
         expect(html).toContain('<b>Hi</b>')
+      })
+    })
+
+    describe('markdown.marp.themes', () => {
+      const baseDir = '/test/path'
+      const css = '/* @theme example */'
+      const themeURL = 'https://example.com/test.css'
+
+      beforeEach(() => {
+        jest.spyOn(console, 'error').mockImplementation()
+        jest.spyOn(console, 'log').mockImplementation()
+      })
+
+      it('registers pre-loaded themes from URL defined in configuration', async () => {
+        const axiosGet = jest
+          .spyOn(axios, 'get')
+          .mockResolvedValue({ data: css })
+
+        setConfiguration({ 'markdown.marp.themes': [themeURL] })
+
+        const markdown = md()
+        await Promise.all(themes.loadStyles(Uri.parse('.')))
+
+        expect(axiosGet).toBeCalledWith(themeURL, expect.any(Object))
+        expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(css)
+      })
+
+      it('registers pre-loaded themes from specified path defined in configuration', async () => {
+        const fsReadFile = jest
+          .spyOn(fs, 'readFile')
+          .mockImplementation((_, cb) => cb(null, Buffer.from(css)))
+
+        setConfiguration({ 'markdown.marp.themes': ['./test.css'] })
+
+        const markdown = md()
+        markdown.normalizeLink = url => path.resolve(baseDir, url)
+
+        await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
+
+        expect(fsReadFile).toBeCalledWith(
+          path.resolve(baseDir, './test.css'),
+          expect.any(Function)
+        )
+        expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(css)
+      })
+
+      it('cannot traverse theme CSS path to parent directory as same as markdown.styles', async () => {
+        jest
+          .spyOn(fs, 'readFile')
+          .mockImplementation((_, cb) => cb(null, Buffer.from(css)))
+
+        setConfiguration({ 'markdown.marp.themes': ['../test.css'] })
+
+        const markdown = md()
+        markdown.normalizeLink = url => path.resolve(baseDir, url)
+
+        await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
+        expect(markdown.render(marpMd('<!--theme: example-->'))).not.toContain(
+          css
+        )
+      })
+
+      it('cannot override built-in themes by custom theme', async () => {
+        jest
+          .spyOn(axios, 'get')
+          .mockResolvedValue({ data: '/*\n@theme default\n@custom theme\n*/' })
+
+        setConfiguration({ 'markdown.marp.themes': [themeURL] })
+
+        const markdown = md()
+        await Promise.all(themes.loadStyles(Uri.parse('.')))
+
+        expect(
+          markdown.render(marpMd('<!-- theme: default -->'))
+        ).not.toContain('@custom theme')
       })
     })
 
