@@ -110,7 +110,10 @@
         "markdown.marp.themes": {
           "type": "array",
           "default": [],
-          "markdownDescription": "A list of URLs or local paths to additional [CSS themes](https://marpit.marp.app/theme-css) for Marp core and Marpit framework. The rule for paths is following [Markdown: Styles](#markdown.styles)."
+          "markdownDescription": "A list of URLs or local paths to additional [theme CSS](https://marpit.marp.app/theme-css) for Marp core and Marpit framework. The rule for paths is following [Markdown: Styles](#markdown.styles).",
+          "items": {
+            "type": "string"
+          }
         },
         "markdown.marp.toolbarButtonForQuickPick": {
           "type": "boolean",
