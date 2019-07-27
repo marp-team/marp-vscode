@@ -2,6 +2,8 @@
 // Use IntelliSense to learn about possible attributes.
 // Hover to view descriptions of existing attributes.
 // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+//
+// TODO: Use --disable-extensions instead of --disable-extensions=1.
 {
   "version": "0.2.0",
   "configurations": [
@@ -11,7 +13,7 @@
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": [
-        "--disable-extensions",
+        "--disable-extensions=1",
         "--extensionDevelopmentPath=${workspaceFolder}"
       ],
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
@@ -23,7 +25,7 @@
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": [
-        "--disable-extensions",
+        "--disable-extensions=1",
         "--extensionDevelopmentPath=${workspaceFolder}"
       ],
       "outFiles": ["${workspaceFolder}/lib/**/*.js"]
