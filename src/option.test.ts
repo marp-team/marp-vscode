@@ -1,7 +1,13 @@
+import fs from 'fs'
+import { promisify } from 'util'
+import axios from 'axios'
 import { Uri, workspace } from 'vscode'
 import * as option from './option'
 
+jest.mock('axios')
 jest.mock('vscode')
+
+const readFile = promisify(fs.readFile)
 
 const setConfiguration: (conf?: object) => void = (workspace as any)
   ._setConfiguration
@@ -37,6 +43,7 @@ describe('Option', () => {
         (await subject({ uri: untitledUri })).options.markdown.breaks
       ).toBe(false)
 
+      // inherit option (markdown.preview.breaks)
       setConfiguration({
         'markdown.marp.breaks': 'inherit',
         'markdown.preview.breaks': true,
@@ -52,6 +59,38 @@ describe('Option', () => {
       expect(
         (await subject({ uri: untitledUri })).options.markdown.breaks
       ).toBe(false)
+    })
+
+    describe('when targeted document belongs to workspace', () => {
+      const css = '/* @theme test */'
+
+      beforeEach(() => {
+        // Workspace
+        jest
+          .spyOn(workspace, 'getWorkspaceFolder')
+          .mockImplementationOnce((): any => ({
+            uri: { scheme: 'file', fsPath: '/workspace/' },
+          }))
+
+        // Theme CSS
+        jest.spyOn(console, 'log').mockImplementation()
+        jest.spyOn(axios, 'get').mockResolvedValue({ data: css }) // Remote
+
+        setConfiguration({
+          'markdown.marp.themes': ['https://example.com/test.css'],
+        })
+      })
+
+      it('loads specified theme CSS to tmp file and use it', async () => {
+        const { themeSet, vscode } = await subject({ uri: untitledUri })
+
+        try {
+          expect(themeSet).toHaveLength(1)
+          expect((await readFile(themeSet[0])).toString()).toBe(css)
+        } finally {
+          await Promise.all(vscode.themeFiles.map(w => w.cleanup()))
+        }
+      })
     })
   })
 })
