@@ -70,7 +70,7 @@ Default file type can choose by `markdown.marp.exportType` preference.
 You can register and use [custom theme CSS for Marpit](https://marpit.marp.app/theme-css) / [Marp Core](https://github.com/marp-team/marp-core/tree/master/themes#readme) by setting `markdown.marp.themes`, that includes remote URLs, or relative paths to local files in the current workspace.
 
 ```javascript
-// Place `settings.json` on the root of your workspace
+// Please put `.vscode/settings.json` on your workspace
 {
   "markdown.marp.themes": [
     "https://example.com/foo/bar/custom-theme.css",
