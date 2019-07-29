@@ -6,6 +6,11 @@
 
 - Custom theme support ([#13](https://github.com/marp-team/marp-vscode/issues/13), [#39](https://github.com/marp-team/marp-vscode/issues/39), [#59](https://github.com/marp-team/marp-vscode/pull/59))
 
+### Changed
+
+- Upgrade Marp Core to [v0.12.0](https://github.com/marp-team/marp-core/releases/v0.12.0) and Marp CLI to [v0.12.1](https://github.com/marp-team/marp-cli/releases/v0.12.1) ([#60](https://github.com/marp-team/marp-vscode/pull/60))
+- Upgrade dependent packages to the latest version ([#60](https://github.com/marp-team/marp-vscode/pull/60))
+
 ## v0.7.1 - 2019-07-09
 
 ### Fixed
