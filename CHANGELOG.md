@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Custom theme support ([#13](https://github.com/marp-team/marp-vscode/issues/13), [#39](https://github.com/marp-team/marp-vscode/issues/39), [#59](https://github.com/marp-team/marp-vscode/pull/59))
+
 ## v0.7.1 - 2019-07-09
 
 ### Fixed

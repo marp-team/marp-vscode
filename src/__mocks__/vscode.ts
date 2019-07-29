@@ -12,12 +12,23 @@ const defaultConf: MockedConf = {
 
 let currentConf: MockedConf = {}
 
+const uriInstances: Record<string, any> = {}
+const uriInstance = (path: string) =>
+  uriInstances[path] ||
+  (() => {
+    const uri = { fsPath: path, with: jest.fn(() => uri) }
+    return uri
+  })()
+
 export const ProgressLocation = {
   Notification: 'notification',
 }
 
+export const RelativePattern = jest.fn()
+
 export const Uri = {
-  file: (path: string) => ({ fsPath: path }),
+  file: uriInstance,
+  parse: uriInstance,
 }
 
 export const commands = {
@@ -44,6 +55,10 @@ export const window = {
 }
 
 export const workspace = {
+  createFileSystemWatcher: jest.fn(() => ({
+    onDidChange: jest.fn(),
+    onDidDelete: jest.fn(),
+  })),
   getConfiguration: jest.fn((section?: string) => ({
     get: jest.fn(
       (subSection?: string) =>
@@ -59,6 +74,7 @@ export const workspace = {
 }
 
 beforeEach(() => {
+  currentConf = {}
   window.activeTextEditor = undefined
   workspace._setConfiguration()
   _setVSCodeVersion(defaultVSCodeVersion)
