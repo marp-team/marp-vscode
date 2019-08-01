@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { Marp } from '@marp-team/marp-core'
 import axios from 'axios'
 import cheerio from 'cheerio'
 import dedent from 'dedent'
@@ -87,6 +88,25 @@ describe('#extendMarkdownIt', () => {
   })
 
   describe('Plugins', () => {
+    describe('Custom theme', () => {
+      const marpCore = (markdown: string = ''): Marp => {
+        const { extendMarkdownIt, marpVscode } = extension()
+        const md = new markdownIt()
+
+        extendMarkdownIt(md).render(marpMd(markdown))
+        return md[marpVscode]
+      }
+
+      it('prevents override built-in theme', () => {
+        expect(() => marpCore().themeSet.add('/* @theme default */')).toThrow()
+        expect(() => marpCore().themeSet.add('/* @theme gaia */')).toThrow()
+        expect(() => marpCore().themeSet.add('/* @theme uncover */')).toThrow()
+      })
+
+      it('works size global directive correctly', () =>
+        expect(() => marpCore('<!-- size: 4:3 -->')).not.toThrow())
+    })
+
     describe('Line number', () => {
       const markdown = dedent`
         ---

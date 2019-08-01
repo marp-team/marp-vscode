@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix regression of not working `size` global directive ([#61](https://github.com/marp-team/marp-vscode/issues/61), [#62](https://github.com/marp-team/marp-vscode/pull/62))
+
 ## v0.8.0 - 2019-07-29
 
 ### Added

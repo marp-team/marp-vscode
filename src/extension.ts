@@ -10,7 +10,6 @@ import themes from './themes'
 
 const frontMatterRegex = /^-{3,}\s*([^]*?)^\s*-{3}/m
 const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
-const marpVscode = Symbol('marp-vscode')
 const shouldRefreshConfs = [
   'markdown.marp.breaks',
   'markdown.marp.enableHtml',
@@ -23,6 +22,8 @@ const detectMarpFromFrontMatter = (markdown: string): boolean => {
   const m = markdown.match(frontMatterRegex)
   return !!(m && m.index === 0 && marpDirectiveRegex.exec(m[0].trim()))
 }
+
+export const marpVscode = Symbol('marp-vscode')
 
 export function extendMarkdownIt(md: any) {
   const { parse, renderer } = md
