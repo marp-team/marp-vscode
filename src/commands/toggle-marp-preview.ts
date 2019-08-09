@@ -8,7 +8,7 @@ export const toggle = async (editor: TextEditor) => {
   const originalText = editor.document.getText()
   const frontmatter = detectFrontMatter(originalText)
 
-  if (frontmatter) {
+  if (frontmatter !== undefined) {
     let line = 1
     let targetRange: Range | undefined
     let toggleValue: string | undefined
