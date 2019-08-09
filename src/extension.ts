@@ -2,14 +2,14 @@ import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, Uri, commands, workspace } from 'vscode'
 import exportCommand from './commands/export' // tslint:disable-line: import-name
 import showQuickPick from './commands/show-quick-pick'
+import toggleMarpPreview from './commands/toggle-marp-preview'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline from './plugins/outline'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import themes from './themes'
+import { detectMarpFromMarkdown } from './utils'
 
-const frontMatterRegex = /^-{3,}\s*([^]*?)^\s*-{3}/m
-const marpDirectiveRegex = /^marp\s*:\s*true\s*$/m
 const shouldRefreshConfs = [
   'markdown.marp.breaks',
   'markdown.marp.enableHtml',
@@ -17,11 +17,6 @@ const shouldRefreshConfs = [
   'markdown.preview.breaks',
   'window.zoomLevel', // for WebKit polyfill
 ]
-
-const detectMarpFromFrontMatter = (markdown: string): boolean => {
-  const m = markdown.match(frontMatterRegex)
-  return !!(m && m.index === 0 && marpDirectiveRegex.exec(m[0].trim()))
-}
 
 export const marpVscode = Symbol('marp-vscode')
 
@@ -31,7 +26,7 @@ export function extendMarkdownIt(md: any) {
 
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
-    if (detectMarpFromFrontMatter(markdown)) {
+    if (detectMarpFromMarkdown(markdown)) {
       const mdFolder = Uri.parse(md.normalizeLink('.')).with({ scheme: 'file' })
       const workspaceFolder = workspace.getWorkspaceFolder(mdFolder)
       const baseFolder = workspaceFolder ? workspaceFolder.uri : mdFolder
@@ -104,6 +99,10 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
   subscriptions.push(
     commands.registerCommand('markdown.marp.export', exportCommand),
     commands.registerCommand('markdown.marp.showQuickPick', showQuickPick),
+    commands.registerCommand(
+      'markdown.marp.toggleMarpPreview',
+      toggleMarpPreview
+    ),
     themes,
     workspace.onDidChangeConfiguration(e => {
       if (shouldRefreshConfs.some(c => e.affectsConfiguration(c))) {

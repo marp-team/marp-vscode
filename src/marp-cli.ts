@@ -5,7 +5,8 @@ import { tmpdir } from 'os'
 import path from 'path'
 import { promisify } from 'util'
 import { TextDocument, workspace } from 'vscode'
-import { WorkFile, marpConfiguration, marpCoreOptionForCLI } from './option'
+import { WorkFile, marpCoreOptionForCLI } from './option'
+import { marpConfiguration } from './utils'
 
 const marpCliAsync = async (): Promise<typeof marpCli> =>
   (await import('@marp-team/marp-cli')).default
