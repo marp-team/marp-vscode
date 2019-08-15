@@ -40,6 +40,10 @@ export const env = {
   openExternal: jest.fn(),
 }
 
+export const languages = {
+  setTextDocumentLanguage: jest.fn(),
+}
+
 export let version: string = defaultVSCodeVersion
 export const _setVSCodeVersion = (value: string) => {
   version = value

@@ -1,7 +1,7 @@
 import { Position, Range, TextEditor, languages, window } from 'vscode'
 import { detectFrontMatter, marpDirectiveRegex } from '../utils'
 
-const ITEM_CONTINUE_BY_CHANGING_LANGUAGE =
+export const ITEM_CONTINUE_BY_CHANGING_LANGUAGE =
   'Continue by changing language to Markdown'
 
 export const toggle = async (editor: TextEditor) => {
