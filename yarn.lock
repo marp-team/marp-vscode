@@ -564,10 +564,10 @@
     "@types/unist" "*"
     "@types/vfile-message" "*"
 
-"@types/vscode@~1.37.0":
-  version "1.37.0"
-  resolved "https://registry.yarnpkg.com/@types/vscode/-/vscode-1.37.0.tgz#fb26ffabfabcd50ba70e8b454122a91b84548080"
-  integrity sha512-PRfeuqYuzk3vjf+puzxltIUWC+AhEGYpFX29/37w30DQSQnpf5AgMVf7GDBAdmTbWTBou+EMFz/Ne6XCM/KxzQ==
+"@types/vscode@~1.31.0":
+  version "1.31.0"
+  resolved "https://registry.yarnpkg.com/@types/vscode/-/vscode-1.31.0.tgz#6238228482f8cae4973e50091153e3125f067044"
+  integrity sha512-uUpjvtrQ14ZEqqRE/EGuBvGbm9GuxDp76mtsnw3goMogsWmEEYS/y4eL2Zwf0rbFMh/hg3hEs+E3CvuuNEs+GA==
 
 "@types/yargs-parser@*":
   version "13.0.0"
