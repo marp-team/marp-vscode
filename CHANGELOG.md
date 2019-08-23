@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix disappeared images in exported PDF on some Windows environment ([#64](https://github.com/marp-team/marp-vscode/issues/64), [#65](https://github.com/marp-team/marp-vscode/pull/65))
+
+### Changed
+
+- Upgrade Marp Core to [v0.12.1](https://github.com/marp-team/marp-core/releases/v0.12.1) and Marp CLI to [v0.13.0](https://github.com/marp-team/marp-cli/releases/v0.13.0) ([#65](https://github.com/marp-team/marp-vscode/pull/65))
+- Upgrade dependent packages to the latest version ([#65](https://github.com/marp-team/marp-vscode/pull/65))
+
 ## v0.8.1 - 2019-08-01
 
 ### Fixed
