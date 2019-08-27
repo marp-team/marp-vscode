@@ -20,8 +20,16 @@ const uriInstance = (path: string) =>
     return uri
   })()
 
+export class Position {
+  constructor(readonly line: number, readonly character: number) {}
+}
+
 export const ProgressLocation = {
   Notification: 'notification',
+}
+
+export class Range {
+  constructor(readonly start: Position, readonly end: Position) {}
 }
 
 export const RelativePattern = jest.fn()
