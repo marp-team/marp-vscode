@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.9.0 - 2019-08-28
+
 ### Added
 
 - `markdown.marp.toggleMarpPreview` command to toggle Marp preview ([#52](https://github.com/marp-team/marp-vscode/issues/52), [#63](https://github.com/marp-team/marp-vscode/pull/63))
