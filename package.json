@@ -40,7 +40,8 @@
   },
   "activationEvents": [
     "onCommand:markdown.marp.export",
-    "onCommand:markdown.marp.showQuickPick"
+    "onCommand:markdown.marp.showQuickPick",
+    "onCommand:markdown.marp.toggleMarpPreview"
   ],
   "contributes": {
     "commands": [
@@ -57,6 +58,11 @@
           "dark": "./images/icon.png",
           "light": "./images/icon.png"
         }
+      },
+      {
+        "category": "Marp",
+        "command": "markdown.marp.toggleMarpPreview",
+        "title": "Toggle Marp preview for current Markdown"
       }
     ],
     "configuration": {

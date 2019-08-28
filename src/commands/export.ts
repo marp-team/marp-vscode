@@ -1,6 +1,6 @@
 import path from 'path'
 import { env, ProgressLocation, TextDocument, Uri, window } from 'vscode'
-import { marpConfiguration } from './../option'
+import { marpConfiguration } from '../utils'
 import marpCli, {
   createConfigFile,
   createWorkFile,

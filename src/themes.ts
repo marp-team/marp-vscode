@@ -3,7 +3,7 @@ import path from 'path'
 import { promisify } from 'util'
 import axios from 'axios'
 import { Disposable, RelativePattern, Uri, commands, workspace } from 'vscode'
-import { marpConfiguration } from './option'
+import { marpConfiguration } from './utils'
 
 export enum ThemeType {
   File = 'File',

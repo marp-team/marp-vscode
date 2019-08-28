@@ -21,7 +21,7 @@ See the documentation of [Marpit Markdown](https://marpit.marp.app/markdown) and
 
 ## Usage
 
-Marp preview will only be enabled when `marp: true` is written in front-matter.
+Marp preview for Markdown document will be enabled when `marp: true` is written in front-matter.
 
 ```markdown
 ---
@@ -32,6 +32,12 @@ marp: true
 
 Start writing!
 ```
+
+It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/icon.png" width="16" height="16" /> and selecting **"Toggle Marp preview for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/toggle.gif" alt="Toggle Marp preview" width="600" />
+</p>
 
 ## Features
 

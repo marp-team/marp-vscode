@@ -8,6 +8,7 @@ import { coerce, lt } from 'semver'
 import { TextDocument, Uri, version, workspace } from 'vscode'
 import { MarpOptions } from '@marp-team/marp-core'
 import themes, { ThemeType } from './themes'
+import { marpConfiguration } from './utils'
 
 export interface WorkFile {
   path: string
@@ -26,9 +27,6 @@ const coercedVer = coerce(version)
 // also has a glitch in video, and we have to wait for stable rendering until
 // Electron 6.
 export const isRequiredPolyfill = coercedVer ? lt(coercedVer, '1.36.0') : false
-
-export const marpConfiguration = () =>
-  workspace.getConfiguration('markdown.marp')
 
 const breaks = (inheritedValue: boolean): boolean => {
   switch (marpConfiguration().get<string>('breaks')) {
