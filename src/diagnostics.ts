@@ -1,12 +1,15 @@
 import {
   Diagnostic,
+  DiagnosticSeverity,
   Disposable,
+  Range,
   TextDocument,
   languages,
   window,
   workspace,
 } from 'vscode'
-import { detectMarpDocument } from './utils'
+import yaml from 'yaml'
+import { detectMarpDocument, frontMatterRegex } from './utils'
 
 export const collection = languages.createDiagnosticCollection('marp-vscode')
 
@@ -38,7 +41,7 @@ function warnDeprecatedDollarPrefix(
   doc: TextDocument,
   diagnostics: Diagnostic[]
 ) {
-  const text = doc.getText()
+  const markdown = doc.getText()
   const warnDirectives = [
     // Marpit
     '$headingDivider',
@@ -55,7 +58,36 @@ function warnDeprecatedDollarPrefix(
     '$url',
   ]
 
-  // TODO: Add diagnostics when detected global directives with dollar prefix
+  const detectDirectives = (text: string, offset: number = 0) => {
+    const { contents } = yaml.parseDocument(text, { schema: 'failsafe' })
+    if (!(contents && contents['items'])) return
+
+    for (const item of contents['items']) {
+      if (item.type === 'PAIR' && warnDirectives.includes(item.key.value)) {
+        const name = item.key.value.slice(1)
+        const [start, end] = item.key.range
+
+        diagnostics.push(
+          new Diagnostic(
+            new Range(
+              doc.positionAt(start + offset),
+              doc.positionAt(end + offset)
+            ),
+            `Dollar prefix support for ${name} global directive is deprecated. Remove "$" to fix.`,
+            DiagnosticSeverity.Warning
+          )
+        )
+      }
+    }
+  }
+
+  // Front-matter
+  const fmMatched = markdown.match(frontMatterRegex)
+  if (fmMatched && fmMatched.index === 0) {
+    detectDirectives(fmMatched[2], fmMatched[1].length)
+  }
+
+  // TODO: Parse directives in HTML comments
 }
 
 export default subscribe

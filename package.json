@@ -213,6 +213,7 @@
     "@types/markdown-it": "^0.0.8",
     "@types/semver": "^6.0.1",
     "@types/vscode": "~1.31.0",
+    "@types/yaml": "^1.0.2",
     "cheerio": "^1.0.0-rc.3",
     "codecov": "^3.5.0",
     "dedent": "^0.7.0",
@@ -237,7 +238,8 @@
     "tslint": "^5.19.0",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "yaml": "^1.6.0"
   },
   "dependencies": {
     "@marp-team/marp-cli": "^0.14.0",
