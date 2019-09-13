@@ -1,3 +1,7 @@
+import rehypeParse from 'rehype-parse'
+import remarkParse from 'remark-parse'
+import unified from 'unified'
+import visit from 'unist-util-visit' // tslint:disable-line: import-name
 import {
   Diagnostic,
   DiagnosticSeverity,
@@ -41,7 +45,9 @@ function warnDeprecatedDollarPrefix(
   doc: TextDocument,
   diagnostics: Diagnostic[]
 ) {
-  const markdown = doc.getText()
+  let markdown = doc.getText()
+  let index = 0
+
   const warnDirectives = [
     // Marpit
     '$headingDivider',
@@ -83,11 +89,22 @@ function warnDeprecatedDollarPrefix(
 
   // Front-matter
   const fmMatched = markdown.match(frontMatterRegex)
+
   if (fmMatched && fmMatched.index === 0) {
-    detectDirectives(fmMatched[2], fmMatched[1].length)
+    const [, open, body, close] = fmMatched
+    detectDirectives(body, open.length)
+
+    index = open.length + body.length + close.length
+    markdown = markdown.slice(index)
   }
 
-  // TODO: Parse directives in HTML comments
+  // HTML comments
+  const mdParser = unified().use(remarkParse, { commonmark: true })
+  const htmlParser = unified().use(rehypeParse)
+
+  visit(mdParser.parse(markdown), 'html', (n: any) => {
+    console.log(htmlParser.parse(n.value))
+  })
 }
 
 export default subscribe
