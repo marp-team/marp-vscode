@@ -6,6 +6,7 @@ import toggleMarpPreview from './commands/toggle-marp-preview'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline from './plugins/outline'
+import diagnostics from './diagnostics'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import themes from './themes'
 import { detectMarpFromMarkdown } from './utils'
@@ -96,6 +97,8 @@ export function extendMarkdownIt(md: any) {
 }
 
 export const activate = ({ subscriptions }: ExtensionContext) => {
+  diagnostics(subscriptions)
+
   subscriptions.push(
     commands.registerCommand('markdown.marp.export', exportCommand),
     commands.registerCommand('markdown.marp.showQuickPick', showQuickPick),
