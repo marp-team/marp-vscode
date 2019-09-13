@@ -22,12 +22,6 @@ const warnDirectives = [
 
   // Marp Core
   '$size',
-
-  // Marp CLI
-  '$description',
-  '$image',
-  '$title',
-  '$url',
 ]
 
 export const code = 'deprecated-dollar-prefix'
