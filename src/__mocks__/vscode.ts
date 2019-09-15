@@ -23,7 +23,7 @@ const uriInstance = (path: string) =>
 export class CodeActionKind {
   static readonly QuickFix = new CodeActionKind('QuickFix')
 
-  constructor(value: string) {}
+  constructor(readonly value: string) {}
 }
 
 export class Position {
@@ -55,7 +55,11 @@ export const env = {
 }
 
 export const languages = {
-  createDiagnosticCollection: jest.fn(),
+  createDiagnosticCollection: jest.fn(name => ({
+    name,
+    delete: jest.fn(),
+    set: jest.fn(),
+  })),
   registerCodeActionsProvider: jest.fn(),
   setTextDocumentLanguage: jest.fn(),
 }

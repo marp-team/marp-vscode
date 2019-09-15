@@ -32,6 +32,10 @@ export function subscribe(subscriptions: Disposable[]) {
   // Diagnostics
   subscriptions.push(collection)
 
+  // Quick fix
+  deprecatedDollarPrefix.subscribe(subscriptions)
+
+  // Initialize observers
   if (window.activeTextEditor) refresh(window.activeTextEditor.document)
 
   subscriptions.push(
@@ -39,9 +43,6 @@ export function subscribe(subscriptions: Disposable[]) {
     workspace.onDidChangeTextDocument(e => refresh(e.document)),
     workspace.onDidCloseTextDocument(d => collection.delete(d.uri))
   )
-
-  // Quick fix
-  deprecatedDollarPrefix.subscribe(subscriptions)
 }
 
 export default subscribe
