@@ -70,15 +70,18 @@ export function register(doc: TextDocument, diagnostics: Diagnostic[]) {
 
   // HTML comments
   visit(parseMd(markdown), 'html', (n: any) =>
-    visit(parseHtml(n.value), 'comment', (c: any) =>
+    visit(parseHtml(n.value), 'comment', (c: any) => {
+      const trimmedLeft = c.value.replace(/^-*\s*/, '')
+
       detectDirectives(
-        c.value.trim(),
+        trimmedLeft.replace(/\s*-*$/, ''),
         index +
           n.position.start.offset +
+          c.position.start.offset +
           4 +
-          (c.value.length - c.value.trimLeft().length)
+          (c.value.length - trimmedLeft.length)
       )
-    )
+    })
   )
 }
 
