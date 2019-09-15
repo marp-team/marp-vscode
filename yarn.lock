@@ -313,12 +313,12 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@marp-team/marp-cli@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@marp-team/marp-cli/-/marp-cli-0.14.0.tgz#413d14198cd46bab0e78a40cdffa975650304d8b"
-  integrity sha512-JhQ6OinEG0qXf5wYjRvptgBkKSA/ytx4U/YrcVWeOA10j5r48IlTFR2X06Q9DwLfafq7gn4V/sFe5yyqmwVkaA==
+"@marp-team/marp-cli@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@marp-team/marp-cli/-/marp-cli-0.14.1.tgz#a0fb70852d2864dcfeca6a3c5c4683be7a5973f5"
+  integrity sha512-nd2jg4FzXmY7Plb09jPAFtbhGZs0NiArqF+/+vTDCAsOeOVOdgl+oj1IXVj2vrefu+MeJTIUTRvl6/KKP9eyew==
   dependencies:
-    "@marp-team/marp-core" "^0.13.0"
+    "@marp-team/marp-core" "^0.13.1"
     "@marp-team/marpit" "^1.4.0"
     "@marp-team/pptx" "^0.1.0"
     carlo "^0.9.46"
@@ -344,24 +344,6 @@
     wrap-ansi "^6.0.0"
     ws "^7.1.2"
     yargs "^14.0.0"
-
-"@marp-team/marp-core@^0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@marp-team/marp-core/-/marp-core-0.13.0.tgz#53c43714f32ec2593a86b0965fc2133a8deca0ef"
-  integrity sha512-y4FYWdQdZ72LszBMeuMPmVs7F/ThkBmRAbzYvmd1dB+tmameLTEU8uzzGZM96/+wLfOjxwg0N4yA9r1G4nu9mQ==
-  dependencies:
-    "@marp-team/marpit" "^1.4.0"
-    "@marp-team/marpit-svg-polyfill" "^1.1.1"
-    emoji-regex "^8.0.0"
-    highlight.js "^9.15.10"
-    katex "^0.11.0"
-    markdown-it-emoji "^1.4.0"
-    postcss "^7.0.18"
-    postcss-minify-params "^4.0.2"
-    postcss-minify-selectors "^4.0.2"
-    postcss-normalize-whitespace "^4.0.2"
-    twemoji "^12.1.2"
-    xss "^1.0.6"
 
 "@marp-team/marp-core@^0.13.1":
   version "0.13.1"
