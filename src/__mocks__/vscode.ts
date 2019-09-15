@@ -20,6 +20,12 @@ const uriInstance = (path: string) =>
     return uri
   })()
 
+export class CodeActionKind {
+  static readonly QuickFix = new CodeActionKind('QuickFix')
+
+  constructor(value: string) {}
+}
+
 export class Position {
   constructor(readonly line: number, readonly character: number) {}
 }
@@ -49,6 +55,8 @@ export const env = {
 }
 
 export const languages = {
+  createDiagnosticCollection: jest.fn(),
+  registerCodeActionsProvider: jest.fn(),
   setTextDocumentLanguage: jest.fn(),
 }
 
@@ -59,6 +67,7 @@ export const _setVSCodeVersion = (value: string) => {
 
 export const window = {
   activeTextEditor: undefined,
+  onDidChangeActiveTextEditor: jest.fn(),
   showErrorMessage: jest.fn(),
   showQuickPick: jest.fn(),
   showSaveDialog: jest.fn(),
@@ -79,6 +88,8 @@ export const workspace = {
   })),
   getWorkspaceFolder: jest.fn(),
   onDidChangeConfiguration: jest.fn(),
+  onDidChangeTextDocument: jest.fn(),
+  onDidCloseTextDocument: jest.fn(),
 
   _setConfiguration: (conf: MockedConf = {}) => {
     currentConf = { ...defaultConf, ...conf }
