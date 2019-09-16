@@ -21,9 +21,10 @@ const uriInstance = (path: string) =>
   })()
 
 export class CodeAction {
-  // edit?: WorkspaceEdit
-  diagnostics?: Diagnostic[]
   // command?: Command
+  diagnostics?: Diagnostic[]
+  edit?: WorkspaceEdit
+  isPreferred?: boolean
 
   constructor(public title: string, public kind?: CodeActionKind) {}
 }

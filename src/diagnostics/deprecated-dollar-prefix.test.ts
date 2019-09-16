@@ -52,10 +52,9 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
       expect($theme.code).toBe(rule.code)
       expect($theme.source).toBe('marp-vscode')
       expect($theme.severity).toBe(DiagnosticSeverity.Warning)
-      expect($theme.range).toMatchObject({
-        start: new Position(2, 0),
-        end: new Position(2, 6),
-      })
+      expect($theme.range).toStrictEqual(
+        new Range(new Position(2, 0), new Position(2, 6))
+      )
 
       // Multiple deprecated directives
       const document = doc(dedent`
@@ -78,18 +77,15 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
       expect(diagnostics.every(d => d.code === rule.code)).toBe(true)
 
       const [$size, $headingDivider, $style] = diagnostics
-      expect($size.range).toMatchObject({
-        start: new Position(1, 0),
-        end: new Position(1, 5),
-      })
-      expect($headingDivider.range).toMatchObject({
-        start: new Position(4, 0),
-        end: new Position(4, 15),
-      })
-      expect($style.range).toMatchObject({
-        start: new Position(5, 0),
-        end: new Position(5, 6),
-      })
+      expect($size.range).toStrictEqual(
+        new Range(new Position(1, 0), new Position(1, 5))
+      )
+      expect($headingDivider.range).toStrictEqual(
+        new Range(new Position(4, 0), new Position(4, 15))
+      )
+      expect($style.range).toStrictEqual(
+        new Range(new Position(5, 0), new Position(5, 6))
+      )
     })
 
     it('adds diagnostics when passed outdated directives as HTML comment', () => {
@@ -125,22 +121,18 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
       expect(diagnostics.every(d => d.code === rule.code)).toBe(true)
 
       const [$theme, $size, $style, $headingDivider] = diagnostics
-      expect($theme.range).toMatchObject({
-        start: new Position(4, 5),
-        end: new Position(4, 11),
-      })
-      expect($size.range).toMatchObject({
-        start: new Position(8, 0),
-        end: new Position(8, 5),
-      })
-      expect($style.range).toMatchObject({
-        start: new Position(17, 7),
-        end: new Position(17, 13),
-      })
-      expect($headingDivider.range).toMatchObject({
-        start: new Position(21, 11),
-        end: new Position(21, 26),
-      })
+      expect($theme.range).toStrictEqual(
+        new Range(new Position(4, 5), new Position(4, 11))
+      )
+      expect($size.range).toStrictEqual(
+        new Range(new Position(8, 0), new Position(8, 5))
+      )
+      expect($style.range).toStrictEqual(
+        new Range(new Position(17, 7), new Position(17, 13))
+      )
+      expect($headingDivider.range).toStrictEqual(
+        new Range(new Position(21, 11), new Position(21, 26))
+      )
     })
   })
 
