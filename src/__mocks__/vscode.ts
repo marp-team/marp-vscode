@@ -20,6 +20,14 @@ const uriInstance = (path: string) =>
     return uri
   })()
 
+export class CodeAction {
+  // edit?: WorkspaceEdit
+  diagnostics?: Diagnostic[]
+  // command?: Command
+
+  constructor(public title: string, public kind?: CodeActionKind) {}
+}
+
 export class CodeActionKind {
   static readonly QuickFix = new CodeActionKind('QuickFix')
 
@@ -45,6 +53,10 @@ export enum DiagnosticSeverity {
 }
 
 export class Position {
+  translate(lineDelta: number = 0, characterDelta: number = 0) {
+    return new Position(this.line + lineDelta, this.character + characterDelta)
+  }
+
   constructor(readonly line: number, readonly character: number) {}
 }
 
@@ -116,6 +128,10 @@ export const workspace = {
   _setConfiguration: (conf: MockedConf = {}) => {
     currentConf = { ...defaultConf, ...conf }
   },
+}
+
+export class WorkspaceEdit {
+  readonly delete = jest.fn()
 }
 
 beforeEach(() => {

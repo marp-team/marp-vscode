@@ -1,10 +1,15 @@
 import dedent from 'dedent'
 import {
+  CancellationToken,
+  CodeAction,
+  CodeActionKind,
   Diagnostic,
   DiagnosticSeverity,
-  Position,
-  TextDocument,
   languages,
+  Position,
+  Range,
+  TextDocument,
+  WorkspaceEdit,
 } from 'vscode'
 import * as rule from './deprecated-dollar-prefix'
 
@@ -21,14 +26,14 @@ const doc = (text: string): TextDocument =>
   } as any)
 
 describe('[Diagnostics rule] Deprecated dollar prefix', () => {
+  const register = (doc: TextDocument): Diagnostic[] => {
+    const diagnostics: Diagnostic[] = []
+    rule.register(doc, diagnostics)
+
+    return diagnostics
+  }
+
   describe('#register', () => {
-    const register = (doc: TextDocument): Diagnostic[] => {
-      const diagnostics: Diagnostic[] = []
-      rule.register(doc, diagnostics)
-
-      return diagnostics
-    }
-
     it('does not add diagnostics when passed pure markdown', () =>
       expect(register(doc('# Hello'))).toHaveLength(0))
 
@@ -106,18 +111,20 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
 
             <!-- $theme: uncover -->
 
+          <!-- $style: "" -->
+
         # Hello! <!--fit-->
 
         xxxxx <!-- $headingDivider: 1 --> xxxxx
       `)
 
       const diagnostics = register(document)
-      expect(diagnostics).toHaveLength(3)
+      expect(diagnostics).toHaveLength(4)
       expect(diagnostics.every(d => d instanceof Diagnostic)).toBe(true)
       expect(diagnostics.every(d => d.source === 'marp-vscode')).toBe(true)
       expect(diagnostics.every(d => d.code === rule.code)).toBe(true)
 
-      const [$theme, $size, $headingDivider] = diagnostics
+      const [$theme, $size, $style, $headingDivider] = diagnostics
       expect($theme.range).toMatchObject({
         start: new Position(4, 5),
         end: new Position(4, 11),
@@ -126,9 +133,13 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         start: new Position(8, 0),
         end: new Position(8, 5),
       })
+      expect($style.range).toMatchObject({
+        start: new Position(17, 7),
+        end: new Position(17, 13),
+      })
       expect($headingDivider.range).toMatchObject({
-        start: new Position(19, 11),
-        end: new Position(19, 26),
+        start: new Position(21, 11),
+        end: new Position(21, 26),
       })
     })
   })
@@ -141,11 +152,56 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
       expect(languages.registerCodeActionsProvider).toBeCalledWith(
         'markdown',
         expect.any(rule.RemoveDollarPrefix),
-        {
-          providedCodeActionKinds:
-            rule.RemoveDollarPrefix.providedCodeActionKinds,
-        }
+        { providedCodeActionKinds: [CodeActionKind.QuickFix] }
       )
+    })
+  })
+
+  describe('RemoveDollarPrefix code action', () => {
+    describe('#provideCodeActions', () => {
+      const dummyRange = new Range(new Position(0, 0), new Position(0, 0))
+      const dummyToken = {} as CancellationToken
+
+      it('returns created code actions for corresponding diagnostics', () => {
+        const document = doc('---\nmarp: true\n$theme: default\n---')
+        const diagnostics = register(document)
+        const codeActions = new rule.RemoveDollarPrefix().provideCodeActions(
+          document,
+          dummyRange,
+          { diagnostics },
+          dummyToken
+        )
+
+        expect(codeActions).toHaveLength(1)
+        expect(codeActions![0]).toBeInstanceOf(CodeAction)
+
+        // Quick fix action
+        const action: CodeAction = codeActions![0]
+        expect(action.kind).toBe(CodeActionKind.QuickFix)
+        expect(action.diagnostics).toStrictEqual(diagnostics)
+        expect(action.edit).toBeInstanceOf(WorkspaceEdit)
+
+        // Edit
+        const edit: WorkspaceEdit = action.edit!
+        expect(edit.delete).toBeCalledTimes(1)
+        expect(edit.delete).toBeCalledWith(
+          document.uri,
+          new Range(new Position(2, 0), new Position(2, 1)) // "$"
+        )
+      })
+
+      it('does not create code actions when dorresponding diagnostics have not passed', () => {
+        const document = doc('---\nmarp: true\n---')
+        const diagnostics = register(document)
+        const codeActions = new rule.RemoveDollarPrefix().provideCodeActions(
+          document,
+          dummyRange,
+          { diagnostics },
+          dummyToken
+        )
+
+        expect(codeActions).toHaveLength(0)
+      })
     })
   })
 })
