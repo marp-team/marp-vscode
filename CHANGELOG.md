@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.10.0 - 2019-09-16
+
 ### Added
 
 - Output warning about [deprecated dollar prefix](https://github.com/marp-team/marpit/issues/182) in global directives ([#70](https://github.com/marp-team/marp-vscode/pull/70))
