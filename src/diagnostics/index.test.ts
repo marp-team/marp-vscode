@@ -1,8 +1,10 @@
 import { window, TextDocument } from 'vscode'
+import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
 import * as diagnostics from './index' // tslint:disable-line: import-name
 
 jest.mock('lodash.debounce')
 jest.mock('vscode')
+jest.mock('./deprecated-dollar-prefix')
 
 const plainTextDocMock: TextDocument = {
   languageId: 'plaintext',
@@ -18,11 +20,15 @@ const mdDocMock = (text: string): TextDocument =>
 
 describe('Diagnostics', () => {
   describe('#subscribe', () => {
-    it('adds diagnostic collection to subscriptions', () => {
+    it('adds diagnostic collection and rules to subscriptions', () => {
       const subscriptions: any[] = []
       diagnostics.subscribe(subscriptions)
 
+      // Collection
       expect(subscriptions).toContain(diagnostics.collection)
+
+      // Rules for code action
+      expect(deprecatedDollarPrefix.subscribe).toBeCalledWith(subscriptions)
     })
 
     it('runs initial detection when text editor is active', () => {
@@ -51,8 +57,15 @@ describe('Diagnostics', () => {
     })
 
     it('sets diagnostics when passed markdown document with marp frontmatter', () => {
-      diagnostics.refresh(mdDocMock('---\nmarp: true\n---\n\n# Hello'))
+      const arr = expect.any(Array)
+      const doc = mdDocMock('---\nmarp: true\n---\n\n# Hello')
+      diagnostics.refresh(doc)
+
       expect(diagnostics.collection.delete).not.toBeCalled()
+      expect(diagnostics.collection.set).toBeCalledWith('/markdown', arr)
+
+      // Rules
+      expect(deprecatedDollarPrefix.register).toBeCalledWith(doc, arr)
     })
   })
 })
