@@ -20,7 +20,44 @@ const uriInstance = (path: string) =>
     return uri
   })()
 
+export class CodeAction {
+  // command?: Command
+  diagnostics?: Diagnostic[]
+  edit?: WorkspaceEdit
+  isPreferred?: boolean
+
+  constructor(public title: string, public kind?: CodeActionKind) {}
+}
+
+export class CodeActionKind {
+  static readonly QuickFix = new CodeActionKind('QuickFix')
+
+  constructor(readonly value: string) {}
+}
+
+export class Diagnostic {
+  code?: string
+  source?: string
+
+  constructor(
+    public range: Range,
+    public message: string,
+    public severity?: DiagnosticSeverity
+  ) {}
+}
+
+export enum DiagnosticSeverity {
+  Error,
+  Warning,
+  Information,
+  Hint,
+}
+
 export class Position {
+  translate(lineDelta: number = 0, characterDelta: number = 0) {
+    return new Position(this.line + lineDelta, this.character + characterDelta)
+  }
+
   constructor(readonly line: number, readonly character: number) {}
 }
 
@@ -49,6 +86,12 @@ export const env = {
 }
 
 export const languages = {
+  createDiagnosticCollection: jest.fn(name => ({
+    name,
+    delete: jest.fn(),
+    set: jest.fn(),
+  })),
+  registerCodeActionsProvider: jest.fn(),
   setTextDocumentLanguage: jest.fn(),
 }
 
@@ -59,6 +102,7 @@ export const _setVSCodeVersion = (value: string) => {
 
 export const window = {
   activeTextEditor: undefined,
+  onDidChangeActiveTextEditor: jest.fn(),
   showErrorMessage: jest.fn(),
   showQuickPick: jest.fn(),
   showSaveDialog: jest.fn(),
@@ -79,10 +123,16 @@ export const workspace = {
   })),
   getWorkspaceFolder: jest.fn(),
   onDidChangeConfiguration: jest.fn(),
+  onDidChangeTextDocument: jest.fn(),
+  onDidCloseTextDocument: jest.fn(),
 
   _setConfiguration: (conf: MockedConf = {}) => {
     currentConf = { ...defaultConf, ...conf }
   },
+}
+
+export class WorkspaceEdit {
+  readonly delete = jest.fn()
 }
 
 beforeEach(() => {
