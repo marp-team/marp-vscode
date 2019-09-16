@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+- Output warning about [deprecated dollar prefix](https://github.com/marp-team/marpit/issues/182) in global directives ([#70](https://github.com/marp-team/marp-vscode/pull/70))
+
+### Changed
+
+- Upgrade Marp Core to [v0.13.1](https://github.com/marp-team/marp-core/releases/v0.13.1) and Marp CLI to [v0.14.1](https://github.com/marp-team/marp-cli/releases/v0.14.1) ([#70](https://github.com/marp-team/marp-vscode/pull/70))
+
 ## v0.9.0 - 2019-08-28
 
 ### Added
