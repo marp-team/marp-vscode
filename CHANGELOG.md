@@ -10,6 +10,7 @@
 
 - Upgrade Marp Core to [v0.13.1](https://github.com/marp-team/marp-core/releases/v0.13.1) and Marp CLI to [v0.14.1](https://github.com/marp-team/marp-cli/releases/v0.14.1) ([#70](https://github.com/marp-team/marp-vscode/pull/70))
 - Disable style minification on preview ([#71](https://github.com/marp-team/marp-vscode/pull/71))
+- Update CircleCI configuration to use v2.1 ([#72](https://github.com/marp-team/marp-vscode/pull/72))
 
 ## v0.9.0 - 2019-08-28
 

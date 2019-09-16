@@ -201,7 +201,7 @@
     "preversion": "run-p check:* lint:* test:*:coverage",
     "test:unit": "jest",
     "test:unit:coverage": "jest --coverage",
-    "version": "curl https://raw.githubusercontent.com/marp-team/marp/master/version.js | node && git add -A CHANGELOG.md",
+    "version": "curl https://raw.githubusercontent.com/marp-team/actions/v1/lib/scripts/version.js | node && git add -A CHANGELOG.md",
     "vsce:publish": "npx vsce publish",
     "vscode:prepublish": "run-s preversion build",
     "watch": "rollup -w -c ./rollup.config.js"
@@ -219,7 +219,7 @@
     "codecov": "^3.5.0",
     "dedent": "^0.7.0",
     "jest": "^24.9.0",
-    "jest-junit": "^7.0.0",
+    "jest-junit": "^8.0.0",
     "lodash.debounce": "^4.0.8",
     "markdown-it": "^10.0.0",
     "nanoid": "^2.0.3",

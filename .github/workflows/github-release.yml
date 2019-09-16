@@ -1,0 +1,16 @@
+name: GitHub Release
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  github-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: marp-team/actions@v1
+        with:
+          task: release
+          token: ${{ secrets.GITHUB_TOKEN }}
