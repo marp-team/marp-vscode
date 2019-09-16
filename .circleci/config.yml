@@ -1,39 +1,65 @@
-references:
-  base: &base
+version: 2.1
+
+executors:
+  node:
+    parameters:
+      version:
+        type: string
+        default: lts
     docker:
-      - image: circleci/node:10.16.0
+      - image: circleci/node:<< parameters.version >>
     working_directory: ~/marp-vscode
+
+commands:
+  install:
+    parameters:
+      postinstall:
+        type: steps
+        default: []
+      yarn:
+        type: string
+        default: 1.17.3
     steps:
       # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#upgradingdowngrading-yarn
       - run:
           name: Upgrade yarn
           command: |
             sudo -E sh -c 'curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-                           && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-                           && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-                           && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-                           && rm yarn-v$YARN_VERSION.tar.gz'
+              && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+              && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+              && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+              && rm yarn-v$YARN_VERSION.tar.gz'
           environment:
-            YARN_VERSION: 1.16.0
-
-      - checkout
+            YARN_VERSION: << parameters.yarn >>
 
       - restore_cache:
           keys:
-            - dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
-            - dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-
-            - dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-
+            - v2.1-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+            - v2.1-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-
+            - v2.1-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-
 
       - run: yarn install
-
-      # TODO: Use `yarn audit` to report audit of devDependencies
-      - run: yarn check:audit
+      - steps: << parameters.postinstall >>
 
       - save_cache:
-          key: dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+          key: v2.1-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
           paths:
             - node_modules
             - ~/.cache/yarn
+
+  audit:
+    steps:
+      - checkout
+      - install:
+          postinstall:
+            - run: yarn audit
+
+  test:
+    steps:
+      - run: node --version
+
+      - checkout
+      - install
 
       - run:
           name: Prettier formatting
@@ -52,10 +78,10 @@ references:
           command: yarn lint:css
 
       - run:
-          name: Unit test
+          name: Jest
           command: yarn test:unit:coverage --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           environment:
-            JEST_JUNIT_OUTPUT: tmp/test-results/jest.xml
+            JEST_JUNIT_OUTPUT_DIR: tmp/test-results
 
       - run: yarn codecov
 
@@ -66,36 +92,33 @@ references:
           path: ./coverage
           destination: coverage
 
-version: 2
 jobs:
-  electron3:
-    <<: *base
-    docker:
-      - image: circleci/node:10.2.0
-
-  electron4:
-    <<: *base
-    docker:
-      - image: circleci/node:10.11.0
-
-  github-release:
-    <<: *base
+  audit:
+    executor: node
     steps:
-      - checkout
-      - run:
-          name: Create release on GitHub
-          command: curl https://raw.githubusercontent.com/marp-team/marp/master/github-release.js | node
+      - audit
+
+  unit-electron3:
+    executor:
+      name: node
+      version: '10.2.0'
+    steps:
+      - test
+
+  unit-electron4:
+    executor:
+      name: node
+      version: '10.11.0'
+    steps:
+      - test
 
 workflows:
-  version: 2
-  build:
+  test:
     jobs:
-      - electron3
-      - electron4
-      - github-release:
-          context: github-release
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
+      - audit
+      - unit-electron3:
+          requires:
+            - audit
+      - unit-electron4:
+          requires:
+            - audit
