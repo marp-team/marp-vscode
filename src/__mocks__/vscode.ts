@@ -26,6 +26,24 @@ export class CodeActionKind {
   constructor(readonly value: string) {}
 }
 
+export class Diagnostic {
+  code?: string
+  source?: string
+
+  constructor(
+    public range: Range,
+    public message: string,
+    public severity?: DiagnosticSeverity
+  ) {}
+}
+
+export enum DiagnosticSeverity {
+  Error,
+  Warning,
+  Information,
+  Hint,
+}
+
 export class Position {
   constructor(readonly line: number, readonly character: number) {}
 }
