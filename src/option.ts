@@ -57,6 +57,7 @@ export const marpCoreOptionForPreview = (
       dollarPrefixForGlobalDirectives: true,
       html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       markdown: { breaks: breaks(!!baseOption.breaks) },
+      minifyCSS: false,
     }
   }
   return cachedPreviewOption
