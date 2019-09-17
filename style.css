@@ -3,25 +3,25 @@
 }
 
 /* Override VS Code default CSS rules reverting to initial
-   https://github.com/Microsoft/vscode/blob/master/src/vs/workbench/contrib/webview/electron-browser/webview-pre.js#L412 */
+   https://github.com/microsoft/vscode/blob/master/src/vs/workbench/contrib/webview/browser/pre/main.js#L53 */
 body.marp-vscode {
   padding: 0;
 }
 
 body.marp-vscode img {
-  max-width: initial;
-  max-height: initial;
+  max-width: unset;
+  max-height: unset;
 }
 
 body.marp-vscode a,
 body.marp-vscode a:hover,
 body.marp-vscode code {
-  color: initial;
+  color: unset;
 }
 
 body.marp-vscode blockquote {
-  background: initial;
-  border-color: initial;
+  background: unset;
+  border-color: unset;
 }
 
 @media screen {
