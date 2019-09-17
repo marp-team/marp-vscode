@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Incorrect style initialization for VS Code preview pane elements ([#74](https://github.com/marp-team/marp-vscode/issues/74), [#75](https://github.com/marp-team/marp-vscode/pull/75))
+
 ## v0.10.0 - 2019-09-16
 
 ### Added
