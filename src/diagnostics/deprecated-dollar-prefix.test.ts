@@ -51,7 +51,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
       expect($theme).toBeInstanceOf(Diagnostic)
       expect($theme.code).toBe(rule.code)
       expect($theme.source).toBe('marp-vscode')
-      expect($theme.severity).toBe(DiagnosticSeverity.Warning)
+      expect($theme.severity).toBe(DiagnosticSeverity.Error)
       expect($theme.range).toStrictEqual(
         new Range(new Position(2, 0), new Position(2, 6))
       )

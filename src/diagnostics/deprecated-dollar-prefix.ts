@@ -44,8 +44,8 @@ export function register(doc: TextDocument, diagnostics: Diagnostic[]) {
               doc.positionAt(start + offset),
               doc.positionAt(end + offset)
             ),
-            `Dollar prefix support for ${name} global directive is deprecated. Remove "$" to fix.`,
-            DiagnosticSeverity.Warning
+            `Dollar prefix support for ${name} global directive is no longer working. Remove "$" to fix.`,
+            DiagnosticSeverity.Error
           )
 
           diagnostic.source = 'marp-vscode'
