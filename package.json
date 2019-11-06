@@ -207,12 +207,10 @@
     "watch": "rollup -w -c ./rollup.config.js"
   },
   "devDependencies": {
-    "@marp-team/marpit-svg-polyfill": "^1.1.1",
     "@types/cheerio": "^0.22.13",
     "@types/jest": "^24.0.18",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^0.0.8",
-    "@types/semver": "^6.0.2",
     "@types/vscode": "~1.36.0",
     "@types/yaml": "^1.0.2",
     "cheerio": "^1.0.0-rc.3",
@@ -235,7 +233,6 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.1.2",
     "rollup-plugin-typescript": "^1.0.1",
-    "semver": "^6.3.0",
     "stylelint": "^11.0.0",
     "stylelint-config-prettier": "^6.0.0",
     "stylelint-config-standard": "^19.0.0",
