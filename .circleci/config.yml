@@ -22,7 +22,7 @@ commands:
     steps:
       - run:
           name: Upgrade yarn for current user
-          command: cd ~ && yarn policies set-version << parameters.yarn >>
+          command: cd ~ && touch package.json && yarn policies set-version << parameters.yarn >>
 
       - restore_cache:
           keys:
