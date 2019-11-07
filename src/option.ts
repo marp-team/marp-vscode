@@ -36,6 +36,7 @@ export const marpCoreOptionForPreview = (
       html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       markdown: { breaks: breaks(!!baseOption.breaks) },
       minifyCSS: false,
+      script: false,
     }
   }
   return cachedPreviewOption
