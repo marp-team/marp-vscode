@@ -8,8 +8,13 @@
 
 ### Changed
 
-- Drop support for VS Code < 1.36 ([#79](https://github.com/marp-team/marp-vscode/issues/79), [#91](https://github.com/marp-team/marp-vscode/pull/91))
+- Change warning level for dollar prefixed global directives to error ([#90](https://github.com/marp-team/marp-vscode/issues/90), [#92](https://github.com/marp-team/marp-vscode/pull/92))
 - Upgrade dependent packages to the latest version ([#78](https://github.com/marp-team/marp-vscode/pull/78))
+
+### Removed
+
+- Drop support for VS Code < 1.36 ([#79](https://github.com/marp-team/marp-vscode/issues/79), [#91](https://github.com/marp-team/marp-vscode/pull/91))
+- Deprecated dollar prefix support for global directives ([#92](https://github.com/marp-team/marp-vscode/pull/92))
 
 ## v0.10.1 - 2019-09-17
 

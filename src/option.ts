@@ -33,7 +33,6 @@ export const marpCoreOptionForPreview = (
   if (!cachedPreviewOption) {
     cachedPreviewOption = {
       container: { tag: 'div', id: 'marp-vscode' },
-      dollarPrefixForGlobalDirectives: true,
       html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       markdown: { breaks: breaks(!!baseOption.breaks) },
       minifyCSS: false,
@@ -47,7 +46,6 @@ export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
     allowLocalFiles: true,
     html: marpConfiguration().get<boolean>('enableHtml') || undefined,
     options: {
-      dollarPrefixForGlobalDirectives: true,
       markdown: {
         breaks: breaks(
           !!workspace
