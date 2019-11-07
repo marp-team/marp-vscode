@@ -5,11 +5,13 @@
 ### Breaking
 
 - VS Code >= 1.36 is now required ([#91](https://github.com/marp-team/marp-vscode/pull/91))
+- [GFM strikethrough syntax](https://github.com/marp-team/marp-core/issues/102) added to Marp Core v0.15.0 may break existing slides
 
 ### Changed
 
 - Change warning level for dollar prefixed global directives to error ([#90](https://github.com/marp-team/marp-vscode/issues/90), [#92](https://github.com/marp-team/marp-vscode/pull/92))
-- Upgrade dependent packages to the latest version ([#78](https://github.com/marp-team/marp-vscode/pull/78))
+- Upgrade Marp Core to [v0.15.1](https://github.com/marp-team/marp-core/releases/v0.15.1) and Marp CLI to [v0.16.1](https://github.com/marp-team/marp-cli/releases/v0.16.1) ([#93](https://github.com/marp-team/marp-vscode/pull/93))
+- Upgrade dependent packages to the latest version ([#78](https://github.com/marp-team/marp-vscode/pull/78), [#93](https://github.com/marp-team/marp-vscode/pull/93))
 
 ### Removed
 
