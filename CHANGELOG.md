@@ -2,8 +2,13 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- VS Code >= 1.36 is now required ([#91](https://github.com/marp-team/marp-vscode/pull/91))
+
 ### Changed
 
+- Drop support for VS Code < 1.36 ([#79](https://github.com/marp-team/marp-vscode/issues/79), [#91](https://github.com/marp-team/marp-vscode/pull/91))
 - Upgrade dependent packages to the latest version ([#78](https://github.com/marp-team/marp-vscode/pull/78))
 
 ## v0.10.1 - 2019-09-17
