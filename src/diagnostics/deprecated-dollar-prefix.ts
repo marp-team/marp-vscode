@@ -109,7 +109,7 @@ export class RemoveDollarPrefix implements CodeActionProvider {
       doc.uri,
       new Range(diag.range.start, diag.range.start.translate(0, 1))
     )
-    // act.isPreferred = true  // TODO: Require VS Code >= v1.32
+    act.isPreferred = true
 
     return act
   }

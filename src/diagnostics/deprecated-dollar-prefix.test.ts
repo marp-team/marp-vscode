@@ -172,6 +172,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         expect(action.kind).toBe(CodeActionKind.QuickFix)
         expect(action.diagnostics).toStrictEqual(diagnostics)
         expect(action.edit).toBeInstanceOf(WorkspaceEdit)
+        expect(action.isPreferred).toBe(true)
 
         // Edit
         const edit: WorkspaceEdit = action.edit!

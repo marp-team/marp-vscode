@@ -27,9 +27,6 @@ const extension = (): typeof import('./extension') => {
 const setConfiguration: (conf?: object) => void = (workspace as any)
   ._setConfiguration
 
-const setVSCodeVersion: (version: string) => void = require('vscode')
-  ._setVSCodeVersion
-
 describe('#activate', () => {
   const extContext: any = { subscriptions: { push: jest.fn() } }
 
@@ -138,21 +135,6 @@ describe('#extendMarkdownIt', () => {
         expect($('h1').data('line')).toBe(4)
         expect($('p').data('line')).toBe(6)
         expect($('h2').data('line')).toBe(10)
-      })
-
-      it('adds code-line class and data-line attribute only to SVG when enabled polyfill', () => {
-        setVSCodeVersion('v1.35.0')
-
-        const $ = cheerio.load(
-          extension()
-            .extendMarkdownIt(new markdownIt())
-            .render(markdown)
-        )
-
-        expect($('svg.code-line[data-line]')).toHaveLength(2)
-        expect($('h1[data-line]')).toHaveLength(0)
-        expect($('p[data-line]')).toHaveLength(0)
-        expect($('h2[data-line]')).toHaveLength(0)
       })
     })
   })
@@ -275,39 +257,6 @@ describe('#extendMarkdownIt', () => {
         expect(
           markdown.render(marpMd('<!-- theme: default -->'))
         ).not.toContain('@custom theme')
-      })
-    })
-
-    describe('window.zoomLevel', () => {
-      const render = () => md().render(marpMd(''))
-
-      it('does not assign data-zoom and data-polyfill when using VS Code >= 1.36', () => {
-        setVSCodeVersion('v1.35.99')
-        expect(render()).toContain('data-zoom')
-        expect(render()).toContain('data-polyfill')
-
-        setVSCodeVersion('v1.36.0-insider')
-        expect(render()).not.toContain('data-zoom')
-        expect(render()).not.toContain('data-polyfill')
-
-        setVSCodeVersion('v1.36.0')
-        expect(render()).not.toContain('data-zoom')
-        expect(render()).not.toContain('data-polyfill')
-
-        // Disable polyfill if passed version is invalid
-        setVSCodeVersion('invalid')
-        expect(render()).not.toContain('data-zoom')
-        expect(render()).not.toContain('data-polyfill')
-      })
-
-      it('assigns the calculated scale to data-zoom attribute', () => {
-        setVSCodeVersion('v1.35.0')
-
-        setConfiguration({ 'window.zoomLevel': 1 })
-        expect(render()).toContain('data-zoom="1.2"')
-
-        setConfiguration({ 'window.zoomLevel': 2 })
-        expect(render()).toContain('data-zoom="1.44"')
       })
     })
   })

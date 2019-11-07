@@ -1,5 +1,4 @@
 import browserCjs from '@marp-team/marp-core/lib/browser.cjs'
-import { webkit } from '@marp-team/marpit-svg-polyfill'
 
 export default function preview() {
   const marpVscode = document.getElementById('marp-vscode')
@@ -19,14 +18,5 @@ export default function preview() {
 
     // Run Marp observer
     browserCjs()
-
-    // WebKit polyfill (for Electron 3)
-    if (marpVscode.dataset.polyfill) {
-      const observer = () => {
-        webkit(Number.parseFloat(marpVscode.dataset.zoom || '1') || 1)
-        window.requestAnimationFrame(observer)
-      }
-      observer()
-    }
   }
 }

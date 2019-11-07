@@ -4,8 +4,7 @@ import path from 'path'
 import { promisify } from 'util'
 import { Options } from 'markdown-it'
 import nanoid from 'nanoid'
-import { coerce, lt } from 'semver'
-import { TextDocument, Uri, version, workspace } from 'vscode'
+import { TextDocument, Uri, workspace } from 'vscode'
 import { MarpOptions } from '@marp-team/marp-core'
 import themes, { ThemeType } from './themes'
 import { marpConfiguration } from './utils'
@@ -16,17 +15,6 @@ export interface WorkFile {
 }
 
 let cachedPreviewOption: MarpOptions | undefined
-
-const coercedVer = coerce(version)
-
-// WebKit polyfill requires in VS Code < 1.36 (Electron 3).
-//
-// NOTE: Electron 3 has got a stable rendering by applying WebKit polyfill. And
-// Electron 4 has almost stable rendering even if polyfill is not used but still
-// remains glitch when used CSS 3D transform and video component. Electron 5
-// also has a glitch in video, and we have to wait for stable rendering until
-// Electron 6.
-export const isRequiredPolyfill = coercedVer ? lt(coercedVer, '1.36.0') : false
 
 const breaks = (inheritedValue: boolean): boolean => {
   switch (marpConfiguration().get<string>('breaks')) {
@@ -43,17 +31,8 @@ export const marpCoreOptionForPreview = (
   baseOption: Options & MarpOptions
 ): MarpOptions => {
   if (!cachedPreviewOption) {
-    const containerBaseArgs = (() => {
-      if (!isRequiredPolyfill) return {}
-
-      const zoom =
-        workspace.getConfiguration('window').get<number>('zoomLevel') || 0
-
-      return { 'data-polyfill': 'true', 'data-zoom': 1.2 ** zoom }
-    })()
-
     cachedPreviewOption = {
-      container: { ...containerBaseArgs, tag: 'div', id: 'marp-vscode' },
+      container: { tag: 'div', id: 'marp-vscode' },
       html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       markdown: { breaks: breaks(!!baseOption.breaks) },
       minifyCSS: false,
