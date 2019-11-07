@@ -312,10 +312,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@marp-team/marp-cli@^0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@marp-team/marp-cli/-/marp-cli-0.16.0.tgz#f193f5e7cc4c9afbe7fc1e1968e72d01a32e7a4b"
-  integrity sha512-w+d0lf3uk+81bdHdclvBsrJpiQZQzKTWeV1l8hRv0T6QwBwsQG6tas+RILfJ28i2o+u501vQdd/HcJQ/0HDRjA==
+"@marp-team/marp-cli@^0.16.1":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@marp-team/marp-cli/-/marp-cli-0.16.1.tgz#5c5383a334788e2201a3060c824b11a588543c61"
+  integrity sha512-rud2qoh+ovGsIik56iQLJLquIctvwaq8+4rLrdizBUDKjal/FX+31CIl6QMgC5C+dK/ysmrS5pCkUy8fSaW8Fg==
   dependencies:
     "@marp-team/marp-core" "^0.15.1"
     "@marp-team/marpit" "^1.4.2"
