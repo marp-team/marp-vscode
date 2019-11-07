@@ -15,6 +15,10 @@
 - Upgrade Marp Core to [v0.15.1](https://github.com/marp-team/marp-core/releases/v0.15.1) and Marp CLI to [v0.16.1](https://github.com/marp-team/marp-cli/releases/v0.16.1) ([#93](https://github.com/marp-team/marp-vscode/pull/93))
 - Upgrade dependent packages to the latest version ([#78](https://github.com/marp-team/marp-vscode/pull/78), [#93](https://github.com/marp-team/marp-vscode/pull/93))
 
+### Fixed
+
+- Export command does not respond on Remote WSL extension ([#89](https://github.com/marp-team/marp-vscode/issues/89))
+
 ### Removed
 
 - Drop support for VS Code < 1.36 ([#79](https://github.com/marp-team/marp-vscode/issues/79), [#91](https://github.com/marp-team/marp-vscode/pull/91))
