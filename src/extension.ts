@@ -16,7 +16,6 @@ const shouldRefreshConfs = [
   'markdown.marp.enableHtml',
   'markdown.marp.themes',
   'markdown.preview.breaks',
-  'window.zoomLevel', // for WebKit polyfill
 ]
 
 export const marpVscode = Symbol('marp-vscode')

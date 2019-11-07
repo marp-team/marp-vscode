@@ -18,7 +18,7 @@ commands:
         default: []
       yarn:
         type: string
-        default: 1.17.3
+        default: 1.19.1
     steps:
       # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#upgradingdowngrading-yarn
       - run:
@@ -98,13 +98,6 @@ jobs:
     steps:
       - audit
 
-  unit-electron3:
-    executor:
-      name: node
-      version: '10.2.0'
-    steps:
-      - test
-
   unit-electron4:
     executor:
       name: node
@@ -116,9 +109,6 @@ workflows:
   test:
     jobs:
       - audit
-      - unit-electron3:
-          requires:
-            - audit
       - unit-electron4:
           requires:
             - audit
