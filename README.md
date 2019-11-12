@@ -132,7 +132,7 @@ You can fold the content of slide in editor while editing Marp Markdown.
 
 ### Enable HTML in Marp Markdown
 
-You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option.
+You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option. This feature is disabled as a default because it could allows script injection from untrusted Markdown files. Use with caution.
 
 ## Contributing
 
