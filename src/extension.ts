@@ -28,9 +28,9 @@ export function extendMarkdownIt(md: any) {
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
     if (detectMarpFromMarkdown(markdown)) {
-      const baseFolder: Uri = (() => {
-        // A messy resolution by finding matched document to resolve workspace or directory of Markdown
-        // https://github.com/microsoft/vscode/issues/84846
+      // A messy resolution by finding matched document to resolve workspace or directory of Markdown
+      // https://github.com/microsoft/vscode/issues/84846
+      const baseFolder: Uri | undefined = (() => {
         for (const document of workspace.textDocuments) {
           if (
             document.languageId === 'markdown' &&
@@ -42,9 +42,7 @@ export function extendMarkdownIt(md: any) {
             return document.uri.with({ path: path.dirname(document.fileName) })
           }
         }
-
-        // Fallback (TODO: Disallow absolute path if using a correct way to get document URI)
-        return Uri.file('unknown')
+        return undefined
       })()
 
       const marp = new Marp(marpCoreOptionForPreview(md.options))

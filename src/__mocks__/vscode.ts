@@ -125,6 +125,7 @@ export const workspace = {
   onDidChangeConfiguration: jest.fn(),
   onDidChangeTextDocument: jest.fn(),
   onDidCloseTextDocument: jest.fn(),
+  textDocuments: [] as any,
 
   _setConfiguration: (conf: MockedConf = {}) => {
     currentConf = { ...defaultConf, ...conf }
@@ -136,8 +137,8 @@ export class WorkspaceEdit {
 }
 
 beforeEach(() => {
-  currentConf = {}
   window.activeTextEditor = undefined
+  workspace.textDocuments = []
   workspace._setConfiguration()
   _setVSCodeVersion(defaultVSCodeVersion)
 })

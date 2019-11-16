@@ -63,11 +63,12 @@ export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
   const parentFolder = uri.scheme === 'file' && path.dirname(uri.fsPath)
   const baseFolder = workspaceFolder ? workspaceFolder.uri.fsPath : parentFolder
 
-  if (baseFolder) {
-    const themeFiles: WorkFile[] = ((await Promise.all(
-      themes.loadStyles(Uri.parse(`file:${baseFolder}`)).map(promise =>
-        promise
-          .then(async theme => {
+  const themeFiles: WorkFile[] = (await Promise.all(
+    themes
+      .loadStyles(baseFolder ? Uri.parse(`file:${baseFolder}`) : undefined)
+      .map(promise =>
+        promise.then(
+          async theme => {
             if (theme.type === ThemeType.File) {
               return { path: theme.path, cleanup: () => Promise.resolve() }
             }
@@ -79,14 +80,14 @@ export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
               await promisify(writeFile)(tmp, theme.css)
               return { path: tmp, cleanup: () => promisify(unlink)(tmp) }
             }
-          })
-          .catch(e => console.error(e))
+          },
+          e => console.error(e)
+        )
       )
-    )) as any).filter(w => w)
+  )).filter((w): w is WorkFile => !!w)
 
-    baseOpts.themeSet = themeFiles.map(w => w.path)
-    baseOpts.vscode.themeFiles = themeFiles
-  }
+  baseOpts.themeSet = themeFiles.map(w => w.path)
+  baseOpts.vscode.themeFiles = themeFiles
 
   return baseOpts
 }
