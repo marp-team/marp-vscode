@@ -20,7 +20,7 @@ export default function marpVSCodeLineNumber(md) {
       .slice(idx + 1)
       .find(t => t.type === 'marpit_slide_open')
 
-    if (slide.map && slide.map.length) {
+    if (slide.map?.length) {
       tokens[idx].attrJoin('class', 'code-line')
       tokens[idx].attrSet('data-line', slide.map[0])
     }
@@ -36,7 +36,7 @@ export default function marpVSCodeLineNumber(md) {
     md.renderer.rules[rule] = (tokens, idx, options, env, self) => {
       const token = tokens[idx]
 
-      if (token.map && token.map.length) {
+      if (token.map?.length) {
         token.attrJoin('class', 'code-line')
         token.attrSet('data-line', token.map[0])
       }
