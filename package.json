@@ -56,8 +56,8 @@
         "command": "markdown.marp.showQuickPick",
         "title": "Show quick pick of Marp commands...",
         "icon": {
-          "dark": "./images/icon.png",
-          "light": "./images/icon.png"
+          "dark": "./images/icon-dark.svg",
+          "light": "./images/icon-light.svg"
         }
       },
       {

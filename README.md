@@ -33,7 +33,7 @@ marp: true
 Start writing!
 ```
 
-It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/icon.png" width="16" height="16" /> and selecting **"Toggle Marp preview for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
+It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/icon-light.svg?sanitize=true" width="16" height="16" /> and selecting **"Toggle Marp preview for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/toggle.gif" alt="Toggle Marp preview" width="600" />
@@ -49,7 +49,7 @@ Marp for VS Code can preview your Marp Markdown with the same way as [a native M
 
 We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
 
-To export the content of active Markdown editor, open the quick pick from Marp icon on toolbar <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/icon.png" width="16" height="16" /> and select **"Export slide deck..."**. (`markdown.marp.export`)
+To export the content of active Markdown editor, open the quick pick from Marp icon on toolbar <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/images/icon-light.svg?sanitize=true" width="16" height="16" /> and select **"Export slide deck..."**. (`markdown.marp.export`)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/export.gif" alt="Export slide deck" width="600" />
