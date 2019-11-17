@@ -105,10 +105,20 @@ jobs:
     steps:
       - test
 
+  unit-electron6:
+    executor:
+      name: node
+      version: '12.4.0'
+    steps:
+      - test
+
 workflows:
   test:
     jobs:
       - audit
       - unit-electron4:
+          requires:
+            - audit
+      - unit-electron6:
           requires:
             - audit
