@@ -217,7 +217,15 @@ describe('#extendMarkdownIt', () => {
         setConfiguration({ 'markdown.marp.themes': ['./test.css'] })
 
         const markdown = md()
-        markdown.normalizeLink = url => path.resolve(baseDir, url)
+        const mdBody = marpMd('<!--theme: example-->')
+        ;(workspace as any).textDocuments = [
+          {
+            languageId: 'markdown',
+            getText: () => mdBody,
+            uri: Uri.parse(baseDir),
+            fileName: path.resolve(baseDir, 'test.css'),
+          } as any,
+        ]
 
         await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
 
@@ -225,7 +233,7 @@ describe('#extendMarkdownIt', () => {
           path.resolve(baseDir, './test.css'),
           expect.any(Function)
         )
-        expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(css)
+        expect(markdown.render(mdBody)).toContain(css)
       })
 
       it('cannot traverse theme CSS path to parent directory as same as markdown.styles', async () => {

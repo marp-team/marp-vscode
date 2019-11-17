@@ -37,17 +37,17 @@ export class Themes {
     this.observedThemes.clear()
   }
 
-  getRegisteredStyles(rootDirectory: Uri): Theme[] {
+  getRegisteredStyles(rootDirectory: Uri | undefined): Theme[] {
     return this.getPathsFromConf(rootDirectory)
       .map(p => this.observedThemes.get(p))
       .filter(t => t) as Theme[]
   }
 
-  loadStyles(rootDirectory: Uri): Promise<Theme>[] {
+  loadStyles(rootDirectory: Uri | undefined): Promise<Theme>[] {
     return this.getPathsFromConf(rootDirectory).map(p => this.registerTheme(p))
   }
 
-  private getPathsFromConf(rootDirectory: Uri): string[] {
+  private getPathsFromConf(rootDirectory: Uri | undefined): string[] {
     const themes = marpConfiguration().get<string[]>('themes')
 
     if (Array.isArray(themes) && themes.length > 0) {
@@ -57,7 +57,10 @@ export class Themes {
     return []
   }
 
-  private normalizePaths(paths: string[], rootDirectory: Uri): string[] {
+  private normalizePaths(
+    paths: string[],
+    rootDirectory: Uri | undefined
+  ): string[] {
     const normalizedPaths = new Set<string>()
 
     for (const p of paths) {
@@ -65,7 +68,7 @@ export class Themes {
 
       if (isRemotePath(p)) {
         normalizedPaths.add(p)
-      } else {
+      } else if (rootDirectory) {
         const resolvedPath = path.resolve(rootDirectory.fsPath, p)
 
         if (

@@ -1,5 +1,6 @@
 import path from 'path'
 import json from '@rollup/plugin-json'
+import builtinModules from 'builtin-modules'
 import commonjs from 'rollup-plugin-commonjs'
 import nodeResolve from 'rollup-plugin-node-resolve'
 import { terser } from 'rollup-plugin-terser'
@@ -18,15 +19,7 @@ const sourcemap = !!process.env.ROLLUP_WATCH
 
 export default [
   {
-    external: [
-      ...Object.keys(pkg.dependencies),
-      'crypto',
-      'fs',
-      'os',
-      'path',
-      'util',
-      'vscode',
-    ],
+    external: [...Object.keys(pkg.dependencies), ...builtinModules, 'vscode'],
     input: `src/${path.basename(pkg.main, '.js')}.ts`,
     output: { exports: 'named', file: pkg.main, format: 'cjs', sourcemap },
     plugins,

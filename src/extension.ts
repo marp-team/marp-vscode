@@ -1,3 +1,4 @@
+import path from 'path'
 import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, Uri, commands, workspace } from 'vscode'
 import exportCommand from './commands/export' // tslint:disable-line: import-name
@@ -27,9 +28,22 @@ export function extendMarkdownIt(md: any) {
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
     if (detectMarpFromMarkdown(markdown)) {
-      const mdFolder = Uri.parse(md.normalizeLink('.')).with({ scheme: 'file' })
-      const workspaceFolder = workspace.getWorkspaceFolder(mdFolder)
-      const baseFolder = workspaceFolder ? workspaceFolder.uri : mdFolder
+      // A messy resolution by finding matched document to resolve workspace or directory of Markdown
+      // https://github.com/microsoft/vscode/issues/84846
+      const baseFolder: Uri | undefined = (() => {
+        for (const document of workspace.textDocuments) {
+          if (
+            document.languageId === 'markdown' &&
+            document.getText().replace(/\u2028|\u2029/g, '') === markdown
+          ) {
+            const workspaceFolder = workspace.getWorkspaceFolder(document.uri)
+            if (workspaceFolder) return workspaceFolder.uri
+
+            return document.uri.with({ path: path.dirname(document.fileName) })
+          }
+        }
+        return undefined
+      })()
 
       const marp = new Marp(marpCoreOptionForPreview(md.options))
         .use(customTheme)
@@ -37,18 +51,17 @@ export function extendMarkdownIt(md: any) {
         .use(lineNumber)
 
       // Load custom themes
-      let shouldRefresh = false
-
       Promise.all(
-        themes.loadStyles(baseFolder).map(promise =>
-          promise
-            .then(theme => {
-              if (theme.registered) shouldRefresh = true
-            })
-            .catch(e => console.error(e))
+        themes.loadStyles(baseFolder).map(p =>
+          p.then(
+            theme => theme.registered,
+            e => console.error(e)
+          )
         )
-      ).then(() => {
-        if (shouldRefresh) commands.executeCommand('markdown.preview.refresh')
+      ).then(registered => {
+        if (registered.some(f => f === true)) {
+          commands.executeCommand('markdown.preview.refresh')
+        }
       })
 
       for (const theme of themes.getRegisteredStyles(baseFolder)) {

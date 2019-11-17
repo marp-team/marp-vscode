@@ -6,6 +6,10 @@
 
 - Add documentation about how to enable HTML into README ([#98](https://github.com/marp-team/marp-vscode/issues/98), [#99](https://github.com/marp-team/marp-vscode/pull/99) by [@eric-burel](https://github.com/eric-burel))
 
+### Fixed
+
+- Apply messy workaround to broken logic of theme directory resolution ([#100](https://github.com/marp-team/marp-vscode/issues/100), [#103](https://github.com/marp-team/marp-vscode/pull/103))
+
 ### Changed
 
 - Upgrade dependent packages to the latest version ([#102](https://github.com/marp-team/marp-vscode/pull/102))

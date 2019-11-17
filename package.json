@@ -214,6 +214,7 @@
     "@types/markdown-it": "^0.0.9",
     "@types/vscode": "~1.36.0",
     "@types/yaml": "^1.2.0",
+    "builtin-modules": "^3.1.0",
     "cheerio": "^1.0.0-rc.3",
     "codecov": "^3.6.1",
     "dedent": "^0.7.0",
