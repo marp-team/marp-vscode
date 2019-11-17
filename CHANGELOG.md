@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.11.1 - 2019-11-17
+
 ### Added
 
 - Add documentation about how to enable HTML into README ([#98](https://github.com/marp-team/marp-vscode/issues/98), [#99](https://github.com/marp-team/marp-vscode/pull/99) by [@eric-burel](https://github.com/eric-burel))
