@@ -52,9 +52,12 @@ export function extendMarkdownIt(md: any) {
 
       // Load custom themes
       Promise.all(
-        themes
-          .loadStyles(baseFolder)
-          .map(p => p.then(theme => theme.registered, e => console.error(e)))
+        themes.loadStyles(baseFolder).map(p =>
+          p.then(
+            theme => theme.registered,
+            e => console.error(e)
+          )
+        )
       ).then(registered => {
         if (registered.some(f => f === true)) {
           commands.executeCommand('markdown.preview.refresh')
