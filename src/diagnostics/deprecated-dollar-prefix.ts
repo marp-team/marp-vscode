@@ -33,7 +33,7 @@ export function register(doc: TextDocument, diagnostics: Diagnostic[]) {
   const detectDirectives = (text: string, offset: number = 0) => {
     const { contents, errors } = parseYaml(text)
 
-    if (errors.length === 0 && contents && contents['items']) {
+    if (errors.length === 0 && contents?.['items']) {
       for (const item of contents['items']) {
         if (item.type === 'PAIR' && warnDirectives.includes(item.key.value)) {
           const name = item.key.value.slice(1)
@@ -60,7 +60,7 @@ export function register(doc: TextDocument, diagnostics: Diagnostic[]) {
   // Front-matter
   const fmMatched = markdown.match(frontMatterRegex)
 
-  if (fmMatched && fmMatched.index === 0) {
+  if (fmMatched?.index === 0) {
     const [, open, body, close] = fmMatched
     detectDirectives(body, open.length)
 
