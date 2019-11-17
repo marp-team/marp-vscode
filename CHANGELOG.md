@@ -13,6 +13,7 @@
 ### Changed
 
 - Upgrade dependent packages to the latest version ([#102](https://github.com/marp-team/marp-vscode/pull/102))
+- Upgrade Node for development to 12 LTS ([#104](https://github.com/marp-team/marp-vscode/pull/104))
 
 ## v0.11.0 - 2019-11-07
 
