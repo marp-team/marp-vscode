@@ -37,7 +37,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
   // If it fails, try to create to the root of workspace
   const documentWorkspace = workspace.getWorkspaceFolder(doc.uri)
 
-  if (documentWorkspace && documentWorkspace.uri.scheme === 'file') {
+  if (documentWorkspace?.uri.scheme === 'file') {
     const workspaceDir = documentWorkspace.uri.fsPath
     const workspaceDirTmpPath = path.join(workspaceDir, tmpFileName)
 
