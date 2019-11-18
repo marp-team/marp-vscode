@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.11.2 - 2019-11-18
+
 ### Fixed
 
 - Last slide visually shifted in HTML export ([#101](https://github.com/marp-team/marp-vscode/issues/101), [#106](https://github.com/marp-team/marp-vscode/pull/106))
