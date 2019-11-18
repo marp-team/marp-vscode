@@ -2,9 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Last slide visually shifted in HTML export ([#101](https://github.com/marp-team/marp-vscode/issues/101), [#106](https://github.com/marp-team/marp-vscode/pull/106))
+
 ### Changed
 
 - Update toolbar icon to match VS Code outline style ([#105](https://github.com/marp-team/marp-vscode/pull/105))
+- Upgrade [Marp Core v0.15.2](https://github.com/marp-team/marp-core/releases/tag/v0.15.2) and [Marp CLI v0.16.2](https://github.com/marp-team/marp-cli/releases/tag/v0.16.2) ([#106](https://github.com/marp-team/marp-vscode/pull/106))
 
 ## v0.11.1 - 2019-11-17
 
