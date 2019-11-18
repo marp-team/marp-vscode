@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Update toolbar icon to match VS Code outline style ([#105](https://github.com/marp-team/marp-vscode/pull/105))
+
 ## v0.11.1 - 2019-11-17
 
 ### Added
