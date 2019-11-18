@@ -2,7 +2,7 @@
 */**
 !node_modules/**
 !.vscodeignore
-!images/icon.png
+!images/**
 !lib/*
 !CHANGELOG.md
 !LICENSE
