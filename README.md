@@ -136,7 +136,7 @@ You can enable previsualization of HTML code within Marp Markdown with the `mark
 
 ## Contributing
 
-Are you interested in contributing? Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md).
+Are you interested in contributing? Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md) and [the common contributing guideline for Marp team](https://github.com/marp-team/.github/blob/master/CONTRIBUTING.md).
 
 ## Author
 
