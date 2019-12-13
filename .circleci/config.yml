@@ -18,7 +18,7 @@ commands:
         default: []
       yarn:
         type: string
-        default: 1.19.1
+        default: 1.21.1
     steps:
       # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#upgradingdowngrading-yarn
       - run:
