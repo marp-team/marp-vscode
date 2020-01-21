@@ -2,10 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+
+- Presenter view in the exported HTML, provided by [Marp CLI v0.17.0](https://github.com/marp-team/marp-cli/releases/v0.17.0) ([#118](https://github.com/marp-team/marp-vscode/pull/118))
+
 ### Changed
 
+- Upgrade Marp Core to [v1.0.1](https://github.com/marp-team/marp-core/releases/v1.0.1) and Marp CLI to [v0.17.0](https://github.com/marp-team/marp-cli/releases/v0.17.0) ([#118](https://github.com/marp-team/marp-vscode/pull/118))
+- Upgrade development Node and dependent packages to the latest version ([#111](https://github.com/marp-team/marp-vscode/pull/111), [#118](https://github.com/marp-team/marp-vscode/pull/118))
 - Update community health files ([#107](https://github.com/marp-team/marp-vscode/pull/107))
-- Upgrade development Node and dependent packages to the latest version ([#111](https://github.com/marp-team/marp-vscode/pull/111))
 
 ## v0.11.2 - 2019-11-18
 
