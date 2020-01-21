@@ -1,8 +1,8 @@
 /** @jest-environment jsdom */
-import browserCjs from '@marp-team/marp-core/lib/browser.cjs'
+import browser from '@marp-team/marp-core/browser'
 import preview from './preview'
 
-jest.mock('@marp-team/marp-core/lib/browser.cjs')
+jest.mock('@marp-team/marp-core/browser')
 
 beforeEach(() => {
   document.head.innerHTML = ''
@@ -13,7 +13,7 @@ beforeEach(() => {
 describe('Preview HTML', () => {
   it('does not call browser context JS when HTML has not Marp slide', () => {
     preview()
-    expect(browserCjs).not.toBeCalled()
+    expect(browser).not.toBeCalled()
   })
 
   it('calls only browser context JS when HTML has Marp slide', () => {
@@ -21,7 +21,7 @@ describe('Preview HTML', () => {
 
     preview()
     expect(document.body.classList.contains('marp-vscode')).toBe(true)
-    expect(browserCjs).toBeCalled()
+    expect(browser).toBeCalled()
   })
 
   it('removes all styles excepted Marp when HTML has Marp slide', () => {
