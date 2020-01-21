@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.12.0 - 2020-01-21
+
 ### Added
 
 - Presenter view in the exported HTML, provided by [Marp CLI v0.17.0](https://github.com/marp-team/marp-cli/releases/v0.17.0) ([#118](https://github.com/marp-team/marp-vscode/pull/118))
