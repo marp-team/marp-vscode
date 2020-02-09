@@ -40,7 +40,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     const conf = await createConfigFile(document)
 
     try {
-      if (!const marpConfiguration().get<boolean>('customConfig')){
+      if (!marpConfiguration().get<boolean>('customConfig')) {
         await marpCli('-c', conf.path, input.path, '-o', uri.fsPath)
       } else {
         /* If we  are using the custom config, set the working directory
