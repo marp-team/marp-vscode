@@ -126,6 +126,11 @@
           "type": "boolean",
           "default": true,
           "description": "Shows editor toolbar button to Markdown document, for accessing quick pick of Marp commands."
+        },
+        "markdown.marp.customConfig": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use Marp CLI config files in workspace folders, if they exist."
         }
       }
     },
