@@ -37,8 +37,22 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
   const input = await createWorkFile(document)
 
   try {
-    const conf = await createConfigFile(document)
-
+    /*Check options to determine whether or not to use a custom config*/
+    try {
+      if (const marpConfiguration().get<boolean>('customConfig')){
+        const conf = await loadConfigFile(XXX)
+      } else {
+        const conf = await createConfigFile(document)
+      }
+    } catch (e) {
+      /*${workspace().path}*/
+      console.error(
+        `Failed to load custom config file from "XXX". (${e.message})`
+      )
+    } finally {
+      const conf = await createConfigFile(document)
+    }
+    
     try {
       await marpCli('-c', conf.path, input.path, '-o', uri.fsPath)
       env.openExternal(uri)
