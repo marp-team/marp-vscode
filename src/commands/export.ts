@@ -37,25 +37,23 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
   const input = await createWorkFile(document)
 
   try {
-    /*Check options to determine whether or not to use a custom config*/
-    try {
-      if (const marpConfiguration().get<boolean>('customConfig')){
-        const conf = await loadConfigFile(document)
-      } else {
-        const conf = await createConfigFile(document)
-      }
-    } catch (e) {
-      /*${workspace().path}*/
-      console.error(
-        `Error loading custom configurations; falling back on default config. (${e.message})`
-      )
-    } finally {
-      const conf = await createConfigFile(document)
-    }
+    
+    const conf = await createConfigFile(document)
     
     try {
-      await marpCli('-c', conf.path, input.path, '-o', uri.fsPath)
-      env.openExternal(uri)
+      if (!const marpConfiguration().get<boolean>('customConfig')){
+        await marpCli('-c', conf.path, input.path, '-o', uri.fsPath)
+      } else {
+        /* If we  are using the custom config, set the working directory
+         * allow Marp CLI to search the document's workspace for a
+         * config file.
+         */
+        const currentDir = path.cwd()
+        process.chdir(path.dirname(document.uri.fsPath))
+        await marpCli(input.path, '-o', uri.fsPath)
+        process.chdir(currentDir)
+      }
+      env.openExternal(uri)       
     } finally {
       conf.cleanup()
     }
