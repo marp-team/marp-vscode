@@ -40,14 +40,14 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     /*Check options to determine whether or not to use a custom config*/
     try {
       if (const marpConfiguration().get<boolean>('customConfig')){
-        const conf = await loadConfigFile(XXX)
+        const conf = await loadConfigFile(document)
       } else {
         const conf = await createConfigFile(document)
       }
     } catch (e) {
       /*${workspace().path}*/
       console.error(
-        `Failed to load custom config file from "XXX". (${e.message})`
+        `Error loading custom configurations; falling back on default config. (${e.message})`
       )
     } finally {
       const conf = await createConfigFile(document)
