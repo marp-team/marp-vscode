@@ -130,7 +130,7 @@
         "markdown.marp.customConfig": {
           "type": "boolean",
           "default": false,
-          "description": "Use Marp CLI config files in workspace folders, if they exist."
+          "description": "Enable using a custom Marp CLI config file for exporting (does not affect preview in VS Code). Custom config file must be placed in the root of the workspace."
         }
       }
     },
