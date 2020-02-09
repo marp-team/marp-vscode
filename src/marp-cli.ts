@@ -77,6 +77,26 @@ export async function createConfigFile(
   }
 }
 
+export async function loadConfigFile(
+  target: TextDocument
+): Promise<WorkFile> {
+  const tmpFileName = `.marp-vscode-cli-conf-${nanoid()}.json`
+  const tmpPath = path.join(tmpdir(), tmpFileName)
+  const cliOpts = await marpCoreOptionForCLI(target)
+
+  await promiseWriteFile(tmpPath, JSON.stringify(cliOpts))
+
+  return {
+    path: tmpPath,
+    cleanup: async () => {
+      await Promise.all([
+        promiseUnlink(tmpPath),
+        ...cliOpts.vscode.themeFiles.map((w: WorkFile) => w.cleanup()),
+      ])
+    },
+  }
+}
+
 export default async function runMarpCli(...opts: string[]): Promise<void> {
   const argv = ['--no-stdin', ...opts]
   console.info(`Execute Marp CLI: ${argv.join(' ')}`)
