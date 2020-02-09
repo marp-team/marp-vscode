@@ -77,40 +77,6 @@ export async function createConfigFile(
   }
 }
 
-export async function loadConfigFile(
-  target: TextDocument
-): Promise<WorkFile> {
-  const tmpFileName = `.marp-vscode-cli-conf-${nanoid()}.json`
-  const tmpPath = path.join(tmpdir(), tmpFileName)
-  const cliOpts = await marpCoreOptionForCLI(target)
-
-  /* Find config file (needs a bit more logic to check for the other
-   * types of config files)
-   */
-  const documentWorkspace = workspace.getWorkspaceFolder(doc.uri)
-  const configFileName = path.join(documentWorkspace.uri.fsPath, '.marprc')
-  
-  /* Proposed implementation:
-   *
-   * 1. Load config file as a dictionary (JSON object?), e.g. `tmpConfig`
-   * 2. Iterate over keys in `tmpConfig` and insert (or replace) the key:value in `cliOpts`
-   *
-   * Advantage here is that the user only has to replace the options that they care to modify.
-   * This is useful because specifying where you should look for themes is potentially painful.
-   */
-  await promiseWriteFile(tmpPath, JSON.stringify(cliOpts))
-
-  return {
-    path: tmpPath,
-    cleanup: async () => {
-      await Promise.all([
-        promiseUnlink(tmpPath),
-        ...cliOpts.vscode.themeFiles.map((w: WorkFile) => w.cleanup()),
-      ])
-    },
-  }
-}
-
 export default async function runMarpCli(...opts: string[]): Promise<void> {
   const argv = ['--no-stdin', ...opts]
   console.info(`Execute Marp CLI: ${argv.join(' ')}`)
