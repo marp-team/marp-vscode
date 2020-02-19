@@ -220,7 +220,7 @@
     "@types/yaml": "^1.2.0",
     "builtin-modules": "^3.1.0",
     "cheerio": "^1.0.0-rc.3",
-    "codecov": "^3.6.1",
+    "codecov": "^3.6.5",
     "dedent": "^0.7.0",
     "jest": "^24.9.0",
     "jest-junit": "^10.0.0",
