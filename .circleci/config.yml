@@ -18,7 +18,7 @@ commands:
         default: []
       yarn:
         type: string
-        default: 1.21.1
+        default: 1.22.0
     steps:
       # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#upgradingdowngrading-yarn
       - run:
@@ -34,17 +34,16 @@ commands:
 
       - restore_cache:
           keys:
-            - v2.1-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
-            - v2.1-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-
-            - v2.1-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-
+            - v2.2-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+            - v2.2-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-
+            - v2.2-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-
 
       - run: yarn install
       - steps: << parameters.postinstall >>
 
       - save_cache:
-          key: v2.1-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+          key: v2.2-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
           paths:
-            - node_modules
             - ~/.cache/yarn
 
   audit:
@@ -101,7 +100,10 @@ jobs:
   unit-electron4:
     executor:
       name: node
-      version: '10.11.0'
+
+      # Electron 4 is using Node 10.11.0, but we have to run test with Node
+      # >= 10.14.2 due to https://github.com/facebook/jest/issues/9453.
+      version: '10.14.2'
     steps:
       - test
 
