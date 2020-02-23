@@ -100,7 +100,10 @@ jobs:
   unit-electron4:
     executor:
       name: node
-      version: '10.11.0'
+
+      # Electron 4 is using Node 10.11.0, but we have to run test with Node
+      # >= 10.14.2 due to https://github.com/facebook/jest/issues/9453.
+      version: '10.14.2'
     steps:
       - test
 
