@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix failing PDF/PPTX/image export with [Snapd Chromium](https://snapcraft.io/install/chromium/ubuntu), by bumped [Marp CLI v0.17.1](https://github.com/marp-team/marp-cli/releases/tag/v0.17.1) ([#94](https://github.com/marp-team/marp-vscode/issues/94), [#127](https://github.com/marp-team/marp-vscode/pull/127))
+
+### Changed
+
+- Upgrade Marp CLI to [v0.17.1](https://github.com/marp-team/marp-cli/releases/v0.17.1) ([#127](https://github.com/marp-team/marp-vscode/pull/127))
+- Upgrade development Node and dependent packages to the latest version ([#127](https://github.com/marp-team/marp-vscode/pull/127))
+
 ## v0.12.0 - 2020-01-21
 
 ### Added
