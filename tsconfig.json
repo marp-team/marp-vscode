@@ -3,6 +3,7 @@
     "esModuleInterop": true,
     "lib": ["es6", "dom"],
     "module": "commonjs",
+    "moduleResolution": "node",
     "noImplicitAny": false,
     "outDir": "lib",
     "resolveJsonModule": true,
