@@ -88,7 +88,7 @@ describe('Option', () => {
           expect(themeSet).toHaveLength(1)
           expect((await readFile(themeSet[0])).toString()).toBe(css)
         } finally {
-          await Promise.all(vscode.themeFiles.map(w => w.cleanup()))
+          await Promise.all(vscode.themeFiles.map((w) => w.cleanup()))
         }
       })
     })

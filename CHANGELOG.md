@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade to [Marp Core v1.1.0](https://github.com/marp-team/marp-core/releases/v1.1.0) and [Marp CLI v0.17.3](https://github.com/marp-team/marp-cli/releases/v0.17.3) ([#130](https://github.com/marp-team/marp-vscode/pull/130))
+- Upgrade dependent packages to the latest version ([#130](https://github.com/marp-team/marp-vscode/pull/130))
+
 ## v0.12.1 - 2020-02-23
 
 ### Fixed

@@ -21,7 +21,7 @@ const plugins = [
   json({ preferConst: true }),
   nodeResolve({ mainFields: ['module', 'jsnext:main', 'main'] }),
   commonjs(),
-  typescript({ module: 'esnext' }),
+  typescript(),
   !process.env.ROLLUP_WATCH && terser(),
 ]
 

@@ -30,7 +30,7 @@ export class Themes {
   observedThemes = new Map<string, Theme>()
 
   dispose() {
-    this.observedThemes.forEach(theme => {
+    this.observedThemes.forEach((theme) => {
       if (theme.onDidChange) theme.onDidChange.dispose()
       if (theme.onDidDelete) theme.onDidDelete.dispose()
     })
@@ -39,12 +39,14 @@ export class Themes {
 
   getRegisteredStyles(rootDirectory: Uri | undefined): Theme[] {
     return this.getPathsFromConf(rootDirectory)
-      .map(p => this.observedThemes.get(p))
-      .filter(t => t) as Theme[]
+      .map((p) => this.observedThemes.get(p))
+      .filter((t) => t) as Theme[]
   }
 
   loadStyles(rootDirectory: Uri | undefined): Promise<Theme>[] {
-    return this.getPathsFromConf(rootDirectory).map(p => this.registerTheme(p))
+    return this.getPathsFromConf(rootDirectory).map((p) =>
+      this.registerTheme(p)
+    )
   }
 
   private getPathsFromConf(rootDirectory: Uri | undefined): string[] {

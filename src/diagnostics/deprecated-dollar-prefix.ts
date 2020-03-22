@@ -94,8 +94,8 @@ export class RemoveDollarPrefix implements CodeActionProvider {
     context
   ) =>
     context.diagnostics
-      .filter(d => d.source === 'marp-vscode' && d.code === code)
-      .map(d => this.createCodeAction(d, doc))
+      .filter((d) => d.source === 'marp-vscode' && d.code === code)
+      .map((d) => this.createCodeAction(d, doc))
 
   private createCodeAction(diag: Diagnostic, doc: TextDocument): CodeAction {
     const act = new CodeAction(
