@@ -250,5 +250,10 @@
     "@marp-team/marp-cli": "^0.17.3",
     "@marp-team/marp-core": "^1.1.0",
     "axios": "^0.19.2"
+  },
+  "resolutions": {
+    "**/chrome-launcher/mkdirp": "^0.5.3",
+    "**/extract-zip/mkdirp": "^0.5.3",
+    "**/gonzales-pe/minimist": "^1.2.5"
   }
 }
