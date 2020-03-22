@@ -2,10 +2,9 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "lib": ["es6", "dom"],
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": false,
-    "outDir": "lib",
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
