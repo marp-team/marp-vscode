@@ -28,14 +28,14 @@ export const toggle = async (editor: TextEditor) => {
     }
 
     if (targetRange && toggleValue) {
-      await editor.edit(e => e.replace(targetRange!, toggleValue!))
+      await editor.edit((e) => e.replace(targetRange!, toggleValue!))
     } else {
-      await editor.edit(e =>
+      await editor.edit((e) =>
         e.insert(new Position(line - 1, 0), 'marp: true\n')
       )
     }
   } else {
-    await editor.edit(e =>
+    await editor.edit((e) =>
       e.insert(new Position(0, 0), '---\nmarp: true\n---\n\n')
     )
   }

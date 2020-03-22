@@ -66,7 +66,7 @@ describe('#toggle', () => {
       document: { getText: () => text },
     }
 
-    textEditorMock.edit = jest.fn(callback => {
+    textEditorMock.edit = jest.fn((callback) => {
       const builder = editBuilder()
       textEditorMock._editBuilders.push(builder)
 

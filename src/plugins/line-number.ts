@@ -18,7 +18,7 @@ export default function marpVSCodeLineNumber(md) {
   md.renderer.rules.marpit_inline_svg_open = (tokens, idx, opts, env, self) => {
     const slide = tokens
       .slice(idx + 1)
-      .find(t => t.type === 'marpit_slide_open')
+      .find((t) => t.type === 'marpit_slide_open')
 
     if (slide.map?.length) {
       tokens[idx].attrJoin('class', 'code-line')

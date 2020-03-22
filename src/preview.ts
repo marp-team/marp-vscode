@@ -13,8 +13,8 @@ export default function preview() {
     const links = document.querySelectorAll(
       'link[rel="stylesheet"]:not([href*="marp-vscode"])'
     )
-    styles.forEach(elm => elm.remove())
-    links.forEach(elm => elm.remove())
+    styles.forEach((elm) => elm.remove())
+    links.forEach((elm) => elm.remove())
 
     // Run Marp observer
     browser()

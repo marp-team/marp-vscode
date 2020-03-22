@@ -72,9 +72,9 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
 
       const diagnostics = register(document)
       expect(diagnostics).toHaveLength(3)
-      expect(diagnostics.every(d => d instanceof Diagnostic)).toBe(true)
-      expect(diagnostics.every(d => d.source === 'marp-vscode')).toBe(true)
-      expect(diagnostics.every(d => d.code === rule.code)).toBe(true)
+      expect(diagnostics.every((d) => d instanceof Diagnostic)).toBe(true)
+      expect(diagnostics.every((d) => d.source === 'marp-vscode')).toBe(true)
+      expect(diagnostics.every((d) => d.code === rule.code)).toBe(true)
 
       const [$size, $headingDivider, $style] = diagnostics
       expect($size.range).toStrictEqual(
@@ -116,9 +116,9 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
 
       const diagnostics = register(document)
       expect(diagnostics).toHaveLength(4)
-      expect(diagnostics.every(d => d instanceof Diagnostic)).toBe(true)
-      expect(diagnostics.every(d => d.source === 'marp-vscode')).toBe(true)
-      expect(diagnostics.every(d => d.code === rule.code)).toBe(true)
+      expect(diagnostics.every((d) => d instanceof Diagnostic)).toBe(true)
+      expect(diagnostics.every((d) => d.source === 'marp-vscode')).toBe(true)
+      expect(diagnostics.every((d) => d.code === rule.code)).toBe(true)
 
       const [$theme, $size, $style, $headingDivider] = diagnostics
       expect($theme.range).toStrictEqual(

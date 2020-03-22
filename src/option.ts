@@ -67,9 +67,9 @@ export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
     await Promise.all(
       themes
         .loadStyles(baseFolder ? Uri.parse(`file:${baseFolder}`) : undefined)
-        .map(promise =>
+        .map((promise) =>
           promise.then(
-            async theme => {
+            async (theme) => {
               if (theme.type === ThemeType.File) {
                 return { path: theme.path, cleanup: () => Promise.resolve() }
               }
@@ -82,13 +82,13 @@ export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
                 return { path: tmp, cleanup: () => promisify(unlink)(tmp) }
               }
             },
-            e => console.error(e)
+            (e) => console.error(e)
           )
         )
     )
   ).filter((w): w is WorkFile => !!w)
 
-  baseOpts.themeSet = themeFiles.map(w => w.path)
+  baseOpts.themeSet = themeFiles.map((w) => w.path)
   baseOpts.vscode.themeFiles = themeFiles
 
   return baseOpts

@@ -121,9 +121,7 @@ describe('#extendMarkdownIt', () => {
 
       it('adds code-line class and data-line attribute to DOM', () => {
         const $ = cheerio.load(
-          extension()
-            .extendMarkdownIt(new markdownIt())
-            .render(markdown)
+          extension().extendMarkdownIt(new markdownIt()).render(markdown)
         )
 
         // SVG slides
@@ -244,7 +242,7 @@ describe('#extendMarkdownIt', () => {
         setConfiguration({ 'markdown.marp.themes': ['../test.css'] })
 
         const markdown = md()
-        markdown.normalizeLink = url => path.resolve(baseDir, url)
+        markdown.normalizeLink = (url) => path.resolve(baseDir, url)
 
         await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
         expect(markdown.render(marpMd('<!--theme: example-->'))).not.toContain(
