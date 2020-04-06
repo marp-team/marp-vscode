@@ -71,13 +71,17 @@ Default file type can choose by `markdown.marp.exportType` preference.
 
 > ⚠️ Export except HTML requires to install [Google Chrome](https://www.google.com/chrome/) (or [Chromium](https://www.chromium.org/)). You may also specify the custom path for Chrome and Chromium-based browser by preference `markdown.marp.chromePath` (e.g. [Microsoft Edge](https://www.microsoft.com/edge)).
 
+### Accessing User's `settings.json`
+
+On the command pallet of VS Code, type Open Settings (JSON).
+
 ### Use custom theme
 
 You can register and use [custom theme CSS for Marpit](https://marpit.marp.app/theme-css) / [Marp Core](https://github.com/marp-team/marp-core/tree/master/themes#readme) by setting `markdown.marp.themes`, that includes remote URLs, or relative paths to local files in the current workspace.
 
 ```javascript
-// Please put `.vscode/settings.json` on your workspace
 {
+  // Add this entry to your User's `settings.json`
   "markdown.marp.themes": [
     "https://example.com/foo/bar/custom-theme.css",
     "./themes/your-theme.css"
@@ -133,6 +137,13 @@ You can fold the content of slide in editor while editing Marp Markdown.
 ### Enable HTML in Marp Markdown
 
 You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option. This feature is disabled as a default because it could allow script injection from untrusted Markdown files. Use with caution.
+
+```javascript
+{
+  // Add this entry to your User's `settings.json`
+  "markdown.marp.enableHtml": true
+}
+```
 
 ## Contributing
 
