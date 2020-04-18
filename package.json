@@ -30,7 +30,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.36.0"
+    "vscode": "^1.40.0"
   },
   "main": "./lib/extension.js",
   "icon": "images/icon.png",
@@ -215,7 +215,7 @@
     "@types/jest": "^25.2.1",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^10.0.0",
-    "@types/vscode": "~1.36.0",
+    "@types/vscode": "~1.40.0",
     "@types/yaml": "^1.2.0",
     "builtin-modules": "^3.1.0",
     "cheerio": "^1.0.0-rc.3",
