@@ -18,19 +18,11 @@ commands:
         default: []
       yarn:
         type: string
-        default: 1.22.0
+        default: 1.22.4
     steps:
-      # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#upgradingdowngrading-yarn
       - run:
-          name: Upgrade yarn
-          command: |
-            sudo -E sh -c 'curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-              && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-              && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-              && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-              && rm yarn-v$YARN_VERSION.tar.gz'
-          environment:
-            YARN_VERSION: << parameters.yarn >>
+          name: Upgrade yarn for current user
+          command: cd ~ && yarn policies set-version << parameters.yarn >>
 
       - restore_cache:
           keys:
@@ -97,16 +89,6 @@ jobs:
     steps:
       - audit
 
-  unit-electron4:
-    executor:
-      name: node
-
-      # Electron 4 is using Node 10.11.0, but we have to run test with Node
-      # >= 10.14.2 due to https://github.com/facebook/jest/issues/9453.
-      version: '10.14.2'
-    steps:
-      - test
-
   unit-electron6:
     executor:
       name: node
@@ -118,9 +100,6 @@ workflows:
   test:
     jobs:
       - audit
-      - unit-electron4:
-          requires:
-            - audit
       - unit-electron6:
           requires:
             - audit
