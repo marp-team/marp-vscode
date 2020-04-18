@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.13.0 - 2020-04-18
+
 ### Breaking
 
 - VS Code >= 1.40 ([Electron >= 6](https://code.visualstudio.com/updates/v1_40#_electron-60-update)) is now required ([#138](https://github.com/marp-team/marp-vscode/pull/138))
