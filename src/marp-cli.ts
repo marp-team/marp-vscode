@@ -1,6 +1,6 @@
 import marpCli from '@marp-team/marp-cli'
 import { unlink, writeFile } from 'fs'
-import nanoid from 'nanoid'
+import { nanoid } from 'nanoid'
 import { tmpdir } from 'os'
 import path from 'path'
 import { promisify } from 'util'
