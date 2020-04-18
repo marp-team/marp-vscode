@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- VS Code >= 1.40 ([Electron >= 6](https://code.visualstudio.com/updates/v1_40#_electron-60-update)) is now required ([#138](https://github.com/marp-team/marp-vscode/pull/138))
+
 ### Changed
 
 - Upgrade to [Marp Core v1.1.0](https://github.com/marp-team/marp-core/releases/v1.1.0) and [Marp CLI v0.17.3](https://github.com/marp-team/marp-cli/releases/v0.17.3) ([#130](https://github.com/marp-team/marp-vscode/pull/130))
