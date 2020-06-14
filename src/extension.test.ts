@@ -184,6 +184,24 @@ describe('#extendMarkdownIt', () => {
       })
     })
 
+    describe('markdown.marp.mathTypesetting', () => {
+      it('renders math syntax in KaTeX when setting "katex"', () => {
+        setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
+
+        const html = md().render(marpMd('$a=b$'))
+        expect(html).toContain('katex')
+        expect(html).not.toContain('MathJax')
+      })
+
+      it('renders math syntax in MathJax when setting "mathjax"', () => {
+        setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
+
+        const html = md().render(marpMd('$a=b$'))
+        expect(html).not.toContain('katex')
+        expect(html).toContain('MathJax')
+      })
+    })
+
     describe('markdown.marp.themes', () => {
       const baseDir = '/test/path'
       const css = '/* @theme example */'

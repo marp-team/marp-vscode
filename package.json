@@ -114,6 +114,19 @@
             "JPEG image (first slide only)"
           ]
         },
+        "markdown.marp.mathTypesetting": {
+          "type": "string",
+          "enum": [
+            "mathjax",
+            "katex"
+          ],
+          "default": "katex",
+          "markdownDescription": "Controls math typesetting library for rendering [Marp Core](https://github.com/marp-team/marp-core)'s math syntax in Marp Markdown.",
+          "markdownEnumDescriptions": [
+            "MathJax (https://www.mathjax.org/)",
+            "KaTeX (https://katex.org/): The default library in Marp Core"
+          ]
+        },
         "markdown.marp.themes": {
           "type": "array",
           "default": [],
