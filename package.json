@@ -79,10 +79,10 @@
           ],
           "default": "on",
           "description": "Sets how line-breaks are rendered in Marp Markdown. It can set separately because the default setting of Marp ecosystem is different from VS Code.",
-          "enumDescriptions": [
+          "markdownEnumDescriptions": [
             "Ignore line-breaks in rendered Marp Markdown preview.",
             "Show line-breaks in rendered Marp Markdown preview. It is the default setting of Marp ecosystem.",
-            "Use inherited setting from markdown.preview.breaks."
+            "Use inherited setting from `markdown.preview.breaks`."
           ]
         },
         "markdown.marp.chromePath": {
@@ -121,7 +121,7 @@
             "katex"
           ],
           "default": "katex",
-          "markdownDescription": "Controls math typesetting library for rendering [Marp Core](https://github.com/marp-team/marp-core)'s math syntax in Marp Markdown.",
+          "markdownDescription": "Controls math typesetting library for rendering math syntax by [Marp Core](https://github.com/marp-team/marp-core).",
           "markdownEnumDescriptions": [
             "MathJax (https://www.mathjax.org/)",
             "KaTeX (https://katex.org/): The default library in Marp Core"
