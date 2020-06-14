@@ -1,8 +1,8 @@
+/** @jest-environment jsdom */
 import fs from 'fs'
 import path from 'path'
 import { Marp } from '@marp-team/marp-core'
 import axios from 'axios'
-import cheerio from 'cheerio'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
 import { Uri, commands, workspace } from 'vscode'
@@ -120,19 +120,20 @@ describe('#extendMarkdownIt', () => {
       `
 
       it('adds code-line class and data-line attribute to DOM', () => {
-        const $ = cheerio.load(
-          extension().extendMarkdownIt(new markdownIt()).render(markdown)
+        const doc = new DOMParser().parseFromString(
+          extension().extendMarkdownIt(new markdownIt()).render(markdown),
+          'text/html'
         )
 
         // SVG slides
-        const svg = $('svg.code-line')
-        expect(svg.eq(0).data('line')).toBe(0)
-        expect(svg.eq(1).data('line')).toBe(8)
+        const svg = doc.querySelectorAll<SVGElement>('svg.code-line')
+        expect(svg[0].dataset.line).toBe('0')
+        expect(svg[1].dataset.line).toBe('8')
 
         // Contents
-        expect($('h1').data('line')).toBe(4)
-        expect($('p').data('line')).toBe(6)
-        expect($('h2').data('line')).toBe(10)
+        expect(doc.querySelector<HTMLElement>('h1')?.dataset.line).toBe('4')
+        expect(doc.querySelector<HTMLElement>('p')?.dataset.line).toBe('6')
+        expect(doc.querySelector<HTMLElement>('h2')?.dataset.line).toBe('10')
       })
     })
   })

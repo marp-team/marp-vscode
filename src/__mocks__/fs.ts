@@ -1,5 +1,5 @@
 module.exports = {
-  ...require.requireActual('fs'),
+  ...jest.requireActual('fs'),
 
   // Mock file R/W
   unlink: jest.fn((_, cb) => cb(null)),
