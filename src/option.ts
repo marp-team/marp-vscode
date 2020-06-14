@@ -35,6 +35,7 @@ export const marpCoreOptionForPreview = (
       container: { tag: 'div', id: 'marp-vscode' },
       html: marpConfiguration().get<boolean>('enableHtml') || undefined,
       markdown: { breaks: breaks(!!baseOption.breaks) },
+      math: marpConfiguration().get<'katex' | 'mathjax'>('mathTypesetting'),
       minifyCSS: false,
       script: false,
     }
@@ -54,6 +55,7 @@ export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
             .get<boolean>('breaks')
         ),
       },
+      math: marpConfiguration().get<'katex' | 'mathjax'>('mathTypesetting'),
     },
     themeSet: [] as string[],
     vscode: {} as Record<string, any>,
