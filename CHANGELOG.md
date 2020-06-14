@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.14.0 - 2020-06-14
+
 ### Added
 
 - Add `markdown.marp.mathTypesetting` configuration to control math typesetting library for Marp Core's math plugin ([#145](https://github.com/marp-team/marp-vscode/issues/145), [#148](https://github.com/marp-team/marp-vscode/pull/148))
