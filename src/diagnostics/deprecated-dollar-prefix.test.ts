@@ -20,6 +20,8 @@ const doc = (text: string): TextDocument =>
     getText: () => text,
     positionAt: (offset: number) => {
       const lines = text.slice(0, offset).split('\n')
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: '/test/document',
@@ -144,7 +146,9 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
       expect(languages.registerCodeActionsProvider).toHaveBeenCalledWith(
         'markdown',
         expect.any(rule.RemoveDollarPrefix),
-        { providedCodeActionKinds: [CodeActionKind.QuickFix] }
+        {
+          providedCodeActionKinds: [CodeActionKind.QuickFix],
+        }
       )
     })
   })
@@ -165,19 +169,18 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         )
 
         expect(codeActions).toHaveLength(1)
-        expect(codeActions![0]).toBeInstanceOf(CodeAction)
+        expect(codeActions?.[0]).toBeInstanceOf(CodeAction)
 
         // Quick fix action
-        const action: CodeAction = codeActions![0]
+        const action: CodeAction = codeActions?.[0]
         expect(action.kind).toBe(CodeActionKind.QuickFix)
         expect(action.diagnostics).toStrictEqual(diagnostics)
         expect(action.edit).toBeInstanceOf(WorkspaceEdit)
         expect(action.isPreferred).toBe(true)
 
         // Edit
-        const edit: WorkspaceEdit = action.edit!
-        expect(edit.delete).toHaveBeenCalledTimes(1)
-        expect(edit.delete).toHaveBeenCalledWith(
+        expect(action.edit?.delete).toHaveBeenCalledTimes(1)
+        expect(action.edit?.delete).toHaveBeenCalledWith(
           document.uri,
           new Range(new Position(2, 0), new Position(2, 1)) // "$"
         )

@@ -46,6 +46,6 @@ describe('Preview HTML', () => {
     expect(document.getElementById('marp-vscode-style')).toBeTruthy()
     expect(document.getElementById('_defaultStyles')).toBeTruthy()
     expect(document.querySelectorAll('link')).toHaveLength(1)
-    expect(document.querySelector('link')!.href).toContain('marp-vscode')
+    expect(document.querySelector('link')?.href).toContain('marp-vscode')
   })
 })

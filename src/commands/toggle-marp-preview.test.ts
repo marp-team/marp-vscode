@@ -27,8 +27,10 @@ describe('toggleMarpPreview command', () => {
   })
 
   describe('when active text editor is not Markdown', () => {
+    const textEditor = { document: { languageId: 'plaintext' } }
+
     beforeEach(() => {
-      window.activeTextEditor = { document: { languageId: 'plaintext' } } as any
+      window.activeTextEditor = textEditor as any
     })
 
     it('shows warning notification', async () => {
@@ -45,7 +47,7 @@ describe('toggleMarpPreview command', () => {
 
       await toggleMarpPreviewCommand()
       expect(languages.setTextDocumentLanguage).toHaveBeenCalledWith(
-        window.activeTextEditor!.document,
+        textEditor.document,
         'markdown'
       )
       expect(toggleFunc).toHaveBeenCalledWith(window.activeTextEditor)

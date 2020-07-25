@@ -6,8 +6,9 @@ const exportCommand = exportModule.default
 
 jest.mock('vscode')
 
-const setConfiguration: (conf?: object) => void = (workspace as any)
-  ._setConfiguration
+const setConfiguration: (
+  conf?: Record<string, unknown>
+) => void = (workspace as any)._setConfiguration
 
 describe('Export command', () => {
   let saveDialog: jest.SpyInstance
@@ -24,15 +25,18 @@ describe('Export command', () => {
   })
 
   it('opens save dialog when active text editor is Markdown', async () => {
-    window.activeTextEditor = { document: { languageId: 'markdown' } } as any
+    const textEditor = { document: { languageId: 'markdown' } }
+    window.activeTextEditor = textEditor as any
 
     await exportCommand()
-    expect(saveDialog).toHaveBeenCalledWith(window.activeTextEditor!.document)
+    expect(saveDialog).toHaveBeenCalledWith(textEditor.document)
   })
 
   describe('when active text editor is not Markdown', () => {
+    const textEditor = { document: { languageId: 'plaintext' } }
+
     beforeEach(() => {
-      window.activeTextEditor = { document: { languageId: 'plaintext' } } as any
+      window.activeTextEditor = textEditor as any
     })
 
     it('shows warning notification', async () => {
@@ -46,7 +50,7 @@ describe('Export command', () => {
       showWarningMessage.mockResolvedValue(exportModule.ITEM_CONTINUE_TO_EXPORT)
 
       await exportCommand()
-      expect(saveDialog).toHaveBeenCalledWith(window.activeTextEditor!.document)
+      expect(saveDialog).toHaveBeenCalledWith(textEditor.document)
     })
   })
 })

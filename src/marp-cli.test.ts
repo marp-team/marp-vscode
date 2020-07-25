@@ -8,8 +8,9 @@ import * as marpCli from './marp-cli'
 jest.mock('fs')
 jest.mock('vscode')
 
-const setConfiguration: (conf?: object) => void = (workspace as any)
-  ._setConfiguration
+const setConfiguration: (
+  conf?: Record<string, unknown>
+) => void = (workspace as any)._setConfiguration
 
 describe('Marp CLI integration', () => {
   const runMarpCli = marpCli.default
@@ -103,8 +104,8 @@ describe('#createWorkFile', () => {
   })
 
   it('creates tmpfile to workspace root when failed creating to same dir', async () => {
-    // Simulate that creation to same directory is not permited
-    const err = (fs as any).writeFile.mockImplementationOnce((_, __, cb) =>
+    // Simulate that creation to same directory is not permitted
+    ;(fs as any).writeFile.mockImplementationOnce((_, __, cb) =>
       cb(new Error())
     )
 

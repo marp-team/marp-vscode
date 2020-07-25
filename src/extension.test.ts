@@ -18,14 +18,15 @@ const extension = (): typeof import('./extension') => {
 
   jest.isolateModules(() => {
     ext = require('./extension') // Shut up cache
-    themes = require('./themes').default
+    themes = require('./themes').default // eslint-disable-line @typescript-eslint/no-var-requires
   })
 
   return ext
 }
 
-const setConfiguration: (conf?: object) => void = (workspace as any)
-  ._setConfiguration
+const setConfiguration: (
+  conf?: Record<string, unknown>
+) => void = (workspace as any)._setConfiguration
 
 describe('#activate', () => {
   const extContext: any = { subscriptions: { push: jest.fn() } }
