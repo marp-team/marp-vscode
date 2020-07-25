@@ -7,8 +7,8 @@ import {
   window,
   workspace,
 } from 'vscode'
-import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
 import { detectMarpDocument } from '../utils'
+import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
 
 export const collection = languages.createDiagnosticCollection('marp-vscode')
 

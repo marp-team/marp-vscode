@@ -5,11 +5,11 @@ import * as exportCommand from './commands/export'
 import * as openExtensionSettings from './commands/open-extension-settings'
 import * as showQuickPick from './commands/show-quick-pick'
 import * as toggleMarpPreview from './commands/toggle-marp-preview'
+import diagnostics from './diagnostics/'
+import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline from './plugins/outline'
-import diagnostics from './diagnostics/' // tslint:disable-line: import-name
-import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import themes from './themes'
 import { detectMarpFromMarkdown } from './utils'
 

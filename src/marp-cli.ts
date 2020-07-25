@@ -1,8 +1,8 @@
 import { unlink, writeFile } from 'fs'
-import { nanoid } from 'nanoid'
 import { tmpdir } from 'os'
 import path from 'path'
 import { promisify } from 'util'
+import { nanoid } from 'nanoid'
 import { TextDocument, workspace } from 'vscode'
 import { WorkFile, marpCoreOptionForCLI } from './option'
 import { marpConfiguration } from './utils'
@@ -28,7 +28,9 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
   try {
     await promiseWriteFile(sameDirTmpPath, text)
     return { path: sameDirTmpPath, cleanup: createCleanup(sameDirTmpPath) }
-  } catch (e) {}
+  } catch (e) {
+    // no ops
+  }
 
   // If it fails, try to create to the root of workspace
   const documentWorkspace = workspace.getWorkspaceFolder(doc.uri)
@@ -43,7 +45,9 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
         path: workspaceDirTmpPath,
         cleanup: createCleanup(workspaceDirTmpPath),
       }
-    } catch (e) {}
+    } catch (e) {
+      // no ops
+    }
   }
 
   // If it fails, create to OS specific tmp directory

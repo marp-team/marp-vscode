@@ -1,16 +1,16 @@
-// tslint:disable-next-line: import-name
-import * as marpCliModule from '@marp-team/marp-cli'
 import fs from 'fs'
-import path from 'path'
 import { tmpdir } from 'os'
+import path from 'path'
+import * as marpCliModule from '@marp-team/marp-cli'
 import { workspace } from 'vscode'
 import * as marpCli from './marp-cli'
 
 jest.mock('fs')
 jest.mock('vscode')
 
-const setConfiguration: (conf?: object) => void = (workspace as any)
-  ._setConfiguration
+const setConfiguration: (
+  conf?: Record<string, unknown>
+) => void = (workspace as any)._setConfiguration
 
 describe('Marp CLI integration', () => {
   const runMarpCli = marpCli.default
@@ -25,7 +25,7 @@ describe('Marp CLI integration', () => {
     const marpCliSpy = jest.spyOn(marpCliModule, 'marpCli')
     await runMarpCli('--version')
 
-    expect(marpCliSpy).toBeCalledWith(['--version'])
+    expect(marpCliSpy).toHaveBeenCalledWith(['--version'])
   })
 
   it('throws MarpCLIError when returned error exit code', async () => {
@@ -61,7 +61,7 @@ describe('Marp CLI integration', () => {
         })
 
       await runMarpCli('--version')
-      expect(marpCliSpy).toBeCalled()
+      expect(marpCliSpy).toHaveBeenCalled()
       expect(process.env.CHROME_PATH).toBe(CHROME_PATH)
     })
   })
@@ -79,7 +79,7 @@ describe('#createWorkFile', () => {
     expect(workFile.path).toEqual('/tmp/clean.md')
 
     await workFile.cleanup()
-    expect(fs.unlink).not.toBeCalled()
+    expect(fs.unlink).not.toHaveBeenCalled()
   })
 
   it('creates tmpfile to same directory of file when passed a dirty file', async () => {
@@ -93,19 +93,19 @@ describe('#createWorkFile', () => {
       workFile.path.startsWith(path.join('/tmp', '.marp-vscode-tmp'))
     ).toBe(true)
 
-    expect(fs.writeFile).toBeCalledWith(
+    expect(fs.writeFile).toHaveBeenCalledWith(
       workFile.path,
       'example',
       expect.any(Function)
     )
 
     await workFile.cleanup()
-    expect(fs.unlink).toBeCalledWith(workFile.path, expect.any(Function))
+    expect(fs.unlink).toHaveBeenCalledWith(workFile.path, expect.any(Function))
   })
 
   it('creates tmpfile to workspace root when failed creating to same dir', async () => {
-    // Simulate that creation to same directory is not permited
-    const err = (fs as any).writeFile.mockImplementationOnce((_, __, cb) =>
+    // Simulate that creation to same directory is not permitted
+    ;(fs as any).writeFile.mockImplementationOnce((_, __, cb) =>
       cb(new Error())
     )
 

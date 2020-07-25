@@ -1,11 +1,11 @@
 import path from 'path'
 import { env, ProgressLocation, TextDocument, Uri, window } from 'vscode'
-import { marpConfiguration } from '../utils'
 import marpCli, {
   createConfigFile,
   createWorkFile,
   MarpCLIError,
 } from '../marp-cli'
+import { marpConfiguration } from '../utils'
 
 export enum Types {
   html = 'html',
@@ -64,6 +64,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 export const saveDialog = async (document: TextDocument) => {
   const { fsPath } = document.uri
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const defaultType = marpConfiguration().get<string>('exportType')!
   const baseTypes = Object.keys(extensions)
   const types = [...new Set<string>([defaultType, ...baseTypes])]

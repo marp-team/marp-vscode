@@ -1,4 +1,4 @@
-import visit from 'unist-util-visit' // tslint:disable-line: import-name
+import visit from 'unist-util-visit'
 import {
   CodeAction,
   CodeActionKind,
@@ -11,8 +11,8 @@ import {
   WorkspaceEdit,
   languages,
 } from 'vscode'
-import { parseHtml, parseMd, parseYaml } from './parser'
 import { frontMatterRegex } from '../utils'
+import { parseHtml, parseMd, parseYaml } from './parser'
 
 const warnDirectives = [
   // Marpit
@@ -30,7 +30,7 @@ export function register(doc: TextDocument, diagnostics: Diagnostic[]) {
   let markdown = doc.getText()
   let index = 0
 
-  const detectDirectives = (text: string, offset: number = 0) => {
+  const detectDirectives = (text: string, offset = 0) => {
     const { contents, errors } = parseYaml(text)
 
     if (errors.length === 0 && contents?.['items']) {

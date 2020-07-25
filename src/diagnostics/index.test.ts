@@ -1,6 +1,6 @@
 import { window, TextDocument } from 'vscode'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
-import * as diagnostics from './index' // tslint:disable-line: import-name
+import * as diagnostics from './index'
 
 jest.mock('lodash.debounce')
 jest.mock('vscode')
@@ -28,14 +28,16 @@ describe('Diagnostics', () => {
       expect(subscriptions).toContain(diagnostics.collection)
 
       // Rules for code action
-      expect(deprecatedDollarPrefix.subscribe).toBeCalledWith(subscriptions)
+      expect(deprecatedDollarPrefix.subscribe).toHaveBeenCalledWith(
+        subscriptions
+      )
     })
 
     it('runs initial detection when text editor is active', () => {
       window.activeTextEditor = { document: plainTextDocMock } as any
       diagnostics.subscribe([])
 
-      expect(diagnostics.collection.delete).toBeCalledWith('/plaintext')
+      expect(diagnostics.collection.delete).toHaveBeenCalledWith('/plaintext')
     })
 
     describe('Observer events', () => {
@@ -48,12 +50,12 @@ describe('Diagnostics', () => {
   describe('#refresh', () => {
     it('resets diagnostics when passed plain text document', () => {
       diagnostics.refresh(plainTextDocMock)
-      expect(diagnostics.collection.delete).toBeCalledWith('/plaintext')
+      expect(diagnostics.collection.delete).toHaveBeenCalledWith('/plaintext')
     })
 
     it('resets diagnostics when passed markdown document without marp frontmatter', () => {
       diagnostics.refresh(mdDocMock('---\nfoo: bar\n---\n\n# Hello'))
-      expect(diagnostics.collection.delete).toBeCalledWith('/markdown')
+      expect(diagnostics.collection.delete).toHaveBeenCalledWith('/markdown')
     })
 
     it('sets diagnostics when passed markdown document with marp frontmatter', () => {
@@ -61,11 +63,11 @@ describe('Diagnostics', () => {
       const doc = mdDocMock('---\nmarp: true\n---\n\n# Hello')
       diagnostics.refresh(doc)
 
-      expect(diagnostics.collection.delete).not.toBeCalled()
-      expect(diagnostics.collection.set).toBeCalledWith('/markdown', arr)
+      expect(diagnostics.collection.delete).not.toHaveBeenCalled()
+      expect(diagnostics.collection.set).toHaveBeenCalledWith('/markdown', arr)
 
       // Rules
-      expect(deprecatedDollarPrefix.register).toBeCalledWith(doc, arr)
+      expect(deprecatedDollarPrefix.register).toHaveBeenCalledWith(doc, arr)
     })
   })
 })

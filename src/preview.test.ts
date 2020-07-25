@@ -13,7 +13,7 @@ beforeEach(() => {
 describe('Preview HTML', () => {
   it('does not call browser context JS when HTML has not Marp slide', () => {
     preview()
-    expect(observer).not.toBeCalled()
+    expect(observer).not.toHaveBeenCalled()
   })
 
   it('calls only browser context JS when HTML has Marp slide', () => {
@@ -21,7 +21,7 @@ describe('Preview HTML', () => {
 
     preview()
     expect(document.body.classList.contains('marp-vscode')).toBe(true)
-    expect(observer).toBeCalled()
+    expect(observer).toHaveBeenCalled()
   })
 
   it('removes all styles excepted Marp when HTML has Marp slide', () => {
@@ -46,6 +46,6 @@ describe('Preview HTML', () => {
     expect(document.getElementById('marp-vscode-style')).toBeTruthy()
     expect(document.getElementById('_defaultStyles')).toBeTruthy()
     expect(document.querySelectorAll('link')).toHaveLength(1)
-    expect(document.querySelector('link')!.href).toContain('marp-vscode')
+    expect(document.querySelector('link')?.href).toContain('marp-vscode')
   })
 })

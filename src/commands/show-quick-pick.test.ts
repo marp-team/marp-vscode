@@ -11,7 +11,7 @@ describe('showQuickPick command', () => {
     }
 
     await showQuickPick()
-    expect(window.showQuickPick).toBeCalledWith(
+    expect(window.showQuickPick).toHaveBeenCalledWith(
       expect.arrayContaining([expectedItem]),
       expect.anything()
     )
@@ -24,6 +24,6 @@ describe('showQuickPick command', () => {
     } as any)
 
     await showQuickPick()
-    expect(commands.executeCommand).toBeCalledWith('example.command')
+    expect(commands.executeCommand).toHaveBeenCalledWith('example.command')
   })
 })
