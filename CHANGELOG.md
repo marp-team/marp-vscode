@@ -15,6 +15,7 @@
 
 - Upgrade to [Marp Core v1.2.2](https://github.com/marp-team/marp-core/releases/v1.2.2) and [Marp CLI v0.20.0](https://github.com/marp-team/marp-cli/releases/v0.20.0) ([#151](https://github.com/marp-team/marp-vscode/pull/151))
 - Upgrade development Node and dependent packages to the latest version ([#151](https://github.com/marp-team/marp-vscode/pull/151))
+- Migrate from TSLint to ESLint ([#157](https://github.com/marp-team/marp-vscode/pull/157))
 
 ## v0.14.0 - 2020-06-14
 
