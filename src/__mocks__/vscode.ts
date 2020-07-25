@@ -53,7 +53,7 @@ export enum DiagnosticSeverity {
 }
 
 export class Position {
-  translate(lineDelta: number = 0, characterDelta: number = 0) {
+  translate(lineDelta = 0, characterDelta = 0) {
     return new Position(this.line + lineDelta, this.character + characterDelta)
   }
 

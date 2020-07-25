@@ -42,11 +42,13 @@ describe('#activate', () => {
     extension().activate(extContext)
 
     const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
-    expect(onDidChgConf).toBeCalledWith(expect.any(Function))
+    expect(onDidChgConf).toHaveBeenCalledWith(expect.any(Function))
 
     const [event] = onDidChgConf.mock.calls[0]
     event({ affectsConfiguration: jest.fn(() => true) })
-    expect(commands.executeCommand).toBeCalledWith('markdown.preview.refresh')
+    expect(commands.executeCommand).toHaveBeenCalledWith(
+      'markdown.preview.refresh'
+    )
   })
 })
 
@@ -86,7 +88,7 @@ describe('#extendMarkdownIt', () => {
 
   describe('Plugins', () => {
     describe('Custom theme', () => {
-      const marpCore = (markdown: string = ''): Marp => {
+      const marpCore = (markdown = ''): Marp => {
         const { extendMarkdownIt, marpVscode } = extension()
         const md = new markdownIt()
 
@@ -222,7 +224,7 @@ describe('#extendMarkdownIt', () => {
         const markdown = md()
         await Promise.all(themes.loadStyles(Uri.parse('.')))
 
-        expect(axiosGet).toBeCalledWith(themeURL, expect.any(Object))
+        expect(axiosGet).toHaveBeenCalledWith(themeURL, expect.any(Object))
         expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(css)
       })
 
@@ -246,7 +248,7 @@ describe('#extendMarkdownIt', () => {
 
         await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
 
-        expect(fsReadFile).toBeCalledWith(
+        expect(fsReadFile).toHaveBeenCalledWith(
           path.resolve(baseDir, './test.css'),
           expect.any(Function)
         )

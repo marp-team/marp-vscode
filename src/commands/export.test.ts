@@ -1,6 +1,6 @@
 import { env, window, workspace } from 'vscode'
-import * as exportModule from './export'
 import * as marpCli from '../marp-cli'
+import * as exportModule from './export'
 
 const exportCommand = exportModule.default
 
@@ -20,14 +20,14 @@ describe('Export command', () => {
     window.activeTextEditor = undefined
 
     await exportCommand()
-    expect(saveDialog).not.toBeCalled()
+    expect(saveDialog).not.toHaveBeenCalled()
   })
 
   it('opens save dialog when active text editor is Markdown', async () => {
     window.activeTextEditor = { document: { languageId: 'markdown' } } as any
 
     await exportCommand()
-    expect(saveDialog).toBeCalledWith(window.activeTextEditor!.document)
+    expect(saveDialog).toHaveBeenCalledWith(window.activeTextEditor!.document)
   })
 
   describe('when active text editor is not Markdown', () => {
@@ -37,8 +37,8 @@ describe('Export command', () => {
 
     it('shows warning notification', async () => {
       await exportCommand()
-      expect(saveDialog).not.toBeCalled()
-      expect(window.showWarningMessage).toBeCalled()
+      expect(saveDialog).not.toHaveBeenCalled()
+      expect(window.showWarningMessage).toHaveBeenCalled()
     })
 
     it('continues exporting when reacted on the notification to continue', async () => {
@@ -46,7 +46,7 @@ describe('Export command', () => {
       showWarningMessage.mockResolvedValue(exportModule.ITEM_CONTINUE_TO_EXPORT)
 
       await exportCommand()
-      expect(saveDialog).toBeCalledWith(window.activeTextEditor!.document)
+      expect(saveDialog).toHaveBeenCalledWith(window.activeTextEditor!.document)
     })
   })
 })
@@ -57,7 +57,7 @@ describe('#saveDialog', () => {
   it('opens save dialog with default URI', async () => {
     await exportModule.saveDialog(document)
 
-    expect(window.showSaveDialog).toBeCalledWith(
+    expect(window.showSaveDialog).toHaveBeenCalledWith(
       expect.objectContaining({
         defaultUri: expect.objectContaining({ fsPath: '/tmp/test' }),
       })
@@ -68,7 +68,7 @@ describe('#saveDialog', () => {
     setConfiguration({ 'markdown.marp.exportType': 'pptx' })
 
     await exportModule.saveDialog(document)
-    expect(window.showSaveDialog).toBeCalled()
+    expect(window.showSaveDialog).toHaveBeenCalled()
 
     const { filters } = (window.showSaveDialog as jest.Mock).mock.calls[0][0]
     expect(Object.values(filters)[0]).toStrictEqual(['pptx'])
@@ -83,12 +83,12 @@ describe('#saveDialog', () => {
       .mockImplementation()
 
     await exportModule.saveDialog(document)
-    expect(window.withProgress).toBeCalledWith(
+    expect(window.withProgress).toHaveBeenCalledWith(
       expect.objectContaining({ title: expect.stringContaining('PATH') }),
       expect.any(Function)
     )
     ;(window.withProgress as any).mock.calls[0][1]()
-    expect(doExportMock).toBeCalledWith(saveURI, document)
+    expect(doExportMock).toHaveBeenCalledWith(saveURI, document)
   })
 })
 
@@ -100,15 +100,15 @@ describe('#doExport', () => {
     const runMarpCLI = jest.spyOn(marpCli, 'default').mockImplementation()
 
     await exportModule.doExport(saveURI, document)
-    expect(runMarpCLI).toBeCalled()
-    expect(env.openExternal).toBeCalledWith(saveURI)
+    expect(runMarpCLI).toHaveBeenCalled()
+    expect(env.openExternal).toHaveBeenCalledWith(saveURI)
   })
 
   it('shows warning when Marp CLI throws error', async () => {
     jest.spyOn(marpCli, 'default').mockRejectedValue(new Error('ERROR'))
 
     await exportModule.doExport(saveURI, document)
-    expect(window.showErrorMessage).toBeCalledWith(
+    expect(window.showErrorMessage).toHaveBeenCalledWith(
       expect.stringContaining('[Error] ERROR')
     )
   })

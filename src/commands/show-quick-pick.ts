@@ -1,8 +1,8 @@
 import { commands, QuickPickItem, window } from 'vscode'
 import { contributes } from '../../package.json'
 import { command as exportCommand } from './export'
-import { command as toggleMarpPreviewCommand } from './toggle-marp-preview'
 import { command as openExtensionSettingsCommand } from './open-extension-settings'
+import { command as toggleMarpPreviewCommand } from './toggle-marp-preview'
 
 export const cmdSymbol = Symbol()
 

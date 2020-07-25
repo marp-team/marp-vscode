@@ -7,7 +7,7 @@ describe('openExtensionSettings command', () => {
   it('executes "workbench.action.openSettings" command with filter for Marp extension', async () => {
     await openExtensionSettings()
 
-    expect(commands.executeCommand).toBeCalledWith(
+    expect(commands.executeCommand).toHaveBeenCalledWith(
       'workbench.action.openSettings',
       '@ext:marp-team.marp-vscode'
     )

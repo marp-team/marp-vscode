@@ -1,11 +1,11 @@
 import path from 'path'
 import { env, ProgressLocation, TextDocument, Uri, window } from 'vscode'
-import { marpConfiguration } from '../utils'
 import marpCli, {
   createConfigFile,
   createWorkFile,
   MarpCLIError,
 } from '../marp-cli'
+import { marpConfiguration } from '../utils'
 
 export enum Types {
   html = 'html',

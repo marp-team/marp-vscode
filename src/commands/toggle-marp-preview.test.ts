@@ -16,14 +16,14 @@ describe('toggleMarpPreview command', () => {
     window.activeTextEditor = undefined
 
     await toggleMarpPreviewCommand()
-    expect(toggleFunc).not.toBeCalled()
+    expect(toggleFunc).not.toHaveBeenCalled()
   })
 
   it('runs toggle function when active text editor is Markdown', async () => {
     window.activeTextEditor = { document: { languageId: 'markdown' } } as any
 
     await toggleMarpPreviewCommand()
-    expect(toggleFunc).toBeCalledWith(window.activeTextEditor)
+    expect(toggleFunc).toHaveBeenCalledWith(window.activeTextEditor)
   })
 
   describe('when active text editor is not Markdown', () => {
@@ -33,8 +33,8 @@ describe('toggleMarpPreview command', () => {
 
     it('shows warning notification', async () => {
       await toggleMarpPreviewCommand()
-      expect(toggleFunc).not.toBeCalled()
-      expect(window.showWarningMessage).toBeCalled()
+      expect(toggleFunc).not.toHaveBeenCalled()
+      expect(window.showWarningMessage).toHaveBeenCalled()
     })
 
     it('changes editor language and continues process when reacted on the notification', async () => {
@@ -44,11 +44,11 @@ describe('toggleMarpPreview command', () => {
       )
 
       await toggleMarpPreviewCommand()
-      expect(languages.setTextDocumentLanguage).toBeCalledWith(
+      expect(languages.setTextDocumentLanguage).toHaveBeenCalledWith(
         window.activeTextEditor!.document,
         'markdown'
       )
-      expect(toggleFunc).toBeCalledWith(window.activeTextEditor)
+      expect(toggleFunc).toHaveBeenCalledWith(window.activeTextEditor)
     })
   })
 })
@@ -80,7 +80,7 @@ describe('#toggle', () => {
     const editor = textEditor('')
     await toggleMarpPreview.toggle(editor)
 
-    expect(editor._editBuilders[0].insert).toBeCalledWith(
+    expect(editor._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(0, 0),
       '---\nmarp: true\n---\n\n'
     )
@@ -90,7 +90,7 @@ describe('#toggle', () => {
     const editor = textEditor('---\ntest: abc\nfoo: bar\n---')
     await toggleMarpPreview.toggle(editor)
 
-    expect(editor._editBuilders[0].insert).toBeCalledWith(
+    expect(editor._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(3, 0),
       'marp: true\n'
     )
@@ -99,7 +99,7 @@ describe('#toggle', () => {
     const editorEmptyFm = textEditor('---\n---')
     await toggleMarpPreview.toggle(editorEmptyFm)
 
-    expect(editorEmptyFm._editBuilders[0].insert).toBeCalledWith(
+    expect(editorEmptyFm._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(1, 0),
       'marp: true\n'
     )
@@ -110,7 +110,7 @@ describe('#toggle', () => {
     const editorEnabled = textEditor('---\nmarp: true\n---')
     await toggleMarpPreview.toggle(editorEnabled)
 
-    expect(editorEnabled._editBuilders[0].replace).toBeCalledWith(
+    expect(editorEnabled._editBuilders[0].replace).toHaveBeenCalledWith(
       new Range(new Position(1, 6), new Position(1, 10)),
       'false'
     )
@@ -119,7 +119,7 @@ describe('#toggle', () => {
     const editorDisabled = textEditor('---\nfoo: bar\nmarp:   false\n---')
     await toggleMarpPreview.toggle(editorDisabled)
 
-    expect(editorDisabled._editBuilders[0].replace).toBeCalledWith(
+    expect(editorDisabled._editBuilders[0].replace).toHaveBeenCalledWith(
       new Range(new Position(2, 8), new Position(2, 13)),
       'true'
     )

@@ -141,7 +141,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
       const subscriptions: any[] = []
       rule.subscribe(subscriptions)
 
-      expect(languages.registerCodeActionsProvider).toBeCalledWith(
+      expect(languages.registerCodeActionsProvider).toHaveBeenCalledWith(
         'markdown',
         expect.any(rule.RemoveDollarPrefix),
         { providedCodeActionKinds: [CodeActionKind.QuickFix] }
@@ -176,8 +176,8 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
 
         // Edit
         const edit: WorkspaceEdit = action.edit!
-        expect(edit.delete).toBeCalledTimes(1)
-        expect(edit.delete).toBeCalledWith(
+        expect(edit.delete).toHaveBeenCalledTimes(1)
+        expect(edit.delete).toHaveBeenCalledWith(
           document.uri,
           new Range(new Position(2, 0), new Position(2, 1)) // "$"
         )
