@@ -21,26 +21,29 @@ describe('Marp CLI integration', () => {
     jest.spyOn(console, 'log').mockImplementation()
   })
 
-  it('runs Marp CLI with passed args and --no-stdin option', async () => {
-    const marpCliSpy = jest.spyOn(marpCliModule, 'default')
+  it('runs Marp CLI with passed args', async () => {
+    const marpCliSpy = jest.spyOn(marpCliModule, 'marpCli')
     await runMarpCli('--version')
 
-    // --no-stdin prevents getting stuck
-    expect(marpCliSpy).toBeCalledWith(['--no-stdin', '--version'])
+    expect(marpCliSpy).toBeCalledWith(['--version'])
   })
 
   it('throws MarpCLIError when returned error exit code', async () => {
-    jest.spyOn(marpCliModule, 'default').mockResolvedValue(1)
-    expect(runMarpCli('--version')).rejects.toThrow(marpCli.MarpCLIError)
+    jest.spyOn(marpCliModule, 'marpCli').mockResolvedValue(1)
+    await expect(runMarpCli('--version')).rejects.toThrow(marpCli.MarpCLIError)
   })
 
   it('throws error with helpful message when outputed error about Chrome', async () => {
-    jest.spyOn(marpCliModule, 'default').mockImplementation(() => {
-      console.error('Chromium revision is not downloaded.')
-      return Promise.resolve(1)
-    })
+    jest
+      .spyOn(marpCliModule, 'marpCli')
+      .mockRejectedValue(
+        new marpCliModule.CLIError(
+          'mocked error',
+          marpCliModule.CLIErrorCode.NOT_FOUND_CHROMIUM
+        )
+      )
 
-    expect(runMarpCli('--version')).rejects.toThrow(/Google Chrome/)
+    await expect(runMarpCli('--version')).rejects.toThrow(/Google Chrome/)
   })
 
   describe('with markdown.marp.chromePath preference', () => {
@@ -51,7 +54,7 @@ describe('Marp CLI integration', () => {
       setConfiguration({ 'markdown.marp.chromePath': __filename })
 
       const marpCliSpy = jest
-        .spyOn(marpCliModule, 'default')
+        .spyOn(marpCliModule, 'marpCli')
         .mockImplementation(async () => {
           expect(process.env.CHROME_PATH).toBe(__filename)
           return 0

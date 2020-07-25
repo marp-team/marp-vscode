@@ -109,7 +109,7 @@ describe('#doExport', () => {
 
     await exportModule.doExport(saveURI, document)
     expect(window.showErrorMessage).toBeCalledWith(
-      expect.stringContaining('Error: ERROR')
+      expect.stringContaining('[Error] ERROR')
     )
   })
 })
