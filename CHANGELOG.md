@@ -9,6 +9,7 @@
 ### Added
 
 - Open extension settings from quick pick ([#155](https://github.com/marp-team/marp-vscode/pull/155))
+- Set up GitHub Dependabot for marp-team packages ([#156](https://github.com/marp-team/marp-vscode/pull/156))
 
 ### Changed
 
