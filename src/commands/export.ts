@@ -47,9 +47,12 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     }
   } catch (e) {
     window.showErrorMessage(
-      `Failure to export. ${
-        e instanceof MarpCLIError ? e.message : e.toString()
-      }`
+      `Failure to export${(() => {
+        if (e instanceof MarpCLIError) return `. ${e.message}`
+        if (e instanceof Error) return `: [${e.name}] ${e.message}`
+
+        return `. ${e.toString()}`
+      })()}`
     )
   } finally {
     input.cleanup()
