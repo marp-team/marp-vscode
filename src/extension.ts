@@ -1,9 +1,10 @@
 import path from 'path'
 import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, Uri, commands, workspace } from 'vscode'
-import exportCommand from './commands/export' // tslint:disable-line: import-name
-import showQuickPick from './commands/show-quick-pick'
-import toggleMarpPreview from './commands/toggle-marp-preview'
+import * as exportCommand from './commands/export'
+import * as openExtensionSettings from './commands/open-extension-settings'
+import * as showQuickPick from './commands/show-quick-pick'
+import * as toggleMarpPreview from './commands/toggle-marp-preview'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline from './plugins/outline'
@@ -113,11 +114,15 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
   diagnostics(subscriptions)
 
   subscriptions.push(
-    commands.registerCommand('markdown.marp.export', exportCommand),
-    commands.registerCommand('markdown.marp.showQuickPick', showQuickPick),
+    commands.registerCommand(exportCommand.command, exportCommand.default),
     commands.registerCommand(
-      'markdown.marp.toggleMarpPreview',
-      toggleMarpPreview
+      openExtensionSettings.command,
+      openExtensionSettings.default
+    ),
+    commands.registerCommand(showQuickPick.command, showQuickPick.default),
+    commands.registerCommand(
+      toggleMarpPreview.command,
+      toggleMarpPreview.default
     ),
     themes,
     workspace.onDidChangeConfiguration((e) => {
