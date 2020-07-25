@@ -28,7 +28,9 @@ describe('Diagnostics', () => {
       expect(subscriptions).toContain(diagnostics.collection)
 
       // Rules for code action
-      expect(deprecatedDollarPrefix.subscribe).toHaveBeenCalledWith(subscriptions)
+      expect(deprecatedDollarPrefix.subscribe).toHaveBeenCalledWith(
+        subscriptions
+      )
     })
 
     it('runs initial detection when text editor is active', () => {
