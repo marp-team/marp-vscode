@@ -4,7 +4,8 @@ import { command as exportCommand } from './export'
 import { command as toggleMarpPreviewCommand } from './toggle-marp-preview'
 import { command as openExtensionSettingsCommand } from './open-extension-settings'
 
-const cmdSymbol = Symbol()
+export const cmdSymbol = Symbol()
+
 const contributedCommands = [exportCommand, toggleMarpPreviewCommand]
 const availableCommands: (QuickPickItem & { [cmdSymbol]: string })[] = []
 
