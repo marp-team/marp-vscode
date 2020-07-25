@@ -82,7 +82,7 @@
           "markdownEnumDescriptions": [
             "Ignore line-breaks in rendered Marp Markdown preview.",
             "Show line-breaks in rendered Marp Markdown preview. It is the default setting of Marp ecosystem.",
-            "Use inherited setting from `markdown.preview.breaks`."
+            "Use inherited setting from `#markdown.preview.breaks#`."
           ]
         },
         "markdown.marp.chromePath": {
@@ -130,7 +130,7 @@
         "markdown.marp.themes": {
           "type": "array",
           "default": [],
-          "markdownDescription": "A list of URLs or local paths to additional [theme CSS](https://marpit.marp.app/theme-css) for Marp core and Marpit framework. The rule for paths is following [Markdown: Styles](#markdown.styles).",
+          "markdownDescription": "A list of URLs or local paths to additional [theme CSS](https://marpit.marp.app/theme-css) for Marp core and Marpit framework. The rule for paths is following `#markdown.styles#`.",
           "items": {
             "type": "string"
           }

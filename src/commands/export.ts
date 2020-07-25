@@ -33,6 +33,8 @@ const descriptions = {
 
 export const ITEM_CONTINUE_TO_EXPORT = 'Continue to export...'
 
+export const command = 'markdown.marp.export'
+
 export const doExport = async (uri: Uri, document: TextDocument) => {
   const input = await createWorkFile(document)
 

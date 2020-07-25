@@ -6,6 +6,10 @@
 
 - VS Code >= 1.43 ([Electron 7](https://code.visualstudio.com/updates/v1_43#_electron-70-update)) is now required ([#154](https://github.com/marp-team/marp-vscode/pull/154))
 
+### Added
+
+- Open extension settings from quick pick ([#155](https://github.com/marp-team/marp-vscode/pull/155))
+
 ### Changed
 
 - Upgrade to [Marp Core v1.2.2](https://github.com/marp-team/marp-core/releases/v1.2.2) and [Marp CLI v0.20.0](https://github.com/marp-team/marp-cli/releases/v0.20.0) ([#151](https://github.com/marp-team/marp-vscode/pull/151))
