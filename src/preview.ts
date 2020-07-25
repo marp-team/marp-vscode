@@ -1,4 +1,4 @@
-import browser from '@marp-team/marp-core/browser'
+import { observer } from '@marp-team/marp-core/browser'
 
 export default function preview() {
   const marpVscode = document.getElementById('marp-vscode')
@@ -17,6 +17,6 @@ export default function preview() {
     links.forEach((elm) => elm.remove())
 
     // Run Marp observer
-    browser()
+    observer()
   }
 }
