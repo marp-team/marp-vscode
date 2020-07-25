@@ -1,4 +1,3 @@
-/* tslint:disable: variable-name */
 type MockedConf = Record<string, any>
 
 const defaultVSCodeVersion = 'v1.36.0'

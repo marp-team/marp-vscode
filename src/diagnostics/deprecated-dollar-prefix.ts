@@ -1,4 +1,4 @@
-import visit from 'unist-util-visit' // tslint:disable-line: import-name
+import visit from 'unist-util-visit'
 import {
   CodeAction,
   CodeActionKind,

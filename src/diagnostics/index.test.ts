@@ -1,6 +1,6 @@
 import { window, TextDocument } from 'vscode'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
-import * as diagnostics from './index' // tslint:disable-line: import-name
+import * as diagnostics from './index'
 
 jest.mock('lodash.debounce')
 jest.mock('vscode')

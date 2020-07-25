@@ -8,7 +8,7 @@ import * as toggleMarpPreview from './commands/toggle-marp-preview'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline from './plugins/outline'
-import diagnostics from './diagnostics/' // tslint:disable-line: import-name
+import diagnostics from './diagnostics/'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import themes from './themes'
 import { detectMarpFromMarkdown } from './utils'

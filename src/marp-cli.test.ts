@@ -1,4 +1,3 @@
-// tslint:disable-next-line: import-name
 import * as marpCliModule from '@marp-team/marp-cli'
 import fs from 'fs'
 import path from 'path'
