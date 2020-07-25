@@ -1,5 +1,4 @@
 import path from 'path'
-import alias from '@rollup/plugin-alias'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -8,35 +7,33 @@ import builtinModules from 'builtin-modules'
 import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 
+const compact = !process.env.ROLLUP_WATCH
+const sourcemap = !compact
+
 const plugins = [
-  alias({
-    entries: {
-      // TODO: Remove aliasing if rollup bug was fixed
-      // @see https://github.com/rollup/plugins/issues/102
-      '@marp-team/marp-core/browser': require.resolve(
-        '@marp-team/marp-core/lib/browser.cjs'
-      ),
-    },
-  }),
   json({ preferConst: true }),
   nodeResolve({ mainFields: ['module', 'jsnext:main', 'main'] }),
   commonjs(),
   typescript(),
-  !process.env.ROLLUP_WATCH && terser(),
+  compact && terser(),
 ]
-
-const sourcemap = !!process.env.ROLLUP_WATCH
 
 export default [
   {
     external: [...Object.keys(pkg.dependencies), ...builtinModules, 'vscode'],
     input: `src/${path.basename(pkg.main, '.js')}.ts`,
-    output: { exports: 'named', file: pkg.main, format: 'cjs', sourcemap },
+    output: {
+      compact,
+      exports: 'named',
+      file: pkg.main,
+      format: 'cjs',
+      sourcemap,
+    },
     plugins,
   },
   {
     input: 'preview.js',
-    output: { file: 'lib/preview.js', format: 'iife', sourcemap },
+    output: { compact, file: 'lib/preview.js', format: 'iife', sourcemap },
     plugins,
   },
 ]
