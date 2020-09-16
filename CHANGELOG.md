@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.15.1 - 2020-09-16
+
 ### Fixed
 
 - Fix failure of export with [Snap Chromium](https://snapcraft.io/chromium) in Linux, by updated [Marp CLI v0.21.1](https://github.com/marp-team/marp-cli/releases/v0.21.1) ([#166](https://github.com/marp-team/marp-vscode/issues/166), [#167](https://github.com/marp-team/marp-vscode/pull/167))
