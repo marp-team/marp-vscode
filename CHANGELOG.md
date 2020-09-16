@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix failure of export with [Snap Chromium](https://snapcraft.io/chromium) in Linux, by updated [Marp CLI v0.21.1](https://github.com/marp-team/marp-cli/releases/v0.21.1) ([#166](https://github.com/marp-team/marp-vscode/issues/166), [#167](https://github.com/marp-team/marp-vscode/pull/167))
+
+> **NOTE:** We've known to fail the export command if both of VS Code and Chromium have installed by snap: [marp-team/marp-cli#287](https://github.com/marp-team/marp-cli/issues/287). It's probably insecure but setting custom Chrome path to [the raw binary of snap Chromium](https://github.com/marp-team/marp-cli/issues/287#issuecomment-693500881) may help you as a workaround.
+
+### Changed
+
+- Upgrade to [Marp Core v1.3.0](https://github.com/marp-team/marp-core/releases/v1.3.0) and [Marp CLI v0.21.1](https://github.com/marp-team/marp-cli/releases/v0.21.1) ([#167](https://github.com/marp-team/marp-vscode/pull/167))
+- Upgrade dependent packages to the latest version ([#167](https://github.com/marp-team/marp-vscode/pull/167))
+
 ## v0.15.0 - 2020-07-25
 
 ### Breaking
