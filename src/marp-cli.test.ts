@@ -33,18 +33,38 @@ describe('Marp CLI integration', () => {
     await expect(runMarpCli('--version')).rejects.toThrow(marpCli.MarpCLIError)
   })
 
-  it('throws error with helpful message when outputed error about Chrome', async () => {
-    jest
-      .spyOn(marpCliModule, 'marpCli')
-      .mockRejectedValue(
-        new marpCliModule.CLIError(
-          'mocked error',
-          marpCliModule.CLIErrorCode.NOT_FOUND_CHROMIUM
-        )
-      )
+  it.each`
+    platform    | expected
+    ${'win32'}  | ${[/Google Chrome/, /Microsoft Edge/]}
+    ${'darwin'} | ${[/Google Chrome/, /Microsoft Edge/]}
+    ${'linux'}  | ${[/Google Chrome/, /Chromium/]}
+  `(
+    'contains $expected to suggested browsers in error message when running on $platform',
+    async ({ platform, expected }) => {
+      expect.assertions(expected.length)
 
-    await expect(runMarpCli('--version')).rejects.toThrow(/Google Chrome/)
-  })
+      const originalPlatform = process.platform
+
+      try {
+        Object.defineProperty(process, 'platform', { value: platform })
+
+        jest
+          .spyOn(marpCliModule, 'marpCli')
+          .mockRejectedValue(
+            new marpCliModule.CLIError(
+              'mocked error',
+              marpCliModule.CLIErrorCode.NOT_FOUND_CHROMIUM
+            )
+          )
+
+        for (const fragment of expected) {
+          await expect(runMarpCli('--version')).rejects.toThrow(fragment)
+        }
+      } finally {
+        Object.defineProperty(process, 'platform', { value: originalPlatform })
+      }
+    }
+  )
 
   describe('with markdown.marp.chromePath preference', () => {
     it('runs Marp CLI with overridden CHROME_PATH environment', async () => {
