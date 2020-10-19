@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix broken background images caused by regression in Chrome >= 85, by updated [Marp CLI v0.22.0](https://github.com/marp-team/marp-cli/releases/v0.22.0) ([#175](https://github.com/marp-team/marp-vscode/issues/175), [#176](https://github.com/marp-team/marp-vscode/pull/ 176))
+
+### Changed
+
+- Upgrade to [Marp CLI v0.22.0](https://github.com/marp-team/marp-cli/releases/v0.22.0) ([#176](https://github.com/marp-team/marp-vscode/pull/176))
+
 ## v0.15.1 - 2020-09-16
 
 ### Fixed
