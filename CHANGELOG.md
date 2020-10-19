@@ -13,6 +13,7 @@
 ### Changed
 
 - Upgrade to [Marp CLI v0.22.0](https://github.com/marp-team/marp-cli/releases/v0.22.0) ([#176](https://github.com/marp-team/marp-vscode/pull/176))
+- Upgrade dependent packages to the latest version ([#177](https://github.com/marp-team/marp-vscode/pull/177))
 
 ## v0.15.1 - 2020-09-16
 
