@@ -261,7 +261,7 @@
     "yaml": "^1.10.0"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^0.21.1",
+    "@marp-team/marp-cli": "^0.22.0",
     "@marp-team/marp-core": "^1.3.0",
     "axios": "^0.20.0"
   }
