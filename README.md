@@ -69,7 +69,7 @@ You can also execute command from the Command Palette (<kbd>F1</kbd> or <kbd>Ctr
 
 Default file type can choose by `markdown.marp.exportType` preference.
 
-> ⚠️ Export except HTML requires to install [Google Chrome](https://www.google.com/chrome/) (or [Chromium](https://www.chromium.org/)). You may also specify the custom path for Chrome and Chromium-based browser by preference `markdown.marp.chromePath` (e.g. [Microsoft Edge](https://www.microsoft.com/edge)).
+> ⚠️ Export except HTML requires to install any one of [Google Chrome](https://www.google.com/chrome/), [Chromium](https://www.chromium.org/), or [Microsoft Edge](https://www.microsoft.com/edge). You may also specify the custom path for Chrome / Chromium-based browser by preference `markdown.marp.chromePath`.
 
 ### Use custom theme
 

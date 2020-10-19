@@ -99,13 +99,18 @@ export default async function runMarpCli(...argv: string[]): Promise<void> {
       e instanceof CLIError &&
       e.errorCode === CLIErrorCode.NOT_FOUND_CHROMIUM
     ) {
-      const chromium =
-        process.platform === 'linux'
-          ? ' or [Chromium](https://www.chromium.org/)'
-          : ''
+      const browsers = ['[Google Chrome](https://www.google.com/chrome/)']
+
+      if (process.platform === 'linux')
+        browsers.push('[Chromium](https://www.chromium.org/)')
+
+      if (process.platform !== 'linux')
+        browsers.push('[Microsoft Edge](https://www.microsoft.com/edge)')
 
       throw new MarpCLIError(
-        `It requires to install [Google Chrome](https://www.google.com/chrome/)${chromium} for exporting.`
+        `It requires to install ${browsers
+          .join(', ')
+          .replace(/, ([^,]*)$/, ' or $1')} for exporting.`
       )
     }
 

@@ -88,7 +88,7 @@
         "markdown.marp.chromePath": {
           "type": "string",
           "default": "",
-          "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome. Changes may require a restart to apply."
+          "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome / Chromium / Microsoft Edge. Changes may require a restart to apply."
         },
         "markdown.marp.enableHtml": {
           "type": "boolean",
@@ -261,7 +261,7 @@
     "yaml": "^1.10.0"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^0.21.1",
+    "@marp-team/marp-cli": "^0.22.0",
     "@marp-team/marp-core": "^1.3.0",
     "axios": "^0.20.0"
   }
