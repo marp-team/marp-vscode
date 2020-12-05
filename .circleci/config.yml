@@ -16,34 +16,27 @@ commands:
       postinstall:
         type: steps
         default: []
-      yarn:
-        type: string
-        default: '^1.22.5'
     steps:
-      - run:
-          name: Upgrade yarn for current user
-          command: cd ~ && yarn policies set-version << parameters.yarn >>
-
       - restore_cache:
           keys:
-            - v2.2-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
-            - v2.2-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-
-            - v2.2-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-
+            - v2.3-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "package-lock.json" }}-{{ .Branch }}
+            - v2.3-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "package-lock.json" }}-
+            - v2.3-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-
 
-      - run: yarn install
+      - run: npm ci
       - steps: << parameters.postinstall >>
 
       - save_cache:
-          key: v2.2-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+          key: v2.3-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "package-lock.json" }}-{{ .Branch }}
           paths:
-            - ~/.cache/yarn
+            - ~/.npm
 
   audit:
     steps:
       - checkout
       - install:
           postinstall:
-            - run: yarn audit
+            - run: npm audit
 
   test:
     steps:
@@ -54,27 +47,27 @@ commands:
 
       - run:
           name: Prettier formatting
-          command: yarn check:format
+          command: npm run check:format
 
       - run:
           name: TypeScript type checking
-          command: yarn check:ts
+          command: npm run check:ts
 
       - run:
           name: ESLint
-          command: yarn lint:js
+          command: npm run lint:js
 
       - run:
           name: stylelint
-          command: yarn lint:css
+          command: npm run lint:css
 
       - run:
           name: Jest
-          command: yarn test:unit:coverage --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          command: npm run test:unit:coverage -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: tmp/test-results
 
-      - run: yarn codecov
+      - run: npx codecov
 
       - store_test_results:
           path: tmp/test-results
