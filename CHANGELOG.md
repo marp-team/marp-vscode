@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.17.0 - 2020-12-05
+
 ### Added
 
 - GitHub Actions workflow to upload packaged VSIX into release page ([#182](https://github.com/marp-team/marp-vscode/issues/182), [#188](https://github.com/marp-team/marp-vscode/pull/188))
