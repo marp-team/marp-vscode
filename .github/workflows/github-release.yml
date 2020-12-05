@@ -14,3 +14,31 @@ jobs:
         with:
           task: release
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  upload-vsix:
+    needs: github-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Detect Node version from .nvmrc
+        id: node_version
+        run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ steps.node_version.outputs.nvmrc }}
+
+      - run: npm ci
+      - run: npm run package
+
+      - name: Find out created VSIX
+        id: vsix
+        run: echo "::set-output name=name::$(find . -maxdepth 1 -name '*.vsix' -printf '%f\n' | head -n 1)"
+
+      - name: Upload VSIX to GitHub Release
+        uses: marp-team/actions@v1
+        with:
+          task: upload
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: ${{ steps.vsix.outputs.name }}
