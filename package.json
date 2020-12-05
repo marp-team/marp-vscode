@@ -200,21 +200,21 @@
     "testEnvironment": "node"
   },
   "scripts": {
-    "build": "yarn -s clean && rollup -c ./rollup.config.js",
+    "build": "npm run -s clean && rollup -c ./rollup.config.js",
     "clean": "rimraf lib",
-    "check:audit": "yarn audit --groups dependencies",
-    "check:format": "yarn -s format -c",
+    "check:audit": "npm audit",
+    "check:format": "npm run -s format -- -c",
     "check:ts": "tsc --noEmit",
     "format": "prettier \"**/*.{css,js,json,md,scss,ts,yaml,yml}\"",
-    "format:write": "yarn -s format --write",
+    "format:write": "npm run -s format -- --write",
     "lint:css": "stylelint \"./*.{css,scss}\"",
     "lint:js": "eslint --ext .js,.ts --report-unused-disable-directives --cache .",
-    "package": "npx vsce package --no-yarn",
+    "package": "vsce package --no-yarn",
     "preversion": "run-p check:* lint:* test:*:coverage",
     "test:unit": "jest",
     "test:unit:coverage": "jest --coverage",
     "version": "curl https://raw.githubusercontent.com/marp-team/actions/v1/lib/scripts/version.js | node && git add -A CHANGELOG.md",
-    "vsce:publish": "npx vsce publish --no-yarn",
+    "vsce:publish": "vsce publish --no-yarn",
     "vscode:prepublish": "run-s preversion build",
     "watch": "rollup -w -c ./rollup.config.js"
   },
@@ -258,6 +258,8 @@
     "typescript": "^4.1.2",
     "unified": "^9.2.0",
     "unist-util-visit": "^2.0.3",
+    "utf-8-validate": "^5.0.3",
+    "vsce": "^1.81.1",
     "yaml": "^1.10.0"
   },
   "dependencies": {

@@ -13,6 +13,7 @@
   - No longer required restarting VS Code after changing `markdown.marp.chromePath` configuration
 - Upgrade development Node LTS to 14 ([#186](https://github.com/marp-team/marp-vscode/pull/186))
 - Upgrade dependent packages to the latest version ([#186](https://github.com/marp-team/marp-vscode/pull/186))
+- Switch package manager from yarn to npm ([#187](https://github.com/marp-team/marp-vscode/pull/187))
 
 ## v0.16.0 - 2020-10-19
 
