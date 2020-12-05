@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- GitHub Actions workflow to upload packaged VSIX into release page ([#182](https://github.com/marp-team/marp-vscode/issues/182), [#188](https://github.com/marp-team/marp-vscode/pull/188))
+
 ### Changed
 
 - Upgrade to [Marp Core v1.4.0](https://github.com/marp-team/marp-core/releases/v1.4.0) ([#186](https://github.com/marp-team/marp-vscode/pull/186))
