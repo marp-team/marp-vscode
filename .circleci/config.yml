@@ -103,6 +103,13 @@ jobs:
     steps:
       - test
 
+  unit-electron11:
+    executor:
+      name: node
+      version: '12.18.3'
+    steps:
+      - test
+
 workflows:
   test:
     jobs:
@@ -111,5 +118,8 @@ workflows:
           requires:
             - audit
       - unit-electron9:
+          requires:
+            - audit
+      - unit-electron11:
           requires:
             - audit

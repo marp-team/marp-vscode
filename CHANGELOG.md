@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade to [Marp Core v1.4.0](https://github.com/marp-team/marp-core/releases/v1.4.0) ([#186](https://github.com/marp-team/marp-vscode/pull/186))
+  - Stopped the confusable auto-detection of syntax highlight for code block
+  - Added support for more emoji shorthands
+- Upgrade to [Marp CLI v0.23.0](https://github.com/marp-team/marp-cli/releases/v0.23.0) ([#186](https://github.com/marp-team/marp-vscode/pull/186))
+  - Export into PDF/image is working with Apple Silicon
+  - Auto-detection of Chromium browser for export has supported Microsoft Edge for Linux
+  - No longer required restarting VS Code after changing `markdown.marp.chromePath` configuration
+- Upgrade development Node LTS to 14 ([#186](https://github.com/marp-team/marp-vscode/pull/186))
+- Upgrade dependent packages to the latest version ([#186](https://github.com/marp-team/marp-vscode/pull/186))
+
 ## v0.16.0 - 2020-10-19
 
 ### Fixed

@@ -104,8 +104,7 @@ export default async function runMarpCli(...argv: string[]): Promise<void> {
       if (process.platform === 'linux')
         browsers.push('[Chromium](https://www.chromium.org/)')
 
-      if (process.platform !== 'linux')
-        browsers.push('[Microsoft Edge](https://www.microsoft.com/edge)')
+      browsers.push('[Microsoft Edge](https://www.microsoft.com/edge)')
 
       throw new MarpCLIError(
         `It requires to install ${browsers
