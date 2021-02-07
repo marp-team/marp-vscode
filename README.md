@@ -1,7 +1,7 @@
 # Marp for VS Code
 
-[![CircleCI](https://img.shields.io/circleci/project/github/marp-team/marp-vscode/master.svg?style=flat-square&logo=circleci)](https://circleci.com/gh/marp-team/marp-vscode/)
-[![Codecov](https://img.shields.io/codecov/c/github/marp-team/marp-vscode/master.svg?style=flat-square&logo=codecov)](https://codecov.io/gh/marp-team/marp-vscode)
+[![CircleCI](https://img.shields.io/circleci/project/github/marp-team/marp-vscode/main.svg?style=flat-square&logo=circleci)](https://circleci.com/gh/marp-team/marp-vscode/)
+[![Codecov](https://img.shields.io/codecov/c/github/marp-team/marp-vscode/main.svg?style=flat-square&logo=codecov)](https://codecov.io/gh/marp-team/marp-vscode)
 [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/marp-team.marp-vscode.svg?style=flat-square&logo=visual-studio-code&label=VS%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=marp-team.marp-vscode)
 [![LICENSE](https://img.shields.io/github/license/marp-team/marp-vscode.svg?style=flat-square)](./LICENSE)
 
@@ -10,7 +10,7 @@
 We will enhance your VS Code as the slide deck writer. Mark `marp: true`, and write your deck!
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/screenshot.png" width="800" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/screenshot.png" width="800" />
 </p>
 
 See the documentation of [Marpit Markdown](https://marpit.marp.app/markdown) and [the features of Marp Core](https://github.com/marp-team/marp-core#features) about how to write.
@@ -33,10 +33,10 @@ marp: true
 Start writing!
 ```
 
-It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp preview for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
+It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp preview for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/toggle.gif" alt="Toggle Marp preview" width="600" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toggle.gif" alt="Toggle Marp preview" width="600" />
 </p>
 
 ## Features
@@ -49,10 +49,10 @@ Marp for VS Code can preview your Marp Markdown with the same way as [a native M
 
 We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
 
-To export the content of active Markdown editor, open the quick pick from Marp icon on toolbar <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/toolbar-icon.png" width="16" height="16" /> and select **"Export slide deck..."**. (`markdown.marp.export`)
+To export the content of active Markdown editor, open the quick pick from Marp icon on toolbar <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and select **"Export slide deck..."**. (`markdown.marp.export`)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/export.gif" alt="Export slide deck" width="600" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/export.gif" alt="Export slide deck" width="600" />
 </p>
 
 You can also execute command from the Command Palette (<kbd>F1</kbd> or <kbd>Ctrl/Cmd+Shift+P</kbd>).
@@ -73,7 +73,7 @@ Default file type can choose by `markdown.marp.exportType` preference.
 
 ### Use custom theme
 
-You can register and use [custom theme CSS for Marpit](https://marpit.marp.app/theme-css) / [Marp Core](https://github.com/marp-team/marp-core/tree/master/themes#readme) by setting `markdown.marp.themes`, that includes remote URLs, or relative paths to local files in the current workspace.
+You can register and use [custom theme CSS for Marpit](https://marpit.marp.app/theme-css) / [Marp Core](https://github.com/marp-team/marp-core/tree/main/themes#readme) by setting `markdown.marp.themes`, that includes remote URLs, or relative paths to local files in the current workspace.
 
 ```javascript
 // Please put `.vscode/settings.json` on your workspace
@@ -109,7 +109,7 @@ theme: your-theme
 Markdown preview will reload updated theme CSS automatically when you edited the registered local CSS file. It's very useful for creating your own theme.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/custom-theme.gif" alt="Use custom theme" width="600" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/custom-theme.gif" alt="Use custom theme" width="600" />
 </p>
 
 ### Outline view for each slide
@@ -117,7 +117,7 @@ Markdown preview will reload updated theme CSS automatically when you edited the
 We extend [a native outline view](https://code.visualstudio.com/docs/languages/markdown#_outline-view) to support slide pages in Marp Markdown.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/outline.png" alt="Outline view for each slide" width="400" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/outline.png" alt="Outline view for each slide" width="400" />
 </p>
 
 > ℹ️ Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order.
@@ -127,7 +127,7 @@ We extend [a native outline view](https://code.visualstudio.com/docs/languages/m
 You can fold the content of slide in editor while editing Marp Markdown.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/master/docs/fold.gif" alt="Slide folding in editor" width="360" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/fold.gif" alt="Slide folding in editor" width="360" />
 </p>
 
 ### Enable HTML in Marp Markdown
