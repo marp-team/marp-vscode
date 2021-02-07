@@ -51,4 +51,4 @@ npm run package
 
 A way to release is different from other projects of Marp Team targeted to npm.
 
-Just run `npm run vsce:publish [major|minor|patch]` at the latest `master` branch. It can [bump version](https://github.com/marp-team/.github/blob/master/CONTRIBUTING.md#bump-version) and release to Marketplace at once. Don't forget `git push && git push --tags`!
+Just run `npm run vsce:publish [major|minor|patch]` at the latest `main` branch. It can [bump version](https://github.com/marp-team/.github/blob/master/CONTRIBUTING.md#bump-version) and release to Marketplace at once. Don't forget `git push && git push --tags`!
