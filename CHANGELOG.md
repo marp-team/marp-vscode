@@ -4,11 +4,12 @@
 
 ### Fixed
 
+- VS Code for Web makes broken slide preview on Safari ([#192](https://github.com/marp-team/marp-vscode/issues/192), [#197](https://github.com/marp-team/marp-vscode/pull/197))
 - Prevent leaking defined MathJax macros into other Markdown preview ([#195](https://github.com/marp-team/marp-vscode/pull/195))
 
 ### Changed
 
-- Upgrade to [Marp Core v1.4.1](https://github.com/marp-team/marp-core/releases/v1.4.1) and [Marp CLI v0.23.1](https://github.com/marp-team/marp-cli/releases/v0.23.1) ([#195](https://github.com/marp-team/marp-vscode/pull/195))
+- Upgrade to [Marp Core v1.4.2](https://github.com/marp-team/marp-core/releases/v1.4.2) and [Marp CLI v0.23.1](https://github.com/marp-team/marp-cli/releases/v0.23.1) ([#195](https://github.com/marp-team/marp-vscode/pull/195), [#197](https://github.com/marp-team/marp-vscode/pull/197))
 - Upgrade dependent packages to the latest version ([#195](https://github.com/marp-team/marp-vscode/pull/195))
 - Make icons for editor action monochrome, to follow [VS Code extension guideline](https://code.visualstudio.com/api/references/extension-guidelines#editor-actions) ([#193](https://github.com/marp-team/marp-vscode/issues/193), [#196](https://github.com/marp-team/marp-vscode/pull/196))
 
