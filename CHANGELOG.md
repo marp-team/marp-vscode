@@ -10,6 +10,7 @@
 
 - Upgrade to [Marp Core v1.4.1](https://github.com/marp-team/marp-core/releases/v1.4.1) and [Marp CLI v0.23.1](https://github.com/marp-team/marp-cli/releases/v0.23.1) ([#195](https://github.com/marp-team/marp-vscode/pull/195))
 - Upgrade dependent packages to the latest version ([#195](https://github.com/marp-team/marp-vscode/pull/195))
+- Make icons for editor action monochrome, to follow [VS Code extension guideline](https://code.visualstudio.com/api/references/extension-guidelines#editor-actions) ([#193](https://github.com/marp-team/marp-vscode/issues/193), [#196](https://github.com/marp-team/marp-vscode/pull/196))
 
 ## v0.17.0 - 2020-12-05
 
