@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.17.1 - 2021-02-07
+
 ### Fixed
 
 - VS Code for Web makes broken slide preview on Safari ([#192](https://github.com/marp-team/marp-vscode/issues/192), [#197](https://github.com/marp-team/marp-vscode/pull/197))
