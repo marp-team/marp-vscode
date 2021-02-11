@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- KaTeX does not be rendered together with header/footer ([#200](https://github.com/marp-team/marp-vscode/issues/200), [#201](https://github.com/marp-team/marp-vscode/pull/201))
+
+### Changed
+
+- Upgrade to [Marp Core v1.4.3](https://github.com/marp-team/marp-core/releases/v1.4.3) and [Marp CLI v0.23.2](https://github.com/marp-team/marp-cli/releases/v0.23.2) ([#201](https://github.com/marp-team/marp-vscode/pull/201))
+- Upgrade dependent packages to the latest version ([#201](https://github.com/marp-team/marp-vscode/pull/201))
+
 ## v0.17.1 - 2021-02-07
 
 ### Fixed
