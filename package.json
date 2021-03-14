@@ -229,6 +229,7 @@
     "@types/vscode": "~1.43.0",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
+    "bufferutil": "^4.0.3",
     "builtin-modules": "^3.2.0",
     "codecov": "^3.8.1",
     "dedent": "^0.7.0",
