@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.17.3 - 2021-03-14
+
 ### Fixed
 
 - Conversion into PPTX takes only the first slide if using Chromium >= v89 ([#202](https://github.com/marp-team/marp-vscode/issues/202), [#205](https://github.com/marp-team/marp-vscode/pull/205))
