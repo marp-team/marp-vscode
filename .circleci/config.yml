@@ -17,6 +17,9 @@ commands:
         type: steps
         default: []
     steps:
+      - run: node --version
+      - run: npm --version
+
       - restore_cache:
           keys:
             - v2.3-dependencies-{{ .Environment.CI_CACHE_KEY }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "package-lock.json" }}-{{ .Branch }}
@@ -40,8 +43,6 @@ commands:
 
   test:
     steps:
-      - run: node --version
-
       - checkout
       - install
 
