@@ -3,6 +3,7 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/marp-team/marp-vscode/main.svg?style=flat-square&logo=circleci)](https://circleci.com/gh/marp-team/marp-vscode/)
 [![Codecov](https://img.shields.io/codecov/c/github/marp-team/marp-vscode/main.svg?style=flat-square&logo=codecov)](https://codecov.io/gh/marp-team/marp-vscode)
 [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/marp-team.marp-vscode.svg?style=flat-square&logo=visual-studio-code&label=VS%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=marp-team.marp-vscode)
+[![Open VSX](https://img.shields.io/open-vsx/v/marp-team/marp-vscode?label=Open%20VSX&style=flat-square)](https://open-vsx.org/extension/marp-team/marp-vscode)
 [![LICENSE](https://img.shields.io/github/license/marp-team/marp-vscode.svg?style=flat-square)](./LICENSE)
 
 **Create slide deck written in [Marp] Markdown on VS Code.**
