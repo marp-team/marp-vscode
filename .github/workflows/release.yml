@@ -1,4 +1,4 @@
-name: GitHub Release
+name: Release
 
 on:
   push:
@@ -42,3 +42,27 @@ jobs:
           task: upload
           token: ${{ secrets.GITHUB_TOKEN }}
           files: ${{ steps.vsix.outputs.name }}
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: vsix
+          path: ${{ steps.vsix.outputs.name }}
+
+  publish-to-open-vsx:
+    needs: upload-vsix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: vsix
+          path: ~/vsix
+
+      - name: Find out downloaded VSIX
+        id: vsix
+        run: echo "::set-output name=path::$(find ~/vsix -maxdepth 1 -name '*.vsix' -printf '%p\n' | head -n 1)"
+
+      - name: Publish to Open VSX Registry
+        uses: HaaLeo/publish-vscode-extension@v0
+        with:
+          pat: ${{ secrets.OPEN_VSX_PAT }}
+          extensionFile: ${{ steps.vsix.outputs.path }}
