@@ -4,7 +4,7 @@
 
 ### Added
 
-- Set up GitHub Actions for automated publication into Open VSX ([#218](https://github.com/marp-team/marp-vscode/pull/218))
+- Set up automated publication into Open VSX ([#211](https://github.com/marp-team/marp-vscode/issues/211), [#218](https://github.com/marp-team/marp-vscode/pull/218))
 
 ## v0.17.3 - 2021-03-14
 
