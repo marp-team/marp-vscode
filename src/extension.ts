@@ -9,7 +9,7 @@ import diagnostics from './diagnostics/'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
-import outline from './plugins/outline'
+import outline, { rule as outlineRule } from './plugins/outline'
 import themes from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 
@@ -50,10 +50,11 @@ export function extendMarkdownIt(md: any) {
 
       const marp = new Marp(marpCoreOptionForPreview(md.options))
         .use(customTheme)
+        .use(outline)
         .use(lineNumber)
 
-      if (marpConfiguration().get<boolean>('outlineExtension') ?? true) {
-        marp.use(outline)
+      if (!(marpConfiguration().get<boolean>('outlineExtension') ?? true)) {
+        marp.markdown.disable(outlineRule)
       }
 
       // Load custom themes

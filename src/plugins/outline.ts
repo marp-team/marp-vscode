@@ -1,5 +1,7 @@
+export const rule = 'marp_vscode_outline'
+
 export default function marpVSCodeOutline(instance) {
-  instance.core.ruler.push('marp_vscode_outline', (state) => {
+  instance.core.ruler.push(rule, (state) => {
     if (state.inlineMode) return
 
     const tokens: any[] = []
