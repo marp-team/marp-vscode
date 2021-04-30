@@ -10,6 +10,7 @@
 
 - Upgrade Marp Core to [v2.0.1](https://github.com/marp-team/marp-core/releases/v2.0.1) ([#217](https://github.com/marp-team/marp-vscode/pull/217))
 - Upgrade Marp CLI to [v1.0.1](https://github.com/marp-team/marp-cli/releases/v1.0.1) ([#216](https://github.com/marp-team/marp-vscode/pull/216))
+- Upgrade development Node and dependent packages to the latest ([#220](https://github.com/marp-team/marp-vscode/pull/220))
 
 ## v0.17.3 - 2021-03-14
 

@@ -180,25 +180,6 @@
       ]
     }
   },
-  "jest": {
-    "clearMocks": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts",
-      "src/**/*.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      ".*\\.d\\.ts"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "lines": 95
-      }
-    },
-    "preset": "ts-jest",
-    "restoreMocks": true,
-    "testEnvironment": "node"
-  },
   "scripts": {
     "build": "npm run -s clean && rollup -c ./rollup.config.js",
     "clean": "rimraf lib",
@@ -219,47 +200,48 @@
     "watch": "rollup -w -c ./rollup.config.js"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.1.0",
+    "@babel/preset-env": "^7.14.0",
+    "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.2.0",
-    "@rollup/plugin-typescript": "^8.2.0",
-    "@types/jest": "^26.0.20",
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/jest": "^26.0.23",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^12.0.1",
     "@types/vscode": "~1.43.0",
-    "@typescript-eslint/eslint-plugin": "^4.17.0",
-    "@typescript-eslint/parser": "^4.17.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "bufferutil": "^4.0.3",
     "builtin-modules": "^3.2.0",
     "codecov": "^3.8.1",
     "dedent": "^0.7.0",
-    "eslint": "^7.22.0",
-    "eslint-config-prettier": "^8.1.0",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.3.1",
+    "eslint-plugin-jest": "^24.3.6",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",
     "lodash.debounce": "^4.0.8",
-    "markdown-it": "^12.0.4",
-    "nanoid": "^3.1.21",
+    "markdown-it": "^12.0.6",
+    "nanoid": "^3.1.22",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "rehype-parse": "^7.0.1",
-    "remark-parse": "^8.0.3",
+    "remark-parse": "^9.0.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.41.2",
+    "rollup": "^2.46.0",
     "rollup-plugin-terser": "^7.0.2",
-    "stylelint": "^13.12.0",
+    "stylelint": "^13.13.0",
     "stylelint-config-prettier": "^8.0.2",
-    "stylelint-config-standard": "^21.0.0",
-    "ts-jest": "^26.5.3",
-    "tslib": "^2.1.0",
-    "typescript": "^4.2.3",
+    "stylelint-config-standard": "^22.0.0",
+    "ts-jest": "^26.5.5",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4",
     "unified": "^9.2.1",
-    "unist-util-visit": "^2.0.3",
+    "unist-util-visit": "^3.0.0",
     "utf-8-validate": "^5.0.4",
-    "vsce": "^1.87.0",
+    "vsce": "^1.88.0",
     "yaml": "^1.10.2"
   },
   "dependencies": {

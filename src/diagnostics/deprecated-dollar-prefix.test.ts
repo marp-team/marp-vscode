@@ -98,10 +98,10 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
 
         <!-- $theme: default -->
 
-        <!---
+        <!--
         class: foobar
         $size: 16:9
-        --->
+        -->
 
         \`\`\`
         <!-- $theme: gaia -->
