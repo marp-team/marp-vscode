@@ -6,6 +6,11 @@
 
 - Set up automated publication into Open VSX ([#211](https://github.com/marp-team/marp-vscode/issues/211), [#218](https://github.com/marp-team/marp-vscode/pull/218))
 
+### Changed
+
+- Upgrade Marp Core to [v2.0.1](https://github.com/marp-team/marp-core/releases/v2.0.1) ([#217](https://github.com/marp-team/marp-vscode/pull/217))
+- Upgrade Marp CLI to [v1.0.1](https://github.com/marp-team/marp-cli/releases/v1.0.1) ([#216](https://github.com/marp-team/marp-vscode/pull/216))
+
 ## v0.17.3 - 2021-03-14
 
 ### Fixed
