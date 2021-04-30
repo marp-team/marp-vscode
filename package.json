@@ -180,25 +180,6 @@
       ]
     }
   },
-  "jest": {
-    "clearMocks": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts",
-      "src/**/*.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      ".*\\.d\\.ts"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "lines": 95
-      }
-    },
-    "preset": "ts-jest",
-    "restoreMocks": true,
-    "testEnvironment": "node"
-  },
   "scripts": {
     "build": "npm run -s clean && rollup -c ./rollup.config.js",
     "clean": "rimraf lib",
@@ -219,6 +200,7 @@
     "watch": "rollup -w -c ./rollup.config.js"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.14.0",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
