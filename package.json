@@ -127,6 +127,11 @@
             "KaTeX (https://katex.org/): The default library in Marp Core"
           ]
         },
+        "markdown.marp.outlineExtension": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enables the outline extension for Marp Markdown. If enabled, VS Code's outline view will reflect slide splitters, and you can fold regions of the slide content in the editor."
+        },
         "markdown.marp.themes": {
           "type": "array",
           "default": [],
