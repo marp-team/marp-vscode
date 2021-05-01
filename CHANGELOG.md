@@ -4,7 +4,8 @@
 
 ### Added
 
-- Set up automated publication into Open VSX ([#211](https://github.com/marp-team/marp-vscode/issues/211), [#218](https://github.com/marp-team/marp-vscode/pull/218))
+- Set up automated publication into [Open VSX](https://open-vsx.org/extension/marp-team/marp-vscode) ([#211](https://github.com/marp-team/marp-vscode/issues/211), [#218](https://github.com/marp-team/marp-vscode/pull/218))
+- `markdown.marp.outlineExtension` preference to enable or disable the outline extension ([#212](https://github.com/marp-team/marp-vscode/issues/212), [#221](https://github.com/marp-team/marp-vscode/pull/221))
 
 ### Changed
 
