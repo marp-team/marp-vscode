@@ -113,9 +113,13 @@ Markdown preview will reload updated theme CSS automatically when you edited the
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/custom-theme.gif" alt="Use custom theme" width="600" />
 </p>
 
-### Outline view for each slide
+### Outline extension
 
-We extend [a native outline view](https://code.visualstudio.com/docs/languages/markdown#_outline-view) to support slide pages in Marp Markdown.
+When Marp Markdown is enabled, you can use the extended [outline view](https://code.visualstudio.com/docs/languages/markdown#_outline-view) like following. They are enabled by default but you may disable by `markdown.marp.outlineExtension` preference.
+
+#### Outline view for each slide
+
+We extend the outline view to support slide pages in Marp Markdown.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/outline.png" alt="Outline view for each slide" width="400" />
@@ -123,7 +127,7 @@ We extend [a native outline view](https://code.visualstudio.com/docs/languages/m
 
 > ℹ️ Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order.
 
-### Slide folding in editor
+#### Slide folding in editor
 
 You can fold the content of slide in editor while editing Marp Markdown.
 
