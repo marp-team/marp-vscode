@@ -287,5 +287,67 @@ describe('#extendMarkdownIt', () => {
         ).not.toContain('@custom theme')
       })
     })
+
+    describe('markdown.marp.outlineExtension', () => {
+      const markdown = dedent`
+        ---
+        marp: true
+        ---
+
+        1
+
+        ---
+
+        2
+      `
+
+      it('adds hidden heading token marked as zero-level if enabled', () => {
+        setConfiguration({ 'markdown.marp.outlineExtension': true })
+
+        const parsed = md().parse(markdown)
+        const hiddenHeadings = parsed.filter(
+          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden
+        )
+
+        expect(hiddenHeadings).toHaveLength(2)
+        expect(hiddenHeadings[0].map[0]).toBe(0)
+        expect(hiddenHeadings[1].map[0]).toBe(6)
+
+        // headingDivider directive
+        const headingDivider = md().parse(dedent`
+          ---
+          marp: true
+          headingDivider: 2
+          ---
+
+          # 1
+
+          ## 2
+
+          ### 3
+
+          ## 4
+        `)
+        const hiddenHeadingDividers = headingDivider.filter(
+          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden
+        )
+
+        expect(hiddenHeadingDividers).toHaveLength(3)
+        expect(hiddenHeadingDividers[0].map[0]).toBe(0)
+        expect(hiddenHeadingDividers[1].map[0]).toBe(7)
+        expect(hiddenHeadingDividers[2].map[0]).toBe(11)
+      })
+
+      it('does not add zero-level heading token if disabled', () => {
+        setConfiguration({ 'markdown.marp.outlineExtension': false })
+
+        const parsed = md().parse(markdown)
+        const hiddenHeadings = parsed.filter(
+          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden
+        )
+
+        expect(hiddenHeadings).toHaveLength(0)
+      })
+    })
   })
 })
