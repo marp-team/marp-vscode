@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.18.0 - 2021-05-01
+
 ### Added
 
 - Set up automated publication into [Open VSX](https://open-vsx.org/extension/marp-team/marp-vscode) ([#211](https://github.com/marp-team/marp-vscode/issues/211), [#218](https://github.com/marp-team/marp-vscode/pull/218))
