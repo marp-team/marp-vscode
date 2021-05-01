@@ -66,3 +66,4 @@ jobs:
         with:
           pat: ${{ secrets.OPEN_VSX_PAT }}
           extensionFile: ${{ steps.vsix.outputs.path }}
+          packagePath: ''
