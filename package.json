@@ -44,6 +44,9 @@
     "onCommand:markdown.marp.showQuickPick",
     "onCommand:markdown.marp.toggleMarpPreview"
   ],
+  "capabilities": {
+    "virtualWorkspaces": true
+  },
   "contributes": {
     "commands": [
       {
@@ -210,6 +213,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@rollup/plugin-typescript": "^8.2.1",
+    "@types/express": "^4.17.11",
     "@types/jest": "^26.0.23",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^12.0.1",
@@ -225,12 +229,14 @@
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.3.6",
+    "express": "^4.17.1",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",
     "lodash.debounce": "^4.0.8",
     "markdown-it": "^12.0.6",
     "nanoid": "^3.1.22",
     "npm-run-all": "^4.1.5",
+    "portfinder": "^1.0.28",
     "prettier": "^2.2.1",
     "rehype-parse": "^7.0.1",
     "remark-parse": "^9.0.0",
@@ -250,7 +256,7 @@
     "yaml": "^1.10.2"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^1.0.1",
+    "@marp-team/marp-cli": "file:../marp-cli/marp-team-marp-cli-1.0.1.tgz",
     "@marp-team/marp-core": "^2.0.1",
     "axios": "^0.21.1"
   }

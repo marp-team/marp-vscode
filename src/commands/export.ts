@@ -1,11 +1,22 @@
 import path from 'path'
-import { env, ProgressLocation, TextDocument, Uri, window } from 'vscode'
+import {
+  env,
+  ProgressLocation,
+  TextDocument,
+  Uri,
+  window,
+  workspace,
+} from 'vscode'
 import marpCli, {
   createConfigFile,
   createWorkFile,
   MarpCLIError,
 } from '../marp-cli'
 import { marpConfiguration } from '../utils'
+import {
+  createWorkspaceProxyServer,
+  WorkspaceProxyServer,
+} from '../workspace-proxy-server'
 
 export enum Types {
   html = 'html',
@@ -16,48 +27,96 @@ export enum Types {
 }
 
 const extensions = {
-  [Types.html]: ['html'],
-  [Types.pdf]: ['pdf'],
-  [Types.pptx]: ['pptx'],
-  [Types.png]: ['png'],
-  [Types.jpeg]: ['jpg', 'jpeg'],
+  [Types.html]: ['html'] as const,
+  [Types.pdf]: ['pdf'] as const,
+  [Types.pptx]: ['pptx'] as const,
+  [Types.png]: ['png'] as const,
+  [Types.jpeg]: ['jpg', 'jpeg'] as const,
 }
 
 const descriptions = {
-  [Types.html]: 'HTML slide deck',
-  [Types.pdf]: 'PDF slide deck',
-  [Types.pptx]: 'PowerPoint document',
-  [Types.png]: 'PNG image (first slide only)',
-  [Types.jpeg]: 'JPEG image (first slide only)',
+  [Types.html]: 'HTML slide deck' as const,
+  [Types.pdf]: 'PDF slide deck' as const,
+  [Types.pptx]: 'PowerPoint document' as const,
+  [Types.png]: 'PNG image (first slide only)' as const,
+  [Types.jpeg]: 'JPEG image (first slide only)' as const,
 }
 
 export const ITEM_CONTINUE_TO_EXPORT = 'Continue to export...'
 
 export const command = 'markdown.marp.export'
 
+const chromiumRequiredExtensions = [
+  ...extensions.pdf,
+  ...extensions.pptx,
+  ...extensions.png,
+  ...extensions.jpeg,
+] as string[]
+
 export const doExport = async (uri: Uri, document: TextDocument) => {
-  const input = await createWorkFile(document)
+  let proxyServer: WorkspaceProxyServer | undefined
+  let baseUrl: string | undefined
+
+  const shouldProvideWorkspaceProxyServer = (() => {
+    const ext = path.extname(uri.path).replace(/^\./, '')
+
+    if (chromiumRequiredExtensions.includes(ext)) {
+      // VS Code's Markdown preview may show local resources placed at the
+      // outside of workspace, and using the proxy server in that case may too
+      // much prevent file accesses.
+      //
+      // So leave handling local files to Marp CLI if the current document was
+      // assumed to use local file system.
+      return !['file', 'untitled'].includes(document.uri.scheme)
+    }
+
+    return false
+  })()
+
+  if (shouldProvideWorkspaceProxyServer) {
+    const workspaceFolder = workspace.getWorkspaceFolder(document.uri)
+
+    if (workspaceFolder) {
+      proxyServer = await createWorkspaceProxyServer(workspaceFolder)
+      baseUrl = `http://127.0.0.1:${proxyServer.port}${document.uri.path}`
+
+      console.debug(
+        `Proxy server for the workspace ${workspaceFolder.name} has created (port: ${proxyServer.port})`
+      )
+    }
+  }
 
   try {
-    const conf = await createConfigFile(document)
+    const input = await createWorkFile(document)
 
     try {
-      await marpCli('-c', conf.path, input.path, '-o', uri.fsPath)
-      env.openExternal(uri)
-    } finally {
-      conf.cleanup()
-    }
-  } catch (e) {
-    window.showErrorMessage(
-      `Failure to export${(() => {
-        if (e instanceof MarpCLIError) return `. ${e.message}`
-        if (e instanceof Error) return `: [${e.name}] ${e.message}`
+      // Run Marp CLI
+      const conf = await createConfigFile(document, {
+        allowLocalFiles: !proxyServer,
+      })
 
-        return `. ${e.toString()}`
-      })()}`
-    )
+      try {
+        await marpCli(['-c', conf.path, input.path, '-o', uri.fsPath], {
+          baseUrl,
+        })
+        env.openExternal(uri)
+      } finally {
+        conf.cleanup()
+      }
+    } catch (e) {
+      window.showErrorMessage(
+        `Failure to export${(() => {
+          if (e instanceof MarpCLIError) return `. ${e.message}`
+          if (e instanceof Error) return `: [${e.name}] ${e.message}`
+
+          return `. ${e.toString()}`
+        })()}`
+      )
+    } finally {
+      input.cleanup()
+    }
   } finally {
-    input.cleanup()
+    proxyServer?.dispose()
   }
 }
 

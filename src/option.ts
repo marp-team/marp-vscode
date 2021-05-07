@@ -43,9 +43,12 @@ export const marpCoreOptionForPreview = (
   return cachedPreviewOption
 }
 
-export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
+export const marpCoreOptionForCLI = async (
+  { uri }: TextDocument,
+  { allowLocalFiles = true }: { allowLocalFiles?: boolean } = {}
+) => {
   const baseOpts = {
-    allowLocalFiles: true,
+    allowLocalFiles,
     html: marpConfiguration().get<boolean>('enableHtml') || undefined,
     options: {
       markdown: {
