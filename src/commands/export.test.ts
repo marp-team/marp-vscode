@@ -97,8 +97,10 @@ describe('#saveDialog', () => {
 })
 
 describe('#doExport', () => {
-  const saveURI: any = { fsPath: '/tmp/to.pdf' }
-  const document: any = { uri: { scheme: 'file', fsPath: '/tmp/md.md' } }
+  const saveURI: any = { path: '/tmp/to.pdf', fsPath: '/tmp/to.pdf' }
+  const document: any = {
+    uri: { scheme: 'file', path: '/tmp/md.md', fsPath: '/tmp/md.md' },
+  }
 
   it('exports passed document via Marp CLI and opens it', async () => {
     const runMarpCLI = jest.spyOn(marpCli, 'default').mockImplementation()

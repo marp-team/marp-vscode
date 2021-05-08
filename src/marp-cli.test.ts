@@ -23,14 +23,16 @@ describe('Marp CLI integration', () => {
 
   it('runs Marp CLI with passed args', async () => {
     const marpCliSpy = jest.spyOn(marpCliModule, 'marpCli')
-    await runMarpCli('--version')
+    await runMarpCli(['--version'])
 
-    expect(marpCliSpy).toHaveBeenCalledWith(['--version'])
+    expect(marpCliSpy).toHaveBeenCalledWith(['--version'], undefined)
   })
 
   it('throws MarpCLIError when returned error exit code', async () => {
     jest.spyOn(marpCliModule, 'marpCli').mockResolvedValue(1)
-    await expect(runMarpCli('--version')).rejects.toThrow(marpCli.MarpCLIError)
+    await expect(runMarpCli(['--version'])).rejects.toThrow(
+      marpCli.MarpCLIError
+    )
   })
 
   it.each`
@@ -58,7 +60,7 @@ describe('Marp CLI integration', () => {
           )
 
         for (const fragment of expected) {
-          await expect(runMarpCli('--version')).rejects.toThrow(fragment)
+          await expect(runMarpCli(['--version'])).rejects.toThrow(fragment)
         }
       } finally {
         Object.defineProperty(process, 'platform', { value: originalPlatform })
@@ -80,7 +82,7 @@ describe('Marp CLI integration', () => {
           return 0
         })
 
-      await runMarpCli('--version')
+      await runMarpCli(['--version'])
       expect(marpCliSpy).toHaveBeenCalled()
       expect(process.env.CHROME_PATH).toBe(CHROME_PATH)
     })

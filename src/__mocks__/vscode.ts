@@ -16,7 +16,7 @@ const uriInstances: Record<string, any> = {}
 const uriInstance = (path: string) =>
   uriInstances[path] ||
   (() => {
-    const uri = { fsPath: path, with: jest.fn(() => uri) }
+    const uri = { path, scheme: 'file', fsPath: path, with: jest.fn(() => uri) }
     return uri
   })()
 
