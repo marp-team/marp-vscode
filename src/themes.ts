@@ -1,13 +1,22 @@
 import fs from 'fs'
 import path from 'path'
-import { promisify } from 'util'
+import { URL } from 'url'
+import { promisify, TextDecoder } from 'util'
 import axios from 'axios'
-import { Disposable, RelativePattern, Uri, commands, workspace } from 'vscode'
+import {
+  commands,
+  workspace,
+  Disposable,
+  GlobPattern,
+  RelativePattern,
+  Uri,
+} from 'vscode'
 import { marpConfiguration } from './utils'
 
 export enum ThemeType {
   File = 'File',
   Remote = 'Remote',
+  VirtualFS = 'VirtualFS',
 }
 
 export interface Theme {
@@ -19,12 +28,14 @@ export interface Theme {
   readonly type: ThemeType
 }
 
-// TODO: Consider using VS Code's `workspace.fs` API in future.
-// https://github.com/microsoft/vscode/issues/48034
 const readFile = promisify(fs.readFile)
 
 const isRemotePath = (path: string) =>
   path.startsWith('https:') || path.startsWith('http:')
+
+const isVirtualPath = (path: string) => /^[a-z0-9.+-]+:\/\/\b/.test(path)
+
+const textDecoder = new TextDecoder()
 
 export class Themes {
   observedThemes = new Map<string, Theme>()
@@ -37,32 +48,27 @@ export class Themes {
     this.observedThemes.clear()
   }
 
-  getRegisteredStyles(rootDirectory: Uri | undefined): Theme[] {
-    return this.getPathsFromConf(rootDirectory)
+  getRegisteredStyles(rootUri: Uri | undefined): Theme[] {
+    return this.getPathsFromConf(rootUri)
       .map((p) => this.observedThemes.get(p))
       .filter((t) => t) as Theme[]
   }
 
-  loadStyles(rootDirectory: Uri | undefined): Promise<Theme>[] {
-    return this.getPathsFromConf(rootDirectory).map((p) =>
-      this.registerTheme(p)
-    )
+  loadStyles(rootUri: Uri | undefined): Promise<Theme>[] {
+    return this.getPathsFromConf(rootUri).map((p) => this.registerTheme(p))
   }
 
-  private getPathsFromConf(rootDirectory: Uri | undefined): string[] {
+  private getPathsFromConf(rootUri: Uri | undefined): string[] {
     const themes = marpConfiguration().get<string[]>('themes')
 
     if (Array.isArray(themes) && themes.length > 0) {
-      return this.normalizePaths(themes, rootDirectory)
+      return this.normalizePaths(themes, rootUri)
     }
 
     return []
   }
 
-  private normalizePaths(
-    paths: string[],
-    rootDirectory: Uri | undefined
-  ): string[] {
+  private normalizePaths(paths: string[], rootUri: Uri | undefined): string[] {
     const normalizedPaths = new Set<string>()
 
     for (const p of paths) {
@@ -70,13 +76,23 @@ export class Themes {
 
       if (isRemotePath(p)) {
         normalizedPaths.add(p)
-      } else if (rootDirectory) {
-        const resolvedPath = path.resolve(rootDirectory.fsPath, p)
+      } else if (rootUri) {
+        if (rootUri.scheme === 'file') {
+          const resolvedPath = path.resolve(rootUri.fsPath, p)
 
-        if (
-          !path.relative(rootDirectory.fsPath, resolvedPath).startsWith('..')
-        ) {
-          normalizedPaths.add(resolvedPath)
+          if (!path.relative(rootUri.fsPath, resolvedPath).startsWith('..')) {
+            normalizedPaths.add(resolvedPath)
+          }
+        } else {
+          try {
+            const { pathname: relativePath } = new URL(p, 'dummy://dummy/')
+
+            normalizedPaths.add(
+              rootUri.with({ path: rootUri.path + relativePath }).toString()
+            )
+          } catch (e) {
+            // no ops
+          }
         }
       }
     }
@@ -90,9 +106,12 @@ export class Themes {
 
     console.log('Fetching theme CSS:', themePath)
 
-    const type: ThemeType = isRemotePath(themePath)
-      ? ThemeType.Remote
-      : ThemeType.File
+    const type: ThemeType = (() => {
+      if (isRemotePath(themePath)) return ThemeType.Remote
+      if (isVirtualPath(themePath)) return ThemeType.VirtualFS
+
+      return ThemeType.File
+    })()
 
     const css = await (async (): Promise<string> => {
       switch (type) {
@@ -100,15 +119,41 @@ export class Themes {
           return (await readFile(themePath)).toString()
         case ThemeType.Remote:
           return (await axios.get(themePath, { timeout: 5000 })).data
+        case ThemeType.VirtualFS:
+          return textDecoder.decode(
+            await workspace.fs.readFile(Uri.parse(themePath, true))
+          )
       }
     })()
 
     const registeredTheme: Theme = { css, type, path: themePath }
 
-    if (type === ThemeType.File) {
-      const fsWatcher = workspace.createFileSystemWatcher(
-        new RelativePattern(path.dirname(themePath), path.basename(themePath))
-      )
+    const watcherPattern: GlobPattern | undefined = (() => {
+      switch (type) {
+        case ThemeType.File:
+          return new RelativePattern(
+            path.dirname(themePath),
+            path.basename(themePath)
+          )
+        case ThemeType.VirtualFS:
+          try {
+            const baseUri = Uri.parse(themePath, true)
+            const { pathname } = new URL('.', themePath)
+
+            return new RelativePattern(
+              baseUri.with({ path: pathname }).toString(),
+              baseUri.path.split('/').pop()! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            )
+          } catch (e) {
+            // no ops
+          }
+      }
+
+      return undefined
+    })()
+
+    if (watcherPattern) {
+      const fsWatcher = workspace.createFileSystemWatcher(watcherPattern)
 
       const onDidChange = fsWatcher.onDidChange(async () => {
         onDidChange.dispose()
