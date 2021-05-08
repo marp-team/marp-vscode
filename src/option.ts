@@ -34,7 +34,10 @@ export const marpCoreOptionForPreview = (
     cachedPreviewOption = {
       container: { tag: 'div', id: 'marp-vscode' },
       html: marpConfiguration().get<boolean>('enableHtml') || undefined,
-      markdown: { breaks: breaks(!!baseOption.breaks) },
+      markdown: {
+        breaks: breaks(!!baseOption.breaks),
+        typographer: baseOption.typographer,
+      },
       math: marpConfiguration().get<'katex' | 'mathjax'>('mathTypesetting'),
       minifyCSS: false,
       script: false,
@@ -44,16 +47,15 @@ export const marpCoreOptionForPreview = (
 }
 
 export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
+  const confMdPreview = workspace.getConfiguration('markdown.preview', uri)
+
   const baseOpts = {
     allowLocalFiles: true,
     html: marpConfiguration().get<boolean>('enableHtml') || undefined,
     options: {
       markdown: {
-        breaks: breaks(
-          !!workspace
-            .getConfiguration('markdown.preview', uri)
-            .get<boolean>('breaks')
-        ),
+        breaks: breaks(!!confMdPreview.get<boolean>('breaks')),
+        typographer: confMdPreview.get<boolean>('typographer'),
       },
       math: marpConfiguration().get<'katex' | 'mathjax'>('mathTypesetting'),
     },
