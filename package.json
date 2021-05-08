@@ -256,7 +256,7 @@
     "yaml": "^1.10.2"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "file:../marp-cli/marp-team-marp-cli-1.0.1.tgz",
+    "@marp-team/marp-cli": "^1.0.2",
     "@marp-team/marp-core": "^2.0.1",
     "axios": "^0.21.1"
   }
