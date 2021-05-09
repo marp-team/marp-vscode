@@ -64,6 +64,22 @@ describe('Option', () => {
       ).toBe(false)
     })
 
+    it('enables typographer by preference', async () => {
+      expect(
+        (await subject({ uri: untitledUri })).options.markdown.typographer
+      ).toBeUndefined()
+
+      setConfiguration({ 'markdown.preview.typographer': true })
+      expect(
+        (await subject({ uri: untitledUri })).options.markdown.typographer
+      ).toBe(true)
+
+      setConfiguration({ 'markdown.preview.typographer': false })
+      expect(
+        (await subject({ uri: untitledUri })).options.markdown.typographer
+      ).toBe(false)
+    })
+
     describe('when targeted document belongs to workspace', () => {
       const css = '/* @theme test */'
 
