@@ -141,7 +141,7 @@ export class Themes {
             const { pathname } = new URL('.', themePath)
 
             return new RelativePattern(
-              baseUri.with({ path: pathname }).toString(),
+              baseUri.with({ path: pathname }),
               baseUri.path.split('/').pop()! // eslint-disable-line @typescript-eslint/no-non-null-assertion
             )
           } catch (e) {
