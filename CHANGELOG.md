@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+
+- Apply [`markdown.preview.typographer` for VS Code 1.56](https://code.visualstudio.com/updates/v1_56#_markdown-preview-typographer-support) to Marp preview and the export result ([#228](https://github.com/marp-team/marp-vscode/pull/228))
+
+### Changed
+
+- Upgrade Marp Core to [v2.0.2](https://github.com/marp-team/marp-core/releases/v2.0.2) ([#228](https://github.com/marp-team/marp-vscode/pull/228))
+- Upgrade Marp CLI to [v1.0.3](https://github.com/marp-team/marp-cli/releases/v1.0.3) ([#228](https://github.com/marp-team/marp-vscode/pull/228))
+
 ## v0.18.0 - 2021-05-01
 
 ### Added

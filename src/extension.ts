@@ -20,6 +20,7 @@ const shouldRefreshConfs = [
   'markdown.marp.outlineExtension',
   'markdown.marp.themes',
   'markdown.preview.breaks',
+  'markdown.preview.typographer',
 ]
 
 export const marpVscode = Symbol('marp-vscode')
@@ -53,6 +54,7 @@ export function extendMarkdownIt(md: any) {
         .use(outline)
         .use(lineNumber)
 
+      // Switch rules
       if (!(marpConfiguration().get<boolean>('outlineExtension') ?? true)) {
         marp.markdown.disable(outlineRule)
       }
