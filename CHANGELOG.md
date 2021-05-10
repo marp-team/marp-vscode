@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.19.0 - 2021-05-10
+
 ### Breaking
 
 - VS Code >= 1.52 is now required ([#225](https://github.com/marp-team/marp-vscode/pull/225))
