@@ -30,7 +30,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.43.0"
+    "vscode": "^1.52.0"
   },
   "main": "./lib/extension.js",
   "icon": "images/icon.png",
@@ -44,6 +44,9 @@
     "onCommand:markdown.marp.showQuickPick",
     "onCommand:markdown.marp.toggleMarpPreview"
   ],
+  "capabilities": {
+    "virtualWorkspaces": true
+  },
   "contributes": {
     "commands": [
       {
@@ -210,10 +213,11 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@rollup/plugin-typescript": "^8.2.1",
+    "@types/express": "^4.17.11",
     "@types/jest": "^26.0.23",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^12.0.1",
-    "@types/vscode": "~1.43.0",
+    "@types/vscode": "~1.52.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "bufferutil": "^4.0.3",
@@ -225,12 +229,14 @@
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.3.6",
+    "express": "^4.17.1",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",
     "lodash.debounce": "^4.0.8",
     "markdown-it": "^12.0.6",
     "nanoid": "^3.1.22",
     "npm-run-all": "^4.1.5",
+    "portfinder": "^1.0.28",
     "prettier": "^2.2.1",
     "rehype-parse": "^7.0.1",
     "remark-parse": "^9.0.0",

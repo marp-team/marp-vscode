@@ -46,11 +46,14 @@ export const marpCoreOptionForPreview = (
   return cachedPreviewOption
 }
 
-export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
+export const marpCoreOptionForCLI = async (
+  { uri }: TextDocument,
+  { allowLocalFiles = true }: { allowLocalFiles?: boolean } = {}
+) => {
   const confMdPreview = workspace.getConfiguration('markdown.preview', uri)
 
   const baseOpts = {
-    allowLocalFiles: true,
+    allowLocalFiles,
     html: marpConfiguration().get<boolean>('enableHtml') || undefined,
     options: {
       markdown: {
@@ -65,30 +68,37 @@ export const marpCoreOptionForCLI = async ({ uri }: TextDocument) => {
 
   const workspaceFolder = workspace.getWorkspaceFolder(uri)
   const parentFolder = uri.scheme === 'file' && path.dirname(uri.fsPath)
-  const baseFolder = workspaceFolder ? workspaceFolder.uri.fsPath : parentFolder
+
+  const baseFolder = (() => {
+    if (workspaceFolder) return workspaceFolder.uri
+    if (parentFolder) return Uri.parse(`file:${parentFolder}`, true)
+
+    return undefined
+  })()
 
   const themeFiles: WorkFile[] = (
     await Promise.all(
-      themes
-        .loadStyles(baseFolder ? Uri.parse(`file:${baseFolder}`) : undefined)
-        .map((promise) =>
-          promise.then(
-            async (theme) => {
-              if (theme.type === ThemeType.File) {
-                return { path: theme.path, cleanup: () => Promise.resolve() }
-              }
+      themes.loadStyles(baseFolder).map((promise) =>
+        promise.then(
+          async (theme) => {
+            if (theme.type === ThemeType.File) {
+              return { path: theme.path, cleanup: () => Promise.resolve() }
+            }
 
-              if (theme.type === ThemeType.Remote) {
-                const cssName = `.marp-vscode-cli-theme-${nanoid()}.css`
-                const tmp = path.join(tmpdir(), cssName)
+            if (
+              theme.type === ThemeType.Remote ||
+              theme.type === ThemeType.VirtualFS
+            ) {
+              const cssName = `.marp-vscode-cli-theme-${nanoid()}.css`
+              const tmp = path.join(tmpdir(), cssName)
 
-                await promisify(writeFile)(tmp, theme.css)
-                return { path: tmp, cleanup: () => promisify(unlink)(tmp) }
-              }
-            },
-            (e) => console.error(e)
-          )
+              await promisify(writeFile)(tmp, theme.css)
+              return { path: tmp, cleanup: () => promisify(unlink)(tmp) }
+            }
+          },
+          (e) => console.error(e)
         )
+      )
     )
   ).filter((w): w is WorkFile => !!w)
 

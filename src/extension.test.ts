@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 import fs from 'fs'
 import path from 'path'
+import { TextEncoder } from 'util'
 import { Marp } from '@marp-team/marp-core'
 import axios from 'axios'
 import dedent from 'dedent'
@@ -285,6 +286,51 @@ describe('#extendMarkdownIt', () => {
         expect(
           markdown.render(marpMd('<!-- theme: default -->'))
         ).not.toContain('@custom theme')
+      })
+
+      describe('when the current workspace belongs to the virtual file system', () => {
+        const vfsUri = Object.assign(Uri.parse(baseDir), {
+          scheme: 'vscode-vfs',
+          path: 'vscode-vfs://dummy.host/path/to/workspace',
+          fsPath: '/vscode-vfs/dummy.host/path/to/workspace',
+          toString() {
+            return this.path
+          },
+        })
+
+        beforeEach(() => {
+          jest
+            .spyOn(workspace, 'getWorkspaceFolder')
+            .mockReturnValue({ name: 'vfs', index: 0, uri: vfsUri })
+        })
+
+        it('resolves theme CSS through VS Code FileSystem API', async () => {
+          const wsFsReadfile = jest
+            .spyOn(workspace.fs, 'readFile')
+            .mockResolvedValue(new TextEncoder().encode(css))
+
+          const mdBody = marpMd('<!--theme: example-->')
+
+          setConfiguration({ 'markdown.marp.themes': ['example.css'] })
+          ;(workspace as any).textDocuments = [
+            {
+              languageId: 'markdown',
+              getText: () => mdBody,
+              uri: Uri.parse(vfsUri.path + '/test.md'),
+              fileName: vfsUri.path + '/test.md',
+            } as any,
+          ]
+
+          const markdown = md()
+          await Promise.all(themes.loadStyles(vfsUri))
+
+          expect(wsFsReadfile).toHaveBeenCalledWith(
+            expect.objectContaining({
+              path: expect.stringContaining('vscode-vfs://'),
+            })
+          )
+          expect(markdown.render(mdBody)).toContain(css)
+        })
       })
     })
 

@@ -2,6 +2,7 @@ import { unlink, writeFile } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 import { promisify } from 'util'
+import type { marpCli } from '@marp-team/marp-cli'
 import { nanoid } from 'nanoid'
 import { TextDocument, workspace } from 'vscode'
 import { WorkFile, marpCoreOptionForCLI } from './option'
@@ -9,6 +10,7 @@ import { marpConfiguration } from './utils'
 
 const promiseWriteFile = promisify(writeFile)
 const promiseUnlink = promisify(unlink)
+const createCleanup = (target: string) => () => promiseUnlink(target)
 
 export class MarpCLIError extends Error {}
 
@@ -20,16 +22,17 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
 
   const text = doc.getText()
   const tmpFileName = `.marp-vscode-tmp-${nanoid()}`
-  const createCleanup = (target: string) => () => promiseUnlink(target)
 
   // Try to create tmp file to the same directory as a document
-  const sameDirTmpPath = path.join(path.dirname(doc.uri.fsPath), tmpFileName)
+  if (doc.uri.scheme === 'file') {
+    const sameDirTmpPath = path.join(path.dirname(doc.uri.fsPath), tmpFileName)
 
-  try {
-    await promiseWriteFile(sameDirTmpPath, text)
-    return { path: sameDirTmpPath, cleanup: createCleanup(sameDirTmpPath) }
-  } catch (e) {
-    // no ops
+    try {
+      await promiseWriteFile(sameDirTmpPath, text)
+      return { path: sameDirTmpPath, cleanup: createCleanup(sameDirTmpPath) }
+    } catch (e) {
+      // no ops
+    }
   }
 
   // If it fails, try to create to the root of workspace
@@ -58,11 +61,12 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
 }
 
 export async function createConfigFile(
-  target: TextDocument
+  target: TextDocument,
+  opts?: Parameters<typeof marpCoreOptionForCLI>[1]
 ): Promise<WorkFile> {
   const tmpFileName = `.marp-vscode-cli-conf-${nanoid()}.json`
   const tmpPath = path.join(tmpdir(), tmpFileName)
-  const cliOpts = await marpCoreOptionForCLI(target)
+  const cliOpts = await marpCoreOptionForCLI(target, opts)
 
   await promiseWriteFile(tmpPath, JSON.stringify(cliOpts))
 
@@ -77,8 +81,10 @@ export async function createConfigFile(
   }
 }
 
-export default async function runMarpCli(...argv: string[]): Promise<void> {
-  console.info(`Execute Marp CLI: ${argv.join(' ')}`)
+export default async function runMarpCli(
+  ...[argv, opts]: Parameters<typeof marpCli>
+): Promise<void> {
+  console.info(`Execute Marp CLI [${argv.join(' ')}] (${JSON.stringify(opts)})`)
 
   const { marpCli, CLIError, CLIErrorCode } = await import(
     '@marp-team/marp-cli'
@@ -91,7 +97,7 @@ export default async function runMarpCli(...argv: string[]): Promise<void> {
     process.env.CHROME_PATH =
       marpConfiguration().get<string>('chromePath') || CHROME_PATH
 
-    exitCode = await marpCli(argv)
+    exitCode = await marpCli(argv, opts)
   } catch (e) {
     console.error(e)
 

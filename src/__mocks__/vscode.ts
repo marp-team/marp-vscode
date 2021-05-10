@@ -1,3 +1,5 @@
+import { TextEncoder } from 'util'
+
 type MockedConf = Record<string, any>
 
 const defaultVSCodeVersion = 'v1.36.0'
@@ -16,7 +18,7 @@ const uriInstances: Record<string, any> = {}
 const uriInstance = (path: string) =>
   uriInstances[path] ||
   (() => {
-    const uri = { fsPath: path, with: jest.fn(() => uri) }
+    const uri = { path, scheme: 'file', fsPath: path, with: jest.fn(() => uri) }
     return uri
   })()
 
@@ -85,6 +87,23 @@ export const env = {
   openExternal: jest.fn(),
 }
 
+export const FileSystem = {
+  stat: jest.fn(async () => ({
+    ctime: 0,
+    mtime: new Date().getTime(),
+    size: 0,
+    type: FileType.File,
+  })),
+  readFile: jest.fn().mockResolvedValue(new TextEncoder().encode('readFile')),
+}
+
+export enum FileType {
+  Unknown = 0,
+  File = 1,
+  Directory = 2,
+  SymbolicLink = 64,
+}
+
 export const languages = {
   createDiagnosticCollection: jest.fn((name) => ({
     name,
@@ -115,6 +134,7 @@ export const workspace = {
     onDidChange: jest.fn(),
     onDidDelete: jest.fn(),
   })),
+  fs: FileSystem,
   getConfiguration: jest.fn((section?: string) => ({
     get: jest.fn(
       (subSection?: string) =>

@@ -2,9 +2,14 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- VS Code >= 1.52 is now required ([#225](https://github.com/marp-team/marp-vscode/pull/225))
+
 ### Added
 
 - Apply [`markdown.preview.typographer` for VS Code 1.56](https://code.visualstudio.com/updates/v1_56#_markdown-preview-typographer-support) to Marp preview and the export result ([#226](https://github.com/marp-team/marp-vscode/issues/226), [#228](https://github.com/marp-team/marp-vscode/pull/228))
+- Improved support for a [virtual workspace](https://code.visualstudio.com/updates/v1_56#_define-whether-your-extension-supports-a-virtual-workspace) ([#224](https://github.com/marp-team/marp-vscode/issues/224), [#225](https://github.com/marp-team/marp-vscode/pull/225))
 
 ### Changed
 
