@@ -1,10 +1,17 @@
 import { env, window, workspace } from 'vscode'
 import * as marpCli from '../marp-cli'
+import { createWorkspaceProxyServer } from '../workspace-proxy-server'
 import * as exportModule from './export'
 
 const exportCommand = exportModule.default
 
 jest.mock('vscode')
+jest.mock('../workspace-proxy-server', () => ({
+  createWorkspaceProxyServer: jest.fn().mockResolvedValue({
+    port: 8765,
+    dispose: jest.fn(),
+  }),
+}))
 
 const setConfiguration: (
   conf?: Record<string, unknown>
@@ -117,5 +124,58 @@ describe('#doExport', () => {
     expect(window.showErrorMessage).toHaveBeenCalledWith(
       expect.stringContaining('[Error] ERROR')
     )
+  })
+
+  describe('when the document belongs to the virtual file system', () => {
+    const vfsDocument: any = {
+      uri: {
+        scheme: 'vscode-vfs',
+        path: 'vscode-vfs://dummy.path/tmp/md.md',
+        fsPath: '/vscode-vfs/dummy.path/tmp/md.md',
+      },
+      getText: () => '',
+    }
+
+    const virtualWorkspace: any = {
+      name: 'virtual-workspace',
+      index: 0,
+      uri: {
+        scheme: 'vscode-vfs',
+        path: 'vscode-vfs://dummy.path/tmp',
+        fsPath: '/vscode-vfs/dummy.path/tmp',
+      },
+    }
+
+    beforeEach(() => {
+      jest.spyOn(console, 'debug').mockImplementation()
+    })
+
+    it('opens workspace proxy server while exporting to pdf', async () => {
+      jest.spyOn(marpCli, 'default').mockImplementation()
+      jest
+        .spyOn(workspace, 'getWorkspaceFolder')
+        .mockReturnValue(virtualWorkspace)
+
+      await exportModule.doExport(saveURI, vfsDocument)
+      expect(createWorkspaceProxyServer).toHaveBeenCalledWith(virtualWorkspace)
+
+      // dispose method
+      const proxyServer = await (createWorkspaceProxyServer as any).mock
+        .results[0].value
+
+      expect(proxyServer.dispose).toHaveBeenCalled()
+    })
+
+    it('does not open workspace proxy server while exporting to html', async () => {
+      const saveURIHtml: any = { path: '/tmp/to.html', fsPath: '/tmp/to.html' }
+
+      jest.spyOn(marpCli, 'default').mockImplementation()
+      jest
+        .spyOn(workspace, 'getWorkspaceFolder')
+        .mockReturnValue(virtualWorkspace)
+
+      await exportModule.doExport(saveURIHtml, vfsDocument)
+      expect(createWorkspaceProxyServer).not.toHaveBeenCalled()
+    })
   })
 })
