@@ -10,6 +10,7 @@ import { marpConfiguration } from './utils'
 
 const promiseWriteFile = promisify(writeFile)
 const promiseUnlink = promisify(unlink)
+const createCleanup = (target: string) => () => promiseUnlink(target)
 
 export class MarpCLIError extends Error {}
 
@@ -21,16 +22,17 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
 
   const text = doc.getText()
   const tmpFileName = `.marp-vscode-tmp-${nanoid()}`
-  const createCleanup = (target: string) => () => promiseUnlink(target)
 
   // Try to create tmp file to the same directory as a document
-  const sameDirTmpPath = path.join(path.dirname(doc.uri.fsPath), tmpFileName)
+  if (doc.uri.scheme === 'file') {
+    const sameDirTmpPath = path.join(path.dirname(doc.uri.fsPath), tmpFileName)
 
-  try {
-    await promiseWriteFile(sameDirTmpPath, text)
-    return { path: sameDirTmpPath, cleanup: createCleanup(sameDirTmpPath) }
-  } catch (e) {
-    // no ops
+    try {
+      await promiseWriteFile(sameDirTmpPath, text)
+      return { path: sameDirTmpPath, cleanup: createCleanup(sameDirTmpPath) }
+    } catch (e) {
+      // no ops
+    }
   }
 
   // If it fails, try to create to the root of workspace

@@ -149,10 +149,6 @@ describe('#createWorkFile', () => {
   })
 
   it('creates tmpfile to os specific directory when failed all creations', async () => {
-    ;(fs as any).writeFile.mockImplementationOnce((_, __, cb) =>
-      cb(new Error())
-    )
-
     const workFile = await createWorkFile({
       getText: jest.fn(),
       isDirty: true,
