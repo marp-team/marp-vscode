@@ -1,3 +1,5 @@
+import { TextEncoder } from 'util'
+
 type MockedConf = Record<string, any>
 
 const defaultVSCodeVersion = 'v1.36.0'
@@ -92,7 +94,7 @@ export const FileSystem = {
     size: 0,
     type: FileType.File,
   })),
-  readFile: jest.fn().mockResolvedValue('readFile'),
+  readFile: jest.fn().mockResolvedValue(new TextEncoder().encode('readFile')),
 }
 
 export enum FileType {
