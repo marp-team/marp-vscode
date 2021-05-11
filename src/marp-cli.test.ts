@@ -8,9 +8,9 @@ import * as marpCli from './marp-cli'
 jest.mock('fs')
 jest.mock('vscode')
 
-const setConfiguration: (
-  conf?: Record<string, unknown>
-) => void = (workspace as any)._setConfiguration
+const setConfiguration: (conf?: Record<string, unknown>) => void = (
+  workspace as any
+)._setConfiguration
 
 describe('Marp CLI integration', () => {
   const runMarpCli = marpCli.default

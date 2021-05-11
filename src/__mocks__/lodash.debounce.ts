@@ -1,1 +1,4 @@
-module.exports = (f) => (...args) => f(...args)
+module.exports =
+  (f) =>
+  (...args) =>
+    f(...args)

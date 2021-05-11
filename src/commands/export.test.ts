@@ -13,9 +13,9 @@ jest.mock('../workspace-proxy-server', () => ({
   }),
 }))
 
-const setConfiguration: (
-  conf?: Record<string, unknown>
-) => void = (workspace as any)._setConfiguration
+const setConfiguration: (conf?: Record<string, unknown>) => void = (
+  workspace as any
+)._setConfiguration
 
 describe('Export command', () => {
   let saveDialog: jest.SpyInstance

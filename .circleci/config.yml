@@ -39,7 +39,7 @@ commands:
       - checkout
       - install:
           postinstall:
-            - run: npm audit
+            - run: npm run check:audit
 
   test:
     steps:
