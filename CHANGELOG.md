@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v0.19.1 - 2021-05-11
+
 ### Fixed
 
 - Presenter notes are not applied to PPTX correctly ([#229](https://github.com/marp-team/marp-vscode/issues/229), [#230](https://github.com/marp-team/marp-vscode/pull/230))
