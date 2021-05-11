@@ -25,9 +25,9 @@ const extension = (): typeof import('./extension') => {
   return ext
 }
 
-const setConfiguration: (
-  conf?: Record<string, unknown>
-) => void = (workspace as any)._setConfiguration
+const setConfiguration: (conf?: Record<string, unknown>) => void = (
+  workspace as any
+)._setConfiguration
 
 describe('#activate', () => {
   const extContext: any = { subscriptions: { push: jest.fn() } }

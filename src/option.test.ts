@@ -9,9 +9,9 @@ jest.mock('vscode')
 
 const readFile = promisify(fs.readFile)
 
-const setConfiguration: (
-  conf?: Record<string, unknown>
-) => void = (workspace as any)._setConfiguration
+const setConfiguration: (conf?: Record<string, unknown>) => void = (
+  workspace as any
+)._setConfiguration
 
 describe('Option', () => {
   describe('#marpCoreOptionForCLI', () => {
