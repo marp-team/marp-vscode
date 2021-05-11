@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Presenter notes are not applied to PPTX correctly ([#229](https://github.com/marp-team/marp-vscode/issues/229), [#230](https://github.com/marp-team/marp-vscode/pull/230))
+
+### Changed
+
+- Upgrade Marp CLI to [v1.1.0](https://github.com/marp-team/marp-cli/releases/v1.1.0) ([#230](https://github.com/marp-team/marp-vscode/pull/230))
+
 ## v0.19.0 - 2021-05-10
 
 ### Breaking
