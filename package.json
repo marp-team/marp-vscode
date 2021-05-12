@@ -30,7 +30,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.52.0"
+    "vscode": "^1.56.0"
   },
   "main": "./lib/extension.js",
   "icon": "images/icon.png",
@@ -45,6 +45,13 @@
     "onCommand:markdown.marp.toggleMarpPreview"
   ],
   "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Required for exporting Markdown, and using themes configured in the workspace.",
+      "restrictedConfigurations": [
+        "markdown.marp.themes"
+      ]
+    },
     "virtualWorkspaces": true
   },
   "contributes": {
@@ -158,6 +165,12 @@
       "./style.css"
     ],
     "menus": {
+      "commandPalette": [
+        {
+          "command": "markdown.marp.export",
+          "when": "isWorkspaceTrusted"
+        }
+      ],
       "editor/title": [
         {
           "command": "markdown.marp.showQuickPick",
@@ -217,7 +230,7 @@
     "@types/jest": "^26.0.23",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^12.0.1",
-    "@types/vscode": "~1.52.0",
+    "@types/vscode": "~1.56.0",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "bufferutil": "^4.0.3",
