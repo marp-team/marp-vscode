@@ -165,12 +165,6 @@
       "./style.css"
     ],
     "menus": {
-      "commandPalette": [
-        {
-          "command": "markdown.marp.export",
-          "when": "isWorkspaceTrusted"
-        }
-      ],
       "editor/title": [
         {
           "command": "markdown.marp.showQuickPick",
