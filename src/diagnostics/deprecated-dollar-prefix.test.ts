@@ -2,6 +2,7 @@ import dedent from 'dedent'
 import {
   CancellationToken,
   CodeAction,
+  CodeActionTriggerKind,
   CodeActionKind,
   Diagnostic,
   DiagnosticSeverity,
@@ -164,7 +165,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         const codeActions = new rule.RemoveDollarPrefix().provideCodeActions(
           document,
           dummyRange,
-          { diagnostics },
+          { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
           dummyToken
         )
 
@@ -192,7 +193,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         const codeActions = new rule.RemoveDollarPrefix().provideCodeActions(
           document,
           dummyRange,
-          { diagnostics },
+          { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
           dummyToken
         )
 

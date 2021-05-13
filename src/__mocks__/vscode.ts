@@ -37,6 +37,11 @@ export class CodeActionKind {
   constructor(readonly value: string) {}
 }
 
+export enum CodeActionTriggerKind {
+  Invoke = 1,
+  Automatic = 2,
+}
+
 export class Diagnostic {
   code?: string
   source?: string
@@ -142,6 +147,9 @@ export const workspace = {
     ),
   })),
   getWorkspaceFolder: jest.fn(),
+  get isTrusted() {
+    return true
+  },
   onDidChangeConfiguration: jest.fn(),
   onDidChangeTextDocument: jest.fn(),
   onDidCloseTextDocument: jest.fn(),
