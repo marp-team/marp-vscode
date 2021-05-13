@@ -135,9 +135,17 @@ You can fold the content of slide in editor while editing Marp Markdown.
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/fold.gif" alt="Slide folding in editor" width="360" />
 </p>
 
-### Enable HTML in Marp Markdown
+### Security
 
-You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option. This feature is disabled as a default because it could allow script injection from untrusted Markdown files. Use with caution.
+#### [Workspace Trust](https://github.com/microsoft/vscode/issues/106488) <!-- TODO: Update link to the formal documentation -->
+
+If the workspace is not trusted, some features that may met malicious are restricted. You can use only a basic Marp preview.
+
+#### Enable HTML in Marp Markdown
+
+You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option.
+
+This feature is disabled as a default because it could allow script injection from untrusted Markdown files. Use with caution.
 
 ## Contributing
 
