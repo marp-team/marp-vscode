@@ -73,8 +73,6 @@ export function register(subscriptions: Disposable[]) {
 
               directivesByTextDocument.set(doc, collected)
 
-              console.log(directivesByTextDocument)
-
               if (activeEditor?.document === doc) {
                 activeEditor.setDecorations(
                   marpDirectiveDecoration,
