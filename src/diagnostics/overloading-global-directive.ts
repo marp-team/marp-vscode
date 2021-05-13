@@ -48,7 +48,7 @@ export function register(
         for (let i = 0; i < lastIdx; i += 1) {
           const diagnostic = new Diagnostic(
             parsed[i].range,
-            `The ${key} global directive has overloaded the subsequent definition.`,
+            `The ${key} global directive may be overloaded the subsequent definition.`,
             DiagnosticSeverity.Warning
           )
 

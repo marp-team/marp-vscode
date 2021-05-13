@@ -56,6 +56,17 @@
     "virtualWorkspaces": true
   },
   "contributes": {
+    "colors": [
+      {
+        "id": "marp.directiveKeyForeground",
+        "description": "Forground decoration color for the key of Marp directive",
+        "defaults": {
+          "dark": "#67b8e3ff",
+          "light": "#0288d1ff",
+          "highContrast": "#67b8e3ff"
+        }
+      }
+    ],
     "commands": [
       {
         "category": "Marp",
