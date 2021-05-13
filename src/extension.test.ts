@@ -186,6 +186,21 @@ describe('#extendMarkdownIt', () => {
         const html = md().render(marpMd('<b>Hi</b>'))
         expect(html).toContain('<b>Hi</b>')
       })
+
+      describe('when the current workspace is untrusted', () => {
+        beforeEach(() => {
+          jest
+            .spyOn(workspace, 'isTrusted', 'get')
+            .mockImplementation(() => false)
+        })
+
+        it('does not render HTML elements even if enabled', () => {
+          setConfiguration({ 'markdown.marp.enableHtml': true })
+
+          const html = md().render(marpMd('<b>Hi</b>'))
+          expect(html).not.toContain('<b>Hi</b>')
+        })
+      })
     })
 
     describe('markdown.marp.mathTypesetting', () => {

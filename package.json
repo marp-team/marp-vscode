@@ -104,7 +104,7 @@
         "markdown.marp.enableHtml": {
           "type": "boolean",
           "default": false,
-          "description": "Enables all HTML elements in Marp Markdown."
+          "description": "Enables all HTML elements in Marp Markdown. This setting is working only in the trusted workspace."
         },
         "markdown.marp.exportType": {
           "type": "string",

@@ -111,5 +111,18 @@ describe('Option', () => {
         }
       })
     })
+
+    describe('when the current workspace is untrusted', () => {
+      beforeEach(() => {
+        jest
+          .spyOn(workspace, 'isTrusted', 'get')
+          .mockImplementation(() => false)
+      })
+
+      it('ignores potentially malicious options', async () => {
+        setConfiguration({ 'markdown.marp.enableHtml': true })
+        expect((await subject({ uri: untitledUri })).html).toBeUndefined()
+      })
+    })
   })
 })

@@ -153,6 +153,7 @@ export const workspace = {
   onDidChangeConfiguration: jest.fn(),
   onDidChangeTextDocument: jest.fn(),
   onDidCloseTextDocument: jest.fn(),
+  onDidGrantWorkspaceTrust: jest.fn(),
   textDocuments: [] as any,
 
   _setConfiguration: (conf: MockedConf = {}) => {
