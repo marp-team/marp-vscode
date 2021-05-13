@@ -46,7 +46,7 @@ It also can toggle by opening the quick picker from toolbar icon <img src="https
 
 Marp for VS Code can preview your Marp Markdown with the same way as [a native Markdown preview](https://code.visualstudio.com/docs/languages/markdown#_markdown-preview).
 
-### Export slide deck to HTML, PDF, PPTX, and image
+### Export slide deck to HTML, PDF, PPTX, and image :shield:
 
 We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
 
@@ -72,7 +72,7 @@ Default file type can choose by `markdown.marp.exportType` preference.
 
 > ⚠️ Export except HTML requires to install any one of [Google Chrome](https://www.google.com/chrome/), [Chromium](https://www.chromium.org/), or [Microsoft Edge](https://www.microsoft.com/edge). You may also specify the custom path for Chrome / Chromium-based browser by preference `markdown.marp.chromePath`.
 
-### Use custom theme
+### Use custom theme CSS :shield:
 
 You can register and use [custom theme CSS for Marpit](https://marpit.marp.app/theme-css) / [Marp Core](https://github.com/marp-team/marp-core/tree/main/themes#readme) by setting `markdown.marp.themes`, that includes remote URLs, or relative paths to local files in the current workspace.
 
@@ -135,9 +135,21 @@ You can fold the content of slide in editor while editing Marp Markdown.
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/fold.gif" alt="Slide folding in editor" width="360" />
 </p>
 
-### Enable HTML in Marp Markdown
+### Security
 
-You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option. This feature is disabled as a default because it could allow script injection from untrusted Markdown files. Use with caution.
+#### [Workspace Trust](https://github.com/microsoft/vscode/issues/106488)
+
+<!-- TODO: Update link to the formal documentation -->
+
+Some features that may met malicious are restricted in the untrusted workspace (marked by the shield icon :shield: in this documentation).
+
+If the workspace is not trusted, you can use only a basic Marp preview.
+
+#### Enable HTML in Marp Markdown :shield:
+
+You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option.
+
+It could allow script injection from untrusted Markdown files. Thus, this feature is disabled as a default and will be _always ignored in the untrusted workspace_. Use with caution.
 
 ## Contributing
 

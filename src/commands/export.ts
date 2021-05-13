@@ -1,5 +1,6 @@
 import path from 'path'
 import {
+  commands,
   env,
   ProgressLocation,
   TextDocument,
@@ -43,6 +44,7 @@ const descriptions = {
 }
 
 export const ITEM_CONTINUE_TO_EXPORT = 'Continue to export...'
+export const ITEM_MANAGE_WORKSPACE_TRUST = 'Manage Workspace Trust...'
 
 export const command = 'markdown.marp.export'
 
@@ -149,6 +151,19 @@ export const saveDialog = async (document: TextDocument) => {
 }
 
 export default async function exportCommand() {
+  if (!workspace.isTrusted) {
+    const acted = await window.showErrorMessage(
+      'Export command cannot run in untrusted workspace.',
+      ITEM_MANAGE_WORKSPACE_TRUST
+    )
+
+    if (acted === ITEM_MANAGE_WORKSPACE_TRUST) {
+      commands.executeCommand('workbench.action.manageTrust')
+    }
+
+    return
+  }
+
   const activeEditor = window.activeTextEditor
 
   if (activeEditor) {

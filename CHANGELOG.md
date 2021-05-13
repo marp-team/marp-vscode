@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- VS Code >= 1.56 is now required ([#231](https://github.com/marp-team/marp-vscode/pull/231))
+
+### Changed
+
+- Support [Workspace Trust](https://code.visualstudio.com/updates/v1_56#_workspace-trust): Restrict some features in the untrusted workspace ([#231](https://github.com/marp-team/marp-vscode/pull/231))
+
 ## v0.19.1 - 2021-05-11
 
 ### Fixed

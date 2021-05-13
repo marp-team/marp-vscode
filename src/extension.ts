@@ -23,6 +23,11 @@ const shouldRefreshConfs = [
   'markdown.preview.typographer',
 ]
 
+const applyRefreshedConfiguration = () => {
+  clearMarpCoreOptionCache()
+  commands.executeCommand('markdown.preview.refresh')
+}
+
 export const marpVscode = Symbol('marp-vscode')
 
 export function extendMarkdownIt(md: any) {
@@ -134,10 +139,10 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
     themes,
     workspace.onDidChangeConfiguration((e) => {
       if (shouldRefreshConfs.some((c) => e.affectsConfiguration(c))) {
-        clearMarpCoreOptionCache()
-        commands.executeCommand('markdown.preview.refresh')
+        applyRefreshedConfiguration()
       }
-    })
+    }),
+    workspace.onDidGrantWorkspaceTrust(applyRefreshedConfiguration)
   )
 
   return { extendMarkdownIt }

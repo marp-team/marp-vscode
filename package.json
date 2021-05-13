@@ -30,7 +30,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.52.0"
+    "vscode": "^1.56.0"
   },
   "main": "./lib/extension.js",
   "icon": "images/icon.png",
@@ -45,6 +45,14 @@
     "onCommand:markdown.marp.toggleMarpPreview"
   ],
   "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Required for exporting Markdown, and using themes configured in the workspace.",
+      "restrictedConfigurations": [
+        "markdown.marp.enableHtml",
+        "markdown.marp.themes"
+      ]
+    },
     "virtualWorkspaces": true
   },
   "contributes": {
@@ -96,7 +104,7 @@
         "markdown.marp.enableHtml": {
           "type": "boolean",
           "default": false,
-          "description": "Enables all HTML elements in Marp Markdown."
+          "description": "Enables all HTML elements in Marp Markdown. This setting is working only in the trusted workspace."
         },
         "markdown.marp.exportType": {
           "type": "string",
@@ -217,7 +225,7 @@
     "@types/jest": "^26.0.23",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^12.0.1",
-    "@types/vscode": "~1.52.0",
+    "@types/vscode": "~1.56.0",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "bufferutil": "^4.0.3",

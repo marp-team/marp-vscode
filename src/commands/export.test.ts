@@ -1,4 +1,4 @@
-import { env, window, workspace } from 'vscode'
+import { commands, env, window, workspace } from 'vscode'
 import * as marpCli from '../marp-cli'
 import { createWorkspaceProxyServer } from '../workspace-proxy-server'
 import * as exportModule from './export'
@@ -37,6 +37,30 @@ describe('Export command', () => {
 
     await exportCommand()
     expect(saveDialog).toHaveBeenCalledWith(textEditor.document)
+  })
+
+  describe('when the current workspace is untrusted', () => {
+    beforeEach(() => {
+      jest.spyOn(workspace, 'isTrusted', 'get').mockImplementation(() => false)
+    })
+
+    it('shows error prompt', async () => {
+      await exportCommand()
+      expect(saveDialog).not.toHaveBeenCalled()
+      expect(window.showErrorMessage).toHaveBeenCalled()
+    })
+
+    it('executes "workbench.action.manageTrust" command when reacted on the prompt', async () => {
+      const { showErrorMessage }: any = window
+      showErrorMessage.mockResolvedValue(
+        exportModule.ITEM_MANAGE_WORKSPACE_TRUST
+      )
+
+      await exportCommand()
+      expect(commands.executeCommand).toHaveBeenCalledWith(
+        'workbench.action.manageTrust'
+      )
+    })
   })
 
   describe('when active text editor is not Markdown', () => {

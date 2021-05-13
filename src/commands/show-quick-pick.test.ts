@@ -1,4 +1,4 @@
-import { commands, window } from 'vscode'
+import { commands, window, workspace } from 'vscode'
 import showQuickPick, { cmdSymbol } from './show-quick-pick'
 
 jest.mock('vscode')
@@ -25,5 +25,23 @@ describe('showQuickPick command', () => {
 
     await showQuickPick()
     expect(commands.executeCommand).toHaveBeenCalledWith('example.command')
+  })
+
+  describe('when the current workspace is untrusted', () => {
+    beforeEach(() => {
+      jest.spyOn(workspace, 'isTrusted', 'get').mockImplementation(() => false)
+    })
+
+    it('shows quick pick with restricted items that have shield icon', async () => {
+      const expectedItem = expect.objectContaining({
+        description: expect.stringContaining('$(shield)'),
+      })
+
+      await showQuickPick()
+      expect(window.showQuickPick).toHaveBeenCalledWith(
+        expect.arrayContaining([expectedItem]),
+        expect.anything()
+      )
+    })
   })
 })
