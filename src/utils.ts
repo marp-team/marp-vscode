@@ -1,6 +1,6 @@
 import { TextDocument, workspace } from 'vscode'
 
-export const frontMatterRegex = /^(-{3,}\s*$\n)([\s\S]*?)^(\s*-{3})/m
+export const frontMatterRegex = /^(-{3,}\s*$\n)([\s\S]*?)^(\s*[-.]{3})/m
 
 export const marpDirectiveRegex = /^(marp\s*: +)(.*)\s*$/m
 
