@@ -149,7 +149,7 @@ If the workspace is not trusted, you can use only a basic Marp preview.
 
 You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option.
 
-This feature is disabled as a default because it could allow script injection from untrusted Markdown files. Use with caution.
+It could allow script injection from untrusted Markdown files. Thus, this feature is disabled as a default and will be _always ignored in the untrusted workspace_. Use with caution.
 
 ## Contributing
 
