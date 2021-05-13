@@ -12,6 +12,7 @@ import {
   TextDocument,
   WorkspaceEdit,
 } from 'vscode'
+import { DirectiveParser } from '../directive-parser'
 import * as rule from './deprecated-dollar-prefix'
 
 jest.mock('vscode')
@@ -30,9 +31,12 @@ const doc = (text: string): TextDocument =>
 
 describe('[Diagnostics rule] Deprecated dollar prefix', () => {
   const register = (doc: TextDocument): Diagnostic[] => {
+    const parser = new DirectiveParser()
     const diagnostics: Diagnostic[] = []
-    rule.register(doc, diagnostics)
 
+    rule.register(doc, parser, diagnostics)
+
+    parser.parse(doc)
     return diagnostics
   }
 
