@@ -1,4 +1,3 @@
-import { visit } from 'unist-util-visit'
 import {
   CodeAction,
   CodeActionKind,
@@ -11,8 +10,7 @@ import {
   WorkspaceEdit,
   languages,
 } from 'vscode'
-import { frontMatterRegex } from '../utils'
-import { parseHtml, parseMd, parseYaml } from './parser'
+import { DirectiveParser } from '../directive-parser'
 
 const warnDirectives = [
   // Marpit
@@ -26,63 +24,28 @@ const warnDirectives = [
 
 export const code = 'deprecated-dollar-prefix'
 
-export function register(doc: TextDocument, diagnostics: Diagnostic[]) {
-  let markdown = doc.getText()
-  let index = 0
+export function register(
+  doc: TextDocument,
+  directiveParser: DirectiveParser,
+  diagnostics: Diagnostic[]
+) {
+  directiveParser.on('directive', ({ item, offset }) => {
+    if (warnDirectives.includes(item.key.value)) {
+      const name = item.key.value.slice(1)
+      const [start, end] = item.key.range
 
-  const detectDirectives = (text: string, offset = 0) => {
-    const { contents, errors } = parseYaml(text)
-
-    if (errors.length === 0 && contents?.['items']) {
-      for (const item of contents['items']) {
-        if (item.type === 'PAIR' && warnDirectives.includes(item.key.value)) {
-          const name = item.key.value.slice(1)
-          const [start, end] = item.key.range
-
-          const diagnostic = new Diagnostic(
-            new Range(
-              doc.positionAt(start + offset),
-              doc.positionAt(end + offset)
-            ),
-            `Dollar prefix support for ${name} global directive is no longer working. Remove "$" to fix.`,
-            DiagnosticSeverity.Error
-          )
-
-          diagnostic.source = 'marp-vscode'
-          diagnostic.code = code
-
-          diagnostics.push(diagnostic)
-        }
-      }
-    }
-  }
-
-  // Front-matter
-  const fmMatched = markdown.match(frontMatterRegex)
-
-  if (fmMatched?.index === 0) {
-    const [, open, body, close] = fmMatched
-    detectDirectives(body, open.length)
-
-    index = open.length + body.length + close.length
-    markdown = markdown.slice(index)
-  }
-
-  // HTML comments
-  visit(parseMd(markdown), 'html', (n: any) =>
-    visit(parseHtml(n.value), 'comment', (c: any) => {
-      const trimmedLeft = c.value.replace(/^-*\s*/, '')
-
-      detectDirectives(
-        trimmedLeft.replace(/\s*-*$/, ''),
-        index +
-          n.position.start.offset +
-          c.position.start.offset +
-          4 +
-          (c.value.length - trimmedLeft.length)
+      const diagnostic = new Diagnostic(
+        new Range(doc.positionAt(start + offset), doc.positionAt(end + offset)),
+        `Dollar prefix for ${name} global directive is no longer working. Remove "$" to fix.`,
+        DiagnosticSeverity.Error
       )
-    })
-  )
+
+      diagnostic.source = 'marp-vscode'
+      diagnostic.code = code
+
+      diagnostics.push(diagnostic)
+    }
+  })
 }
 
 export class RemoveDollarPrefix implements CodeActionProvider {

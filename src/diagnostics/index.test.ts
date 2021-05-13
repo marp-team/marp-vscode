@@ -1,10 +1,13 @@
 import { window, TextDocument } from 'vscode'
+import { DirectiveParser } from '../directive-parser'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
+import * as overloadingGlobalDirective from './overloading-global-directive'
 import * as diagnostics from './index'
 
 jest.mock('lodash.debounce')
 jest.mock('vscode')
 jest.mock('./deprecated-dollar-prefix')
+jest.mock('./overloading-global-directive')
 
 const plainTextDocMock: TextDocument = {
   languageId: 'plaintext',
@@ -60,6 +63,7 @@ describe('Diagnostics', () => {
 
     it('sets diagnostics when passed markdown document with marp frontmatter', () => {
       const arr = expect.any(Array)
+      const parser = expect.any(DirectiveParser)
       const doc = mdDocMock('---\nmarp: true\n---\n\n# Hello')
       diagnostics.refresh(doc)
 
@@ -67,7 +71,16 @@ describe('Diagnostics', () => {
       expect(diagnostics.collection.set).toHaveBeenCalledWith('/markdown', arr)
 
       // Rules
-      expect(deprecatedDollarPrefix.register).toHaveBeenCalledWith(doc, arr)
+      expect(deprecatedDollarPrefix.register).toHaveBeenCalledWith(
+        doc,
+        parser,
+        arr
+      )
+      expect(overloadingGlobalDirective.register).toHaveBeenCalledWith(
+        doc,
+        parser,
+        arr
+      )
     })
   })
 })
