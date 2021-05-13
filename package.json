@@ -49,6 +49,7 @@
       "supported": "limited",
       "description": "Required for exporting Markdown, and using themes configured in the workspace.",
       "restrictedConfigurations": [
+        "markdown.marp.enableHtml",
         "markdown.marp.themes"
       ]
     },
