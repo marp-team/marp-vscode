@@ -50,40 +50,44 @@ Marp for VS Code can preview your Marp Markdown with the same way as [a native M
 
 [Directives](https://marpit.marp.app/directives), the inherited feature from [Marpit framework](https://marpit.marp.app/), is an important syntax to write the deck in Marp.
 
-If enabled Marp feature by `marp: true`, Marp for VS Code extends [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense) to support auto completion, hover help, and syntax highlight for Marp directives.
+If enabled Marp feature by `marp: true`, Marp for VS Code extends [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense) to support auto completion, hover help, syntax highlight, and diagnostics for Marp directives.
 
 #### Auto completion
 
-Marp for VS Code can suggest all global/local directives supported by Marp ecosystem. Hit <kbd>Ctrl</kbd> + <kbd>Space</kbd> within the front-matter or HTML comment to show the list of directives.
+Marp for VS Code can suggest global/local directives supported by Marp ecosystem. We remember all so you may forget them! :stuck_out_tongue:
 
-You can peek the help of selected directive by hitting <kbd>Ctrl</kbd> + <kbd>Space</kbd> again.
+Hit <kbd>Ctrl</kbd> + <kbd>Space</kbd> within the front-matter or HTML comment to show the list of directives. You can peek the help of selected directive by hitting <kbd>Ctrl</kbd> + <kbd>Space</kbd> again.
 
 <!-- TODO: Add screenshot -->
 
+Some directives such as `theme` and `paginate` are also supported auto completion for the value.
+
 #### Hover help
 
-And you can also see the help of a defined directive by hovering cursor on the recognized directive.
+You can see the help of a defined directive by hovering cursor on the recognized directive.
 
 <!-- TODO: Add screenshot -->
 
 #### Highlight
 
-Recognized directives are highlighted in the different color from the around. This visualization may help to find out the meaningless definition.
+Recognized directives are highlighted in the different color from the around. This visualization may help to find out meaningless definitions.
 
 <!-- TODO: Add screenshot -->
 
-#### Problems
+#### Diagnostics
 
 Marp for VS Code can detect some basic problems in Marp directives.
 
-| Name                           | Description                                | [Quick Fix] |
-| :----------------------------- | :----------------------------------------- | :---------: |
-| `deprecated-dollar-prefix`     | Check obsoleted directives prefixed by `$` |     ✅      |
-| `overloading-global-directive` | Find out overloaded global directives      |             |
+| Name                           | Description                                                 | [Quick Fix] |
+| :----------------------------- | :---------------------------------------------------------- | :---------: |
+| `deprecated-dollar-prefix`     | Check [obsoleted directives prefixed by `$`][dollar-prefix] |     ✅      |
+| `overloading-global-directive` | Find out overloaded global directives                       |             |
+| `unknown-theme`                | Notify a not recognized theme name                          |             |
 
 <!-- TODO: Add screenshot -->
 
 [quick fix]: https://code.visualstudio.com/docs/editor/refactoring#_code-actions-quick-fixes-and-refactorings
+[dollar-prefix]: https://github.com/marp-team/marpit/issues/182
 
 ### Export slide deck to HTML, PDF, PPTX, and image :shield:
 
