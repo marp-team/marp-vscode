@@ -9,6 +9,7 @@ import {
   Disposable,
   GlobPattern,
   RelativePattern,
+  TextDocument,
   Uri,
 } from 'vscode'
 import { marpConfiguration } from './utils'
@@ -39,6 +40,13 @@ const textDecoder = new TextDecoder()
 
 export class Themes {
   observedThemes = new Map<string, Theme>()
+
+  static resolveBaseDirectoryForTheme(doc: TextDocument): Uri {
+    const workspaceFolder = workspace.getWorkspaceFolder(doc.uri)
+    if (workspaceFolder) return workspaceFolder.uri
+
+    return doc.uri.with({ path: path.dirname(doc.fileName) })
+  }
 
   dispose() {
     this.observedThemes.forEach((theme) => {

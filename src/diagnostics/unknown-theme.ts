@@ -1,14 +1,7 @@
-import path from 'path'
 import { Marp } from '@marp-team/marp-core'
-import {
-  workspace,
-  Diagnostic,
-  DiagnosticSeverity,
-  Range,
-  TextDocument,
-} from 'vscode'
+import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode'
 import { DirectiveParser } from '../directive-parser'
-import themes from '../themes'
+import themes, { Themes } from '../themes'
 
 interface ParsedThemeValue {
   value: string
@@ -44,21 +37,19 @@ export function register(
 
   directiveParser.on('endParse', () => {
     if (parsed) {
-      const wsFolder = workspace.getWorkspaceFolder(doc.uri)
-      const customThemes = themes.getRegisteredStyles(
-        wsFolder?.uri ?? doc.uri.with({ path: path.dirname(doc.fileName) })
-      )
-      const tmpMarp = new Marp()
+      const marp = new Marp()
 
-      for (const theme of customThemes) {
+      for (const { css } of themes.getRegisteredStyles(
+        Themes.resolveBaseDirectoryForTheme(doc)
+      )) {
         try {
-          tmpMarp.themeSet.add(theme.css)
+          marp.themeSet.add(css)
         } catch (e) {
           // no ops
         }
       }
 
-      if (!tmpMarp.themeSet.has(parsed.value)) {
+      if (!marp.themeSet.has(parsed.value)) {
         const diagnostic = new Diagnostic(
           parsed.range,
           `The specified theme "${parsed.value}" is not recognized by Marp for VS Code.`,
