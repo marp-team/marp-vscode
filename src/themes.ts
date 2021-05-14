@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { URL } from 'url'
 import { promisify, TextDecoder } from 'util'
+import Marp from '@marp-team/marp-core'
 import axios from 'axios'
 import {
   commands,
@@ -9,6 +10,7 @@ import {
   Disposable,
   GlobPattern,
   RelativePattern,
+  TextDocument,
   Uri,
 } from 'vscode'
 import { marpConfiguration } from './utils'
@@ -40,12 +42,35 @@ const textDecoder = new TextDecoder()
 export class Themes {
   observedThemes = new Map<string, Theme>()
 
+  static resolveBaseDirectoryForTheme(doc: TextDocument): Uri {
+    const workspaceFolder = workspace.getWorkspaceFolder(doc.uri)
+    if (workspaceFolder) return workspaceFolder.uri
+
+    return doc.uri.with({ path: path.dirname(doc.fileName) })
+  }
+
   dispose() {
     this.observedThemes.forEach((theme) => {
       if (theme.onDidChange) theme.onDidChange.dispose()
       if (theme.onDidDelete) theme.onDidDelete.dispose()
     })
     this.observedThemes.clear()
+  }
+
+  getMarpThemeSetFor(doc: TextDocument) {
+    const marp = new Marp()
+
+    for (const { css } of this.getRegisteredStyles(
+      Themes.resolveBaseDirectoryForTheme(doc)
+    )) {
+      try {
+        marp.themeSet.add(css)
+      } catch (e) {
+        // no ops
+      }
+    }
+
+    return marp.themeSet
   }
 
   getRegisteredStyles(rootUri: Uri | undefined): Theme[] {

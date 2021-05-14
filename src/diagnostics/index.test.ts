@@ -2,12 +2,14 @@ import { window, TextDocument } from 'vscode'
 import { DirectiveParser } from '../directive-parser'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
 import * as overloadingGlobalDirective from './overloading-global-directive'
+import * as unknownTheme from './unknown-theme'
 import * as diagnostics from './index'
 
 jest.mock('lodash.debounce')
 jest.mock('vscode')
 jest.mock('./deprecated-dollar-prefix')
 jest.mock('./overloading-global-directive')
+jest.mock('./unknown-theme')
 
 const plainTextDocMock: TextDocument = {
   languageId: 'plaintext',
@@ -81,6 +83,7 @@ describe('Diagnostics', () => {
         parser,
         arr
       )
+      expect(unknownTheme.register).toHaveBeenCalledWith(doc, parser, arr)
     })
   })
 })
