@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { URL } from 'url'
 import { promisify, TextDecoder } from 'util'
+import Marp from '@marp-team/marp-core'
 import axios from 'axios'
 import {
   commands,
@@ -54,6 +55,22 @@ export class Themes {
       if (theme.onDidDelete) theme.onDidDelete.dispose()
     })
     this.observedThemes.clear()
+  }
+
+  getMarpThemeSetFor(doc: TextDocument) {
+    const marp = new Marp()
+
+    for (const { css } of this.getRegisteredStyles(
+      Themes.resolveBaseDirectoryForTheme(doc)
+    )) {
+      try {
+        marp.themeSet.add(css)
+      } catch (e) {
+        // no ops
+      }
+    }
+
+    return marp.themeSet
   }
 
   getRegisteredStyles(rootUri: Uri | undefined): Theme[] {
