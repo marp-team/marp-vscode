@@ -23,7 +23,7 @@ export function register(
   directiveParser.on('directive', ({ item, offset, info }) => {
     if (info?.type === DirectiveType.Global) {
       const [start] = item.key.range
-      const [, end] = item.value.range
+      const [, end] = item.value?.range ?? item.key.range
 
       parsedGlobalDirectives.set(info.name, [
         ...(parsedGlobalDirectives.get(info.name) ?? []),

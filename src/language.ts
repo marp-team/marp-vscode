@@ -19,6 +19,7 @@ import {
   DirectiveDefinedIn,
   DirectiveType,
 } from './directive-parser'
+import themes from './themes'
 import { detectMarpDocument } from './utils'
 
 interface ParsedDirective {
@@ -80,7 +81,7 @@ export function register(subscriptions: Disposable[]) {
               .on('directive', ({ item, info, offset }) => {
                 if (info) {
                   const [start, end] = item.key.range
-                  const [, vEnd] = item.value.range
+                  const [, vEnd] = item.value?.range ?? item.key.range
 
                   directvies.push({
                     info,
@@ -151,7 +152,7 @@ export function register(subscriptions: Disposable[]) {
       },
     }),
     languages.registerCompletionItemProvider('markdown', {
-      provideCompletionItems: async (doc, pos, token, ctx) => {
+      provideCompletionItems: async (doc, pos) => {
         if (!detectMarpDocument(doc)) return null
 
         // Get parsed data
@@ -176,8 +177,44 @@ export function register(subscriptions: Disposable[]) {
           })),
         ]) {
           if (range?.contains(pos)) {
+            // Theme suggestion
+            if (doc.getWordRangeAtPosition(pos, /\btheme\s*:\s{1,}[\w-]*\s*/)) {
+              const themeSet = themes.getMarpThemeSetFor(doc)
+
+              return new CompletionList(
+                [...themeSet.themes()].map(
+                  (theme): CompletionItem => ({
+                    detail: 'Marp theme',
+                    kind: CompletionItemKind.EnumMember,
+                    label: theme.name,
+                  })
+                )
+              )
+            }
+
+            // Boolean
+            if (
+              doc.getWordRangeAtPosition(pos, /\b_?paginate\s*:\s{1,}[\w-]*\s*/)
+            ) {
+              return new CompletionList([
+                {
+                  detail: 'Boolean',
+                  kind: CompletionItemKind.EnumMember,
+                  label: 'true',
+                },
+                {
+                  detail: 'Boolean',
+                  kind: CompletionItemKind.EnumMember,
+                  label: 'false',
+                },
+              ])
+            }
+
+            // =====
+
+            // Determine how to completion directive key from the focused word
             let range: Range | undefined
-            let generateInsertText = (label) => `${label}: `
+            let generateInsertText = (label: string) => `${label}: `
             let scoped = false
 
             const wordRange = doc.getWordRangeAtPosition(pos, /\w+/)

@@ -72,7 +72,7 @@ const createDirectiveInfo = (
   }`
 
   const mdDetails = `_Provided by ${info.providedBy}${
-    info.details ? ` ([Show more details...](${info.details}))` : ''
+    info.details ? ` ([See more details...](${info.details}))` : ''
   }_`
 
   return Object.freeze({
@@ -420,8 +420,8 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
         this.emit('comment', {
           body: `<!--${c.value}-->`,
           range: new Range(
-            doc.positionAt(index + n.position.start.offset - 4),
-            doc.positionAt(index + n.position.end.offset + 3)
+            doc.positionAt(index + n.position.start.offset),
+            doc.positionAt(index + n.position.end.offset)
           ),
         })
 
