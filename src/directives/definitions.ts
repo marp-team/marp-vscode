@@ -86,7 +86,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'theme',
     description: dedent(`
-      Specify a theme name of the slide deck.
+      Set a theme name of the slide deck.
 
       You can choose from [Marp Core built-in themes](https://github.com/marp-team/marp-core/tree/main/themes) or registered custom themes.
     `),
@@ -150,7 +150,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'header',
     description: dedent(`
-      Specify the content of slide header.
+      Set the content of slide header.
 
       The content of header can use basic Markdown formatting. To prevent the broken parsing by YAML special characters, recommend to wrap by quotes \`"\` or \`'\` when used Markdown syntax:
 
@@ -172,7 +172,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'footer',
     description: dedent(`
-      Specify the content of slide footer.
+      Set the content of slide footer.
 
       The content of footer can use basic Markdown formatting. To prevent the broken parsing by YAML special characters, recommend to wrap by quotes \`"\` or \`'\` when used Markdown syntax:
 
@@ -194,7 +194,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'class',
     description:
-      'Specify [HTML `class` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class) for the slide element `<section>`.',
+      'Set [HTML `class` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class) for the slide element `<section>`.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
@@ -203,7 +203,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'backgroundColor',
     description:
-      'Setting [`background-color` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color) of the slide.',
+      'Set [`background-color` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color) of the slide.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
@@ -212,7 +212,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'backgroundImage',
     description:
-      'Setting [`background-image` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-image) of the slide.',
+      'Set [`background-image` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-image) of the slide.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
@@ -221,7 +221,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'backgroundPosition',
     description:
-      'Setting [`background-position` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-position) of the slide.',
+      'Set [`background-position` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-position) of the slide.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
@@ -230,7 +230,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'backgroundRepeat',
     description:
-      'Setting [`background-repeat` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-repeat) of the slide.',
+      'Set [`background-repeat` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-repeat) of the slide.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
@@ -239,7 +239,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'backgroundSize',
     description:
-      'Setting [`background-size` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size) of the slide.',
+      'Set [`background-size` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size) of the slide.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
@@ -248,7 +248,7 @@ export const builtinDirectives = [
   createDirectiveInfo({
     name: 'color',
     description:
-      'Setting [`color` style](https://developer.mozilla.org/en-US/docs/Web/CSS/color) of the slide.',
+      'Set [`color` style](https://developer.mozilla.org/en-US/docs/Web/CSS/color) of the slide.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
@@ -272,7 +272,7 @@ export const builtinDirectives = [
   // Marp CLI metadata options
   createDirectiveInfo({
     name: 'title',
-    description: 'Define title of the slide deck.',
+    description: 'Set title of the slide deck.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.MarpCLI,
     type: DirectiveType.Global,
@@ -280,7 +280,7 @@ export const builtinDirectives = [
   }),
   createDirectiveInfo({
     name: 'description',
-    description: 'Define description of the slide deck.',
+    description: 'Set description of the slide deck.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.MarpCLI,
     type: DirectiveType.Global,
@@ -288,7 +288,7 @@ export const builtinDirectives = [
   }),
   createDirectiveInfo({
     name: 'url',
-    description: 'Define canonical URL for the slide deck.',
+    description: 'Set canonical URL for the slide deck.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.MarpCLI,
     type: DirectiveType.Global,
@@ -296,7 +296,7 @@ export const builtinDirectives = [
   }),
   createDirectiveInfo({
     name: 'image',
-    description: 'Define Open Graph image URL.',
+    description: 'Set Open Graph image URL.',
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.MarpCLI,
     type: DirectiveType.Global,

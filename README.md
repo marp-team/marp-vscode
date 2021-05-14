@@ -71,7 +71,7 @@ The key of recognized directives are highlighted in the different color from the
 And you can see the help of a defined directive by hovering cursor on the recognized directive.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/highlight-and-hover-help.png" alt="Auto completion" width="426" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/highlight-and-hover-help.png" alt="Highlight and hover help" width="426" />
 </p>
 
 #### Diagnostics
