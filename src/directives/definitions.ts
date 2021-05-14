@@ -88,19 +88,7 @@ export const builtinDirectives = [
     description: dedent(`
       Specify a theme name of the slide deck.
 
-      ## [Marp Core built-in themes](https://github.com/marp-team/marp-core/tree/main/themes)
-
-      ### \`default\`
-
-      ![](https://user-images.githubusercontent.com/3993388/48039490-53be1b80-e1b8-11e8-8179-0e6c11d285e2.png)
-
-      ### \`gaia\`
-
-      ![](https://user-images.githubusercontent.com/3993388/48039493-5456b200-e1b8-11e8-9c49-dd5d66d76c0d.png)
-
-      ### \`uncover\`
-
-      ![](https://user-images.githubusercontent.com/3993388/48039495-5456b200-e1b8-11e8-8c82-ca7f7842b34d.png)
+      You can choose from [Marp Core built-in themes](https://github.com/marp-team/marp-core/tree/main/themes) or registered custom themes.
     `),
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,

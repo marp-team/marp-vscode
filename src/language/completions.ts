@@ -1,3 +1,4 @@
+import dedent from 'dedent'
 import {
   languages,
   CompletionItem,
@@ -47,6 +48,28 @@ export function register(subscriptions: Disposable[], parser: LanguageParser) {
   )
 }
 
+const themeDocs = {
+  default: dedent(`
+    ![](https://user-images.githubusercontent.com/3993388/48039490-53be1b80-e1b8-11e8-8179-0e6c11d285e2.png)
+    ![invert](https://user-images.githubusercontent.com/3993388/48039492-5456b200-e1b8-11e8-9975-c9e4029d9036.png)
+
+    _[See more details...](https://github.com/marp-team/marp-core/tree/main/themes#default)_
+  `),
+  gaia: dedent(`
+    ![](https://user-images.githubusercontent.com/3993388/48039493-5456b200-e1b8-11e8-9c49-dd5d66d76c0d.png)
+    ![invert](https://user-images.githubusercontent.com/3993388/48039494-5456b200-e1b8-11e8-8bb5-f4a250e902e1.png)
+    ![gaia](https://user-images.githubusercontent.com/3993388/48040059-c62ffb00-e1ba-11e8-8026-fa3511844ec7.png)
+
+    _[See more details...](https://github.com/marp-team/marp-core/tree/main/themes#gaia)_
+  `),
+  uncover: dedent(`
+    ![](https://user-images.githubusercontent.com/3993388/48039495-5456b200-e1b8-11e8-8c82-ca7f7842b34d.png)
+    ![invert](https://user-images.githubusercontent.com/3993388/48039496-54ef4880-e1b8-11e8-9c22-f3309b101e3c.png)
+
+    _[See more details...](https://github.com/marp-team/marp-core/tree/main/themes#uncover)_
+  `),
+} as const
+
 class CompletionProvider {
   constructor(
     private readonly document: TextDocument,
@@ -68,13 +91,16 @@ class CompletionProvider {
       const themeSet = themes.getMarpThemeSetFor(this.document)
 
       return new CompletionList(
-        [...themeSet.themes()].map(
-          (theme): CompletionItem => ({
-            detail: 'Marp theme',
+        [...themeSet.themes()].map((theme): CompletionItem => {
+          const docs = themeDocs[theme.name]
+
+          return {
+            detail: `Marp ${docs ? 'Core built-in' : 'custom'} theme`,
             kind: CompletionItemKind.EnumMember,
             label: theme.name,
-          })
-        )
+            documentation: docs ? new MarkdownString(docs, true) : undefined,
+          }
+        })
       )
     }
   }
