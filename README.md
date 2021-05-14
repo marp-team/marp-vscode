@@ -22,7 +22,7 @@ See the documentation of [Marpit Markdown](https://marpit.marp.app/markdown) and
 
 ## Usage
 
-Marp features will be enabled when `marp: true` is written in front-matter of Markdown document.
+Marp features will be enabled when `marp: true` is written in a front-matter of Markdown document.
 
 ```markdown
 ---
@@ -34,7 +34,7 @@ marp: true
 Start writing!
 ```
 
-It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp features for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
+It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp feature for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toggle.gif" alt="Toggle Marp preview" width="600" />
@@ -48,7 +48,42 @@ Marp for VS Code can preview your Marp Markdown with the same way as [a native M
 
 ### IntelliSense for Marp directives
 
-[Directives](https://marpit.marp.app/directives), the inherited feature from [Marpit framework](https://marpit.marp.app/), is an important syntax to write the deck in Marp. If enabled Marp Markdown by `marp: true`, Marp for VS Code extends [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense).
+[Directives](https://marpit.marp.app/directives), the inherited feature from [Marpit framework](https://marpit.marp.app/), is an important syntax to write the deck in Marp.
+
+If enabled Marp feature by `marp: true`, Marp for VS Code extends [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense) to support auto completion, hover help, and syntax highlight for Marp directives.
+
+#### Auto completion
+
+Marp for VS Code can suggest all global/local directives supported by Marp ecosystem. Hit <kbd>Ctrl</kbd> + <kbd>Space</kbd> within the front-matter or HTML comment to show the list of directives.
+
+You can peek the help of selected directive by hitting <kbd>Ctrl</kbd> + <kbd>Space</kbd> again.
+
+<!-- TODO: Add screenshot -->
+
+#### Hover help
+
+And you can also see the help of a defined directive by hovering cursor on the recognized directive.
+
+<!-- TODO: Add screenshot -->
+
+#### Highlight
+
+Recognized directives are highlighted in the different color from the around. This visualization may help to find out the meaningless definition.
+
+<!-- TODO: Add screenshot -->
+
+#### Problems
+
+Marp for VS Code can detect some basic problems in Marp directives.
+
+| Name                           | Description                                | [Quick Fix] |
+| :----------------------------- | :----------------------------------------- | :---------: |
+| `deprecated-dollar-prefix`     | Check obsoleted directives prefixed by `$` |     ✅      |
+| `overloading-global-directive` | Find out overloaded global directives      |             |
+
+<!-- TODO: Add screenshot -->
+
+[quick fix]: https://code.visualstudio.com/docs/editor/refactoring#_code-actions-quick-fixes-and-refactorings
 
 ### Export slide deck to HTML, PDF, PPTX, and image :shield:
 
