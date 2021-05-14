@@ -34,7 +34,7 @@ marp: true
 Start writing!
 ```
 
-It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp feature for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
+It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp feature for current Markdown"**. (`markdown.marp.toggleMarpFeature`).
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toggle.gif" alt="Toggle Marp preview" width="600" />
