@@ -42,7 +42,7 @@
     "onLanguage:markdown",
     "onCommand:markdown.marp.export",
     "onCommand:markdown.marp.showQuickPick",
-    "onCommand:markdown.marp.toggleMarpPreview"
+    "onCommand:markdown.marp.toggleMarpFeature"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
@@ -84,8 +84,8 @@
       },
       {
         "category": "Marp",
-        "command": "markdown.marp.toggleMarpPreview",
-        "title": "Toggle Marp preview for current Markdown"
+        "command": "markdown.marp.toggleMarpFeature",
+        "title": "Toggle Marp feature for current Markdown"
       }
     ],
     "configuration": {

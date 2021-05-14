@@ -41,9 +41,9 @@ export const toggle = async (editor: TextEditor) => {
   }
 }
 
-export const command = 'markdown.marp.toggleMarpPreview'
+export const command = 'markdown.marp.toggleMarpFeature'
 
-export default async function toggleMarpPreview() {
+export default async function toggleMarpFeature() {
   const activeEditor = window.activeTextEditor
 
   if (activeEditor) {

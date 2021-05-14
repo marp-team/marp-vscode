@@ -4,7 +4,7 @@ import { ExtensionContext, Uri, commands, workspace } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as openExtensionSettings from './commands/open-extension-settings'
 import * as showQuickPick from './commands/show-quick-pick'
-import * as toggleMarpPreview from './commands/toggle-marp-preview'
+import * as toggleMarpFeature from './commands/toggle-marp-feature'
 import diagnostics from './diagnostics/'
 import languageProvider from './language'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
@@ -135,8 +135,8 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
     ),
     commands.registerCommand(showQuickPick.command, showQuickPick.default),
     commands.registerCommand(
-      toggleMarpPreview.command,
-      toggleMarpPreview.default
+      toggleMarpFeature.command,
+      toggleMarpFeature.default
     ),
     themes,
     workspace.onDidChangeConfiguration((e) => {

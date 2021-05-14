@@ -5,6 +5,7 @@
 ### Breaking
 
 - VS Code >= 1.56 is now required ([#231](https://github.com/marp-team/marp-vscode/pull/231))
+- Renamed command `markdown.marp.toggleMarpPreview` to `markdown.marp.toggleMarpFeature`. ([#235](https://github.com/marp-team/marp-vscode/pull/235))
 
 ### Added
 

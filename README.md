@@ -22,7 +22,7 @@ See the documentation of [Marpit Markdown](https://marpit.marp.app/markdown) and
 
 ## Usage
 
-Marp preview for Markdown document will be enabled when `marp: true` is written in front-matter.
+Marp features will be enabled when `marp: true` is written in front-matter of Markdown document.
 
 ```markdown
 ---
@@ -34,7 +34,7 @@ marp: true
 Start writing!
 ```
 
-It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp preview for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
+It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp features for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toggle.gif" alt="Toggle Marp preview" width="600" />
@@ -45,6 +45,10 @@ It also can toggle by opening the quick picker from toolbar icon <img src="https
 ### Preview Marp Markdown
 
 Marp for VS Code can preview your Marp Markdown with the same way as [a native Markdown preview](https://code.visualstudio.com/docs/languages/markdown#_markdown-preview).
+
+### IntelliSense for Marp directives
+
+[Directives](https://marpit.marp.app/directives), the inherited feature from [Marpit framework](https://marpit.marp.app/), is an important syntax to write the deck in Marp. If enabled Marp Markdown by `marp: true`, Marp for VS Code extends [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense).
 
 ### Export slide deck to HTML, PDF, PPTX, and image :shield:
 
