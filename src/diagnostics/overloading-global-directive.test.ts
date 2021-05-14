@@ -6,7 +6,7 @@ import {
   Range,
   TextDocument,
 } from 'vscode'
-import { DirectiveParser } from '../directive-parser'
+import { DirectiveParser } from '../directives/parser'
 import * as rule from './overloading-global-directive'
 
 jest.mock('vscode')

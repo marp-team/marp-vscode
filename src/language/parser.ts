@@ -9,7 +9,7 @@ import {
   window,
   workspace,
 } from 'vscode'
-import { DirectiveInfo, DirectiveParser } from '../directive-parser'
+import { DirectiveInfo, DirectiveParser } from '../directives/parser'
 import { detectMarpDocument } from '../utils'
 
 export interface LanguageParsedDirective {

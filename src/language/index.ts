@@ -1,5 +1,5 @@
 import { languages, Disposable, Hover, Range } from 'vscode'
-import { DirectiveType } from '../directive-parser'
+import { DirectiveType } from '../directives/parser'
 import * as completions from './completions'
 import * as decorations from './decorations'
 import { LanguageParser } from './parser'

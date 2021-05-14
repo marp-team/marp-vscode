@@ -13,7 +13,7 @@ import {
   DirectiveDefinedIn,
   DirectiveParser,
   DirectiveType,
-} from '../directive-parser'
+} from '../directives/parser'
 import themes from '../themes'
 import { LanguageParser, LanguageParseData } from './parser'
 

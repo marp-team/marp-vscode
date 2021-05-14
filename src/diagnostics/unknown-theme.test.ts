@@ -7,7 +7,7 @@ import {
   TextDocument,
   Uri,
 } from 'vscode'
-import { DirectiveParser } from '../directive-parser'
+import { DirectiveParser } from '../directives/parser'
 import { Themes } from '../themes'
 import * as rule from './unknown-theme'
 

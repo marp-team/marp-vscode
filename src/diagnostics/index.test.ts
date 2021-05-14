@@ -1,5 +1,5 @@
 import { window, TextDocument } from 'vscode'
-import { DirectiveParser } from '../directive-parser'
+import { DirectiveParser } from '../directives/parser'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
 import * as overloadingGlobalDirective from './overloading-global-directive'
 import * as unknownTheme from './unknown-theme'
