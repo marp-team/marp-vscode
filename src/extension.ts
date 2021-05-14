@@ -10,7 +10,7 @@ import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline, { rule as outlineRule } from './plugins/outline'
-import themes from './themes'
+import themes, { Themes } from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 
 const shouldRefreshConfs = [
@@ -45,10 +45,7 @@ export function extendMarkdownIt(md: any) {
             document.languageId === 'markdown' &&
             document.getText().replace(/\u2028|\u2029/g, '') === markdown
           ) {
-            const workspaceFolder = workspace.getWorkspaceFolder(document.uri)
-            if (workspaceFolder) return workspaceFolder.uri
-
-            return document.uri.with({ path: path.dirname(document.fileName) })
+            return Themes.resolveBaseDirectoryForTheme(document)
           }
         }
         return undefined
