@@ -5,7 +5,7 @@ import remarkParse from 'remark-parse'
 import TypedEmitter from 'typed-emitter'
 import unified from 'unified'
 import { visit } from 'unist-util-visit'
-import { MarkdownString, TextDocument } from 'vscode'
+import { MarkdownString, Range, TextDocument } from 'vscode'
 import yaml from 'yaml'
 import { Pair, YAMLMap } from 'yaml/types'
 import { frontMatterRegex } from './utils'
@@ -41,7 +41,8 @@ interface DirectiveInfoBase {
   allowed: readonly DirectiveDefinedIn[]
   description: string
   details?: string
-  markdownDescription: string | MarkdownString
+  markdownDescription: MarkdownString
+  markdownDetails: MarkdownString
   name: string
   providedBy: DirectiveProvidedBy
   type: DirectiveType
@@ -61,30 +62,28 @@ export type DirectiveInfo = GlobalDirectiveInfo | LocalDirectiveInfo
 
 const createDirectiveInfo = (
   info:
-    | Omit<GlobalDirectiveInfo, 'markdownDescription'>
-    | Omit<LocalDirectiveInfo, 'markdownDescription'>
-): Readonly<DirectiveInfo> =>
-  Object.freeze({
-    ...info,
-    get markdownDescription() {
-      const directiveText = `\`${info.name}\` [${
-        info.type
-      } directive](https://marpit.marp.app/directives?id=${info.type.toLowerCase()}-directives)${
-        info.scoped ? ' _[Scoped]_' : ''
-      }`
+    | Omit<GlobalDirectiveInfo, 'markdownDescription' | 'markdownDetails'>
+    | Omit<LocalDirectiveInfo, 'markdownDescription' | 'markdownDetails'>
+): Readonly<DirectiveInfo> => {
+  const directiveText = `\`${info.name}\` [${
+    info.type
+  } directive](https://marpit.marp.app/directives?id=${info.type.toLowerCase()}-directives)${
+    info.scoped ? ' _[Scoped]_' : ''
+  }`
 
-      return new MarkdownString(
-        [
-          directiveText,
-          info.description,
-          `_Provided by ${info.providedBy}${
-            info.details ? ` ([Show more details...](${info.details}))` : ''
-          }_`,
-        ].join('\n\n---\n\n'),
-        true
-      )
-    },
+  const mdDetails = `_Provided by ${info.providedBy}${
+    info.details ? ` ([Show more details...](${info.details}))` : ''
+  }_`
+
+  return Object.freeze({
+    ...info,
+    markdownDetails: new MarkdownString(mdDetails),
+    markdownDescription: new MarkdownString(
+      [directiveText, info.description, mdDetails].join('\n\n---\n\n'),
+      true
+    ),
   })
+}
 
 export interface DirectiveEventHandler {
   info?: DirectiveInfo
@@ -92,10 +91,17 @@ export interface DirectiveEventHandler {
   offset: number
 }
 
+export interface DirectiveSectionEventHandler {
+  body: string
+  range: Range
+}
+
 interface DirectiveParserEvents {
+  comment: (event: DirectiveSectionEventHandler) => void
   directive: (event: DirectiveEventHandler) => void
-  startParse: (event: { document: TextDocument }) => void
   endParse: (event: { document: TextDocument }) => void
+  frontMatter: (event: DirectiveSectionEventHandler) => void
+  startParse: (event: { document: TextDocument }) => void
 }
 
 export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<DirectiveParserEvents>) {
@@ -141,6 +147,8 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
       description: dedent(`
         Specify CSS for tweaking theme.
 
+        It is exactly same as defining inline style within Markdown. Useful if \`<style>\` would break the view in the other Markdown tools.
+
         \`\`\`yaml
         style: |
           section {
@@ -159,9 +167,17 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
       description: dedent(`
         Specify heading divider option.
 
-        You may instruct to divide slide pages automatically at before of headings. This feature is similar to [Pandoc](https://pandoc.org/)'s [\`--slide-level\` option](https://pandoc.org/MANUAL.html#structuring-the-slide-show) and [Deckset 2](https://www.deckset.com/2/)'s "Slide Dividers" option.
+        You may instruct to divide slide pages at before of headings automatically. It is useful for making slide from existing Markdown document.
 
-        It have to specify heading level from 1 to 6 (e.g. \`headingDivider: 2\`), or array of them (e.g. \`headingDivider: [1, 3]\`). This feature is enabled at headings whose the level _higher than or equal to the specified value_ if in a number, and it is enabled at _only specified levels_ if in array.
+        It have to specify heading level from 1 to 6, or array of them. This feature is enabled at headings having the level _higher than or equal to the specified value_ if in a number, and it is enabled at _only specified levels_ if in array.
+
+        \`\`\`yaml
+        # Divide pages by headings having level 3 and higher (#, ##, ###)
+        headingDivider: 3
+
+        # Divide pages by only headings having level 1 and 3 (#, ###)
+        headingDivider: [1, 3]
+        \`\`\`
       `),
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
@@ -180,7 +196,21 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }),
     createDirectiveInfo({
       name: 'header',
-      description: 'Specify the content of slide header.',
+      description: dedent(`
+        Specify the content of slide header.
+
+        The content of header can use basic Markdown formatting. To prevent the broken parsing by YAML special characters, recommend to wrap by quotes \`"\` or \`'\` when used Markdown syntax:
+
+        \`\`\`yaml
+        header: "**Header content**"
+        \`\`\`
+
+        To clear the header content in the middle of slides, set an empty string:
+
+        \`\`\`yaml
+        header: ""
+        \`\`\`
+      `),
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -188,7 +218,21 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }),
     createDirectiveInfo({
       name: 'footer',
-      description: 'Specify the content of slide footer.',
+      description: dedent(`
+        Specify the content of slide footer.
+
+        The content of footer can use basic Markdown formatting. To prevent the broken parsing by YAML special characters, recommend to wrap by quotes \`"\` or \`'\` when used Markdown syntax:
+
+        \`\`\`yaml
+        footer: "**Footer content**"
+        \`\`\`
+
+        To clear the footer content in the middle of slides, set an empty string:
+
+        \`\`\`yaml
+        footer: ""
+        \`\`\`
+      `),
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -197,7 +241,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     createDirectiveInfo({
       name: 'class',
       description:
-        "Specify HTML's `class` attribute for the slide element `<section>`.",
+        'Specify [HTML `class` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class) for the slide element `<section>`.',
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -205,7 +249,8 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }),
     createDirectiveInfo({
       name: 'backgroundColor',
-      description: 'Setting `background-color` style of the slide.',
+      description:
+        'Setting [`background-color` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color) of the slide.',
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -213,7 +258,8 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }),
     createDirectiveInfo({
       name: 'backgroundImage',
-      description: 'Setting `background-image` style of the slide.',
+      description:
+        'Setting [`background-image` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-image) of the slide.',
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -221,7 +267,8 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }),
     createDirectiveInfo({
       name: 'backgroundPosition',
-      description: 'Setting `background-position` style of the slide.',
+      description:
+        'Setting [`background-position` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-position) of the slide.',
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -229,7 +276,8 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }),
     createDirectiveInfo({
       name: 'backgroundRepeat',
-      description: 'Setting `background-repeat` style of the slide.',
+      description:
+        'Setting [`background-repeat` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-repeat) of the slide.',
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -237,7 +285,8 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }),
     createDirectiveInfo({
       name: 'backgroundSize',
-      description: 'Setting `background-size` style of the slide.',
+      description:
+        'Setting [`background-size` style](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size) of the slide.',
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -245,7 +294,8 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }),
     createDirectiveInfo({
       name: 'color',
-      description: 'Setting `color` style of the slide.',
+      description:
+        'Setting [`color` style](https://developer.mozilla.org/en-US/docs/Web/CSS/color) of the slide.',
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.Marpit,
       type: DirectiveType.Local,
@@ -258,7 +308,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
       description: dedent(`
         Choose the slide size preset provided by theme.
 
-        In Marp Core built-in theme, you can choose from \`16:9\` (1280x720) or \`4:3\` (960x720).
+        Accepted presets are depending on using theme. In the case of Marp Core built-in theme, you can choose from \`16:9\` (1280x720) or \`4:3\` (960x720).
       `),
       allowed: directiveAlwaysAllowed,
       providedBy: DirectiveProvidedBy.MarpCore,
@@ -351,16 +401,30 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     const fmMatched = markdown.match(frontMatterRegex)
 
     if (fmMatched?.index === 0) {
-      const [, open, body, close] = fmMatched
+      const [outerBody, open, body, close] = fmMatched
+      index = open.length + body.length + close.length
+
+      this.emit('frontMatter', {
+        body: outerBody,
+        range: new Range(doc.positionAt(0), doc.positionAt(index)),
+      })
+
       detectDirectives(body, open.length, DirectiveDefinedIn.FrontMatter)
 
-      index = open.length + body.length + close.length
       markdown = markdown.slice(index)
     }
 
     // HTML comments
-    visit(parseMd(markdown), 'html', (n: any) =>
+    visit(parseMd(markdown), 'html', (n: any) => {
       visit(parseHtml(n.value), 'comment', (c: any) => {
+        this.emit('comment', {
+          body: `<!--${c.value}-->`,
+          range: new Range(
+            doc.positionAt(index + n.position.start.offset - 4),
+            doc.positionAt(index + n.position.end.offset + 3)
+          ),
+        })
+
         const trimmedLeft = c.value.replace(/^-*\s*/, '')
 
         detectDirectives(
@@ -372,7 +436,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
             (c.value.length - trimmedLeft.length)
         )
       })
-    )
+    })
 
     this.emit('endParse', { document: doc })
   }
