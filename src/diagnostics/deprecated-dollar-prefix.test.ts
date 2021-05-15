@@ -12,7 +12,7 @@ import {
   TextDocument,
   WorkspaceEdit,
 } from 'vscode'
-import { DirectiveParser } from '../directive-parser'
+import { DirectiveParser } from '../directives/parser'
 import * as rule from './deprecated-dollar-prefix'
 
 jest.mock('vscode')

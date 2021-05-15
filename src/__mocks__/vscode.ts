@@ -42,6 +42,15 @@ export enum CodeActionTriggerKind {
   Automatic = 2,
 }
 
+export class CompletionList {
+  constructor(readonly items: any[]) {}
+}
+
+export enum CompletionItemKind {
+  EnumMember,
+  Property,
+}
+
 export class Diagnostic {
   code?: string
   source?: string
@@ -74,9 +83,26 @@ export const ProgressLocation = {
 
 export class Range {
   constructor(readonly start: Position, readonly end: Position) {}
+
+  contains(position: Position) {
+    return !(
+      position.line < this.start.line ||
+      position.line > this.end.line ||
+      (position.line === this.start.line &&
+        position.character < this.start.character) ||
+      (position.line === this.end.line &&
+        position.character > this.end.character)
+    )
+  }
+
+  with(start?: Position, end?: Position) {
+    return new Range(start ?? this.start, end ?? this.end)
+  }
 }
 
 export const RelativePattern = jest.fn()
+
+export const ThemeColor = jest.fn(() => '#000000ff')
 
 export const Uri = {
   file: uriInstance,
@@ -109,6 +135,10 @@ export enum FileType {
   SymbolicLink = 64,
 }
 
+export class Hover {
+  constructor(public contents: string, public range?: Range) {}
+}
+
 export const languages = {
   createDiagnosticCollection: jest.fn((name) => ({
     name,
@@ -116,7 +146,17 @@ export const languages = {
     set: jest.fn(),
   })),
   registerCodeActionsProvider: jest.fn(),
+  registerCompletionItemProvider: jest.fn(),
+  registerHoverProvider: jest.fn(),
   setTextDocumentLanguage: jest.fn(),
+}
+
+export class MarkdownString {
+  constructor(public value: string) {}
+
+  toString() {
+    return this.value
+  }
 }
 
 export let version: string = defaultVSCodeVersion
@@ -126,6 +166,7 @@ export const _setVSCodeVersion = (value: string) => {
 
 export const window = {
   activeTextEditor: undefined,
+  createTextEditorDecorationType: jest.fn((t) => t),
   onDidChangeActiveTextEditor: jest.fn(),
   showErrorMessage: jest.fn(),
   showQuickPick: jest.fn(),

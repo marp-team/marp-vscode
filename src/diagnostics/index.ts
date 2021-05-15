@@ -7,7 +7,7 @@ import {
   window,
   workspace,
 } from 'vscode'
-import { DirectiveParser } from '../directive-parser'
+import { DirectiveParser } from '../directives/parser'
 import { detectMarpDocument } from '../utils'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
 import * as overloadingGlobalDirective from './overloading-global-directive'

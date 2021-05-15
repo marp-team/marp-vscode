@@ -1,5 +1,5 @@
 import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode'
-import { DirectiveParser } from '../directive-parser'
+import { DirectiveParser } from '../directives/parser'
 import themes from '../themes'
 
 interface ParsedThemeValue {
@@ -21,7 +21,7 @@ export function register(
   })
 
   directiveParser.on('directive', ({ item, offset, info }) => {
-    if (info?.name === 'theme') {
+    if (info?.name === 'theme' && item.value) {
       const [start, end] = item.value.range
 
       parsed = {

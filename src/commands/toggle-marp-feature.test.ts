@@ -1,28 +1,28 @@
 import { Position, Range, languages, window } from 'vscode'
-import * as toggleMarpPreview from './toggle-marp-preview'
+import * as toggleMarpFeature from './toggle-marp-feature'
 
-const toggleMarpPreviewCommand = toggleMarpPreview.default
+const toggleMarpFeatureCommand = toggleMarpFeature.default
 
 jest.mock('vscode')
 
-describe('toggleMarpPreview command', () => {
+describe('toggleMarpFeature command', () => {
   let toggleFunc: jest.SpyInstance
 
   beforeEach(() => {
-    toggleFunc = jest.spyOn(toggleMarpPreview, 'toggle').mockImplementation()
+    toggleFunc = jest.spyOn(toggleMarpFeature, 'toggle').mockImplementation()
   })
 
   it('has no ops when active text editor is undefined', async () => {
     window.activeTextEditor = undefined
 
-    await toggleMarpPreviewCommand()
+    await toggleMarpFeatureCommand()
     expect(toggleFunc).not.toHaveBeenCalled()
   })
 
   it('runs toggle function when active text editor is Markdown', async () => {
     window.activeTextEditor = { document: { languageId: 'markdown' } } as any
 
-    await toggleMarpPreviewCommand()
+    await toggleMarpFeatureCommand()
     expect(toggleFunc).toHaveBeenCalledWith(window.activeTextEditor)
   })
 
@@ -34,7 +34,7 @@ describe('toggleMarpPreview command', () => {
     })
 
     it('shows warning notification', async () => {
-      await toggleMarpPreviewCommand()
+      await toggleMarpFeatureCommand()
       expect(toggleFunc).not.toHaveBeenCalled()
       expect(window.showWarningMessage).toHaveBeenCalled()
     })
@@ -42,10 +42,10 @@ describe('toggleMarpPreview command', () => {
     it('changes editor language and continues process when reacted on the notification', async () => {
       const { showWarningMessage }: any = window
       showWarningMessage.mockResolvedValue(
-        toggleMarpPreview.ITEM_CONTINUE_BY_CHANGING_LANGUAGE
+        toggleMarpFeature.ITEM_CONTINUE_BY_CHANGING_LANGUAGE
       )
 
-      await toggleMarpPreviewCommand()
+      await toggleMarpFeatureCommand()
       expect(languages.setTextDocumentLanguage).toHaveBeenCalledWith(
         textEditor.document,
         'markdown'
@@ -80,7 +80,7 @@ describe('#toggle', () => {
 
   it('inserts frontmatter to the top when frontmatter was not detected', async () => {
     const editor = textEditor('')
-    await toggleMarpPreview.toggle(editor)
+    await toggleMarpFeature.toggle(editor)
 
     expect(editor._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(0, 0),
@@ -90,7 +90,7 @@ describe('#toggle', () => {
 
   it('inserts `marp: true` to the last line of frontmatter when frontmatter without marp key was detected', async () => {
     const editor = textEditor('---\ntest: abc\nfoo: bar\n---')
-    await toggleMarpPreview.toggle(editor)
+    await toggleMarpFeature.toggle(editor)
 
     expect(editor._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(3, 0),
@@ -99,7 +99,7 @@ describe('#toggle', () => {
 
     // Empty frontmatter
     const editorEmptyFm = textEditor('---\n---')
-    await toggleMarpPreview.toggle(editorEmptyFm)
+    await toggleMarpFeature.toggle(editorEmptyFm)
 
     expect(editorEmptyFm._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(1, 0),
@@ -110,7 +110,7 @@ describe('#toggle', () => {
   it('toggles the value of marp key in frontmatter when frontmatter with marp key was detected', async () => {
     // true => false
     const editorEnabled = textEditor('---\nmarp: true\n---')
-    await toggleMarpPreview.toggle(editorEnabled)
+    await toggleMarpFeature.toggle(editorEnabled)
 
     expect(editorEnabled._editBuilders[0].replace).toHaveBeenCalledWith(
       new Range(new Position(1, 6), new Position(1, 10)),
@@ -119,7 +119,7 @@ describe('#toggle', () => {
 
     // false => true
     const editorDisabled = textEditor('---\nfoo: bar\nmarp:   false\n---')
-    await toggleMarpPreview.toggle(editorDisabled)
+    await toggleMarpFeature.toggle(editorDisabled)
 
     expect(editorDisabled._editBuilders[0].replace).toHaveBeenCalledWith(
       new Range(new Position(2, 8), new Position(2, 13)),

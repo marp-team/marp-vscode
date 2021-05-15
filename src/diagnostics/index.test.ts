@@ -1,5 +1,5 @@
-import { window, TextDocument } from 'vscode'
-import { DirectiveParser } from '../directive-parser'
+import { window, TextDocument, Position } from 'vscode'
+import { DirectiveParser } from '../directives/parser'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
 import * as overloadingGlobalDirective from './overloading-global-directive'
 import * as unknownTheme from './unknown-theme'
@@ -21,6 +21,7 @@ const mdDocMock = (text: string): TextDocument =>
     getText: () => text,
     languageId: 'markdown',
     uri: '/markdown',
+    positionAt: (idx: number) => new Position(0, idx),
   } as any)
 
 describe('Diagnostics', () => {

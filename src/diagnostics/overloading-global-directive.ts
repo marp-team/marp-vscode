@@ -1,6 +1,6 @@
 import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode'
 import { Pair } from 'yaml/types'
-import { DirectiveParser, DirectiveType } from '../directive-parser'
+import { DirectiveParser, DirectiveType } from '../directives/parser'
 
 interface ParsedGlobalDirective {
   item: Pair
@@ -23,7 +23,7 @@ export function register(
   directiveParser.on('directive', ({ item, offset, info }) => {
     if (info?.type === DirectiveType.Global) {
       const [start] = item.key.range
-      const [, end] = item.value.range
+      const [, end] = item.value?.range ?? item.key.range
 
       parsedGlobalDirectives.set(info.name, [
         ...(parsedGlobalDirectives.get(info.name) ?? []),
@@ -48,7 +48,7 @@ export function register(
         for (let i = 0; i < lastIdx; i += 1) {
           const diagnostic = new Diagnostic(
             parsed[i].range,
-            `The ${key} global directive has overloaded the subsequent definition.`,
+            `The ${key} global directive may be overloaded the subsequent definition.`,
             DiagnosticSeverity.Warning
           )
 

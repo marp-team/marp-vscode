@@ -22,7 +22,7 @@ See the documentation of [Marpit Markdown](https://marpit.marp.app/markdown) and
 
 ## Usage
 
-Marp preview for Markdown document will be enabled when `marp: true` is written in front-matter.
+Marp features will be enabled when `marp: true` is written in a front-matter of Markdown document.
 
 ```markdown
 ---
@@ -34,7 +34,7 @@ marp: true
 Start writing!
 ```
 
-It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp preview for current Markdown"**. (`markdown.marp.toggleMarpPreview`).
+It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp feature for current Markdown"**. (`markdown.marp.toggleMarpFeature`).
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toggle.gif" alt="Toggle Marp preview" width="600" />
@@ -45,6 +45,51 @@ It also can toggle by opening the quick picker from toolbar icon <img src="https
 ### Preview Marp Markdown
 
 Marp for VS Code can preview your Marp Markdown with the same way as [a native Markdown preview](https://code.visualstudio.com/docs/languages/markdown#_markdown-preview).
+
+### IntelliSense for Marp directives
+
+[Directives](https://marpit.marp.app/directives), the inherited feature from [Marpit framework](https://marpit.marp.app/), is an important syntax to write the deck in Marp.
+
+If enabled Marp feature by `marp: true`, Marp for VS Code extends [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense) to support auto completion, syntax highlight, hover help, and diagnostics for Marp directives.
+
+#### Auto completion
+
+Marp for VS Code can suggest global/local directives supported by Marp ecosystem. We remember all so you may forget them! :stuck_out_tongue:
+
+Hit <kbd>Ctrl</kbd> + <kbd>Space</kbd> within [the front-matter](https://marpit.marp.app/directives?id=front-matter) or [HTML comment](https://marpit.marp.app/directives?id=html-comment) to show the list of directives. You can peek the help of selected directive by hitting <kbd>Ctrl</kbd> + <kbd>Space</kbd> again.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/auto-completion.gif" alt="Auto completion" width="400" />
+</p>
+
+Some directives such as `theme` and `paginate` are also supported auto completion for the value.
+
+#### Highlight and hover help
+
+The key of recognized directives are highlighted in the different color from the around. This visualization may help to find out meaningless definitions.
+
+And you can see the help of a defined directive by hovering cursor on the recognized directive.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/highlight-and-hover-help.png" alt="Highlight and hover help" width="426" />
+</p>
+
+#### Diagnostics
+
+Marp for VS Code can detect some basic problems in Marp directives.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/diagnostics.png" alt="Diagnostics" width="443" />
+</p>
+
+| Name                           | Description                                                 | [Quick Fix] |
+| :----------------------------- | :---------------------------------------------------------- | :---------: |
+| `deprecated-dollar-prefix`     | Check [obsoleted directives prefixed by `$`][dollar-prefix] |     ✅      |
+| `overloading-global-directive` | Find out overloaded global directives                       |             |
+| `unknown-theme`                | Notify a not recognized theme name                          |             |
+
+[quick fix]: https://code.visualstudio.com/docs/editor/refactoring#_code-actions-quick-fixes-and-refactorings
+[dollar-prefix]: https://github.com/marp-team/marpit/issues/182
 
 ### Export slide deck to HTML, PDF, PPTX, and image :shield:
 
@@ -143,7 +188,7 @@ You can fold the content of slide in editor while editing Marp Markdown.
 
 Some features that may met malicious are restricted in the untrusted workspace (marked by the shield icon :shield: in this documentation).
 
-If the workspace is not trusted, you can use only a basic Marp preview.
+If the workspace is not trusted, you can use only a basic Marp preview and IntelliSense.
 
 #### Enable HTML in Marp Markdown :shield:
 

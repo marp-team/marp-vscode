@@ -42,7 +42,7 @@
     "onLanguage:markdown",
     "onCommand:markdown.marp.export",
     "onCommand:markdown.marp.showQuickPick",
-    "onCommand:markdown.marp.toggleMarpPreview"
+    "onCommand:markdown.marp.toggleMarpFeature"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
@@ -56,6 +56,17 @@
     "virtualWorkspaces": true
   },
   "contributes": {
+    "colors": [
+      {
+        "id": "marp.directiveKeyForeground",
+        "description": "Forground decoration color for the key of Marp directive",
+        "defaults": {
+          "dark": "#67b8e3ff",
+          "light": "#0288d1ff",
+          "highContrast": "#67b8e3ff"
+        }
+      }
+    ],
     "commands": [
       {
         "category": "Marp",
@@ -73,8 +84,8 @@
       },
       {
         "category": "Marp",
-        "command": "markdown.marp.toggleMarpPreview",
-        "title": "Toggle Marp preview for current Markdown"
+        "command": "markdown.marp.toggleMarpFeature",
+        "title": "Toggle Marp feature for current Markdown"
       }
     ],
     "configuration": {

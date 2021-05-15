@@ -10,7 +10,7 @@ import {
   WorkspaceEdit,
   languages,
 } from 'vscode'
-import { DirectiveParser } from '../directive-parser'
+import { DirectiveParser } from '../directives/parser'
 
 const warnDirectives = [
   // Marpit
