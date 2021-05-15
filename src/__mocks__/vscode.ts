@@ -42,6 +42,15 @@ export enum CodeActionTriggerKind {
   Automatic = 2,
 }
 
+export class CompletionList {
+  constructor(readonly items: any[]) {}
+}
+
+export enum CompletionItemKind {
+  EnumMember,
+  Property,
+}
+
 export class Diagnostic {
   code?: string
   source?: string
@@ -74,6 +83,21 @@ export const ProgressLocation = {
 
 export class Range {
   constructor(readonly start: Position, readonly end: Position) {}
+
+  contains(position: Position) {
+    return !(
+      position.line < this.start.line ||
+      position.line > this.end.line ||
+      (position.line === this.start.line &&
+        position.character < this.start.character) ||
+      (position.line === this.end.line &&
+        position.character > this.end.character)
+    )
+  }
+
+  with(start?: Position, end?: Position) {
+    return new Range(start ?? this.start, end ?? this.end)
+  }
 }
 
 export const RelativePattern = jest.fn()

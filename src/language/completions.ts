@@ -41,7 +41,7 @@ export function register(subscriptions: Disposable[], parser: LanguageParser) {
         const definedIn = getCompletionTarget(pos, data)
         if (!definedIn) return
 
-        const provider = new CompletionProvider(doc, pos, data, definedIn)
+        const provider = new CompletionProvider(doc, pos, definedIn)
         return provider.getCompletionList()
       },
     })
@@ -74,7 +74,7 @@ class CompletionProvider {
   constructor(
     private readonly document: TextDocument,
     private readonly position: Position,
-    private readonly data: LanguageParseData,
+    // private readonly data: LanguageParseData,
     private readonly definedIn: DirectiveDefinedIn
   ) {}
 

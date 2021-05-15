@@ -95,14 +95,8 @@ describe('Language extension', () => {
 
       // Call providerHover
       const docMock: TextDocument = {} as any
-      const ignoredRange = Object.assign(
-        new Range(new Position(0, 0), new Position(0, 10)),
-        { contains: jest.fn().mockReturnValue(false) }
-      )
-      const range = Object.assign(
-        new Range(new Position(1, 0), new Position(1, 10)),
-        { contains: jest.fn().mockReturnValue(true) }
-      )
+      const ignoredRange = new Range(new Position(0, 0), new Position(0, 10))
+      const range = new Range(new Position(1, 0), new Position(1, 10))
 
       const getParseDataSpy = jest
         .spyOn(LanguageParser.prototype, 'getParseData')
@@ -114,7 +108,7 @@ describe('Language extension', () => {
         } as any)
 
       const { provideHover } = registerSpy.mock.calls[0][1]
-      const hover = await provideHover(docMock, new Position(0, 0), {} as any)
+      const hover = await provideHover(docMock, new Position(1, 0), {} as any)
 
       expect(getParseDataSpy).toHaveBeenCalledWith(docMock)
       expect(hover).toBeInstanceOf(Hover)
