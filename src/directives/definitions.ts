@@ -75,7 +75,7 @@ export const builtinDirectives = [
   // Marp for VS Code
   createDirectiveInfo({
     name: 'marp',
-    description: 'Set whether or not enable Marp preview in VS Code extension.',
+    description: 'Set whether or not enable Marp feature in VS Code.',
     allowed: [DirectiveDefinedIn.FrontMatter],
     providedBy: DirectiveProvidedBy.MarpVSCode,
     type: DirectiveType.Global,
