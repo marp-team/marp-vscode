@@ -9,8 +9,13 @@
 
 ### Added
 
-- `overloading-global-directive` diagnostic: Mark overloaded global directive in the subsequent definition ([#232](https://github.com/marp-team/marp-vscode/pull/232))
-- `unknown-theme` diagnostic: Mark if the specified theme name is not recognized by the extension ([#236](https://github.com/marp-team/marp-vscode/pull/236))
+- IntelliSense for Marp directives ([#158](https://github.com/marp-team/marp-vscode/issues/158), [#235](https://github.com/marp-team/marp-vscode/pull/235))
+  - Auto completion for directive keys and some values
+  - Syntax highlight for recognized directive keys
+  - Hover help for recognized directives
+
+* `overloading-global-directive` diagnostic: Mark overloaded global directive in the subsequent definition ([#232](https://github.com/marp-team/marp-vscode/pull/232))
+* `unknown-theme` diagnostic: Mark if the specified theme name is not recognized by the extension ([#236](https://github.com/marp-team/marp-vscode/pull/236))
 
 ### Changed
 
