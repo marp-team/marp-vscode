@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   languages,
   window,
@@ -52,11 +51,11 @@ describe('Auto completions', () => {
 
           // simple match
           const matched = line.match(regex)
-          if (!matched) return undefined
+          if (!matched || matched.index === undefined) return undefined
 
           const range = new Range(
-            new Position(position.line, matched.index!),
-            new Position(position.line, matched.index! + matched[0].length)
+            new Position(position.line, matched.index),
+            new Position(position.line, matched.index + matched[0].length)
           )
 
           if (range.contains(new Position(position.line, position.character))) {
