@@ -78,6 +78,8 @@ export class Range {
 
 export const RelativePattern = jest.fn()
 
+export const ThemeColor = jest.fn(() => '#000000ff')
+
 export const Uri = {
   file: uriInstance,
   parse: uriInstance,
@@ -109,6 +111,10 @@ export enum FileType {
   SymbolicLink = 64,
 }
 
+export class Hover {
+  constructor(public contents: string, public range?: Range) {}
+}
+
 export const languages = {
   createDiagnosticCollection: jest.fn((name) => ({
     name,
@@ -116,7 +122,17 @@ export const languages = {
     set: jest.fn(),
   })),
   registerCodeActionsProvider: jest.fn(),
+  registerCompletionItemProvider: jest.fn(),
+  registerHoverProvider: jest.fn(),
   setTextDocumentLanguage: jest.fn(),
+}
+
+export class MarkdownString {
+  constructor(public value: string) {}
+
+  toString() {
+    return this.value
+  }
 }
 
 export let version: string = defaultVSCodeVersion
@@ -126,6 +142,7 @@ export const _setVSCodeVersion = (value: string) => {
 
 export const window = {
   activeTextEditor: undefined,
+  createTextEditorDecorationType: jest.fn((t) => t),
   onDidChangeActiveTextEditor: jest.fn(),
   showErrorMessage: jest.fn(),
   showQuickPick: jest.fn(),
