@@ -20,6 +20,10 @@
 ### Changed
 
 - Support [Workspace Trust](https://code.visualstudio.com/updates/v1_56#_workspace-trust): Restrict some features in the untrusted workspace ([#231](https://github.com/marp-team/marp-vscode/pull/231))
+- Upgrade Marp Core to [v2.0.3](https://github.com/marp-team/marp-core/releases/v2.0.3) ([#237](https://github.com/marp-team/marp-vscode/pull/237))
+- Upgrade Marp CLI to [v1.1.1](https://github.com/marp-team/marp-cli/releases/v1.1.1) ([#237](https://github.com/marp-team/marp-vscode/pull/237))
+  - PPTX export will become to pre-render images with high resolution
+- Upgrade dependent packages to the latest version ([#237](https://github.com/marp-team/marp-vscode/pull/237))
 
 ## v0.19.1 - 2021-05-11
 
