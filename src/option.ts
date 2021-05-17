@@ -27,13 +27,16 @@ const breaks = (inheritedValue: boolean): boolean => {
   }
 }
 
+const enableHtml = () =>
+  marpConfiguration().get<boolean>('enableHtml') && workspace.isTrusted
+
 export const marpCoreOptionForPreview = (
   baseOption: Options & MarpOptions
 ): MarpOptions => {
   if (!cachedPreviewOption) {
     cachedPreviewOption = {
       container: { tag: 'div', id: 'marp-vscode' },
-      html: marpConfiguration().get<boolean>('enableHtml') || undefined,
+      html: enableHtml() || undefined,
       markdown: {
         breaks: breaks(!!baseOption.breaks),
         typographer: baseOption.typographer,
@@ -54,7 +57,7 @@ export const marpCoreOptionForCLI = async (
 
   const baseOpts = {
     allowLocalFiles,
-    html: marpConfiguration().get<boolean>('enableHtml') || undefined,
+    html: enableHtml() || undefined,
     options: {
       markdown: {
         breaks: breaks(!!confMdPreview.get<boolean>('breaks')),

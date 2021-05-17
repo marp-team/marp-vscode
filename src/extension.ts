@@ -1,16 +1,16 @@
-import path from 'path'
 import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, Uri, commands, workspace } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as openExtensionSettings from './commands/open-extension-settings'
 import * as showQuickPick from './commands/show-quick-pick'
-import * as toggleMarpPreview from './commands/toggle-marp-preview'
+import * as toggleMarpFeature from './commands/toggle-marp-feature'
 import diagnostics from './diagnostics/'
+import languageProvider from './language/'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline, { rule as outlineRule } from './plugins/outline'
-import themes from './themes'
+import themes, { Themes } from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 
 const shouldRefreshConfs = [
@@ -22,6 +22,11 @@ const shouldRefreshConfs = [
   'markdown.preview.breaks',
   'markdown.preview.typographer',
 ]
+
+const applyRefreshedConfiguration = () => {
+  clearMarpCoreOptionCache()
+  commands.executeCommand('markdown.preview.refresh')
+}
 
 export const marpVscode = Symbol('marp-vscode')
 
@@ -40,10 +45,7 @@ export function extendMarkdownIt(md: any) {
             document.languageId === 'markdown' &&
             document.getText().replace(/\u2028|\u2029/g, '') === markdown
           ) {
-            const workspaceFolder = workspace.getWorkspaceFolder(document.uri)
-            if (workspaceFolder) return workspaceFolder.uri
-
-            return document.uri.with({ path: path.dirname(document.fileName) })
+            return Themes.resolveBaseDirectoryForTheme(document)
           }
         }
         return undefined
@@ -119,6 +121,7 @@ export function extendMarkdownIt(md: any) {
 
 export const activate = ({ subscriptions }: ExtensionContext) => {
   diagnostics(subscriptions)
+  languageProvider(subscriptions)
 
   subscriptions.push(
     commands.registerCommand(exportCommand.command, exportCommand.default),
@@ -128,16 +131,16 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
     ),
     commands.registerCommand(showQuickPick.command, showQuickPick.default),
     commands.registerCommand(
-      toggleMarpPreview.command,
-      toggleMarpPreview.default
+      toggleMarpFeature.command,
+      toggleMarpFeature.default
     ),
     themes,
     workspace.onDidChangeConfiguration((e) => {
       if (shouldRefreshConfs.some((c) => e.affectsConfiguration(c))) {
-        clearMarpCoreOptionCache()
-        commands.executeCommand('markdown.preview.refresh')
+        applyRefreshedConfiguration()
       }
-    })
+    }),
+    workspace.onDidGrantWorkspaceTrust(applyRefreshedConfiguration)
   )
 
   return { extendMarkdownIt }
