@@ -2,11 +2,11 @@ import { unlink, writeFile } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 import { promisify } from 'util'
-import type { marpCli } from '@marp-team/marp-cli'
 import { nanoid } from 'nanoid'
 import { TextDocument, workspace } from 'vscode'
 import { WorkFile, marpCoreOptionForCLI } from './option'
 import { marpConfiguration } from './utils'
+import type { marpCli } from '@marp-team/marp-cli'
 
 const promiseWriteFile = promisify(writeFile)
 const promiseUnlink = promisify(unlink)
