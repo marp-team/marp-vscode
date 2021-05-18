@@ -113,7 +113,7 @@ export class LanguageParser
       })
       .on('comment', ({ range }) => commentRanges.push(range))
       .on('directive', ({ item, info, offset }) => {
-        if (info) {
+        if (info && item.key.range) {
           const [start, end] = item.key.range
           const [, vEnd] = item.value?.range ?? item.key.range
 

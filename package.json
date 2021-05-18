@@ -273,7 +273,7 @@
     "unist-util-visit": "^3.1.0",
     "utf-8-validate": "^5.0.5",
     "vsce": "^1.88.0",
-    "yaml": "^1.10.2"
+    "yaml": "^2.0.0-5"
   },
   "dependencies": {
     "@marp-team/marp-cli": "^1.1.1",
