@@ -68,10 +68,17 @@ describe('Language parser', () => {
           test: test
           ---
 
-          <!-- paginate: true -->
+          <!--
+          paginate: true
+          -->
           <!-- _paginate: false -->
         `),
-      positionAt: (idx: number) => new Position(0, idx),
+      positionAt(offset: number) {
+        const lines = this.getText().slice(0, offset).split('\n')
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return new Position(lines.length - 1, lines.pop()!.length)
+      },
     }
     window.activeTextEditor = { document } as any
 
@@ -82,6 +89,106 @@ describe('Language parser', () => {
     expect(data?.commentRanges).toHaveLength(2)
     expect(data?.frontMatterRange).toBeInstanceOf(Range)
     expect(data?.directvies).toHaveLength(4)
+
+    // Range data
+    expect(data?.directvies[0].range.start).toMatchObject({
+      line: 1,
+      character: 0,
+    })
+    expect(data?.directvies[0].range.end).toMatchObject({
+      line: 1,
+      character: 10,
+    })
+    expect(data?.directvies[1].range.start).toMatchObject({
+      line: 2,
+      character: 0,
+    })
+    expect(data?.directvies[1].range.end).toMatchObject({
+      line: 2,
+      character: 14,
+    })
+    expect(data?.directvies[2].range.start).toMatchObject({
+      line: 7,
+      character: 0,
+    })
+    expect(data?.directvies[2].range.end).toMatchObject({
+      line: 7,
+      character: 14,
+    })
+    expect(data?.directvies[3].range.start).toMatchObject({
+      line: 9,
+      character: 5,
+    })
+    expect(data?.directvies[3].range.end).toMatchObject({
+      line: 9,
+      character: 21,
+    })
+  })
+
+  it('has correct source map even if used CR+LF newline', async () => {
+    const document = {
+      languageId: 'markdown',
+      getText: () => {
+        const baseDoc = dedent(`
+          ---
+          marp: true
+          theme: default
+          test: test
+          ---
+
+          <!--
+          paginate: true
+          -->
+          <!-- _paginate: false -->
+        `)
+
+        return baseDoc.split('\n').join('\r\n')
+      },
+      positionAt(offset: number) {
+        const lines = this.getText().slice(0, offset).split('\n')
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return new Position(lines.length - 1, lines.pop()!.length)
+      },
+    }
+    window.activeTextEditor = { document } as any
+
+    const parser = new LanguageParser([])
+    const data = await parser.getParseData(document as any)
+
+    expect(data).toBeTruthy()
+    expect(data?.directvies[0].range.start).toMatchObject({
+      line: 1,
+      character: 0,
+    })
+    expect(data?.directvies[0].range.end).toMatchObject({
+      line: 1,
+      character: 10,
+    })
+    expect(data?.directvies[1].range.start).toMatchObject({
+      line: 2,
+      character: 0,
+    })
+    expect(data?.directvies[1].range.end).toMatchObject({
+      line: 2,
+      character: 14,
+    })
+    expect(data?.directvies[2].range.start).toMatchObject({
+      line: 7,
+      character: 0,
+    })
+    expect(data?.directvies[2].range.end).toMatchObject({
+      line: 7,
+      character: 14,
+    })
+    expect(data?.directvies[3].range.start).toMatchObject({
+      line: 9,
+      character: 5,
+    })
+    expect(data?.directvies[3].range.end).toMatchObject({
+      line: 9,
+      character: 21,
+    })
   })
 
   it('does not parse Markdown when it is not Marp Markdown', async () => {
