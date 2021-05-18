@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.0.1 - 2021-05-18
+
 ### Fixed
 
 - Wrong highlight in CRLF ([#239](https://github.com/marp-team/marp-vscode/issues/239), [#240](https://github.com/marp-team/marp-vscode/pull/240))
