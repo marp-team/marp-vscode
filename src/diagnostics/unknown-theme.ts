@@ -21,7 +21,7 @@ export function register(
   })
 
   directiveParser.on('directive', ({ item, offset, info }) => {
-    if (info?.name === 'theme' && item.value) {
+    if (info?.name === 'theme' && item.value?.range) {
       const [start, end] = item.value.range
 
       parsed = {

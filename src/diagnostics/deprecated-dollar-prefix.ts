@@ -30,7 +30,7 @@ export function register(
   diagnostics: Diagnostic[]
 ) {
   directiveParser.on('directive', ({ item, offset }) => {
-    if (warnDirectives.includes(item.key.value)) {
+    if (warnDirectives.includes(item.key.value) && item.key.range) {
       const name = item.key.value.slice(1)
       const [start, end] = item.key.range
 

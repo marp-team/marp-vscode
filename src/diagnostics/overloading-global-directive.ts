@@ -1,6 +1,6 @@
 import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode'
-import { Pair } from 'yaml/types'
 import { DirectiveParser, DirectiveType } from '../directives/parser'
+import type { Pair } from 'yaml'
 
 interface ParsedGlobalDirective {
   item: Pair
@@ -21,7 +21,7 @@ export function register(
   })
 
   directiveParser.on('directive', ({ item, offset, info }) => {
-    if (info?.type === DirectiveType.Global) {
+    if (info?.type === DirectiveType.Global && item.key.range) {
       const [start] = item.key.range
       const [, end] = item.value?.range ?? item.key.range
 

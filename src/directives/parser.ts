@@ -5,8 +5,7 @@ import TypedEmitter from 'typed-emitter'
 import unified from 'unified'
 import { visit } from 'unist-util-visit'
 import { Range, TextDocument } from 'vscode'
-import yaml from 'yaml'
-import { Pair, YAMLMap } from 'yaml/types'
+import yaml, { Pair, Scalar, YAMLMap } from 'yaml'
 import { frontMatterRegex } from '../utils'
 import {
   builtinDirectives,
@@ -30,7 +29,7 @@ const parseYaml = (yamlBody: string) =>
 
 export interface DirectiveEventHandler {
   info?: DirectiveInfo
-  item: Pair
+  item: Pair<Scalar<string>, Scalar<any>>
   offset: number
 }
 
@@ -63,11 +62,12 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
       offset: number,
       definedIn = DirectiveDefinedIn.Comment
     ) => {
-      const { contents, errors } = parseYaml(text)
+      const { contents, errors } = parseYaml(text.replace(/\r$/, ''))
 
       if (errors.length === 0 && contents?.['items']) {
-        for (const item of (contents as YAMLMap).items) {
-          if (item.type === 'PAIR') {
+        for (const item of (contents as YAMLMap<Scalar<string>, Scalar<any>>)
+          .items) {
+          if (item.key && item.value) {
             let scoped: boolean | undefined = undefined
 
             const directiveInfo = this.directives.find((d) => {
@@ -116,15 +116,22 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     // HTML comments
     visit(parseMd(markdown), 'html', (n: any) => {
       visit(parseHtml(n.value), 'comment', (c: any) => {
+        const rawBody = n.value.slice(
+          c.position.start.offset,
+          c.position.end.offset
+        )
+
         this.emit('comment', {
-          body: `<!--${c.value}-->`,
+          body: rawBody,
           range: new Range(
             doc.positionAt(index + n.position.start.offset),
             doc.positionAt(index + n.position.end.offset)
           ),
         })
 
-        const trimmedLeft = c.value.replace(/^-*\s*/, '')
+        // c.value should not use because it has normalized CRLF to LF
+        const value = rawBody.slice(4, -3)
+        const trimmedLeft = value.replace(/^-*\s*/, '')
 
         detectDirectives(
           trimmedLeft.replace(/\s*-*$/, ''),
@@ -132,7 +139,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
             n.position.start.offset +
             c.position.start.offset +
             4 +
-            (c.value.length - trimmedLeft.length)
+            (value.length - trimmedLeft.length)
         )
       })
     })
