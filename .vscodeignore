@@ -1,9 +1,8 @@
-*
-*/**
-!node_modules/**
+/*
+!/node_modules
 !.vscodeignore
-!images/**
-!lib/*
+!/images
+!/lib
 !CHANGELOG.md
 !LICENSE
 !README.md
