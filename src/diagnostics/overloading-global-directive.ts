@@ -1,6 +1,6 @@
 import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode'
-import { DirectiveParser, DirectiveType } from '../directives/parser'
 import type { Pair } from 'yaml'
+import { DirectiveParser, DirectiveType } from '../directives/parser'
 
 interface ParsedGlobalDirective {
   item: Pair
