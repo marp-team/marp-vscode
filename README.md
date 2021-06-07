@@ -182,13 +182,13 @@ You can fold the content of slide in editor while editing Marp Markdown.
 
 ### Security
 
-#### [Workspace Trust](https://github.com/microsoft/vscode/issues/106488)
+#### [Workspace Trust]
 
-<!-- TODO: Update link to the formal documentation -->
+Some features that may met malicious are restricted in the untrusted workspace/window. Please read [VS Code's user guide][workspace trust] for details.
 
-Some features that may met malicious are restricted in the untrusted workspace (marked by the shield icon :shield: in this documentation).
+Features may be restricted are marked by the shield icon 🛡️ in this documentation. Marp for VS Code is available even if the current workspace is not trusted but you can use only a basic Marp preview and IntelliSense.
 
-If the workspace is not trusted, you can use only a basic Marp preview and IntelliSense.
+[workspace trust]: https://code.visualstudio.com/docs/editor/workspace-trust
 
 #### Enable HTML in Marp Markdown :shield:
 
