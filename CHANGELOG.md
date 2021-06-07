@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.0.2 - 2021-06-07
+
 ### Changed
 
 - Update documentation of workspace trust ([#244](https://github.com/marp-team/marp-vscode/pull/244))
