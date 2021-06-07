@@ -275,7 +275,15 @@ describe('Language parser', () => {
       beforeEach(() => jest.useFakeTimers())
       afterEach(() => jest.useRealTimers())
 
-      const wait = () => new Promise<void>((res) => nextTick(res))
+      const wait = () =>
+        new Promise<void>((res) => {
+          // Modern fake timers will mock nextTick function. We have to use
+          // original function through _nextTick in Clock instance.
+          //
+          // https://github.com/facebook/jest/issues/10221
+          // https://github.com/sinonjs/fake-timers/blob/master/src/fake-timers-src.js
+          ;(nextTick as any).clock._nextTick(res)
+        })
 
       it('tries to wait for a time to call debounce function if the data ws not yet ready', async () => {
         expect.assertions(3)
