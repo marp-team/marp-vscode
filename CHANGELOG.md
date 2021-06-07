@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade dependent packages to the latest version ([#245](https://github.com/marp-team/marp-vscode/pull/245))
+
 ## v1.0.1 - 2021-05-18
 
 ### Fixed

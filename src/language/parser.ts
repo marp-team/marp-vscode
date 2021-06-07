@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events'
 import lodashDebounce from 'lodash.debounce'
+import type TypedEmitter from 'typed-emitter'
 import {
   Disposable,
   TextDocument,
@@ -10,7 +11,6 @@ import {
 } from 'vscode'
 import { DirectiveInfo, DirectiveParser } from '../directives/parser'
 import { detectMarpDocument } from '../utils'
-import type TypedEmitter from 'typed-emitter'
 
 export interface LanguageParsedDirective {
   info: DirectiveInfo
