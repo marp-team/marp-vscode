@@ -1,5 +1,6 @@
+import crypto from 'crypto'
 import { Marp } from '@marp-team/marp-core'
-import { ExtensionContext, Uri, commands, workspace } from 'vscode'
+import { ExtensionContext, commands, workspace, TextDocument } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as openExtensionSettings from './commands/open-extension-settings'
 import * as showQuickPick from './commands/show-quick-pick'
@@ -39,19 +40,31 @@ export function extendMarkdownIt(md: any) {
     if (detectMarpFromMarkdown(markdown)) {
       // A messy resolution by finding matched document to resolve workspace or directory of Markdown
       // https://github.com/microsoft/vscode/issues/84846
-      const baseFolder: Uri | undefined = (() => {
+      const document: TextDocument | undefined = (() => {
         for (const document of workspace.textDocuments) {
           if (
             document.languageId === 'markdown' &&
             document.getText().replace(/\u2028|\u2029/g, '') === markdown
           ) {
-            return Themes.resolveBaseDirectoryForTheme(document)
+            return document
           }
         }
         return undefined
       })()
 
-      const marp = new Marp(marpCoreOptionForPreview(md.options))
+      const baseFolder =
+        document && Themes.resolveBaseDirectoryForTheme(document)
+
+      const marpOptions = marpCoreOptionForPreview(md.options)
+
+      if (document && typeof marpOptions.container === 'object') {
+        marpOptions.container['data-document-id'] = crypto
+          .createHash('sha256')
+          .update('marp-vscode::' + document.uri.toString())
+          .digest('hex')
+      }
+
+      const marp = new Marp(marpOptions)
         .use(customTheme)
         .use(outline)
         .use(lineNumber)
