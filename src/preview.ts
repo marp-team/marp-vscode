@@ -7,7 +7,7 @@ const onDOMContentLoaded = (callback: () => void) => {
   const { readyState } = document
 
   if (readyState === 'complete' || readyState === 'interactive') {
-    setTimeout(callback, 0)
+    callback()
   } else {
     window.addEventListener('DOMContentLoaded', callback)
   }
@@ -84,7 +84,7 @@ export default function preview() {
       // Set current position and the number of pages
       trySettingToStorage('count', count.toString())
 
-      onDOMContentLoaded(setScrollY)
+      onDOMContentLoaded(() => setTimeout(setScrollY, 16))
       window.addEventListener('scroll', setScrollY)
     }
   }
