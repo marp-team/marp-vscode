@@ -42,11 +42,15 @@ const textDecoder = new TextDecoder()
 export class Themes {
   observedThemes = new Map<string, Theme>()
 
-  static resolveBaseDirectoryForTheme(doc: TextDocument): Uri {
-    const workspaceFolder = workspace.getWorkspaceFolder(doc.uri)
+  static resolveBaseDirectoryForThemeFromUri(uri: Uri): Uri {
+    const workspaceFolder = workspace.getWorkspaceFolder(uri)
     if (workspaceFolder) return workspaceFolder.uri
 
-    return doc.uri.with({ path: path.dirname(doc.fileName) })
+    return uri.with({ path: path.dirname(uri.fsPath) })
+  }
+
+  static resolveBaseDirectoryForTheme(doc: TextDocument): Uri {
+    return Themes.resolveBaseDirectoryForThemeFromUri(doc.uri)
   }
 
   dispose() {

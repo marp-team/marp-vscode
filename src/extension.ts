@@ -1,5 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
-import { ExtensionContext, Uri, commands, workspace } from 'vscode'
+import { ExtensionContext, commands, workspace } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as openExtensionSettings from './commands/open-extension-settings'
 import * as showQuickPick from './commands/show-quick-pick'
@@ -34,22 +34,14 @@ export function extendMarkdownIt(md: any) {
   const { parse, renderer } = md
   const { render } = renderer
 
+  md.marpDocUri = undefined
+
   md.parse = (markdown: string, env: any) => {
     // Generate tokens by Marp if enabled
     if (detectMarpFromMarkdown(markdown)) {
-      // A messy resolution by finding matched document to resolve workspace or directory of Markdown
-      // https://github.com/microsoft/vscode/issues/84846
-      const baseFolder: Uri | undefined = (() => {
-        for (const document of workspace.textDocuments) {
-          if (
-            document.languageId === 'markdown' &&
-            document.getText().replace(/\u2028|\u2029/g, '') === markdown
-          ) {
-            return Themes.resolveBaseDirectoryForTheme(document)
-          }
-        }
-        return undefined
-      })()
+      const baseFolder =
+        md.marpDocUri &&
+        Themes.resolveBaseDirectoryForThemeFromUri(md.marpDocUri)
 
       const marp = new Marp(marpCoreOptionForPreview(md.options))
         .use(customTheme)
@@ -106,6 +98,14 @@ export function extendMarkdownIt(md: any) {
     const marp = md[marpVscode]
 
     if (marp) {
+      // Resolve workspace directory of Markdown
+      if (env.currentDocument?.toString() !== md.marpDocUri?.toString()) {
+        md.marpDocUri = env.currentDocument
+
+        // Render Markdown again when changed the workspace directory
+        commands.executeCommand('markdown.preview.refresh')
+      }
+
       const { markdown } = marp
       const style = marp.renderStyle(marp.lastGlobalDirectives.theme)
       const html = markdown.renderer.render(tokens, markdown.options, env)
