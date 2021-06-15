@@ -28,6 +28,53 @@ const applyRefreshedConfiguration = () => {
   commands.executeCommand('markdown.preview.refresh')
 }
 
+let isWarnedFailurePatch = false
+const hackGetScriptsToExecuteMarpScriptFirst = (resourceProvider: any) => {
+  try {
+    const { getScripts } = resourceProvider._contentProvider.__proto__
+
+    if (!getScripts['marpPatched']) {
+      resourceProvider._contentProvider.__proto__.getScripts = function (
+        this: any,
+        ...args: any[]
+      ) {
+        const ret: string = getScripts.apply(this, args)
+        const scripts = ret.match(/<script[^>]*><\/script>/g) ?? []
+
+        const marpScriptIdx = scripts.findIndex((script) =>
+          script.includes('marp-vscode')
+        )
+
+        if (marpScriptIdx >= 0) {
+          const [marpScript] = scripts.splice(marpScriptIdx, 1)
+          scripts.unshift(marpScript.replace('async', ''))
+        }
+
+        return scripts.join('\n')
+      }
+
+      Object.defineProperty(
+        resourceProvider._contentProvider.__proto__.getScripts,
+        'marpPatched',
+        { value: true }
+      )
+
+      console.debug(
+        '[Marp for VS Code] Applied the patch for the order of preview scripts.'
+      )
+    }
+  } catch (e) {
+    if (!isWarnedFailurePatch) {
+      console.warn(
+        "Failed to patch for the order of preview scripts. Marp preview still will work but sometimes may fail to apply VS Code's scroll stabilizer."
+      )
+      console.warn(e)
+    }
+
+    isWarnedFailurePatch = true
+  }
+}
+
 export const marpVscode = Symbol('marp-vscode')
 
 export function extendMarkdownIt(md: any) {
@@ -103,6 +150,8 @@ export function extendMarkdownIt(md: any) {
   }
 
   renderer.render = (tokens: any[], options: any, env: any) => {
+    hackGetScriptsToExecuteMarpScriptFirst(env.resourceProvider)
+
     const marp = md[marpVscode]
 
     if (marp) {
