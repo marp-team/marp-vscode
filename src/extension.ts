@@ -30,6 +30,9 @@ const applyRefreshedConfiguration = () => {
 
 let isWarnedFailurePatch = false
 const hackGetScriptsToExecuteMarpScriptFirst = (resourceProvider: any) => {
+  // resourceProvider is not passed by VS Code 1.56 and previous versions.
+  if (!resourceProvider) return
+
   try {
     const { getScripts } = resourceProvider._contentProvider.__proto__
 
