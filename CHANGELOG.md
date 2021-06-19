@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.0.3 - 2021-06-19
+
 ### Fixed
 
 - Apply patch to work VS Code built-in scroll stabilizer to Marp preview always (works only in VS Code 1.57+) ([#248](https://github.com/marp-team/marp-vscode/issues/248), [#252](https://github.com/marp-team/marp-vscode/pull/252))
