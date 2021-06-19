@@ -210,7 +210,7 @@
   "scripts": {
     "build": "npm run -s clean && rollup -c ./rollup.config.js",
     "clean": "rimraf lib",
-    "check:audit": "echo \"[WARNING] Temporally limited yarn audit only to dependencies.\" && npm audit --production",
+    "check:audit": "npm audit",
     "check:format": "npm run -s format -- -c",
     "check:ts": "tsc --noEmit",
     "format": "prettier \"**/*.{css,js,json,md,scss,ts,yaml,yml}\"",
