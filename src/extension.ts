@@ -28,6 +28,7 @@ const applyRefreshedConfiguration = () => {
   commands.executeCommand('markdown.preview.refresh')
 }
 
+// Workaround for https://github.com/microsoft/vscode/issues/126640
 let isWarnedFailurePatch = false
 const hackGetScriptsToExecuteMarpScriptFirst = (resourceProvider: any) => {
   // resourceProvider is not passed by VS Code 1.56 and previous versions.

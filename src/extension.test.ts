@@ -411,4 +411,53 @@ describe('#extendMarkdownIt', () => {
       })
     })
   })
+
+  describe('Patch for VS Code', () => {
+    const md = extension().extendMarkdownIt(new markdownIt('commonmark'))
+
+    beforeEach(() => {
+      jest.spyOn(console, 'debug').mockImplementation()
+    })
+
+    it('applys patch to VS Code preview logic through renderer env', () => {
+      class ContentProvider {
+        getScripts() {
+          return `
+<script async
+  src="https://example.com/vscode-builtin/script.js"
+  nonce="1234567890"
+></script>
+<script async
+  src="https://example.com/marp-vscode/preview.js"
+  nonce="0987654321"
+></script>
+`.trim()
+        }
+      }
+
+      const _contentProvider = new ContentProvider()
+      const resourceProvider = { _contentProvider }
+
+      // Apply patch by calling render method
+      md.render('test', { resourceProvider })
+
+      expect(_contentProvider.getScripts()).toMatchInlineSnapshot(`
+"<script 
+  src=\\"https://example.com/marp-vscode/preview.js\\"
+  nonce=\\"0987654321\\"
+></script>
+<script async
+  src=\\"https://example.com/vscode-builtin/script.js\\"
+  nonce=\\"1234567890\\"
+></script>"
+`)
+    })
+
+    it('emits warning if happened some trouble while patching', () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation()
+
+      md.render('test', { resourceProvider: {} })
+      expect(warn).toHaveBeenCalled()
+    })
+  })
 })
