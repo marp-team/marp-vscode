@@ -7,7 +7,7 @@ executors:
         type: string
         default: lts
     docker:
-      - image: circleci/node:<< parameters.version >>
+      - image: cimg/node:<< parameters.version >>
     working_directory: ~/marp-vscode
 
 commands:
@@ -90,10 +90,20 @@ jobs:
     steps:
       - test
 
+  unit-electron13:
+    executor:
+      name: node
+      version: '14.17.0'
+    steps:
+      - test
+
 workflows:
   test:
     jobs:
       - audit
       - unit-electron12:
+          requires:
+            - audit
+      - unit-electron13:
           requires:
             - audit
