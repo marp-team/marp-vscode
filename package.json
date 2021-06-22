@@ -190,7 +190,15 @@
           "when": "config.markdown.marp.toolbarButtonForQuickPick && editorLangId == markdown"
         }
       ]
-    }
+    },
+    "startEntries": [
+      {
+        "title": "Marp Markdown",
+        "description": "For creating slide deck",
+        "catagory": "file",
+        "command": "markdown.marp.newMarpMarkdown"
+      }
+    ]
   },
   "private": true,
   "prettier": {
