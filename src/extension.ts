@@ -1,6 +1,7 @@
 import { Marp } from '@marp-team/marp-core'
 import { ExtensionContext, Uri, commands, workspace } from 'vscode'
 import * as exportCommand from './commands/export'
+import * as newMarpMarkdown from './commands/new-marp-markdown'
 import * as openExtensionSettings from './commands/open-extension-settings'
 import * as showQuickPick from './commands/show-quick-pick'
 import * as toggleMarpFeature from './commands/toggle-marp-feature'
@@ -178,6 +179,7 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
 
   subscriptions.push(
     commands.registerCommand(exportCommand.command, exportCommand.default),
+    commands.registerCommand(newMarpMarkdown.command, newMarpMarkdown.default),
     commands.registerCommand(
       openExtensionSettings.command,
       openExtensionSettings.default

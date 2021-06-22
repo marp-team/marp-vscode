@@ -22,7 +22,7 @@ for (const cmdPath of contributedCommands) {
 }
 
 availableCommands.push({
-  label: '$(settings-gear) Open extension settings',
+  label: '$(settings-gear) Open Extension Settings',
   [cmdSymbol]: openExtensionSettingsCommand,
 })
 

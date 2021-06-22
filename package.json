@@ -41,6 +41,7 @@
   "activationEvents": [
     "onLanguage:markdown",
     "onCommand:markdown.marp.export",
+    "onCommand:markdown.marp.newMarpMarkdown",
     "onCommand:markdown.marp.showQuickPick",
     "onCommand:markdown.marp.toggleMarpFeature"
   ],
@@ -71,12 +72,17 @@
       {
         "category": "Marp",
         "command": "markdown.marp.export",
-        "title": "Export slide deck..."
+        "title": "Export Slide Deck..."
+      },
+      {
+        "category": "Marp",
+        "command": "markdown.marp.newMarpMarkdown",
+        "title": "New Untitled Marp Markdown For Slide Deck"
       },
       {
         "category": "Marp",
         "command": "markdown.marp.showQuickPick",
-        "title": "Show quick pick of Marp commands...",
+        "title": "Show Quick Pick Of Marp Commands...",
         "icon": {
           "dark": "./images/icon-dark.svg",
           "light": "./images/icon-light.svg"
@@ -85,7 +91,7 @@
       {
         "category": "Marp",
         "command": "markdown.marp.toggleMarpFeature",
-        "title": "Toggle Marp feature for current Markdown"
+        "title": "Toggle Marp Feature For Current Markdown"
       }
     ],
     "configuration": {
