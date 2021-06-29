@@ -195,7 +195,7 @@
       {
         "title": "Marp Markdown",
         "description": "For creating slide deck",
-        "catagory": "file",
+        "category": "file",
         "command": "markdown.marp.newMarpMarkdown"
       }
     ]
