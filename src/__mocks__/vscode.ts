@@ -74,6 +74,10 @@ export class Position {
     return new Position(this.line + lineDelta, this.character + characterDelta)
   }
 
+  isEqual(other: Position) {
+    return this.line === other.line && this.character === other.character
+  }
+
   constructor(readonly line: number, readonly character: number) {}
 }
 

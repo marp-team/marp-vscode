@@ -69,6 +69,18 @@ describe('[Diagnostics rule] Unknown theme', () => {
       expect(register(doc('<!-- theme: uncover -->'))).toHaveLength(0)
     })
 
+    it('does not add diagnostics when the definition of theme directive is incompleted', () => {
+      expect(register(doc('<!-- theme:-->'))).toHaveLength(0)
+      expect(register(doc('<!-- theme: -->'))).toHaveLength(0)
+      expect(register(doc('<!-- theme:  -->'))).toHaveLength(0)
+      expect(register(doc('<!-- theme:\t-->'))).toHaveLength(0)
+    })
+
+    it('adds diagnostics if set empty string implicitly', () => {
+      expect(register(doc('<!-- theme: "" -->'))).toHaveLength(1)
+      expect(register(doc("<!-- theme: '' -->"))).toHaveLength(1)
+    })
+
     describe('when registered custom theme', () => {
       beforeEach(() => {
         jest
