@@ -35,7 +35,10 @@ export function register(
   })
 
   directiveParser.on('endParse', () => {
-    if (parsed) {
+    if (
+      parsed &&
+      (parsed.value || !parsed.range.start.isEqual(parsed.range.end))
+    ) {
       const themeSet = themes.getMarpThemeSetFor(doc)
 
       if (!themeSet.has(parsed.value)) {
