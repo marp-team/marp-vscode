@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added
+
+- `markdown.marp.newMarpMarkdown` command to create empty Marp Markdown ([#255](https://github.com/marp-team/marp-vscode/pull/255))
+- Contribution to "New File…" in File menu and welcome screen _(Experimental: Required opt-in by `workbench.welcome.experimental.startEntries` in VS Code 1.58+)_ (#255) ([#255](https://github.com/marp-team/marp-vscode/pull/255))
+
 ## v1.0.3 - 2021-06-19
 
 ### Fixed
