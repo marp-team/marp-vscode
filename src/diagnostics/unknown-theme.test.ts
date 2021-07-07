@@ -76,7 +76,7 @@ describe('[Diagnostics rule] Unknown theme', () => {
       expect(register(doc('<!-- theme:\t-->'))).toHaveLength(0)
     })
 
-    it('adds diagnostics if set empty string implicitly', () => {
+    it('adds diagnostics if set empty string explicitly', () => {
       expect(register(doc('<!-- theme: "" -->'))).toHaveLength(1)
       expect(register(doc("<!-- theme: '' -->"))).toHaveLength(1)
     })
