@@ -100,6 +100,8 @@ export class Range {
   }
 }
 
+export class Selection extends Range {}
+
 export const RelativePattern = jest.fn()
 
 export const ThemeColor = jest.fn(() => '#000000ff')
@@ -171,6 +173,7 @@ export const window = {
   showErrorMessage: jest.fn(),
   showQuickPick: jest.fn(),
   showSaveDialog: jest.fn(),
+  showTextDocument: jest.fn(async () => ({})),
   showWarningMessage: jest.fn(),
   withProgress: jest.fn(),
 }
@@ -195,6 +198,7 @@ export const workspace = {
   onDidChangeTextDocument: jest.fn(),
   onDidCloseTextDocument: jest.fn(),
   onDidGrantWorkspaceTrust: jest.fn(),
+  openTextDocument: jest.fn(),
   textDocuments: [] as any,
 
   _setConfiguration: (conf: MockedConf = {}) => {
