@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.1.0 - 2021-07-08
+
 ### Added
 
 - `markdown.marp.newMarpMarkdown` command to create empty Marp Markdown ([#255](https://github.com/marp-team/marp-vscode/pull/255))
