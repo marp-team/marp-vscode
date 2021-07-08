@@ -30,6 +30,15 @@ const breaks = (inheritedValue: boolean): boolean => {
 const enableHtml = () =>
   marpConfiguration().get<boolean>('enableHtml') && workspace.isTrusted
 
+const math = () => {
+  const conf = marpConfiguration().get<'off' | 'katex' | 'mathjax'>(
+    'mathTypesetting'
+  )
+
+  if (conf === 'off') return false
+  return conf ?? 'katex'
+}
+
 export const marpCoreOptionForPreview = (
   baseOption: Options & MarpOptions
 ): MarpOptions => {
@@ -41,7 +50,7 @@ export const marpCoreOptionForPreview = (
         breaks: breaks(!!baseOption.breaks),
         typographer: baseOption.typographer,
       },
-      math: marpConfiguration().get<'katex' | 'mathjax'>('mathTypesetting'),
+      math: math(),
       minifyCSS: false,
       script: false,
     }
@@ -63,7 +72,7 @@ export const marpCoreOptionForCLI = async (
         breaks: breaks(!!confMdPreview.get<boolean>('breaks')),
         typographer: confMdPreview.get<boolean>('typographer'),
       },
-      math: marpConfiguration().get<'katex' | 'mathjax'>('mathTypesetting'),
+      math: math(),
     },
     themeSet: [] as string[],
     vscode: {} as Record<string, any>,

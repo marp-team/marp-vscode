@@ -219,6 +219,15 @@ describe('#extendMarkdownIt', () => {
         expect(html).not.toContain('katex')
         expect(html).toContain('MathJax')
       })
+
+      it('disables math syntax when setting "off"', () => {
+        setConfiguration({ 'markdown.marp.mathTypesetting': 'off' })
+
+        const html = md().render(marpMd('$a=b$'))
+        expect(html).toContain('$a=b$')
+        expect(html).not.toMatch(/katex/i)
+        expect(html).not.toMatch(/mathjax/i)
+      })
     })
 
     describe('markdown.marp.themes', () => {

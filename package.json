@@ -145,14 +145,16 @@
         "markdown.marp.mathTypesetting": {
           "type": "string",
           "enum": [
+            "off",
             "mathjax",
             "katex"
           ],
           "default": "katex",
-          "markdownDescription": "Controls math typesetting library for rendering math syntax by [Marp Core](https://github.com/marp-team/marp-core).",
+          "markdownDescription": "Controls math typesetting library for rendering math syntax by [Marp Core](https://github.com/marp-team/marp-core). Please note that math rendering in Marp Markdown is not following the setting in `#markdown.math.enabled#`.",
           "markdownEnumDescriptions": [
-            "MathJax (https://www.mathjax.org/)",
-            "KaTeX (https://katex.org/): The default library in Marp Core"
+            "Disable math typesetting.",
+            "Use MathJax (https://www.mathjax.org/).",
+            "Use KaTeX (https://katex.org/). It is the default library in both of Marp and VS Code."
           ]
         },
         "markdown.marp.outlineExtension": {
