@@ -225,8 +225,8 @@ describe('#extendMarkdownIt', () => {
 
         const html = md().render(marpMd('$a=b$'))
         expect(html).toContain('$a=b$')
-        expect(html).not.toContain(/katex/i)
-        expect(html).not.toContain(/mathjax/i)
+        expect(html).not.toMatch(/katex/i)
+        expect(html).not.toMatch(/mathjax/i)
       })
     })
 
@@ -451,7 +451,7 @@ describe('#extendMarkdownIt', () => {
       md.render('test', { resourceProvider })
 
       expect(_contentProvider.getScripts()).toMatchInlineSnapshot(`
-"<script
+"<script 
   src=\\"https://example.com/marp-vscode/preview.js\\"
   nonce=\\"0987654321\\"
 ></script>
