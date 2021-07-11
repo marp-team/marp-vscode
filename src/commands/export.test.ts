@@ -50,16 +50,32 @@ describe('Export command', () => {
       expect(window.showErrorMessage).toHaveBeenCalled()
     })
 
-    it('executes "workbench.action.manageTrust" command when reacted on the prompt', async () => {
-      const { showErrorMessage }: any = window
-      showErrorMessage.mockResolvedValue(
-        exportModule.ITEM_MANAGE_WORKSPACE_TRUST
-      )
+    describe('when reacted with "Manage Workspace Trust..."', () => {
+      beforeEach(() => {
+        ;(window.showErrorMessage as any).mockResolvedValue(
+          exportModule.ITEM_MANAGE_WORKSPACE_TRUST
+        )
+      })
 
-      await exportCommand()
-      expect(commands.executeCommand).toHaveBeenCalledWith(
-        'workbench.action.manageTrust'
-      )
+      it('executes "workbench.trust.manage" command when reacted on the prompt', async () => {
+        await exportCommand()
+        expect(commands.executeCommand).toHaveBeenCalledWith(
+          'workbench.trust.manage'
+        )
+      })
+
+      it('fallbacks to "workbench.action.manageTrust" command for VS Code 1.57 if throwed error', async () => {
+        const error = jest.spyOn(console, 'error').mockImplementation()
+        const err = new Error('!')
+
+        ;(commands.executeCommand as any).mockRejectedValueOnce(err)
+
+        await exportCommand()
+        expect(error).toHaveBeenCalledWith(err)
+        expect(commands.executeCommand).toHaveBeenCalledWith(
+          'workbench.action.manageTrust'
+        )
+      })
     })
   })
 

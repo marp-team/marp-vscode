@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- VS Code 1.58 does not open Workspace Trust from a notification of export command ([#259](https://github.com/marp-team/marp-vscode/issues/259), [#260](https://github.com/marp-team/marp-vscode/pull/260))
+
 ## v1.1.0 - 2021-07-08
 
 ### Added

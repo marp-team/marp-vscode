@@ -116,7 +116,9 @@ export const Uri = {
 }
 
 export const commands = {
-  executeCommand: jest.fn(),
+  executeCommand: jest.fn(async () => {
+    // no ops
+  }),
   registerCommand: jest.fn(),
 }
 
