@@ -293,7 +293,7 @@
   },
   "dependencies": {
     "@marp-team/marp-cli": "^1.1.1",
-    "@marp-team/marp-core": "^2.0.3",
+    "@marp-team/marp-core": "^2.1.0",
     "axios": "^0.21.1"
   }
 }
