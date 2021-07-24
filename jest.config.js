@@ -1,4 +1,13 @@
-const esModules = ['unist-util-visit', 'unist-util-is']
+const esModules = [
+  'bail',
+  'is-plain-obj',
+  'trough',
+  'unified',
+  'unist-util-is',
+  'unist-util-stringify-position',
+  'unist-util-visit',
+  'vfile',
+]
 
 module.exports = {
   clearMocks: true,
