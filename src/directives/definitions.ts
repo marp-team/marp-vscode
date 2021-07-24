@@ -264,7 +264,7 @@ export const builtinDirectives = [
       - \`katex\`: Use [KaTeX](https://katex.org/). It is generally known as faster parsing than MathJax.
       - \`mathjax\`: Use [MathJax](https://www.mathjax.org/). It has more stable rendering and better syntax support.
 
-      Marp may change the default library of the ecosystem in the future, so recommend to declare using library whenever to use math typesetting, to prevent breaking existing slides.
+      Marp may change the default library of the ecosystem in the future. To prevent breaking existing slides, recommend to declare used library whenever to use math typesetting.
     `),
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.MarpCore,
