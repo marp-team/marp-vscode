@@ -2,12 +2,19 @@
 
 ## [Unreleased]
 
+### Added
+
+- IntelliSense and auto-completion for [`math` global directive](https://github.com/marp-team/marp-core#math-global-directive) ([#266](https://github.com/marp-team/marp-vscode/pull/266))
+
 ### Fixed
 
 - VS Code 1.58 does not open Workspace Trust from a notification of export command ([#259](https://github.com/marp-team/marp-vscode/issues/259), [#260](https://github.com/marp-team/marp-vscode/pull/260))
 
 ### Changed
 
+- Upgrade Marp Core to [v2.1.0](https://github.com/marp-team/marp-core/releases/tag/v2.1.0) ([#265](https://github.com/marp-team/marp-vscode/pull/265))
+  - [`math` global directive](https://github.com/marp-team/marp-core#math-global-directive) for switching math typesetting library in current Markdown
+- Upgrade Marp CLI to [v1.2.0](https://github.com/marp-team/marp-cli/releases/tag/v1.2.0) ([#265](https://github.com/marp-team/marp-vscode/pull/265))
 - Upgrade dependent packages to the latest ([#265](https://github.com/marp-team/marp-vscode/pull/265))
 
 ## v1.1.0 - 2021-07-08

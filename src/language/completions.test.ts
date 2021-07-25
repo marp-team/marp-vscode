@@ -285,5 +285,26 @@ Array [
         `)
       })
     })
+
+    describe('Math suggestion', () => {
+      it('suggests math library when the cursor is on math directive', async () => {
+        const doc = setDocument('---\nmarp: true\nmath: \n---')
+        const list = (await provideCompletionItems()(
+          doc,
+          new Position(2, 6),
+          {} as any,
+          {} as any
+        )) as CompletionList
+
+        const labels = list.items.map((item) => item.label).sort()
+
+        expect(labels).toMatchInlineSnapshot(`
+Array [
+  "katex",
+  "mathjax",
+]
+`)
+      })
+    })
   })
 })
