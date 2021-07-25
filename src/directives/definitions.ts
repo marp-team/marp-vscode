@@ -257,6 +257,21 @@ export const builtinDirectives = [
 
   // Marp Core extension
   createDirectiveInfo({
+    name: 'math',
+    description: dedent(`
+      Choose a library to render math typesetting in the current Markdown.
+
+      - \`katex\`: Use [KaTeX](https://katex.org/). It is generally known as faster parsing than MathJax.
+      - \`mathjax\`: Use [MathJax](https://www.mathjax.org/). It has more stable rendering and better syntax support.
+
+      Marp may change the default library of the ecosystem in the future. To prevent breaking existing slides, recommend to declare used library whenever to use math typesetting.
+    `),
+    allowed: directiveAlwaysAllowed,
+    providedBy: DirectiveProvidedBy.MarpCore,
+    type: DirectiveType.Global,
+    details: 'https://github.com/marp-team/marp-core#math-global-directive',
+  }),
+  createDirectiveInfo({
     name: 'size',
     description: dedent(`
       Choose the slide size preset provided by theme.

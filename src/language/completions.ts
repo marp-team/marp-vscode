@@ -82,6 +82,7 @@ class CompletionProvider {
     return (
       this.completionThemes() ||
       this.completionBoolean() ||
+      this.completionMath() ||
       this.completionDirectives()
     )
   }
@@ -117,6 +118,29 @@ class CompletionProvider {
           detail: 'Boolean',
           kind: CompletionItemKind.EnumMember,
           label: 'false',
+        },
+      ])
+    }
+  }
+
+  private completionMath() {
+    if (this.isCursorOnDirective('math')) {
+      return new CompletionList([
+        {
+          detail: 'KaTeX',
+          documentation: new MarkdownString(
+            'Use [KaTeX](https://katex.org/). It is generally known as faster parsing than MathJax.'
+          ),
+          kind: CompletionItemKind.EnumMember,
+          label: 'katex',
+        },
+        {
+          detail: 'MathJax',
+          documentation: new MarkdownString(
+            'Use [MathJax](https://www.mathjax.org/). It has more stable rendering and better syntax support.'
+          ),
+          kind: CompletionItemKind.EnumMember,
+          label: 'mathjax',
         },
       ])
     }

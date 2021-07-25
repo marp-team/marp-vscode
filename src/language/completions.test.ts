@@ -109,28 +109,29 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
-            "backgroundColor",
-            "backgroundImage",
-            "backgroundPosition",
-            "backgroundRepeat",
-            "backgroundSize",
-            "class",
-            "color",
-            "description",
-            "footer",
-            "header",
-            "headingDivider",
-            "image",
-            "marp",
-            "paginate",
-            "size",
-            "style",
-            "theme",
-            "title",
-            "url",
-          ]
-        `)
+Array [
+  "backgroundColor",
+  "backgroundImage",
+  "backgroundPosition",
+  "backgroundRepeat",
+  "backgroundSize",
+  "class",
+  "color",
+  "description",
+  "footer",
+  "header",
+  "headingDivider",
+  "image",
+  "marp",
+  "math",
+  "paginate",
+  "size",
+  "style",
+  "theme",
+  "title",
+  "url",
+]
+`)
 
         // The insert text has semicolon
         expect(list.items[0].insertText).toBe(`${list.items[0].label}: `)
@@ -148,27 +149,28 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
-            "backgroundColor",
-            "backgroundImage",
-            "backgroundPosition",
-            "backgroundRepeat",
-            "backgroundSize",
-            "class",
-            "color",
-            "description",
-            "footer",
-            "header",
-            "headingDivider",
-            "image",
-            "paginate",
-            "size",
-            "style",
-            "theme",
-            "title",
-            "url",
-          ]
-        `)
+Array [
+  "backgroundColor",
+  "backgroundImage",
+  "backgroundPosition",
+  "backgroundRepeat",
+  "backgroundSize",
+  "class",
+  "color",
+  "description",
+  "footer",
+  "header",
+  "headingDivider",
+  "image",
+  "math",
+  "paginate",
+  "size",
+  "style",
+  "theme",
+  "title",
+  "url",
+]
+`)
         expect(labels).not.toContain('marp')
       })
 
@@ -281,6 +283,27 @@ describe('Auto completions', () => {
             "true",
           ]
         `)
+      })
+    })
+
+    describe('Math suggestion', () => {
+      it('suggests math library when the cursor is on math directive', async () => {
+        const doc = setDocument('---\nmarp: true\nmath: \n---')
+        const list = (await provideCompletionItems()(
+          doc,
+          new Position(2, 6),
+          {} as any,
+          {} as any
+        )) as CompletionList
+
+        const labels = list.items.map((item) => item.label).sort()
+
+        expect(labels).toMatchInlineSnapshot(`
+Array [
+  "katex",
+  "mathjax",
+]
+`)
       })
     })
   })
