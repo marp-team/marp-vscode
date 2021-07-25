@@ -10,6 +10,7 @@ import {
 import { DirectiveParser } from '../directives/parser'
 import { detectMarpDocument } from '../utils'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
+import * as mathGlobalDirective from './math-global-directive'
 import * as overloadingGlobalDirective from './overloading-global-directive'
 import * as unknownTheme from './unknown-theme'
 
@@ -20,6 +21,7 @@ const setDiagnostics = lodashDebounce((doc: TextDocument) => {
   const diagnostics: Diagnostic[] = []
 
   deprecatedDollarPrefix.register(doc, directiveParser, diagnostics)
+  mathGlobalDirective.register(doc, directiveParser, diagnostics)
   overloadingGlobalDirective.register(doc, directiveParser, diagnostics)
   unknownTheme.register(doc, directiveParser, diagnostics)
 
@@ -37,14 +39,19 @@ export function refresh(doc: TextDocument) {
 }
 
 export function subscribe(subscriptions: Disposable[]) {
+  const refreshActiveTextEditor = () => {
+    if (window.activeTextEditor) refresh(window.activeTextEditor.document)
+  }
+
   // Diagnostics
   subscriptions.push(collection)
 
-  // Quick fix
+  // Actions
   deprecatedDollarPrefix.subscribe(subscriptions)
+  mathGlobalDirective.subscribe(subscriptions, refreshActiveTextEditor)
 
   // Initialize observers
-  if (window.activeTextEditor) refresh(window.activeTextEditor.document)
+  refreshActiveTextEditor()
 
   subscriptions.push(
     window.onDidChangeActiveTextEditor((e) => e && refresh(e.document)),
