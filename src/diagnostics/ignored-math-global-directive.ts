@@ -7,7 +7,7 @@ import {
   workspace,
 } from 'vscode'
 import { DirectiveParser } from '../directives/parser'
-import { marpConfiguration } from '../utils'
+import { mathTypesettingConfiguration } from '../utils'
 
 interface ParsedMathDirective {
   range: Range
@@ -20,9 +20,7 @@ export function register(
   directiveParser: DirectiveParser,
   diagnostics: Diagnostic[]
 ) {
-  const mathSetting = marpConfiguration().get<string>('mathTypesetting')
-
-  if (mathSetting === 'off') {
+  if (mathTypesettingConfiguration() === 'off') {
     // Tell the user the thing that math global directive is ignored
     let mathDirective: ParsedMathDirective | undefined
 
@@ -47,7 +45,7 @@ export function register(
       if (mathDirective) {
         const diagnostic = new Diagnostic(
           mathDirective.range,
-          `A setting by math global directive will be ignored due to disabled math typesetting.`,
+          `A definition of math global directive will be ignored due to disabled math typesetting in VS Code setting.`,
           DiagnosticSeverity.Information
         )
 
