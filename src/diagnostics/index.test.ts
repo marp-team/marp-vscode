@@ -1,7 +1,7 @@
 import { window, TextDocument, Position } from 'vscode'
 import { DirectiveParser } from '../directives/parser'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
-import * as mathGlobalDirective from './math-global-directive'
+import * as ignoredMathGlobalDirective from './ignored-math-global-directive'
 import * as overloadingGlobalDirective from './overloading-global-directive'
 import * as unknownTheme from './unknown-theme'
 import * as diagnostics from './index'
@@ -9,7 +9,7 @@ import * as diagnostics from './index'
 jest.mock('lodash.debounce')
 jest.mock('vscode')
 jest.mock('./deprecated-dollar-prefix')
-jest.mock('./math-global-directive')
+jest.mock('./ignored-math-global-directive')
 jest.mock('./overloading-global-directive')
 jest.mock('./unknown-theme')
 
@@ -39,7 +39,7 @@ describe('Diagnostics', () => {
       expect(deprecatedDollarPrefix.subscribe).toHaveBeenCalledWith(
         subscriptions
       )
-      expect(mathGlobalDirective.subscribe).toHaveBeenCalledWith(
+      expect(ignoredMathGlobalDirective.subscribe).toHaveBeenCalledWith(
         subscriptions,
         expect.any(Function)
       )
@@ -85,7 +85,7 @@ describe('Diagnostics', () => {
         parser,
         arr
       )
-      expect(mathGlobalDirective.register).toHaveBeenCalledWith(
+      expect(ignoredMathGlobalDirective.register).toHaveBeenCalledWith(
         doc,
         parser,
         arr

@@ -10,7 +10,7 @@ import {
 import { DirectiveParser } from '../directives/parser'
 import { detectMarpDocument } from '../utils'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
-import * as mathGlobalDirective from './math-global-directive'
+import * as ignoredMathGlobalDirective from './ignored-math-global-directive'
 import * as overloadingGlobalDirective from './overloading-global-directive'
 import * as unknownTheme from './unknown-theme'
 
@@ -21,7 +21,7 @@ const setDiagnostics = lodashDebounce((doc: TextDocument) => {
   const diagnostics: Diagnostic[] = []
 
   deprecatedDollarPrefix.register(doc, directiveParser, diagnostics)
-  mathGlobalDirective.register(doc, directiveParser, diagnostics)
+  ignoredMathGlobalDirective.register(doc, directiveParser, diagnostics)
   overloadingGlobalDirective.register(doc, directiveParser, diagnostics)
   unknownTheme.register(doc, directiveParser, diagnostics)
 
@@ -48,7 +48,7 @@ export function subscribe(subscriptions: Disposable[]) {
 
   // Actions
   deprecatedDollarPrefix.subscribe(subscriptions)
-  mathGlobalDirective.subscribe(subscriptions, refreshActiveTextEditor)
+  ignoredMathGlobalDirective.subscribe(subscriptions, refreshActiveTextEditor)
 
   // Initialize observers
   refreshActiveTextEditor()

@@ -7,7 +7,7 @@ import {
   workspace,
 } from 'vscode'
 import { DirectiveParser } from '../directives/parser'
-import * as rule from './math-global-directive'
+import * as rule from './ignored-math-global-directive'
 
 jest.mock('vscode')
 
@@ -49,7 +49,7 @@ describe('[Diagnostics rule] math global directive', () => {
       expect(diagnostic).toBeInstanceOf(Diagnostic)
       expect(diagnostic.code).toBe(rule.code)
       expect(diagnostic.source).toBe('marp-vscode')
-      expect(diagnostic.severity).toBe(DiagnosticSeverity.Warning)
+      expect(diagnostic.severity).toBe(DiagnosticSeverity.Information)
       expect(diagnostic.range).toStrictEqual(
         new Range(new Position(0, 5), new Position(0, 9))
       )

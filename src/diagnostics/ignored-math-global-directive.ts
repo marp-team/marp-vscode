@@ -13,7 +13,7 @@ interface ParsedMathDirective {
   range: Range
 }
 
-export const code = 'math-global-directive'
+export const code = 'ignored-math-global-directive'
 
 export function register(
   doc: TextDocument,
@@ -57,8 +57,6 @@ export function register(
         diagnostics.push(diagnostic)
       }
     })
-  } else {
-    // TODO: Add recommendation to define math global directive to declare used library if math syntax is used in current Markdown
   }
 }
 
