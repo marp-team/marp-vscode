@@ -48,7 +48,7 @@ export function register(
         const diagnostic = new Diagnostic(
           mathDirective.range,
           `A setting by math global directive will be ignored due to disabled math typesetting.`,
-          DiagnosticSeverity.Warning
+          DiagnosticSeverity.Information
         )
 
         diagnostic.source = 'marp-vscode'
