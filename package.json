@@ -274,6 +274,7 @@
     "portfinder": "^1.0.28",
     "prettier": "^2.3.2",
     "rehype-parse": "^7.0.1",
+    "remark-math": "^4.0.0",
     "remark-parse": "^9.0.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.53.3",
