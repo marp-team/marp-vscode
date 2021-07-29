@@ -1,4 +1,10 @@
+import { AbortController } from 'abort-controller'
+import nodeFetch from 'node-fetch'
 import { TextDocument, workspace } from 'vscode'
+
+interface FetchOption {
+  timeout?: number
+}
 
 export const frontMatterRegex = /^(-{3,}\s*$\n)([\s\S]*?)^(\s*[-.]{3})/m
 
@@ -18,6 +24,22 @@ export const detectMarpFromMarkdown = (markdown: string): boolean => {
 
   const matched = marpDirectiveRegex.exec(frontmatter)
   return matched ? matched[2] === 'true' : false
+}
+
+export const fetch = (url: string, { timeout = 5000 }: FetchOption = {}) => {
+  const controller = new AbortController()
+  const timeoutCallback = setTimeout(() => controller.abort(), timeout)
+
+  return nodeFetch(url, { signal: controller.signal })
+    .then((res) => {
+      if (!res.ok)
+        throw new Error(`Failured fetching ${res.url} (${res.status})`)
+
+      return res.text()
+    })
+    .finally(() => {
+      clearTimeout(timeoutCallback)
+    })
 }
 
 export const marpConfiguration = () =>

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import fetch from 'node-fetch'
 import { FileType, Uri, workspace } from 'vscode'
 import {
   createWorkspaceProxyServer,
@@ -26,16 +26,13 @@ describe('Workspace Proxy Server', () => {
     server = await createWorkspaceProxyServer(wsFolder)
     expect(server.port).toBeGreaterThanOrEqual(8192)
 
-    const response = await axios.get(
+    const response = await fetch(
       `http://127.0.0.1:${server.port}/test.png?query`
     )
     expect(response.status).toBe(200)
-    expect(response.data).toMatchInlineSnapshot(`"readFile"`)
+    expect(await response.text()).toMatchInlineSnapshot(`"readFile"`)
 
-    expect(response.headers).toHaveProperty(
-      'content-type',
-      expect.stringContaining('image/png')
-    )
+    expect(response.headers.get('content-type')).toContain('image/png')
     expect(wsUri.with).toHaveBeenCalledWith({
       path: '/test.png',
       query: '?query',
@@ -48,9 +45,7 @@ describe('Workspace Proxy Server', () => {
     jest.spyOn(workspace.fs, 'stat').mockRejectedValue(new Error('err'))
     server = await createWorkspaceProxyServer(wsFolder)
 
-    const response = await axios.get(`http://127.0.0.1:${server.port}/test`, {
-      validateStatus: () => true,
-    })
+    const response = await fetch(`http://127.0.0.1:${server.port}/test`)
     expect(response.status).toBe(404)
   })
 
@@ -63,9 +58,7 @@ describe('Workspace Proxy Server', () => {
     })
     server = await createWorkspaceProxyServer(wsFolder)
 
-    const response = await axios.get(`http://127.0.0.1:${server.port}/test`, {
-      validateStatus: () => true,
-    })
+    const response = await fetch(`http://127.0.0.1:${server.port}/test`)
     expect(response.status).toBe(404)
   })
 })
