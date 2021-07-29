@@ -126,7 +126,11 @@ describe('#saveDialog', () => {
   })
 
   it('runs exporting with notification when file path is specified', async () => {
-    const saveURI: any = { path: 'PATH', fsPath: '/tmp/saveTo.pdf' }
+    const saveURI: any = {
+      scheme: 'file',
+      toString: () => 'PATH',
+      fsPath: '/tmp/saveTo.pdf',
+    }
     jest.spyOn(window, 'showSaveDialog').mockImplementation(() => saveURI)
 
     const doExportMock: jest.SpyInstance = jest
@@ -144,7 +148,11 @@ describe('#saveDialog', () => {
 })
 
 describe('#doExport', () => {
-  const saveURI: any = { path: '/tmp/to.pdf', fsPath: '/tmp/to.pdf' }
+  const saveURI: any = {
+    scheme: 'file',
+    path: '/tmp/to.pdf',
+    fsPath: '/tmp/to.pdf',
+  }
   const document: any = {
     uri: { scheme: 'file', path: '/tmp/md.md', fsPath: '/tmp/md.md' },
   }
@@ -207,7 +215,11 @@ describe('#doExport', () => {
     })
 
     it('does not open workspace proxy server while exporting to html', async () => {
-      const saveURIHtml: any = { path: '/tmp/to.html', fsPath: '/tmp/to.html' }
+      const saveURIHtml: any = {
+        scheme: 'file',
+        path: '/tmp/to.html',
+        fsPath: '/tmp/to.html',
+      }
 
       jest.spyOn(marpCli, 'default').mockImplementation()
       jest
