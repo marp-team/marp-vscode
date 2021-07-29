@@ -227,6 +227,7 @@ export const workspace = {
 
 export class WorkspaceEdit {
   readonly delete = jest.fn()
+  readonly insert = jest.fn()
 }
 
 beforeEach(() => {

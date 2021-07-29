@@ -55,11 +55,37 @@ describe('[Diagnostics rule] Ignored math global directive', () => {
       )
     })
 
+    it('does not add diagnostics when not used math global directive', () => {
+      setConfiguration({ 'markdown.marp.mathTypesetting': 'off' })
+
+      const diagnostics = register(doc('<!-- marp: true -->'))
+      expect(diagnostics).toHaveLength(0)
+    })
+
     it('does not add diagnostics when enabled math feature even if used math global directive', () => {
       setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
 
       const diagnostics = register(doc('<!-- math: mathjax -->'))
       expect(diagnostics).toHaveLength(0)
+    })
+  })
+
+  describe('#subscribe', () => {
+    it('subscribes onDidChangeConfiguration event to trigger refresh', () => {
+      const subscriptions: any[] = []
+      const refresh = jest.fn()
+
+      rule.subscribe(subscriptions, refresh)
+
+      expect(workspace.onDidChangeConfiguration).toHaveBeenCalledWith(
+        expect.any(Function)
+      )
+
+      const [callback] = (workspace.onDidChangeConfiguration as jest.Mock).mock
+        .calls[0]
+
+      callback({ affectsConfiguration: jest.fn(() => true) })
+      expect(refresh).toHaveBeenCalled()
     })
   })
 })

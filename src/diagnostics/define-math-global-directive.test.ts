@@ -1,19 +1,25 @@
 import {
+  CancellationToken,
+  CodeAction,
+  CodeActionKind,
+  CodeActionTriggerKind,
   Diagnostic,
   DiagnosticSeverity,
+  languages,
   Position,
   Range,
   TextDocument,
   workspace,
+  WorkspaceEdit,
 } from 'vscode'
 import { DirectiveParser } from '../directives/parser'
 import * as rule from './define-math-global-directive'
 
 jest.mock('vscode')
 
-const marpDoc = (text: string): TextDocument =>
+const marpDoc = (text: string, frontMatter = 'marp: true'): TextDocument =>
   ({
-    getText: () => `---\nmarp: true\n---\n\n${text}`,
+    getText: () => `---\n${frontMatter}\n---\n\n${text}`,
     positionAt: function (offset: number) {
       const lines = this.getText().slice(0, offset).split('\n')
 
@@ -72,7 +78,6 @@ describe('[Diagnostics rule] Define math global directive', () => {
       setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
 
       const m = (md: string) => register(marpDoc(md))
-      expect(m('$$1+1 = 2$$')).toHaveLength(1)
 
       // The spec of remark-math is different from Marp so we have to make an
       // effort covering Marp's test cases to reduce a noisy diagnostic.
@@ -120,6 +125,121 @@ describe('[Diagnostics rule] Define math global directive', () => {
 
       const diagnostics = register(marpDoc('$a=1+2$'))
       expect(diagnostics).toHaveLength(0)
+    })
+
+    it('does not add diagnostics when defined math global directive', () => {
+      setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
+
+      expect(
+        register(marpDoc('$a=1+2$\n\n<!-- math: mathjax -->'))
+      ).toHaveLength(0)
+      expect(
+        register(marpDoc('$a=1+2$', 'marp: true\nmath: katex'))
+      ).toHaveLength(0)
+    })
+  })
+
+  describe('#subscribe', () => {
+    it('subscribes onDidChangeConfiguration event to trigger refresh', () => {
+      const subscriptions: any[] = []
+      const refresh = jest.fn()
+
+      rule.subscribe(subscriptions, refresh)
+
+      expect(workspace.onDidChangeConfiguration).toHaveBeenCalledWith(
+        expect.any(Function)
+      )
+
+      const [callback] = (workspace.onDidChangeConfiguration as jest.Mock).mock
+        .calls[0]
+
+      callback({ affectsConfiguration: jest.fn(() => true) })
+      expect(refresh).toHaveBeenCalled()
+    })
+
+    it('subscribes registered DefineMathGlobalDirective code action provider', () => {
+      const subscriptions: any[] = []
+      rule.subscribe(subscriptions, jest.fn())
+
+      expect(languages.registerCodeActionsProvider).toHaveBeenCalledWith(
+        'markdown',
+        expect.any(rule.DefineMathGlobalDirective),
+        {
+          providedCodeActionKinds: [CodeActionKind.QuickFix],
+        }
+      )
+    })
+  })
+
+  describe('DefineMathGlobalDirective code action', () => {
+    describe('#provideCodeActions', () => {
+      const dummyRange = new Range(new Position(0, 0), new Position(0, 0))
+      const dummyToken = {} as CancellationToken
+
+      it('returns created code actions for corresponding diagnostics', () => {
+        const document = marpDoc('$a=1+2$')
+        const diagnostics = register(document)
+        const codeActions =
+          new rule.DefineMathGlobalDirective().provideCodeActions(
+            document,
+            dummyRange,
+            { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
+            dummyToken
+          )
+
+        expect(codeActions).toHaveLength(1)
+        expect(codeActions?.[0]).toBeInstanceOf(CodeAction)
+
+        // Quick fix action
+        const action: CodeAction = codeActions?.[0]
+        expect(action.kind).toBe(CodeActionKind.QuickFix)
+        expect(action.diagnostics).toStrictEqual(diagnostics)
+        expect(action.edit).toBeInstanceOf(WorkspaceEdit)
+        expect(action.isPreferred).toBe(true)
+
+        // Insert
+        expect(action.edit?.insert).toHaveBeenCalledTimes(1)
+        expect(action.edit?.insert).toHaveBeenCalledWith(
+          document.uri,
+          new Position(2, 0),
+          'math: katex\n'
+        )
+      })
+
+      it('applies the action with following current setting of math typesetting', () => {
+        setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
+
+        const document = marpDoc('$a=1+2$')
+        const diagnostics = register(document)
+        const codeActions =
+          new rule.DefineMathGlobalDirective().provideCodeActions(
+            document,
+            dummyRange,
+            { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
+            dummyToken
+          )
+
+        const action: CodeAction = codeActions?.[0]
+        expect(action.edit?.insert).toHaveBeenCalledWith(
+          document.uri,
+          new Position(2, 0),
+          'math: mathjax\n'
+        )
+      })
+
+      it('does not create code actions when corresponding diagnostics have not passed', () => {
+        const document = marpDoc("$20,000 and USD$30,000 won't parse as math.")
+        const diagnostics = register(document)
+        const codeActions =
+          new rule.DefineMathGlobalDirective().provideCodeActions(
+            document,
+            dummyRange,
+            { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
+            dummyToken
+          )
+
+        expect(codeActions).toHaveLength(0)
+      })
     })
   })
 })
