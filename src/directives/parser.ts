@@ -16,12 +16,7 @@ import {
   DirectiveType,
 } from './definitions'
 
-export {
-  DirectiveDefinedIn,
-  DirectiveInfo,
-  DirectiveProvidedBy,
-  DirectiveType,
-} from './definitions'
+export { DirectiveDefinedIn, DirectiveInfo, DirectiveType } from './definitions'
 
 const parseHtml = unified().use(rehypeParse).parse
 const parseMd = unified().use(remarkParse).use(remarkMath).parse
@@ -164,8 +159,6 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
           const trailing = markdown[n.position.end.offset]
 
           const isInline = secondChar !== '$'
-
-          if (n.type === 'inlineMath' && !isInline) return
 
           if (isInline) {
             // The opening $ must have a non-space character immediately to its right

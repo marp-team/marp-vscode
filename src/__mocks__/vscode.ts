@@ -70,8 +70,16 @@ export enum DiagnosticSeverity {
 }
 
 export class Position {
-  translate(lineDelta = 0, characterDelta = 0) {
-    return new Position(this.line + lineDelta, this.character + characterDelta)
+  translate(lineDelta?: number, characterDelta?: number): Position
+  translate(change: { lineDelta?: number; characterDelta?: number }): Position
+  translate(...args: any[]): Position {
+    if (args[0]?.lineDelta || args[0]?.characterDelta) {
+      return this.translate(args[0].lineDelta, args[0].characterDelta)
+    }
+    return new Position(
+      this.line + (args[0] ?? 0),
+      this.character + (args[1] ?? 0)
+    )
   }
 
   isEqual(other: Position) {
@@ -99,8 +107,13 @@ export class Range {
     )
   }
 
-  with(start?: Position, end?: Position) {
-    return new Range(start ?? this.start, end ?? this.end)
+  with(start?: Position, end?: Position): Range
+  with(change: { start?: Position; end?: Position }): Range
+  with(...args: any[]): Range {
+    if (args[0]?.start || args[0]?.end) {
+      return this.with(args[0].start, args[0].end)
+    }
+    return new Range(args[0] ?? this.start, args[1] ?? this.end)
   }
 }
 

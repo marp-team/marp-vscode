@@ -27,7 +27,7 @@ const setConfiguration: (conf?: Record<string, unknown>) => void = (
   workspace as any
 )._setConfiguration
 
-describe('[Diagnostics rule] math global directive', () => {
+describe('[Diagnostics rule] Ignored math global directive', () => {
   const register = (doc: TextDocument): Diagnostic[] => {
     const parser = new DirectiveParser()
     const diagnostics: Diagnostic[] = []
