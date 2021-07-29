@@ -147,6 +147,7 @@ export const FileSystem = {
     type: FileType.File,
   })),
   readFile: jest.fn().mockResolvedValue(new TextEncoder().encode('readFile')),
+  isWritableFileSystem: jest.fn((scheme: string) => scheme === 'file'),
 }
 
 export enum FileType {

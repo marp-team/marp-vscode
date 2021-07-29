@@ -1,4 +1,7 @@
+import fs from 'fs'
 import path from 'path'
+import { promisify } from 'util'
+import { tmpName, TmpNameOptions } from 'tmp'
 import {
   commands,
   env,
@@ -18,6 +21,9 @@ import {
   createWorkspaceProxyServer,
   WorkspaceProxyServer,
 } from '../workspace-proxy-server'
+
+const tmpNamePromise = promisify<TmpNameOptions, string>(tmpName)
+const unlink = promisify(fs.unlink)
 
 export enum Types {
   html = 'html',
@@ -92,16 +98,50 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     const input = await createWorkFile(document)
 
     try {
+      let outputPath = uri.fsPath
+      const outputToLocalFS = uri.scheme === 'file'
+
+      // NOTE: It may return `undefined` if VS Code does not know about the
+      // filesystem. In this case, Marp may be able to write to the output path.
+      if (workspace.fs.isWritableFileSystem(uri.scheme) === false) {
+        throw new Error(`Could not write to ${uri.scheme} file system.`)
+      }
+
+      if (!outputToLocalFS) {
+        outputPath = await tmpNamePromise({
+          postfix: path.extname(uri.path),
+        })
+      }
+
       // Run Marp CLI
       const conf = await createConfigFile(document, {
         allowLocalFiles: !proxyServer,
       })
 
       try {
-        await marpCli(['-c', conf.path, input.path, '-o', uri.fsPath], {
+        await marpCli(['-c', conf.path, input.path, '-o', outputPath], {
           baseUrl,
         })
-        env.openExternal(uri)
+
+        if (outputToLocalFS) {
+          env.openExternal(uri)
+        } else {
+          try {
+            await workspace.fs.copy(Uri.file(outputPath), uri, {
+              overwrite: true,
+            })
+          } finally {
+            try {
+              await unlink(outputPath)
+            } catch (e) {
+              console.warn(e)
+            }
+          }
+
+          window.showInformationMessage(
+            `Marp slide deck was successfully exported to ${uri.toString()}.`
+          )
+        }
       } finally {
         conf.cleanup()
       }
@@ -143,7 +183,7 @@ export const saveDialog = async (document: TextDocument) => {
     await window.withProgress(
       {
         location: ProgressLocation.Notification,
-        title: `Exporting Marp slide deck to ${saveURI.path}...`,
+        title: `Exporting Marp slide deck to ${saveURI.toString()}...`,
       },
       () => doExport(saveURI, document)
     )
