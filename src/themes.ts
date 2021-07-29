@@ -3,7 +3,6 @@ import path from 'path'
 import { URL } from 'url'
 import { promisify, TextDecoder } from 'util'
 import Marp from '@marp-team/marp-core'
-import axios from 'axios'
 import {
   commands,
   workspace,
@@ -13,7 +12,7 @@ import {
   TextDocument,
   Uri,
 } from 'vscode'
-import { marpConfiguration } from './utils'
+import { fetch, marpConfiguration } from './utils'
 
 export enum ThemeType {
   File = 'File',
@@ -143,7 +142,7 @@ export class Themes {
         case ThemeType.File:
           return (await readFile(themePath)).toString()
         case ThemeType.Remote:
-          return (await axios.get(themePath, { timeout: 5000 })).data
+          return await fetch(themePath, { timeout: 5000 })
         case ThemeType.VirtualFS:
           return textDecoder.decode(
             await workspace.fs.readFile(Uri.parse(themePath, true))

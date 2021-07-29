@@ -3,13 +3,13 @@ import fs from 'fs'
 import path from 'path'
 import { TextEncoder } from 'util'
 import { Marp } from '@marp-team/marp-core'
-import axios from 'axios'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
+import * as nodeFetch from 'node-fetch'
 import { Uri, commands, workspace } from 'vscode'
 
 jest.mock('fs')
-jest.mock('axios')
+jest.mock('node-fetch')
 jest.mock('vscode')
 
 let themes: typeof import('./themes')['default']
@@ -247,16 +247,16 @@ describe('#extendMarkdownIt', () => {
       })
 
       it('registers pre-loaded themes from URL defined in configuration', async () => {
-        const axiosGet = jest
-          .spyOn(axios, 'get')
-          .mockResolvedValue({ data: css })
+        const fetch = jest
+          .spyOn(nodeFetch, 'default')
+          .mockResolvedValue({ ok: true, text: async () => css } as any)
 
         setConfiguration({ 'markdown.marp.themes': [themeURL] })
 
         const markdown = md()
         await Promise.all(themes.loadStyles(Uri.parse('.')))
 
-        expect(axiosGet).toHaveBeenCalledWith(themeURL, expect.any(Object))
+        expect(fetch).toHaveBeenCalledWith(themeURL, expect.any(Object))
         expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(css)
       })
 
@@ -304,9 +304,10 @@ describe('#extendMarkdownIt', () => {
       })
 
       it('cannot override built-in themes by custom theme', async () => {
-        jest
-          .spyOn(axios, 'get')
-          .mockResolvedValue({ data: '/*\n@theme default\n@custom theme\n*/' })
+        jest.spyOn(nodeFetch, 'default').mockResolvedValue({
+          ok: true,
+          text: async () => '/*\n@theme default\n@custom theme\n*/',
+        } as any)
 
         setConfiguration({ 'markdown.marp.themes': [themeURL] })
 
@@ -457,15 +458,15 @@ describe('#extendMarkdownIt', () => {
       md.render('test', { resourceProvider })
 
       expect(_contentProvider.getScripts()).toMatchInlineSnapshot(`
-"<script 
-  src=\\"https://example.com/marp-vscode/preview.js\\"
-  nonce=\\"0987654321\\"
-></script>
-<script async
-  src=\\"https://example.com/vscode-builtin/script.js\\"
-  nonce=\\"1234567890\\"
-></script>"
-`)
+        "<script 
+          src=\\"https://example.com/marp-vscode/preview.js\\"
+          nonce=\\"0987654321\\"
+        ></script>
+        <script async
+          src=\\"https://example.com/vscode-builtin/script.js\\"
+          nonce=\\"1234567890\\"
+        ></script>"
+      `)
     })
 
     it('emits warning if happened some trouble while patching', () => {

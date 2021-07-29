@@ -19,6 +19,7 @@
   - [`math` global directive](https://github.com/marp-team/marp-core#math-global-directive) for switching math typesetting library in current Markdown
 - Upgrade Marp CLI to [v1.2.0](https://github.com/marp-team/marp-cli/releases/tag/v1.2.0) ([#265](https://github.com/marp-team/marp-vscode/pull/265))
 - Upgrade dependent packages to the latest ([#265](https://github.com/marp-team/marp-vscode/pull/265))
+- Use bundled `node-fetch` instead of `axios` to improve install performance ([#268](https://github.com/marp-team/marp-vscode/pull/268))
 
 ## v1.1.0 - 2021-07-08
 

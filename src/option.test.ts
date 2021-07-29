@@ -1,10 +1,10 @@
 import fs from 'fs'
 import { promisify } from 'util'
-import axios from 'axios'
+import * as nodeFetch from 'node-fetch'
 import { Uri, workspace } from 'vscode'
 import * as option from './option'
 
-jest.mock('axios')
+jest.mock('node-fetch')
 jest.mock('vscode')
 
 const readFile = promisify(fs.readFile)
@@ -93,7 +93,9 @@ describe('Option', () => {
 
         // Theme CSS
         jest.spyOn(console, 'log').mockImplementation()
-        jest.spyOn(axios, 'get').mockResolvedValue({ data: css }) // Remote
+        jest
+          .spyOn(nodeFetch, 'default')
+          .mockResolvedValue({ ok: true, text: async () => css } as any) // Remote
 
         setConfiguration({
           'markdown.marp.themes': ['https://example.com/test.css'],
