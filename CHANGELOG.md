@@ -5,6 +5,9 @@
 ### Added
 
 - IntelliSense and auto-completion for [`math` global directive](https://github.com/marp-team/marp-core#math-global-directive) ([#266](https://github.com/marp-team/marp-vscode/pull/266))
+- Diagnostics for `math` global directive ([#267](https://github.com/marp-team/marp-vscode/pull/267))
+  - `define-math-global-directive`: Recommend to declare math typesetting library
+  - `ignored-math-global-directive`: Report ignored `math` global directive if disabled math by the extension setting
 
 ### Fixed
 
