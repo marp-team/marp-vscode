@@ -32,9 +32,7 @@ export const fetch = (url: string, { timeout = 5000 }: FetchOption = {}) => {
 
   return nodeFetch(url, { signal: controller.signal })
     .then((res) => {
-      if (!res.ok)
-        throw new Error(`Failured fetching ${res.url} (${res.status})`)
-
+      if (!res.ok) throw new Error(`Failured fetching ${url} (${res.status})`)
       return res.text()
     })
     .finally(() => {
