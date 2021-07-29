@@ -22,3 +22,10 @@ export const detectMarpFromMarkdown = (markdown: string): boolean => {
 
 export const marpConfiguration = () =>
   workspace.getConfiguration('markdown.marp')
+
+export const mathTypesettingConfiguration = () => {
+  const conf = marpConfiguration().get<'off' | 'katex' | 'mathjax'>(
+    'mathTypesetting'
+  )
+  return conf ?? 'katex'
+}

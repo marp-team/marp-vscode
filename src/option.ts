@@ -7,7 +7,7 @@ import { Options } from 'markdown-it'
 import { nanoid } from 'nanoid'
 import { TextDocument, Uri, workspace } from 'vscode'
 import themes, { ThemeType } from './themes'
-import { marpConfiguration } from './utils'
+import { marpConfiguration, mathTypesettingConfiguration } from './utils'
 
 export interface WorkFile {
   path: string
@@ -31,12 +31,8 @@ const enableHtml = () =>
   marpConfiguration().get<boolean>('enableHtml') && workspace.isTrusted
 
 const math = () => {
-  const conf = marpConfiguration().get<'off' | 'katex' | 'mathjax'>(
-    'mathTypesetting'
-  )
-
-  if (conf === 'off') return false
-  return conf ?? 'katex'
+  const conf = mathTypesettingConfiguration()
+  return conf === 'off' ? false : conf
 }
 
 export const marpCoreOptionForPreview = (

@@ -150,11 +150,11 @@
             "katex"
           ],
           "default": "katex",
-          "markdownDescription": "Controls math typesetting library for rendering math syntax by [Marp Core](https://github.com/marp-team/marp-core). Please note that math rendering in Marp Markdown is not following the setting in `#markdown.math.enabled#`.",
+          "markdownDescription": "Controls math syntax and the default library for rendering math (provided by [Marp Core](https://github.com/marp-team/marp-core)). A using library can override by math global directive in Markdown. Please note that math rendering in Marp Markdown is not following the setting in `#markdown.math.enabled#`.",
           "markdownEnumDescriptions": [
-            "Disable math typesetting.",
+            "Disable math syntax and math global directive.",
             "Use MathJax (https://www.mathjax.org/).",
-            "Use KaTeX (https://katex.org/). It is the default library in both of Marp and VS Code."
+            "Use KaTeX (https://katex.org/). It is the default library in Marp."
           ]
         },
         "markdown.marp.outlineExtension": {
@@ -274,6 +274,7 @@
     "portfinder": "^1.0.28",
     "prettier": "^2.3.2",
     "rehype-parse": "^7.0.1",
+    "remark-math": "^4.0.0",
     "remark-parse": "^9.0.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.53.3",
