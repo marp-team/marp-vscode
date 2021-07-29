@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events'
 import rehypeParse from 'rehype-parse'
+import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import TypedEmitter from 'typed-emitter'
 import { unified } from 'unified'
@@ -15,15 +16,10 @@ import {
   DirectiveType,
 } from './definitions'
 
-export {
-  DirectiveDefinedIn,
-  DirectiveInfo,
-  DirectiveProvidedBy,
-  DirectiveType,
-} from './definitions'
+export { DirectiveDefinedIn, DirectiveInfo, DirectiveType } from './definitions'
 
 const parseHtml = unified().use(rehypeParse).parse
-const parseMd = unified().use(remarkParse).parse
+const parseMd = unified().use(remarkParse).use(remarkMath).parse
 const parseYaml = (yamlBody: string) =>
   yaml.parseDocument(yamlBody, { schema: 'failsafe' })
 
@@ -38,11 +34,17 @@ export interface DirectiveSectionEventHandler {
   range: Range
 }
 
+export interface MathEventHandler {
+  body: string
+  range: Range
+}
+
 interface DirectiveParserEvents {
   comment: (event: DirectiveSectionEventHandler) => void
   directive: (event: DirectiveEventHandler) => void
   endParse: (event: { document: TextDocument }) => void
   frontMatter: (event: DirectiveSectionEventHandler) => void
+  maybeMath: (event: MathEventHandler) => void
   startParse: (event: { document: TextDocument }) => void
 }
 
@@ -114,34 +116,73 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     }
 
     // HTML comments
-    visit(parseMd(markdown), 'html', (n: any) => {
-      visit(parseHtml(n.value), 'comment', (c: any) => {
-        const rawBody = n.value.slice(
-          c.position.start.offset,
-          c.position.end.offset
-        )
+    const parsed = parseMd(markdown)
 
-        this.emit('comment', {
-          body: rawBody,
-          range: new Range(
-            doc.positionAt(index + n.position.start.offset),
-            doc.positionAt(index + n.position.end.offset)
-          ),
-        })
+    visit(parsed, ['html', 'math', 'inlineMath'], (n: any) => {
+      switch (n.type) {
+        case 'html':
+          visit(parseHtml(n.value), 'comment', (c: any) => {
+            const rawBody = n.value.slice(
+              c.position.start.offset,
+              c.position.end.offset
+            )
 
-        // c.value should not use because it has normalized CRLF to LF
-        const value = rawBody.slice(4, -3)
-        const trimmedLeft = value.replace(/^-*\s*/, '')
+            this.emit('comment', {
+              body: rawBody,
+              range: new Range(
+                doc.positionAt(index + n.position.start.offset),
+                doc.positionAt(index + n.position.end.offset)
+              ),
+            })
 
-        detectDirectives(
-          trimmedLeft.replace(/\s*-*$/, ''),
-          index +
-            n.position.start.offset +
-            c.position.start.offset +
-            4 +
-            (value.length - trimmedLeft.length)
-        )
-      })
+            // c.value should not use because it has normalized CRLF to LF
+            const value = rawBody.slice(4, -3)
+            const trimmedLeft = value.replace(/^-*\s*/, '')
+
+            detectDirectives(
+              trimmedLeft.replace(/\s*-*$/, ''),
+              index +
+                n.position.start.offset +
+                c.position.start.offset +
+                4 +
+                (value.length - trimmedLeft.length)
+            )
+          })
+          break
+        case 'math':
+        case 'inlineMath': {
+          // remark-math is not following Pandoc spec so we need extra validation
+          // (math syntax detection is still heuristic because remark-math does not care escaped dollar sign)
+
+          const secondChar = markdown[n.position.start.offset + 1]
+          const beforeLast = markdown[n.position.end.offset - 2]
+          const trailing = markdown[n.position.end.offset]
+
+          const isInline = secondChar !== '$'
+
+          if (isInline) {
+            // The opening $ must have a non-space character immediately to its right
+            if (/\s/.test(secondChar)) return
+
+            // The closing $ must have a non-space character immediately to its left
+            if (/\s/.test(beforeLast)) return
+
+            // The closing $ must not be followed immediately by a digit
+            if (beforeLast !== '\\' && /\d/.test(trailing)) return
+          }
+
+          this.emit('maybeMath', {
+            body: markdown.slice(
+              n.position.start.offset,
+              n.position.end.offset
+            ),
+            range: new Range(
+              doc.positionAt(index + n.position.start.offset),
+              doc.positionAt(index + n.position.end.offset)
+            ),
+          })
+        }
+      }
     })
 
     this.emit('endParse', { document: doc })

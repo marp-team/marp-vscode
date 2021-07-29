@@ -44,3 +44,10 @@ export const fetch = (url: string, { timeout = 5000 }: FetchOption = {}) => {
 
 export const marpConfiguration = () =>
   workspace.getConfiguration('markdown.marp')
+
+export const mathTypesettingConfiguration = () => {
+  const conf = marpConfiguration().get<'off' | 'katex' | 'mathjax'>(
+    'mathTypesetting'
+  )
+  return conf ?? 'katex'
+}

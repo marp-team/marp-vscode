@@ -54,7 +54,7 @@ If enabled Marp feature by `marp: true`, Marp for VS Code extends [IntelliSense]
 
 #### Auto completion
 
-Marp for VS Code can suggest global/local directives supported by Marp ecosystem. We remember all so you may forget them! :stuck_out_tongue:
+Marp for VS Code can suggest global/local directives supported by Marp ecosystem. We remember all so you may forget them! 😛
 
 Hit <kbd>Ctrl</kbd> + <kbd>Space</kbd> within [the front-matter](https://marpit.marp.app/directives?id=front-matter) or [HTML comment](https://marpit.marp.app/directives?id=html-comment) to show the list of directives. You can peek the help of selected directive by hitting <kbd>Ctrl</kbd> + <kbd>Space</kbd> again.
 
@@ -76,22 +76,25 @@ And you can see the help of a defined directive by hovering cursor on the recogn
 
 #### Diagnostics
 
-Marp for VS Code can detect some basic problems in Marp directives.
+Marp for VS Code can detect some basic problems in Marp directives. Diagnostics will help following our recommended way for writing slides.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/diagnostics.png" alt="Diagnostics" width="443" />
 </p>
 
-| Name                           | Description                                                 | [Quick Fix] |
-| :----------------------------- | :---------------------------------------------------------- | :---------: |
-| `deprecated-dollar-prefix`     | Check [obsoleted directives prefixed by `$`][dollar-prefix] |     ✅      |
-| `overloading-global-directive` | Find out overloaded global directives                       |             |
-| `unknown-theme`                | Notify a not recognized theme name                          |             |
+| Name                            | Description                                                                                        | [Quick Fix] |
+| :------------------------------ | :------------------------------------------------------------------------------------------------- | :---------: |
+| `define-math-global-directive`  | Recommend to declare math typesetting library via [`math` global directive][math global directive] |     ✅      |
+| `deprecated-dollar-prefix`      | Check [obsoleted directives prefixed by `$`][dollar-prefix]                                        |     ✅      |
+| `ignored-math-global-directive` | Report ignored `math` global directive if disabled math by the extension setting                   |             |
+| `overloading-global-directive`  | Find out overloaded global directives                                                              |             |
+| `unknown-theme`                 | Notify a not recognized theme name                                                                 |             |
 
 [quick fix]: https://code.visualstudio.com/docs/editor/refactoring#_code-actions-quick-fixes-and-refactorings
 [dollar-prefix]: https://github.com/marp-team/marpit/issues/182
+[math global directive]: https://github.com/marp-team/marp-core#math-global-directive
 
-### Export slide deck to HTML, PDF, PPTX, and image :shield:
+### Export slide deck to HTML, PDF, PPTX, and image 🛡️
 
 We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
 
@@ -117,7 +120,7 @@ Default file type can choose by `markdown.marp.exportType` preference.
 
 > ⚠️ Export except HTML requires to install any one of [Google Chrome](https://www.google.com/chrome/), [Chromium](https://www.chromium.org/), or [Microsoft Edge](https://www.microsoft.com/edge). You may also specify the custom path for Chrome / Chromium-based browser by preference `markdown.marp.chromePath`.
 
-### Use custom theme CSS :shield:
+### Use custom theme CSS 🛡️
 
 You can register and use [custom theme CSS for Marpit](https://marpit.marp.app/theme-css) / [Marp Core](https://github.com/marp-team/marp-core/tree/main/themes#readme) by setting `markdown.marp.themes`, that includes remote URLs, or relative paths to local files in the current workspace.
 
@@ -190,7 +193,7 @@ Features may be restricted are marked by the shield icon 🛡️ in this documen
 
 [workspace trust]: https://code.visualstudio.com/docs/editor/workspace-trust
 
-#### Enable HTML in Marp Markdown :shield:
+#### Enable HTML in Marp Markdown 🛡️
 
 You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option.
 

@@ -9,7 +9,9 @@ import {
 } from 'vscode'
 import { DirectiveParser } from '../directives/parser'
 import { detectMarpDocument } from '../utils'
+import * as defineMathGlobalDirective from './define-math-global-directive'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
+import * as ignoredMathGlobalDirective from './ignored-math-global-directive'
 import * as overloadingGlobalDirective from './overloading-global-directive'
 import * as unknownTheme from './unknown-theme'
 
@@ -19,7 +21,9 @@ const setDiagnostics = lodashDebounce((doc: TextDocument) => {
   const directiveParser = new DirectiveParser()
   const diagnostics: Diagnostic[] = []
 
+  defineMathGlobalDirective.register(directiveParser, diagnostics)
   deprecatedDollarPrefix.register(doc, directiveParser, diagnostics)
+  ignoredMathGlobalDirective.register(doc, directiveParser, diagnostics)
   overloadingGlobalDirective.register(doc, directiveParser, diagnostics)
   unknownTheme.register(doc, directiveParser, diagnostics)
 
@@ -37,14 +41,21 @@ export function refresh(doc: TextDocument) {
 }
 
 export function subscribe(subscriptions: Disposable[]) {
+  const refreshActiveTextEditor = () => {
+    if (window.activeTextEditor) refresh(window.activeTextEditor.document)
+  }
+  const debouncedRefresh = lodashDebounce(refreshActiveTextEditor, 0)
+
   // Diagnostics
   subscriptions.push(collection)
 
-  // Quick fix
+  // Actions
+  defineMathGlobalDirective.subscribe(subscriptions, debouncedRefresh)
   deprecatedDollarPrefix.subscribe(subscriptions)
+  ignoredMathGlobalDirective.subscribe(subscriptions, debouncedRefresh)
 
   // Initialize observers
-  if (window.activeTextEditor) refresh(window.activeTextEditor.document)
+  refreshActiveTextEditor()
 
   subscriptions.push(
     window.onDidChangeActiveTextEditor((e) => e && refresh(e.document)),

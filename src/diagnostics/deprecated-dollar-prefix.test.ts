@@ -191,7 +191,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         )
       })
 
-      it('does not create code actions when dorresponding diagnostics have not passed', () => {
+      it('does not create code actions when corresponding diagnostics have not passed', () => {
         const document = doc('---\nmarp: true\n---')
         const diagnostics = register(document)
         const codeActions = new rule.RemoveDollarPrefix().provideCodeActions(

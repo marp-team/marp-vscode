@@ -46,8 +46,14 @@ describe('#activate', () => {
     const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
     expect(onDidChgConf).toHaveBeenCalledWith(expect.any(Function))
 
-    const [event] = onDidChgConf.mock.calls[0]
-    event({ affectsConfiguration: jest.fn(() => true) })
+    for (const [callback] of onDidChgConf.mock.calls) {
+      callback({
+        affectsConfiguration: jest.fn(
+          (conf) => conf === 'markdown.marp.breaks'
+        ),
+      })
+    }
+
     expect(commands.executeCommand).toHaveBeenCalledWith(
       'markdown.preview.refresh'
     )
