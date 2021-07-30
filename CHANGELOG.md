@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.2.0 - 2021-07-30
+
 ### Added
 
 - IntelliSense and auto-completion for [`math` global directive](https://github.com/marp-team/marp-core#math-global-directive) ([#266](https://github.com/marp-team/marp-vscode/pull/266))
