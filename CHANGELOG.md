@@ -8,6 +8,8 @@
 - Diagnostics for `math` global directive ([#267](https://github.com/marp-team/marp-vscode/pull/267))
   - `define-math-global-directive`: Recommend to declare math typesetting library
   - `ignored-math-global-directive`: Report ignored `math` global directive if disabled math by the extension setting
+- Handle the export command into non-file scheme ([#262](https://github.com/marp-team/marp-vscode/issues/262), [#269](https://github.com/marp-team/marp-vscode/pull/269))
+  - Support direct export from [the remote container](https://code.visualstudio.com/docs/remote/containers) to the local file system
 
 ### Fixed
 
