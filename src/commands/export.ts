@@ -1,7 +1,8 @@
 import fs from 'fs'
+import os from 'os'
 import path from 'path'
 import { promisify } from 'util'
-import { tmpName, TmpNameOptions } from 'tmp'
+import { nanoid } from 'nanoid'
 import {
   commands,
   env,
@@ -22,7 +23,6 @@ import {
   WorkspaceProxyServer,
 } from '../workspace-proxy-server'
 
-const tmpNamePromise = promisify<TmpNameOptions, string>(tmpName)
 const unlink = promisify(fs.unlink)
 
 export enum Types {
@@ -99,7 +99,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
     try {
       let outputPath = uri.fsPath
-      const outputToLocalFS = uri.scheme === 'file'
+      const outputToLocalFS = uri.scheme !== 'file'
 
       // NOTE: It may return `undefined` if VS Code does not know about the
       // filesystem. In this case, Marp may be able to write to the output path.
@@ -108,10 +108,10 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
       }
 
       if (!outputToLocalFS) {
-        outputPath = await tmpNamePromise({
-          prefix: 'marp-vscode-tmp',
-          postfix: path.extname(uri.path),
-        })
+        outputPath = path.join(
+          os.tmpdir(),
+          `marp-vscode-tmp-${nanoid()}${path.extname(uri.path)}`
+        )
       }
 
       // Run Marp CLI

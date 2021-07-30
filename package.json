@@ -253,7 +253,6 @@
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^12.0.3",
     "@types/node-fetch": "^2.5.12",
-    "@types/tmp": "^0.2.1",
     "@types/vscode": "~1.56.0",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
@@ -298,7 +297,6 @@
   },
   "dependencies": {
     "@marp-team/marp-cli": "^1.2.0",
-    "@marp-team/marp-core": "^2.1.0",
-    "tmp": "^0.2.1"
+    "@marp-team/marp-core": "^2.1.0"
   }
 }
