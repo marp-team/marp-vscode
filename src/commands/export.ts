@@ -135,7 +135,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
             try {
               await unlink(outputPath)
             } catch (e) {
-              console.warn(e)
+              // no ops
             }
           }
 
