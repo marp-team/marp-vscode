@@ -5,6 +5,7 @@ import * as exportModule from './export'
 
 const exportCommand = exportModule.default
 
+jest.mock('fs')
 jest.mock('vscode')
 jest.mock('../workspace-proxy-server', () => ({
   createWorkspaceProxyServer: jest.fn().mockResolvedValue({
@@ -172,6 +173,54 @@ describe('#doExport', () => {
     expect(window.showErrorMessage).toHaveBeenCalledWith(
       expect.stringContaining('[Error] ERROR')
     )
+  })
+
+  describe('when the save path has non-file scheme', () => {
+    const saveURI = (scheme: string, ext: string): any => {
+      const instance = {
+        scheme,
+        path: `/tmp/to.${ext}`,
+        fsPath: `/tmp/to.${ext}`,
+        toString: () => `${scheme}://${instance.path}`,
+      }
+      return instance
+    }
+
+    it('exports the document into temporally path and copy it to the save path', async () => {
+      jest.spyOn(marpCli, 'default').mockImplementation()
+
+      for (const isWritableFileSystem of [true, undefined]) {
+        jest
+          .spyOn(workspace.fs, 'isWritableFileSystem')
+          .mockReturnValue(isWritableFileSystem)
+
+        const saveURIinstance = saveURI('unknown-scheme', 'pdf')
+        await exportModule.doExport(saveURIinstance, document)
+        expect(workspace.fs.copy).toHaveBeenCalled()
+
+        const { calls } = (workspace.fs.copy as jest.Mock).mock
+        const [source, target] = calls[calls.length - 1]
+
+        expect(source.path).toContain('marp-vscode-tmp')
+        expect(source.path).toMatch(/\.pdf$/)
+        expect(source.scheme).toBe('file')
+        expect(target).toBe(saveURIinstance)
+
+        expect(window.showInformationMessage).toHaveBeenCalledWith(
+          'Marp slide deck was successfully exported to unknown-scheme:///tmp/to.pdf.'
+        )
+      }
+    })
+
+    it('shows warning when the scheme of save path has not-writable file system', async () => {
+      jest.spyOn(workspace.fs, 'isWritableFileSystem').mockReturnValue(false)
+
+      await exportModule.doExport(saveURI('readonly', 'pdf'), document)
+
+      expect(window.showErrorMessage).toHaveBeenCalledWith(
+        expect.stringContaining('Could not write to readonly file system.')
+      )
+    })
   })
 
   describe('when the document belongs to the virtual file system', () => {

@@ -109,6 +109,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
       if (!outputToLocalFS) {
         outputPath = await tmpNamePromise({
+          prefix: 'marp-vscode-tmp',
           postfix: path.extname(uri.path),
         })
       }

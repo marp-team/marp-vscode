@@ -140,6 +140,7 @@ export const env = {
 }
 
 export const FileSystem = {
+  copy: jest.fn(),
   stat: jest.fn(async () => ({
     ctime: 0,
     mtime: new Date().getTime(),
@@ -191,6 +192,7 @@ export const window = {
   createTextEditorDecorationType: jest.fn((t) => t),
   onDidChangeActiveTextEditor: jest.fn(),
   showErrorMessage: jest.fn(),
+  showInformationMessage: jest.fn(),
   showQuickPick: jest.fn(),
   showSaveDialog: jest.fn(),
   showTextDocument: jest.fn(async () => ({})),
