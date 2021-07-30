@@ -99,7 +99,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
     try {
       let outputPath = uri.fsPath
-      const outputToLocalFS = uri.scheme !== 'file'
+      const outputToLocalFS = uri.scheme === 'file'
 
       // NOTE: It may return `undefined` if VS Code does not know about the
       // filesystem. In this case, Marp may be able to write to the output path.
