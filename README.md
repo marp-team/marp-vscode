@@ -44,7 +44,9 @@ It also can toggle by opening the quick picker from toolbar icon <img src="https
 
 ### Preview Marp Markdown
 
-Marp for VS Code can preview your Marp Markdown with the same way as [a native Markdown preview](https://code.visualstudio.com/docs/languages/markdown#_markdown-preview).
+While enabled Marp features by `marp: true`, Marp for VS Code can preview your Marp Markdown with the same way as [a built-in Markdown preview](https://code.visualstudio.com/docs/languages/markdown#_markdown-preview).
+
+If you are not familiar with editing Markdown on VS Code, we recommend to learn what you can do in [VS Code documentation](https://code.visualstudio.com/docs/languages/markdown) at first.
 
 ### IntelliSense for Marp directives
 
