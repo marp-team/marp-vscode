@@ -13,6 +13,7 @@ import * as defineMathGlobalDirective from './define-math-global-directive'
 import * as deprecatedDollarPrefix from './deprecated-dollar-prefix'
 import * as ignoredMathGlobalDirective from './ignored-math-global-directive'
 import * as overloadingGlobalDirective from './overloading-global-directive'
+import * as unknownSize from './unknown-size'
 import * as unknownTheme from './unknown-theme'
 
 export const collection = languages.createDiagnosticCollection('marp-vscode')
@@ -25,6 +26,7 @@ const setDiagnostics = lodashDebounce((doc: TextDocument) => {
   deprecatedDollarPrefix.register(doc, directiveParser, diagnostics)
   ignoredMathGlobalDirective.register(doc, directiveParser, diagnostics)
   overloadingGlobalDirective.register(doc, directiveParser, diagnostics)
+  unknownSize.register(doc, directiveParser, diagnostics)
   unknownTheme.register(doc, directiveParser, diagnostics)
 
   directiveParser.parse(doc)

@@ -41,7 +41,7 @@ export function register(subscriptions: Disposable[], parser: LanguageParser) {
         const definedIn = getCompletionTarget(pos, data)
         if (!definedIn) return
 
-        const provider = new CompletionProvider(doc, pos, definedIn)
+        const provider = new CompletionProvider(doc, pos, data, definedIn)
         return provider.getCompletionList()
       },
     })
@@ -74,7 +74,7 @@ class CompletionProvider {
   constructor(
     private readonly document: TextDocument,
     private readonly position: Position,
-    // private readonly data: LanguageParseData,
+    private readonly data: LanguageParseData,
     private readonly definedIn: DirectiveDefinedIn
   ) {}
 
@@ -83,6 +83,7 @@ class CompletionProvider {
       this.completionThemes() ||
       this.completionBoolean() ||
       this.completionMath() ||
+      this.completionSizePreset() ||
       this.completionDirectives()
     )
   }
@@ -143,6 +144,29 @@ class CompletionProvider {
           label: 'mathjax',
         },
       ])
+    }
+  }
+
+  private completionSizePreset() {
+    if (this.isCursorOnDirective('size')) {
+      let theme: string | undefined
+
+      for (const { info, value } of this.data.directvies) {
+        if (info.name === 'theme' && value) theme = value
+      }
+
+      const sizePresets = themes.getSizePresets(this.document, theme)
+
+      if (sizePresets.length > 0) {
+        return new CompletionList(
+          sizePresets.map((preset) => ({
+            detail: 'Marp theme size preset',
+            documentation: `${preset.width} X ${preset.height}`,
+            kind: CompletionItemKind.EnumMember,
+            label: preset.name,
+          }))
+        )
+      }
     }
   }
 
