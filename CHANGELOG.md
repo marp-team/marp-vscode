@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Update contribution for "New File…" in File menu and welcome screen to stable spec in VS Code 1.59 ([#270](https://github.com/marp-team/marp-vscode/pull/270))
+
 ## v1.2.0 - 2021-07-30
 
 ### Added

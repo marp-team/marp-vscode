@@ -77,7 +77,8 @@
       {
         "category": "Marp",
         "command": "markdown.marp.newMarpMarkdown",
-        "title": "New Untitled Marp Markdown For Slide Deck"
+        "title": "New Untitled Marp Markdown For Slide Deck",
+        "shortTitle": "Marp Markdown"
       },
       {
         "category": "Marp",
@@ -191,16 +192,14 @@
           "group": "navigation",
           "when": "config.markdown.marp.toolbarButtonForQuickPick && editorLangId == markdown"
         }
+      ],
+      "file/newFile": [
+        {
+          "command": "markdown.marp.newMarpMarkdown",
+          "group": "file"
+        }
       ]
-    },
-    "startEntries": [
-      {
-        "title": "Marp Markdown",
-        "description": "For creating slide deck",
-        "category": "file",
-        "command": "markdown.marp.newMarpMarkdown"
-      }
-    ]
+    }
   },
   "private": true,
   "prettier": {
