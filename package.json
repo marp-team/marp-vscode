@@ -296,6 +296,6 @@
   },
   "dependencies": {
     "@marp-team/marp-cli": "^1.2.0",
-    "@marp-team/marp-core": "^2.1.0"
+    "@marp-team/marp-core": "^2.1.1"
   }
 }
