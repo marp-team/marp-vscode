@@ -54,7 +54,7 @@ export function register(
       if (!sizes.includes(parsed.size)) {
         const diagnostic = new Diagnostic(
           parsed.range,
-          `A specified size preset "${parsed.size}" will be ignored due to a not defined preset in a used theme.`,
+          `A specified size preset "${parsed.size}" will be ignored because it is not defined by used theme.`,
           DiagnosticSeverity.Warning
         )
 
