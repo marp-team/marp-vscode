@@ -56,12 +56,16 @@ export const marpCoreOptionForPreview = (
 
 export const marpCoreOptionForCLI = async (
   { uri }: TextDocument,
-  { allowLocalFiles = true }: { allowLocalFiles?: boolean } = {}
+  {
+    allowLocalFiles = true,
+    pdfNotes,
+  }: { allowLocalFiles?: boolean; pdfNotes?: boolean } = {}
 ) => {
   const confMdPreview = workspace.getConfiguration('markdown.preview', uri)
 
   const baseOpts = {
     allowLocalFiles,
+    pdfNotes,
     html: enableHtml() || undefined,
     options: {
       markdown: {

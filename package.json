@@ -163,6 +163,11 @@
           "default": true,
           "description": "Enables the outline extension for Marp Markdown. If enabled, VS Code's outline view will reflect slide splitters, and you can fold regions of the slide content in the editor."
         },
+        "markdown.marp.pdf.noteAnnotations": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Adds [presenter notes](https://marpit.marp.app/usage?id=presenter-notes) to exported PDF as note annotations."
+        },
         "markdown.marp.themes": {
           "type": "array",
           "default": [],

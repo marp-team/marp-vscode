@@ -23,8 +23,16 @@ describe('Option', () => {
     it('returns basic options', async () => {
       const opts = await subject({ uri: untitledUri })
 
-      // --allow-local-files
       expect(opts.allowLocalFiles).toBe(true)
+      expect(opts.pdfNotes).toBeUndefined()
+
+      const custom = await subject(
+        { uri: untitledUri },
+        { allowLocalFiles: false, pdfNotes: true }
+      )
+
+      expect(custom.allowLocalFiles).toBe(false)
+      expect(custom.pdfNotes).toBe(true)
     })
 
     it('enables HTML by preference', async () => {
