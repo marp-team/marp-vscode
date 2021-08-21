@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.3.0 - 2021-08-21
+
 ### Added
 
 - Auto completion for [`size` global directive](https://github.com/marp-team/marp-core#size-global-directive) ([#276](https://github.com/marp-team/marp-vscode/pull/276))
