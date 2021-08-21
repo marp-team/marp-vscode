@@ -307,6 +307,23 @@ export const builtinDirectives = [
     details: 'https://github.com/marp-team/marp-cli#metadata',
   }),
   createDirectiveInfo({
+    name: 'author',
+    description: 'Set author of the slide deck.',
+    allowed: directiveAlwaysAllowed,
+    providedBy: DirectiveProvidedBy.MarpCLI,
+    type: DirectiveType.Global,
+    details: 'https://github.com/marp-team/marp-cli#metadata',
+  }),
+  createDirectiveInfo({
+    name: 'keywords',
+    description:
+      'Set keywords for the slide deck. It accepts a string consisted by comma-separated keywords, or YAML array of keywords.',
+    allowed: directiveAlwaysAllowed,
+    providedBy: DirectiveProvidedBy.MarpCLI,
+    type: DirectiveType.Global,
+    details: 'https://github.com/marp-team/marp-cli#metadata',
+  }),
+  createDirectiveInfo({
     name: 'url',
     description: 'Set canonical URL for the slide deck.',
     allowed: directiveAlwaysAllowed,
