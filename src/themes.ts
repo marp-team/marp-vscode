@@ -81,7 +81,7 @@ export class Themes {
   getRegisteredStyles(rootUri: Uri | undefined): Theme[] {
     return this.getPathsFromConf(rootUri)
       .map((p) => this.observedThemes.get(p))
-      .filter((t) => t) as Theme[]
+      .filter((t): t is Theme => !!t)
   }
 
   getSizePresets(

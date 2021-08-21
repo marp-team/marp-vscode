@@ -6,6 +6,7 @@ interface ParsedSizeValue {
   theme?: string
   size?: string
   range?: Range
+  vRange?: Range
 }
 
 export const code = 'unknown-size'
@@ -29,11 +30,15 @@ export function register(
       case 'size':
         if (item.key.range && item.value?.range) {
           const [start] = item.key.range
-          const [, end] = item.value.range
+          const [vStart, end] = item.value.range
 
           parsed.size = item.value.value
           parsed.range = new Range(
             doc.positionAt(start + offset),
+            doc.positionAt(end + offset)
+          )
+          parsed.vRange = new Range(
+            doc.positionAt(vStart + offset),
             doc.positionAt(end + offset)
           )
         }
@@ -43,9 +48,10 @@ export function register(
 
   directiveParser.on('endParse', () => {
     if (
-      parsed.size &&
+      parsed.size !== undefined &&
       parsed.range &&
-      !parsed.range.start.isEqual(parsed.range.end)
+      parsed.vRange &&
+      !parsed.vRange.start.isEqual(parsed.vRange.end)
     ) {
       const sizes = themes
         .getSizePresets(doc, parsed.theme)
