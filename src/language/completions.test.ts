@@ -111,6 +111,7 @@ describe('Auto completions', () => {
 
         expect(labels).toMatchInlineSnapshot(`
           Array [
+            "author",
             "backgroundColor",
             "backgroundImage",
             "backgroundPosition",
@@ -123,6 +124,7 @@ describe('Auto completions', () => {
             "header",
             "headingDivider",
             "image",
+            "keywords",
             "marp",
             "math",
             "paginate",
@@ -151,6 +153,7 @@ describe('Auto completions', () => {
 
         expect(labels).toMatchInlineSnapshot(`
           Array [
+            "author",
             "backgroundColor",
             "backgroundImage",
             "backgroundPosition",
@@ -163,6 +166,7 @@ describe('Auto completions', () => {
             "header",
             "headingDivider",
             "image",
+            "keywords",
             "math",
             "paginate",
             "size",

@@ -8,6 +8,7 @@
 - `unknown-size` diagnostic: Notify if the specified size preset was not defined in a theme ([#276](https://github.com/marp-team/marp-vscode/pull/276))
 - Auto-trigger suggestion for value of supported directives ([#277](https://github.com/marp-team/marp-vscode/pull/277))
 - `markdown.marp.pdf.noteAnnotations` config: Add presenter notes to exported PDF as note annotations ([#278](https://github.com/marp-team/marp-vscode/pull/278))
+- IntelliSense support for new metadata options in [Marp CLI v1.3.0](https://github.com/marp-team/marp-cli/releases/tag/v1.3.0): `author` and `keywords` global directives ([#279](https://github.com/marp-team/marp-vscode/pull/279))
 
 ### Changed
 
