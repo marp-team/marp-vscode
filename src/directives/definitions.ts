@@ -25,6 +25,7 @@ export enum DirectiveProvidedBy {
 
 interface DirectiveInfoBase {
   allowed: readonly DirectiveDefinedIn[]
+  completable?: boolean
   description: string
   details?: string
   markdownDescription: MarkdownString
@@ -94,6 +95,7 @@ export const builtinDirectives = [
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Global,
     details: 'https://marpit.marp.app/directives?id=theme',
+    completable: true,
   }),
   createDirectiveInfo({
     name: 'style',
@@ -146,6 +148,7 @@ export const builtinDirectives = [
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
     details: 'https://marpit.marp.app/directives?id=pagination',
+    completable: true,
   }),
   createDirectiveInfo({
     name: 'header',
@@ -270,6 +273,7 @@ export const builtinDirectives = [
     providedBy: DirectiveProvidedBy.MarpCore,
     type: DirectiveType.Global,
     details: 'https://github.com/marp-team/marp-core#math-global-directive',
+    completable: true,
   }),
   createDirectiveInfo({
     name: 'size',
@@ -282,6 +286,7 @@ export const builtinDirectives = [
     providedBy: DirectiveProvidedBy.MarpCore,
     type: DirectiveType.Global,
     details: 'https://github.com/marp-team/marp-core#size-global-directive',
+    completable: true,
   }),
 
   // Marp CLI metadata options
