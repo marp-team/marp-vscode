@@ -6,6 +6,7 @@
 
 - Auto completion for [`size` global directive](https://github.com/marp-team/marp-core#size-global-directive) ([#276](https://github.com/marp-team/marp-vscode/pull/276))
 - `unknown-size` diagnostic: Notify if the specified size preset was not defined in a theme ([#276](https://github.com/marp-team/marp-vscode/pull/276))
+- Auto-trigger suggestion for value of supported directives ([#277](https://github.com/marp-team/marp-vscode/pull/277))
 
 ### Changed
 
