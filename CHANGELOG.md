@@ -5,6 +5,9 @@
 ### Changed
 
 - Update contribution for "New File…" in File menu and welcome screen to stable spec in VS Code 1.59 ([#270](https://github.com/marp-team/marp-vscode/pull/270))
+- Upgrade Marp Core to [v2.1.1](https://github.com/marp-team/marp-core/releases/tag/v2.1.1) ([#275](https://github.com/marp-team/marp-vscode/pull/275))
+- Upgrade Marp CLI to [v1.3.2](https://github.com/marp-team/marp-cli/releases/tag/v1.3.2) ([#275](https://github.com/marp-team/marp-vscode/pull/275))
+- Upgrade dependent packages to the latest ([#275](https://github.com/marp-team/marp-vscode/pull/275))
 
 ## v1.2.0 - 2021-07-30
 
