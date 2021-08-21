@@ -16,6 +16,7 @@ export interface LanguageParsedDirective {
   info: DirectiveInfo
   keyRange: Range
   range: Range
+  value?: string
 }
 
 export interface LanguageParseData {
@@ -127,6 +128,7 @@ export class LanguageParser
               document.positionAt(start + offset),
               document.positionAt(vEnd + offset)
             ),
+            value: item.value?.value,
           })
         }
       })

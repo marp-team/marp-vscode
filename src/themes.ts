@@ -29,6 +29,12 @@ export interface Theme {
   readonly type: ThemeType
 }
 
+export interface SizePreset {
+  height: string
+  name: string
+  width: string
+}
+
 const readFile = promisify(fs.readFile)
 
 const isRemotePath = (path: string) =>
@@ -75,7 +81,34 @@ export class Themes {
   getRegisteredStyles(rootUri: Uri | undefined): Theme[] {
     return this.getPathsFromConf(rootUri)
       .map((p) => this.observedThemes.get(p))
-      .filter((t) => t) as Theme[]
+      .filter((t): t is Theme => !!t)
+  }
+
+  getSizePresets(
+    doc: TextDocument,
+    themeName: string | undefined
+  ): SizePreset[] {
+    const themeSet = this.getMarpThemeSetFor(doc)
+    const theme = themeSet.get(themeName ?? '', true)?.name || 'default'
+
+    const sizeMeta = (themeSet.getThemeMeta(theme, 'size') as string[]) || []
+    const sizes = new Map<string, SizePreset>()
+
+    for (const size of sizeMeta) {
+      const args = size.split(/\s+/)
+
+      if (args.length === 3) {
+        sizes.set(args[0], {
+          name: args[0],
+          width: args[1],
+          height: args[2],
+        })
+      } else if (args.length === 2 && args[1] === 'false') {
+        sizes.delete(args[0])
+      }
+    }
+
+    return [...sizes.values()]
   }
 
   loadStyles(rootUri: Uri | undefined): Promise<Theme>[] {

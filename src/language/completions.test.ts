@@ -1,3 +1,4 @@
+import dedent from 'dedent'
 import {
   languages,
   window,
@@ -109,29 +110,29 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-Array [
-  "backgroundColor",
-  "backgroundImage",
-  "backgroundPosition",
-  "backgroundRepeat",
-  "backgroundSize",
-  "class",
-  "color",
-  "description",
-  "footer",
-  "header",
-  "headingDivider",
-  "image",
-  "marp",
-  "math",
-  "paginate",
-  "size",
-  "style",
-  "theme",
-  "title",
-  "url",
-]
-`)
+          Array [
+            "backgroundColor",
+            "backgroundImage",
+            "backgroundPosition",
+            "backgroundRepeat",
+            "backgroundSize",
+            "class",
+            "color",
+            "description",
+            "footer",
+            "header",
+            "headingDivider",
+            "image",
+            "marp",
+            "math",
+            "paginate",
+            "size",
+            "style",
+            "theme",
+            "title",
+            "url",
+          ]
+        `)
 
         // The insert text has semicolon
         expect(list.items[0].insertText).toBe(`${list.items[0].label}: `)
@@ -149,28 +150,28 @@ Array [
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-Array [
-  "backgroundColor",
-  "backgroundImage",
-  "backgroundPosition",
-  "backgroundRepeat",
-  "backgroundSize",
-  "class",
-  "color",
-  "description",
-  "footer",
-  "header",
-  "headingDivider",
-  "image",
-  "math",
-  "paginate",
-  "size",
-  "style",
-  "theme",
-  "title",
-  "url",
-]
-`)
+          Array [
+            "backgroundColor",
+            "backgroundImage",
+            "backgroundPosition",
+            "backgroundRepeat",
+            "backgroundSize",
+            "class",
+            "color",
+            "description",
+            "footer",
+            "header",
+            "headingDivider",
+            "image",
+            "math",
+            "paginate",
+            "size",
+            "style",
+            "theme",
+            "title",
+            "url",
+          ]
+        `)
         expect(labels).not.toContain('marp')
       })
 
@@ -299,11 +300,84 @@ Array [
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-Array [
-  "katex",
-  "mathjax",
-]
-`)
+          Array [
+            "katex",
+            "mathjax",
+          ]
+        `)
+      })
+    })
+
+    describe('Size preset suggestion', () => {
+      it('suggests size presets defined in used theme when the cursor is on size directive', async () => {
+        const doc = setDocument('---\nmarp: true\nsize: \n---')
+        const list = (await provideCompletionItems()(
+          doc,
+          new Position(2, 6),
+          {} as any,
+          {} as any
+        )) as CompletionList
+
+        const labels = list.items.map((item) => item.label).sort()
+
+        expect(labels).toMatchInlineSnapshot(`
+          Array [
+            "16:9",
+            "4:3",
+          ]
+        `)
+      })
+
+      it('suggests size presets strictly defined in used custom theme', async () => {
+        jest.spyOn(Themes.prototype, 'getRegisteredStyles').mockReturnValue([
+          {
+            css: dedent`
+              @import "default";
+
+              /* @theme custom-theme */
+              /* @size a4 210mm 297mm */
+              /* @size 4:3 false */
+            `,
+          } as any,
+        ])
+
+        const doc = setDocument(
+          '---\nmarp: true\ntheme: custom-theme\nsize: \n---'
+        )
+        const list = (await provideCompletionItems()(
+          doc,
+          new Position(3, 6),
+          {} as any,
+          {} as any
+        )) as CompletionList
+
+        const labels = list.items.map((item) => item.label).sort()
+
+        expect(labels).toMatchInlineSnapshot(`
+          Array [
+            "16:9",
+            "a4",
+          ]
+        `)
+      })
+
+      it('fallback to presets for the default theme if specified theme is not registered', async () => {
+        const doc = setDocument('---\nmarp: true\ntheme: unknown\nsize: \n---')
+        const list = (await provideCompletionItems()(
+          doc,
+          new Position(3, 6),
+          {} as any,
+          {} as any
+        )) as CompletionList
+
+        const labels = list.items.map((item) => item.label).sort()
+
+        expect(labels).toMatchInlineSnapshot(`
+          Array [
+            "16:9",
+            "4:3",
+          ]
+        `)
       })
     })
   })
