@@ -99,6 +99,8 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
     try {
       let outputPath = uri.fsPath
+
+      const ouputExt = path.extname(uri.path)
       const outputToLocalFS = uri.scheme === 'file'
 
       // NOTE: It may return `undefined` if VS Code does not know about the
@@ -110,13 +112,16 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
       if (!outputToLocalFS) {
         outputPath = path.join(
           os.tmpdir(),
-          `marp-vscode-tmp-${nanoid()}${path.extname(uri.path)}`
+          `marp-vscode-tmp-${nanoid()}${ouputExt}`
         )
       }
 
       // Run Marp CLI
       const conf = await createConfigFile(document, {
         allowLocalFiles: !proxyServer,
+        pdfNotes:
+          ouputExt === '.pdf' &&
+          marpConfiguration().get<boolean>('pdf.noteAnnotations'),
       })
 
       try {
@@ -168,16 +173,18 @@ export const saveDialog = async (document: TextDocument) => {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const defaultType = marpConfiguration().get<string>('exportType')!
+  const ext = extensions[defaultType] ? `.${extensions[defaultType][0]}` : ''
   const baseTypes = Object.keys(extensions)
   const types = [...new Set<string>([defaultType, ...baseTypes])]
 
   const saveURI = await window.showSaveDialog({
-    defaultUri: Uri.file(fsPath.slice(0, -path.extname(fsPath).length)),
+    defaultUri: Uri.file(fsPath.slice(0, -path.extname(fsPath).length) + ext),
     filters: types.reduce((f, t) => {
       if (baseTypes.includes(t)) f[descriptions[t]] = extensions[t]
       return f
     }, {}),
     saveLabel: 'Export',
+    title: 'Export slide deck',
   })
 
   if (saveURI) {
