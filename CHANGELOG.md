@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added
+
+- Auto completion for [`size` global directive](https://github.com/marp-team/marp-core#size-global-directive) ([#276](https://github.com/marp-team/marp-vscode/pull/276))
+- `unknown-size` diagnostic: Notify if the specified size preset was not defined in a theme ([#276](https://github.com/marp-team/marp-vscode/pull/276))
+
 ### Changed
 
 - Update contribution for "New File…" in File menu and welcome screen to stable spec in VS Code 1.59 ([#270](https://github.com/marp-team/marp-vscode/pull/270))
