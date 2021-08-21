@@ -228,6 +228,12 @@ class CompletionProvider {
             kind: CompletionItemKind.Property,
             label: d.name,
             range,
+            command: d.completable
+              ? {
+                  command: 'editor.action.triggerSuggest',
+                  title: 'Trigger suggest',
+                }
+              : undefined,
           })
         )
     )
