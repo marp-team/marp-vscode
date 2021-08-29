@@ -1,5 +1,4 @@
 import { AbortSignal } from 'abort-controller'
-import * as nodeFetch from 'node-fetch'
 import * as utils from './utils'
 
 describe('Utilities', () => {
@@ -18,7 +17,7 @@ describe('Utilities', () => {
       }
 
       const fetch = jest
-        .spyOn(nodeFetch, 'default')
+        .spyOn(utils._fetchPonyfillInstance, 'fetch')
         .mockResolvedValue(mocked as any)
 
       const url = 'https://example.com/'
@@ -29,13 +28,15 @@ describe('Utilities', () => {
     })
 
     it('throws error if the response status is not 2xx', async () => {
-      const mocked: Pick<nodeFetch.Response, 'ok' | 'text' | 'status'> = {
+      const mocked: Pick<Response, 'ok' | 'text' | 'status'> = {
         ok: false,
         text: jest.fn(async () => '404 Not found'),
         status: 404,
       }
 
-      jest.spyOn(nodeFetch, 'default').mockResolvedValue(mocked as any)
+      jest
+        .spyOn(utils._fetchPonyfillInstance, 'fetch')
+        .mockResolvedValue(mocked as any)
 
       await expect(utils.fetch('https://example.com/')).rejects.toThrow(
         'Failured fetching https://example.com/ (404)'
@@ -49,7 +50,10 @@ describe('Utilities', () => {
         const abortError = new Error('Request aborted')
         const timeout = 3000
 
-        const fetch: jest.SpyInstance = jest.spyOn(nodeFetch, 'default')
+        const fetch: jest.SpyInstance = jest.spyOn(
+          utils._fetchPonyfillInstance,
+          'fetch'
+        )
 
         fetch.mockImplementation((_, opts) => {
           const signal = opts?.signal as AbortSignal

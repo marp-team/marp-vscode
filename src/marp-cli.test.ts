@@ -1,4 +1,3 @@
-import fs from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 import * as marpCliModule from '@marp-team/marp-cli'
@@ -6,7 +5,6 @@ import { workspace } from 'vscode'
 import * as marpCli from './marp-cli'
 import { textEncoder } from './utils'
 
-jest.mock('fs')
 jest.mock('vscode')
 
 const setConfiguration: (conf?: Record<string, unknown>) => void = (
@@ -117,22 +115,20 @@ describe('#createWorkFile', () => {
     ).toBe(true)
 
     expect(workspace.fs.writeFile).toHaveBeenCalledWith(
-      workFile.path,
+      expect.objectContaining({ fsPath: workFile.path }),
       textEncoder.encode('example')
     )
 
     await workFile.cleanup()
     expect(workspace.fs.delete).toHaveBeenCalledWith(
-      workFile.path,
+      expect.objectContaining({ fsPath: workFile.path }),
       expect.any(Object)
     )
   })
 
   it('creates tmpfile to workspace root when failed creating to same dir', async () => {
     // Simulate that creation to same directory is not permitted
-    ;(fs as any).writeFile.mockImplementationOnce((_, __, cb) =>
-      cb(new Error())
-    )
+    jest.spyOn(workspace.fs, 'writeFile').mockRejectedValueOnce(new Error())
 
     jest
       .spyOn(workspace, 'getWorkspaceFolder')
