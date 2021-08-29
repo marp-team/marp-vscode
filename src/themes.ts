@@ -1,5 +1,4 @@
 import path from 'path'
-import { URL } from 'url'
 import Marp from '@marp-team/marp-core'
 import {
   commands,
@@ -37,8 +36,6 @@ const isRemotePath = (path: string) =>
   path.startsWith('https:') || path.startsWith('http:')
 
 const isVirtualPath = (path: string) => /^[a-z0-9.+-]+:\/\/\b/.test(path)
-
-const textDecoder = new TextDecoder()
 
 export class Themes {
   observedThemes = new Map<string, Theme>()

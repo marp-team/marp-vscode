@@ -51,11 +51,8 @@ export const mathTypesettingConfiguration = () => {
   return conf ?? 'katex'
 }
 
-export const textEncoder = new (globalThis.TextEncoder ??
-  (require('util') as typeof import('util')).TextEncoder)()
-
-export const textDecoder = new (globalThis.TextDecoder ??
-  (require('util') as typeof import('util')).TextDecoder)()
+export const textEncoder = new TextEncoder()
+export const textDecoder = new TextDecoder()
 
 export const readFile = async (target: Uri) =>
   textDecoder.decode(await workspace.fs.readFile(target))
