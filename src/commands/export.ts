@@ -1,7 +1,5 @@
-import fs from 'fs'
 import os from 'os'
 import path from 'path'
-import { promisify } from 'util'
 import { nanoid } from 'nanoid'
 import {
   commands,
@@ -17,13 +15,11 @@ import marpCli, {
   createWorkFile,
   MarpCLIError,
 } from '../marp-cli'
-import { marpConfiguration } from '../utils'
+import { marpConfiguration, unlink } from '../utils'
 import {
   createWorkspaceProxyServer,
   WorkspaceProxyServer,
 } from '../workspace-proxy-server'
-
-const unlink = promisify(fs.unlink)
 
 export enum Types {
   html = 'html',
@@ -132,13 +128,13 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
         if (outputToLocalFS) {
           env.openExternal(uri)
         } else {
+          const outputUri = Uri.file(outputPath)
+
           try {
-            await workspace.fs.copy(Uri.file(outputPath), uri, {
-              overwrite: true,
-            })
+            await workspace.fs.copy(outputUri, uri, { overwrite: true })
           } finally {
             try {
-              await unlink(outputPath)
+              await unlink(outputUri)
             } catch (e) {
               // no ops
             }

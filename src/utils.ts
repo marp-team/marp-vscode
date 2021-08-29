@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { AbortController } from 'abort-controller'
 import nodeFetch from 'node-fetch'
-import { TextDocument, workspace } from 'vscode'
+import { TextDocument, Uri, workspace } from 'vscode'
 
 interface FetchOption {
   timeout?: number
@@ -49,3 +50,18 @@ export const mathTypesettingConfiguration = () => {
   )
   return conf ?? 'katex'
 }
+
+export const textEncoder = new (globalThis.TextEncoder ??
+  (require('util') as typeof import('util')).TextEncoder)()
+
+export const textDecoder = new (globalThis.TextDecoder ??
+  (require('util') as typeof import('util')).TextDecoder)()
+
+export const readFile = async (target: Uri) =>
+  textDecoder.decode(await workspace.fs.readFile(target))
+
+export const writeFile = (target: Uri, text: string) =>
+  workspace.fs.writeFile(target, textEncoder.encode(text))
+
+export const unlink = (target: Uri) =>
+  workspace.fs.delete(target, { useTrash: false })
