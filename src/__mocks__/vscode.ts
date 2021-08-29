@@ -148,7 +148,9 @@ export const FileSystem = {
     size: 0,
     type: FileType.File,
   })),
-  readFile: jest.fn().mockResolvedValue(new TextEncoder().encode('readFile')),
+  delete: jest.fn(async () => undefined),
+  readFile: jest.fn(async () => undefined),
+  writeFile: jest.fn(async () => undefined),
   isWritableFileSystem: jest.fn((scheme: string) => scheme === 'file'),
 }
 

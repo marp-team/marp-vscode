@@ -1,5 +1,4 @@
 /** @jest-environment jsdom */
-import fs from 'fs'
 import path from 'path'
 import { TextEncoder } from 'util'
 import { Marp } from '@marp-team/marp-core'
@@ -8,7 +7,6 @@ import markdownIt from 'markdown-it'
 import * as nodeFetch from 'node-fetch'
 import { Uri, commands, workspace } from 'vscode'
 
-jest.mock('fs')
 jest.mock('node-fetch')
 jest.mock('vscode')
 
@@ -262,8 +260,8 @@ describe('#extendMarkdownIt', () => {
 
       it('registers pre-loaded themes from specified path defined in configuration', async () => {
         const fsReadFile = jest
-          .spyOn(fs, 'readFile')
-          .mockImplementation((_, cb) => cb(null, Buffer.from(css)))
+          .spyOn(workspace.fs, 'readFile')
+          .mockResolvedValue(new TextEncoder().encode(css))
 
         setConfiguration({ 'markdown.marp.themes': ['./test.css'] })
 
@@ -281,16 +279,17 @@ describe('#extendMarkdownIt', () => {
         await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
 
         expect(fsReadFile).toHaveBeenCalledWith(
-          path.resolve(baseDir, './test.css'),
-          expect.any(Function)
+          expect.objectContaining({
+            fsPath: path.resolve(baseDir, './test.css'),
+          })
         )
         expect(markdown.render(mdBody)).toContain(css)
       })
 
       it('cannot traverse theme CSS path to parent directory as same as markdown.styles', async () => {
         jest
-          .spyOn(fs, 'readFile')
-          .mockImplementation((_, cb) => cb(null, Buffer.from(css)))
+          .spyOn(workspace.fs, 'readFile')
+          .mockResolvedValue(new TextEncoder().encode(css))
 
         setConfiguration({ 'markdown.marp.themes': ['../test.css'] })
 

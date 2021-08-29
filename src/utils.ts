@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { AbortController } from 'abort-controller'
-import nodeFetch from 'node-fetch'
+import fetchPonyfill from 'fetch-ponyfill'
 import { TextDocument, Uri, workspace } from 'vscode'
+
+const fetchPonyfillInstance = fetchPonyfill()
 
 interface FetchOption {
   timeout?: number
@@ -31,7 +32,8 @@ export const fetch = (url: string, { timeout = 5000 }: FetchOption = {}) => {
   const controller = new AbortController()
   const timeoutCallback = setTimeout(() => controller.abort(), timeout)
 
-  return nodeFetch(url, { signal: controller.signal })
+  return fetchPonyfillInstance
+    .fetch(url, { signal: controller.signal })
     .then((res) => {
       if (!res.ok) throw new Error(`Failured fetching ${url} (${res.status})`)
       return res.text()
@@ -51,8 +53,8 @@ export const mathTypesettingConfiguration = () => {
   return conf ?? 'katex'
 }
 
-export const textEncoder = new TextEncoder()
-export const textDecoder = new TextDecoder()
+export const textEncoder = new globalThis.TextEncoder()
+export const textDecoder = new globalThis.TextDecoder()
 
 export const readFile = async (target: Uri) =>
   textDecoder.decode(await workspace.fs.readFile(target))

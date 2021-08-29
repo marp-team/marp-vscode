@@ -12,7 +12,7 @@ describe('Utilities', () => {
     })
 
     it('requests remote URL and returns the body as text', async () => {
-      const mocked: Pick<nodeFetch.Response, 'ok' | 'text'> = {
+      const mocked: Pick<Response, 'ok' | 'text'> = {
         ok: true,
         text: jest.fn(async () => 'result'),
       }
@@ -49,7 +49,9 @@ describe('Utilities', () => {
         const abortError = new Error('Request aborted')
         const timeout = 3000
 
-        jest.spyOn(nodeFetch, 'default').mockImplementation((_, opts) => {
+        const fetch: jest.SpyInstance = jest.spyOn(nodeFetch, 'default')
+
+        fetch.mockImplementation((_, opts) => {
           const signal = opts?.signal as AbortSignal
 
           return new Promise((_, reject) => {
