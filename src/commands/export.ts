@@ -1,4 +1,4 @@
-import os from 'os'
+import { tmpdir } from 'os'
 import path from 'path'
 import { nanoid } from 'nanoid'
 import {
@@ -107,7 +107,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
       if (!outputToLocalFS) {
         outputPath = path.join(
-          os.tmpdir(),
+          tmpdir(),
           `marp-vscode-tmp-${nanoid()}${ouputExt}`
         )
       }
