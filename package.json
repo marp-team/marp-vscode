@@ -186,7 +186,7 @@
     },
     "markdown.markdownItPlugins": true,
     "markdown.previewScripts": [
-      "./lib/preview.js"
+      "./preview/preview.js"
     ],
     "markdown.previewStyles": [
       "./style.css"
@@ -229,10 +229,13 @@
     }
   },
   "scripts": {
-    "build": "npm run -s build:node",
-    "build:node": "npm run -s clean && rollup -c ./rollup.config.js",
+    "build": "run-p build:*",
+    "build:node": "npm run -s clean:node && rollup -c ./rollup.config.js",
+    "build:preview": "npm run -s clean:preview && rollup -c ./rollup.preview.config.js",
     "build:web": "npm run -s clean:web && webpack --env production",
-    "clean": "rimraf lib",
+    "clean": "run-p clean:*",
+    "clean:node": "rimraf lib",
+    "clean:preview": "rimraf preview",
     "clean:web": "rimraf dist",
     "check:audit": "npm audit",
     "check:format": "npm run -s format -- -c",
@@ -247,9 +250,13 @@
     "test:unit:coverage": "jest --coverage",
     "version": "curl https://raw.githubusercontent.com/marp-team/actions/v1/lib/scripts/version.js | node && git add -A CHANGELOG.md",
     "vsce:publish": "vsce publish --no-yarn",
-    "vscode:prepublish": "run-s preversion build:*",
-    "watch": "rollup -w -c ./rollup.config.js",
-    "watch:web": "webpack --watch"
+    "vscode:prepublish": "run-s preversion build",
+    "watch": "run-p _watch:*",
+    "watch:node": "run-p _watch:node _watch:preview",
+    "watch:web": "run-p _watch:web _watch:preview",
+    "_watch:node": "rollup -w -c ./rollup.config.js",
+    "_watch:preview": "rollup -w -c ./rollup.preview.config.js",
+    "_watch:web": "webpack --watch"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.15.0",

@@ -18,9 +18,6 @@ module.exports = ({ production }) => ({
         __dirname,
         './src/web/commands/export'
       ),
-
-      // Provides alternate implementation for node module and source files
-      'abort-controller': require.resolve('abort-controller/browser'),
     },
     fallback: {
       // Node.js polyfills
