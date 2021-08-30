@@ -33,6 +33,7 @@
     "vscode": "^1.56.0"
   },
   "main": "./lib/extension.js",
+  "browser": "./dist/extension.js",
   "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#d9edf8",
@@ -228,8 +229,11 @@
     }
   },
   "scripts": {
-    "build": "npm run -s clean && rollup -c ./rollup.config.js",
+    "build": "npm run -s build:node",
+    "build:node": "npm run -s clean && rollup -c ./rollup.config.js",
+    "build:web": "npm run -s clean:web && webpack --env production",
     "clean": "rimraf lib",
+    "clean:web": "rimraf dist",
     "check:audit": "npm audit",
     "check:format": "npm run -s format -- -c",
     "check:ts": "tsc --noEmit",
@@ -243,8 +247,9 @@
     "test:unit:coverage": "jest --coverage",
     "version": "curl https://raw.githubusercontent.com/marp-team/actions/v1/lib/scripts/version.js | node && git add -A CHANGELOG.md",
     "vsce:publish": "vsce publish --no-yarn",
-    "vscode:prepublish": "run-s preversion build",
-    "watch": "rollup -w -c ./rollup.config.js"
+    "vscode:prepublish": "run-s preversion build:*",
+    "watch": "rollup -w -c ./rollup.config.js",
+    "watch:web": "webpack --watch"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.15.0",
@@ -264,6 +269,8 @@
     "builtin-modules": "^3.2.0",
     "codecov": "^3.8.3",
     "dedent": "^0.7.0",
+    "esbuild": "^0.12.24",
+    "esbuild-loader": "^2.15.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
@@ -277,6 +284,8 @@
     "markdown-it": "^12.2.0",
     "nanoid": "^3.1.25",
     "npm-run-all": "^4.1.5",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "portfinder": "^1.0.28",
     "prettier": "^2.3.2",
     "rehype-parse": "^8.0.2",
@@ -296,6 +305,8 @@
     "unist-util-visit": "^4.0.0",
     "utf-8-validate": "^5.0.5",
     "vsce": "^1.96.1",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0",
     "yaml": "^2.0.0-5"
   },
   "dependencies": {

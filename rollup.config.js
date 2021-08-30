@@ -1,3 +1,4 @@
+// Rollup is used to bundle the code for Node.js extension.
 import path from 'path'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'

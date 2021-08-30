@@ -1,5 +1,5 @@
 import { commands, QuickPickItem, window, workspace } from 'vscode'
-import { contributes } from '../../package.json'
+import pkg from '../../package.json'
 import { command as exportCommand } from './export'
 import { command as openExtensionSettingsCommand } from './open-extension-settings'
 import { command as toggleMarpFeatureCommand } from './toggle-marp-feature'
@@ -10,7 +10,9 @@ const contributedCommands = [exportCommand, toggleMarpFeatureCommand]
 const availableCommands: (QuickPickItem & { [cmdSymbol]: string })[] = []
 
 for (const cmdPath of contributedCommands) {
-  const cmd = contributes.commands.find(({ command }) => cmdPath === command)
+  const cmd = pkg.contributes.commands.find(
+    ({ command }) => cmdPath === command
+  )
 
   if (cmd) {
     availableCommands.push({
