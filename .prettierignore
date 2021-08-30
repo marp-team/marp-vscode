@@ -1,5 +1,6 @@
 .git/
 coverage/
+dist/
 lib/
 preview/
 node_modules

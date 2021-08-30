@@ -1,5 +1,3 @@
-import { TextEncoder } from 'util'
-
 type MockedConf = Record<string, any>
 
 const defaultVSCodeVersion = 'v1.36.0'
