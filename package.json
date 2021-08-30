@@ -288,6 +288,7 @@
     "path-browserify": "^1.0.1",
     "portfinder": "^1.0.28",
     "prettier": "^2.3.2",
+    "process": "^0.11.10",
     "rehype-parse": "^8.0.2",
     "remark-math": "^5.0.0",
     "remark-parse": "^10.0.0",

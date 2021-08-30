@@ -35,6 +35,19 @@
       "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
       "outFiles": ["${workspaceFolder}/lib/**/*.js"]
+    },
+    {
+      "name": "Run on Web",
+      "type": "pwa-extensionHost",
+      "debugWebWorkerHost": true,
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--disable-extensions",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionDevelopmentKind=web"
+      ],
+      "outFiles": ["${workspaceFolder}/lib/**/*.js"]
     }
   ]
 }

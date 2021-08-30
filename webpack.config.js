@@ -2,6 +2,7 @@
 const path = require('path')
 const esbuild = require('esbuild')
 const { ESBuildMinifyPlugin } = require('esbuild-loader')
+const { ProvidePlugin } = require('webpack')
 const pkg = require('./package.json')
 
 const output = path.resolve(__dirname, pkg.browser)
@@ -13,8 +14,10 @@ module.exports = ({ production }) => ({
     mainFields: ['browser', 'module', 'main'],
     extensions: ['.ts', '.js'],
     alias: {
-      // Not working in Browser
-      [path.resolve(__dirname, './src/commands/export')]: false,
+      [path.resolve(__dirname, './src/commands/export')]: path.resolve(
+        __dirname,
+        './src/web/commands/export'
+      ),
 
       // Provides alternate implementation for node module and source files
       'abort-controller': require.resolve('abort-controller/browser'),
@@ -53,4 +56,6 @@ module.exports = ({ production }) => ({
   performance: {
     hints: false,
   },
+  plugins: [new ProvidePlugin({ process: 'process/browser.js' })],
+  devtool: production ? false : 'nosources-source-map',
 })
