@@ -34,7 +34,7 @@ marp: true
 Start writing!
 ```
 
-You can create a new Marp Markdown document from **"New File..."** menu (<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Win</kbd> + <kbd>N</kbd> / <kbd>Alt</kbd> + <kbd>Cmd</kbd> + <kbd>Ctrl</kbd> + <kbd>N</kbd>) to start writing presentation quickly.
+You can create a new Marp Markdown document from **"New File..."** menu (<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Win</kbd> + <kbd>N</kbd> / <kbd>Alt</kbd> + <kbd>Cmd</kbd> + <kbd>Ctrl</kbd> + <kbd>N</kbd>) to start writing a slide deck quickly.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/new-file.gif" alt="Create Marp Markdown" width="500" />
