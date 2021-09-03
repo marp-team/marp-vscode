@@ -178,12 +178,31 @@ describe('#doExport', () => {
     expect(env.openExternal).toHaveBeenCalledWith(uri)
   })
 
-  it('shows warning when Marp CLI throws error', async () => {
-    jest.spyOn(marpCli, 'default').mockRejectedValue(new Error('ERROR'))
+  it('shows error when Marp CLI throws error', async () => {
+    const marpCliSpy = jest.spyOn(marpCli, 'default')
 
+    // MarpCLIError
+    marpCliSpy.mockRejectedValueOnce(new marpCli.MarpCLIError('MarpCLIError'))
     await exportModule.doExport(saveURI(), document)
+
+    expect(window.showErrorMessage).toHaveBeenCalledWith(
+      expect.stringContaining('MarpCLIError')
+    )
+
+    // Error object
+    marpCliSpy.mockRejectedValueOnce(new Error('ERROR'))
+    await exportModule.doExport(saveURI(), document)
+
     expect(window.showErrorMessage).toHaveBeenCalledWith(
       expect.stringContaining('[Error] ERROR')
+    )
+
+    // Unknown error
+    marpCliSpy.mockRejectedValueOnce('UNKNOWN ERROR!')
+    await exportModule.doExport(saveURI(), document)
+
+    expect(window.showErrorMessage).toHaveBeenCalledWith(
+      expect.stringContaining('UNKNOWN ERROR!')
     )
   })
 
