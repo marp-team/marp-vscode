@@ -15,7 +15,7 @@ import marpCli, {
   createWorkFile,
   MarpCLIError,
 } from '../marp-cli'
-import { marpConfiguration, unlink } from '../utils'
+import { marpConfiguration, unlink, hasToString } from '../utils'
 import {
   createWorkspaceProxyServer,
   WorkspaceProxyServer,
@@ -152,8 +152,9 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
         `Failure to export${(() => {
           if (e instanceof MarpCLIError) return `. ${e.message}`
           if (e instanceof Error) return `: [${e.name}] ${e.message}`
+          if (hasToString(e)) return `. ${e.toString()}`
 
-          return `. ${e.toString()}`
+          return ' by unknown error.'
         })()}`
       )
     } finally {
@@ -174,7 +175,11 @@ export const saveDialog = async (document: TextDocument) => {
   const types = [...new Set<string>([defaultType, ...baseTypes])]
 
   const saveURI = await window.showSaveDialog({
-    defaultUri: Uri.file(fsPath.slice(0, -path.extname(fsPath).length) + ext),
+    defaultUri: Uri.file(
+      (document.isUntitled
+        ? 'untitled'
+        : fsPath.slice(0, -path.extname(fsPath).length)) + ext
+    ),
     filters: types.reduce((f, t) => {
       if (baseTypes.includes(t)) f[descriptions[t]] = extensions[t]
       return f

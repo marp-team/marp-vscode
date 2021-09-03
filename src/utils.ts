@@ -64,3 +64,20 @@ export const writeFile = (target: Uri, text: string) =>
 
 export const unlink = (target: Uri) =>
   workspace.fs.delete(target, { useTrash: false })
+
+export const hasToString = (
+  target: unknown
+): target is { toString(): string } => {
+  switch (typeof target) {
+    case 'object':
+      return typeof target?.toString === 'function'
+    case 'bigint':
+    case 'boolean':
+    case 'function':
+    case 'number':
+    case 'string':
+    case 'symbol':
+      return true
+  }
+  return false
+}
