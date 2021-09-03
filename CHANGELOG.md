@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- VS Code >= 1.60 is now required ([#283](https://github.com/marp-team/marp-vscode/pull/283))
+
 ### Added
 
 - Set up build for Web extension such as [github.dev](https://github.dev) ([#281](https://github.com/marp-team/marp-vscode/issues/281), [#283](https://github.com/marp-team/marp-vscode/pull/283))
