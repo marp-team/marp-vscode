@@ -117,6 +117,18 @@ describe('#saveDialog', () => {
     )
   })
 
+  it('opens save dialog with default name "untitled" if the document is untitled', async () => {
+    const document: any = { uri: { fsPath: '' }, isUntitled: true }
+
+    await exportModule.saveDialog(document)
+
+    expect(window.showSaveDialog).toHaveBeenCalledWith(
+      expect.objectContaining({
+        defaultUri: expect.objectContaining({ fsPath: 'untitled.pdf' }),
+      })
+    )
+  })
+
   it('opens save dialog with configured default type', async () => {
     setConfiguration({ 'markdown.marp.exportType': 'pptx' })
 
@@ -197,12 +209,20 @@ describe('#doExport', () => {
       expect.stringContaining('[Error] ERROR')
     )
 
-    // Unknown error
+    // Unknown error (via toString())
     marpCliSpy.mockRejectedValueOnce('UNKNOWN ERROR!')
     await exportModule.doExport(saveURI(), document)
 
     expect(window.showErrorMessage).toHaveBeenCalledWith(
       expect.stringContaining('UNKNOWN ERROR!')
+    )
+
+    // WTF
+    marpCliSpy.mockRejectedValueOnce(null)
+    await exportModule.doExport(saveURI(), document)
+
+    expect(window.showErrorMessage).toHaveBeenCalledWith(
+      'Failure to export by unknown error.'
     )
   })
 

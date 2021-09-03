@@ -15,7 +15,7 @@ import marpCli, {
   createWorkFile,
   MarpCLIError,
 } from '../marp-cli'
-import { marpConfiguration, unlink } from '../utils'
+import { marpConfiguration, unlink, hasToString } from '../utils'
 import {
   createWorkspaceProxyServer,
   WorkspaceProxyServer,
@@ -152,8 +152,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
         `Failure to export${(() => {
           if (e instanceof MarpCLIError) return `. ${e.message}`
           if (e instanceof Error) return `: [${e.name}] ${e.message}`
-          if (typeof e === 'object' && typeof e?.toString === 'function')
-            return `. ${e.toString()}`
+          if (hasToString(e)) return `. ${e.toString()}`
 
           return ' by unknown error.'
         })()}`
