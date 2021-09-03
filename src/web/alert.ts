@@ -2,8 +2,8 @@ import { env, window, MessageItem, Memento } from 'vscode'
 
 const dontShowAgainKey = 'webExtAlertDontShowAgain' as const
 
-const continueItem: MessageItem = { title: 'Continue' }
-const dontShowAgainItem: MessageItem = {
+export const continueItem: MessageItem = { title: 'Continue' }
+export const dontShowAgainItem: MessageItem = {
   title: "Don't show again",
   isCloseAffordance: true,
 }
@@ -23,5 +23,5 @@ export const showAlertForWebExtension = async (memento: Memento) => {
     dontShowAgainItem
   )
 
-  if (ret === dontShowAgainItem) memento.update(dontShowAgainKey, true)
+  if (ret === dontShowAgainItem) await memento.update(dontShowAgainKey, true)
 }

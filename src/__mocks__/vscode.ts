@@ -135,7 +135,10 @@ export const commands = {
 }
 
 export const env = {
+  appHost: 'desktop',
   openExternal: jest.fn(),
+
+  _createMemento: () => new Memento(),
 }
 
 export const FileSystem = {
@@ -180,6 +183,20 @@ export class MarkdownString {
 
   toString() {
     return this.value
+  }
+}
+
+export class Memento {
+  private _map: Map<string, any> = new Map()
+
+  get(key: string) {
+    return this._map.get(key)
+  }
+  keys() {
+    return [...this._map.keys()]
+  }
+  async update(key: string, value: any) {
+    this._map.set(key, value)
   }
 }
 

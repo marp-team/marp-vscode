@@ -1,23 +1,34 @@
 /** @jest-environment jsdom */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path'
 import { TextEncoder } from 'util'
 import { Marp } from '@marp-team/marp-core'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
 import * as nodeFetch from 'node-fetch'
-import { Uri, commands, workspace } from 'vscode'
+import {
+  Memento,
+  MessageItem,
+  Uri,
+  commands,
+  window,
+  workspace,
+  env,
+} from 'vscode'
 
 jest.mock('node-fetch')
 jest.mock('vscode')
 
 let themes: typeof import('./themes')['default']
+let dontShowAgainItem: MessageItem
 
 const extension = (): typeof import('./extension') => {
   let ext
 
   jest.isolateModules(() => {
     ext = require('./extension') // Shut up cache
-    themes = require('./themes').default // eslint-disable-line @typescript-eslint/no-var-requires
+    themes = require('./themes').default
+    dontShowAgainItem = require('./web/alert').dontShowAgainItem
   })
 
   return ext
@@ -27,19 +38,24 @@ const setConfiguration: (conf?: Record<string, unknown>) => void = (
   workspace as any
 )._setConfiguration
 
+const createMemento = (): Memento => (env as any)._createMemento()
+
 describe('#activate', () => {
-  const extContext: any = { subscriptions: { push: jest.fn() } }
+  const extContext = (): any => ({
+    subscriptions: { push: jest.fn() },
+    globalState: createMemento(),
+  })
 
   it('contains #extendMarkdownIt', () => {
     const { activate, extendMarkdownIt } = extension()
 
-    expect(activate(extContext)).toEqual(
+    expect(activate(extContext())).toEqual(
       expect.objectContaining({ extendMarkdownIt })
     )
   })
 
   it('refreshes Markdown preview when affected configuration has changed', () => {
-    extension().activate(extContext)
+    extension().activate(extContext())
 
     const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
     expect(onDidChgConf).toHaveBeenCalledWith(expect.any(Function))
@@ -55,6 +71,51 @@ describe('#activate', () => {
     expect(commands.executeCommand).toHaveBeenCalledWith(
       'markdown.preview.refresh'
     )
+  })
+
+  it('does not show alert modal', () => {
+    extension().activate(extContext())
+    expect(window.showErrorMessage).not.toHaveBeenCalled()
+  })
+
+  describe('when running Web extension', () => {
+    let previousAppHost: string
+
+    beforeEach(() => {
+      previousAppHost = env.appHost
+      ;(env as any).appHost = 'web'
+    })
+
+    afterEach(() => {
+      ;(env as any).appHost = previousAppHost
+    })
+
+    it('shows alert modal', () => {
+      extension().activate(extContext())
+      expect(window.showErrorMessage).toHaveBeenCalledWith(
+        expect.stringContaining('Marp for VS Code extension on the web'),
+        expect.objectContaining({ modal: true }),
+        expect.objectContaining({ title: expect.any(String) }),
+        expect.objectContaining({ title: expect.any(String) })
+      )
+    })
+
+    it(`does not show alert modal again if reacted to "Don't show again"`, async () => {
+      const { activate } = extension()
+      const showErrorMessageMock = window.showErrorMessage as jest.Mock
+      showErrorMessageMock.mockResolvedValueOnce(dontShowAgainItem)
+
+      // React to "Don't show again"
+      const context = extContext()
+      activate(context)
+
+      expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
+      await showErrorMessageMock.mock.results[0].value
+
+      // Activate extension again, with already reacted globalState
+      activate({ ...extContext(), globalState: context.globalState })
+      expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
+    })
   })
 })
 
