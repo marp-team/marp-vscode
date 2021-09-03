@@ -203,6 +203,13 @@ You can enable previsualization of HTML code within Marp Markdown with the `mark
 
 It could allow script injection from untrusted Markdown files. Thus, this feature is disabled as a default and will be _always ignored in the untrusted workspace_. Use with caution.
 
+## Web extension (Early preview)
+
+You can test installing and using Marp extension in VS Code on the Web environment like [github.dev](https://github.dev). The web extension has many limitations:
+
+- _Export command cannot use_ because it is depending on Marp CLI that is not designed for Web. Please use VS Code that is installed to your local environment or GitHub Codespaces.
+- Currently, VS Code's Markdown engine for the web seems not be able to extend. Thus, Markdown preview and outline extensions are not available on the web for now.
+
 ## Contributing
 
 Are you interested in contributing? Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md) and [the common contributing guideline for Marp team](https://github.com/marp-team/.github/blob/master/CONTRIBUTING.md).
