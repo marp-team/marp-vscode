@@ -10,6 +10,10 @@
 
 - [Early preview] Set up build for Web extension such as [github.dev](https://github.dev) ([#281](https://github.com/marp-team/marp-vscode/issues/281), [#283](https://github.com/marp-team/marp-vscode/pull/283))
 
+### Fixed
+
+- Fix the default export name for untitled Markdown ([#280](https://github.com/marp-team/marp-vscode/issues/280), [#285](https://github.com/marp-team/marp-vscode/pull/285))
+
 ### Changed
 
 - Upgrade Marp CLI to [v1.4.0](https://github.com/marp-team/marp-cli/releases/tag/v1.4.0) ([#282](https://github.com/marp-team/marp-vscode/pull/282))
