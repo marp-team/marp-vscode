@@ -30,9 +30,10 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.56.0"
+    "vscode": "^1.60.0"
   },
   "main": "./lib/extension.js",
+  "browser": "./dist/extension.js",
   "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#d9edf8",
@@ -185,7 +186,7 @@
     },
     "markdown.markdownItPlugins": true,
     "markdown.previewScripts": [
-      "./lib/preview.js"
+      "./preview/preview.js"
     ],
     "markdown.previewStyles": [
       "./style.css"
@@ -228,8 +229,14 @@
     }
   },
   "scripts": {
-    "build": "npm run -s clean && rollup -c ./rollup.config.js",
-    "clean": "rimraf lib",
+    "build": "run-p build:*",
+    "build:node": "npm run -s clean:node && rollup -c ./rollup.config.js",
+    "build:preview": "npm run -s clean:preview && rollup -c ./rollup.preview.config.js",
+    "build:web": "npm run -s clean:web && webpack --env production",
+    "clean": "run-p clean:*",
+    "clean:node": "rimraf lib",
+    "clean:preview": "rimraf preview",
+    "clean:web": "rimraf dist",
     "check:audit": "npm audit",
     "check:format": "npm run -s format -- -c",
     "check:ts": "tsc --noEmit",
@@ -244,7 +251,12 @@
     "version": "curl https://raw.githubusercontent.com/marp-team/actions/v1/lib/scripts/version.js | node && git add -A CHANGELOG.md",
     "vsce:publish": "vsce publish --no-yarn",
     "vscode:prepublish": "run-s preversion build",
-    "watch": "rollup -w -c ./rollup.config.js"
+    "watch": "run-p _watch:*",
+    "watch:node": "run-p _watch:node _watch:preview",
+    "watch:web": "run-p _watch:web _watch:preview",
+    "_watch:node": "rollup -w -c ./rollup.config.js",
+    "_watch:preview": "rollup -w -c ./rollup.preview.config.js",
+    "_watch:web": "webpack --watch"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.15.0",
@@ -256,8 +268,7 @@
     "@types/jest": "^27.0.1",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^12.2.0",
-    "@types/node-fetch": "^2.5.12",
-    "@types/vscode": "~1.56.0",
+    "@types/vscode": "~1.60.0",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
     "abort-controller": "^3.0.0",
@@ -265,21 +276,26 @@
     "builtin-modules": "^3.2.0",
     "codecov": "^3.8.3",
     "dedent": "^0.7.0",
+    "esbuild": "^0.12.24",
+    "esbuild-loader": "^2.15.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.24.1",
     "eslint-plugin-jest": "^24.4.0",
     "express": "^4.17.1",
+    "fetch-ponyfill": "^7.1.0",
     "jest": "^27.0.6",
     "jest-junit": "^12.2.0",
     "lodash.debounce": "^4.0.8",
     "markdown-it": "^12.2.0",
     "nanoid": "^3.1.25",
-    "node-fetch": "^2.6.1",
     "npm-run-all": "^4.1.5",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "portfinder": "^1.0.28",
     "prettier": "^2.3.2",
+    "process": "^0.11.10",
     "rehype-parse": "^8.0.2",
     "remark-math": "^5.0.0",
     "remark-parse": "^10.0.0",
@@ -297,6 +313,8 @@
     "unist-util-visit": "^4.0.0",
     "utf-8-validate": "^5.0.5",
     "vsce": "^1.96.1",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0",
     "yaml": "^2.0.0-5"
   },
   "dependencies": {

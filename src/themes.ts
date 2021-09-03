@@ -1,7 +1,4 @@
-import fs from 'fs'
 import path from 'path'
-import { URL } from 'url'
-import { promisify, TextDecoder } from 'util'
 import Marp from '@marp-team/marp-core'
 import {
   commands,
@@ -12,7 +9,7 @@ import {
   TextDocument,
   Uri,
 } from 'vscode'
-import { fetch, marpConfiguration } from './utils'
+import { fetch, marpConfiguration, readFile } from './utils'
 
 export enum ThemeType {
   File = 'File',
@@ -35,14 +32,10 @@ export interface SizePreset {
   width: string
 }
 
-const readFile = promisify(fs.readFile)
-
 const isRemotePath = (path: string) =>
   path.startsWith('https:') || path.startsWith('http:')
 
 const isVirtualPath = (path: string) => /^[a-z0-9.+-]+:\/\/\b/.test(path)
-
-const textDecoder = new TextDecoder()
 
 export class Themes {
   observedThemes = new Map<string, Theme>()
@@ -173,13 +166,11 @@ export class Themes {
     const css = await (async (): Promise<string> => {
       switch (type) {
         case ThemeType.File:
-          return (await readFile(themePath)).toString()
+          return await readFile(Uri.file(themePath))
         case ThemeType.Remote:
           return await fetch(themePath, { timeout: 5000 })
         case ThemeType.VirtualFS:
-          return textDecoder.decode(
-            await workspace.fs.readFile(Uri.parse(themePath, true))
-          )
+          return await readFile(Uri.parse(themePath, true))
       }
     })()
 

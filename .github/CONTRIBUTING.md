@@ -28,6 +28,8 @@ Typically using VS Code's debugger is good. See launch configurations on [`.vsco
 - **Build and run**: Compile TypeScript and run compiled extension.
 - **Run**: Only run compiled extension. It's useful running together with `npm run watch`. Recommend to execute `Restart Debugging` manually when updated source code.
 - **Run with extensions**: Run compiled extension with enabled other installed extensions. It's useful to validate the race condition.
+- **Build and run on Web**: Compile and run the extension on [the web environment](https://code.visualstudio.com/api/extension-guides/web-extensions).
+- **Run on Web**: Run compiled extension on the web environment.
 
 ### Unit testing
 

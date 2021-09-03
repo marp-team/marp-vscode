@@ -38,6 +38,7 @@ module.exports = {
   coverageThreshold: { global: { lines: 95 } },
   preset: 'ts-jest/presets/js-with-babel',
   restoreMocks: true,
+  setupFiles: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'node',
   transformIgnorePatterns: [`/node_modules/(?!${esModules.join('|')})`],
 }

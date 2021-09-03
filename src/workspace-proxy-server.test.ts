@@ -1,5 +1,6 @@
-import fetch from 'node-fetch'
+import fetchPonyfill from 'fetch-ponyfill'
 import { FileType, Uri, workspace } from 'vscode'
+import { textEncoder } from './utils'
 import {
   createWorkspaceProxyServer,
   WorkspaceProxyServer,
@@ -10,6 +11,7 @@ jest.mock('vscode')
 describe('Workspace Proxy Server', () => {
   let server: WorkspaceProxyServer | undefined
 
+  const { fetch } = fetchPonyfill()
   const wsUri: Uri = Object.assign(Uri.parse('untitled:untitled'), {
     with: jest.fn(() => wsUri),
   })
@@ -23,6 +25,10 @@ describe('Workspace Proxy Server', () => {
   afterEach(() => server?.dispose())
 
   it('listens proxy server', async () => {
+    jest
+      .spyOn(workspace.fs, 'readFile')
+      .mockResolvedValue(textEncoder.encode('readFile'))
+
     server = await createWorkspaceProxyServer(wsFolder)
     expect(server.port).toBeGreaterThanOrEqual(8192)
 

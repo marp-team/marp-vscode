@@ -1,13 +1,16 @@
-import { unlink, writeFile } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
-import { promisify } from 'util'
 import { MarpOptions } from '@marp-team/marp-core'
 import { Options } from 'markdown-it'
 import { nanoid } from 'nanoid'
 import { TextDocument, Uri, workspace } from 'vscode'
 import themes, { ThemeType } from './themes'
-import { marpConfiguration, mathTypesettingConfiguration } from './utils'
+import {
+  marpConfiguration,
+  mathTypesettingConfiguration,
+  unlink,
+  writeFile,
+} from './utils'
 
 export interface WorkFile {
   path: string
@@ -103,9 +106,10 @@ export const marpCoreOptionForCLI = async (
             ) {
               const cssName = `.marp-vscode-cli-theme-${nanoid()}.css`
               const tmp = path.join(tmpdir(), cssName)
+              const tmpUri = Uri.file(tmp)
 
-              await promisify(writeFile)(tmp, theme.css)
-              return { path: tmp, cleanup: () => promisify(unlink)(tmp) }
+              await writeFile(tmpUri, theme.css)
+              return { path: tmp, cleanup: () => unlink(tmpUri) }
             }
           },
           (e) => console.error(e)

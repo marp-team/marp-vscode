@@ -1,13 +1,10 @@
-import fs from 'fs'
-import { promisify } from 'util'
 import * as nodeFetch from 'node-fetch'
 import { Uri, workspace } from 'vscode'
 import * as option from './option'
+import { textEncoder } from './utils'
 
 jest.mock('node-fetch')
 jest.mock('vscode')
-
-const readFile = promisify(fs.readFile)
 
 const setConfiguration: (conf?: Record<string, unknown>) => void = (
   workspace as any
@@ -115,7 +112,10 @@ describe('Option', () => {
 
         try {
           expect(themeSet).toHaveLength(1)
-          expect((await readFile(themeSet[0])).toString()).toBe(css)
+          expect(workspace.fs.writeFile).toHaveBeenCalledWith(
+            expect.objectContaining({ fsPath: themeSet[0] }),
+            textEncoder.encode(css)
+          )
         } finally {
           await Promise.all(vscode.themeFiles.map((w) => w.cleanup()))
         }

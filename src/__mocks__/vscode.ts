@@ -1,5 +1,3 @@
-import { TextEncoder } from 'util'
-
 type MockedConf = Record<string, any>
 
 const defaultVSCodeVersion = 'v1.36.0'
@@ -137,7 +135,10 @@ export const commands = {
 }
 
 export const env = {
+  appHost: 'desktop',
   openExternal: jest.fn(),
+
+  _createMemento: () => new Memento(),
 }
 
 export const FileSystem = {
@@ -148,7 +149,9 @@ export const FileSystem = {
     size: 0,
     type: FileType.File,
   })),
-  readFile: jest.fn().mockResolvedValue(new TextEncoder().encode('readFile')),
+  delete: jest.fn(async () => undefined),
+  readFile: jest.fn(async () => undefined),
+  writeFile: jest.fn(async () => undefined),
   isWritableFileSystem: jest.fn((scheme: string) => scheme === 'file'),
 }
 
@@ -183,6 +186,20 @@ export class MarkdownString {
   }
 }
 
+export class Memento {
+  private _map: Map<string, any> = new Map()
+
+  get(key: string) {
+    return this._map.get(key)
+  }
+  keys() {
+    return [...this._map.keys()]
+  }
+  async update(key: string, value: any) {
+    this._map.set(key, value)
+  }
+}
+
 export let version: string = defaultVSCodeVersion
 export const _setVSCodeVersion = (value: string) => {
   version = value
@@ -203,8 +220,8 @@ export const window = {
 
 export const workspace = {
   createFileSystemWatcher: jest.fn(() => ({
-    onDidChange: jest.fn(),
-    onDidDelete: jest.fn(),
+    onDidChange: jest.fn((): any => ({ dispose: jest.fn() })),
+    onDidDelete: jest.fn((): any => ({ dispose: jest.fn() })),
   })),
   fs: FileSystem,
   getConfiguration: jest.fn((section?: string) => ({

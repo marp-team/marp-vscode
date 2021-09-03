@@ -1,3 +1,5 @@
 coverage
 lib
+dist
+preview
 node_modules

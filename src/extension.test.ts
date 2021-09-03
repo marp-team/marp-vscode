@@ -1,25 +1,34 @@
 /** @jest-environment jsdom */
-import fs from 'fs'
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path'
 import { TextEncoder } from 'util'
 import { Marp } from '@marp-team/marp-core'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
 import * as nodeFetch from 'node-fetch'
-import { Uri, commands, workspace } from 'vscode'
+import {
+  Memento,
+  MessageItem,
+  Uri,
+  commands,
+  window,
+  workspace,
+  env,
+} from 'vscode'
 
-jest.mock('fs')
 jest.mock('node-fetch')
 jest.mock('vscode')
 
 let themes: typeof import('./themes')['default']
+let dontShowAgainItem: MessageItem
 
 const extension = (): typeof import('./extension') => {
   let ext
 
   jest.isolateModules(() => {
     ext = require('./extension') // Shut up cache
-    themes = require('./themes').default // eslint-disable-line @typescript-eslint/no-var-requires
+    themes = require('./themes').default
+    dontShowAgainItem = require('./web/alert').dontShowAgainItem
   })
 
   return ext
@@ -29,19 +38,24 @@ const setConfiguration: (conf?: Record<string, unknown>) => void = (
   workspace as any
 )._setConfiguration
 
+const createMemento = (): Memento => (env as any)._createMemento()
+
 describe('#activate', () => {
-  const extContext: any = { subscriptions: { push: jest.fn() } }
+  const extContext = (): any => ({
+    subscriptions: { push: jest.fn() },
+    globalState: createMemento(),
+  })
 
   it('contains #extendMarkdownIt', () => {
     const { activate, extendMarkdownIt } = extension()
 
-    expect(activate(extContext)).toEqual(
+    expect(activate(extContext())).toEqual(
       expect.objectContaining({ extendMarkdownIt })
     )
   })
 
   it('refreshes Markdown preview when affected configuration has changed', () => {
-    extension().activate(extContext)
+    extension().activate(extContext())
 
     const onDidChgConf = workspace.onDidChangeConfiguration as jest.Mock
     expect(onDidChgConf).toHaveBeenCalledWith(expect.any(Function))
@@ -57,6 +71,51 @@ describe('#activate', () => {
     expect(commands.executeCommand).toHaveBeenCalledWith(
       'markdown.preview.refresh'
     )
+  })
+
+  it('does not show alert modal', () => {
+    extension().activate(extContext())
+    expect(window.showErrorMessage).not.toHaveBeenCalled()
+  })
+
+  describe('when running Web extension', () => {
+    let previousAppHost: string
+
+    beforeEach(() => {
+      previousAppHost = env.appHost
+      ;(env as any).appHost = 'web'
+    })
+
+    afterEach(() => {
+      ;(env as any).appHost = previousAppHost
+    })
+
+    it('shows alert modal', () => {
+      extension().activate(extContext())
+      expect(window.showErrorMessage).toHaveBeenCalledWith(
+        expect.stringContaining('Marp for VS Code extension on the web'),
+        expect.objectContaining({ modal: true }),
+        expect.objectContaining({ title: expect.any(String) }),
+        expect.objectContaining({ title: expect.any(String) })
+      )
+    })
+
+    it(`does not show alert modal again if reacted to "Don't show again"`, async () => {
+      const { activate } = extension()
+      const showErrorMessageMock = window.showErrorMessage as jest.Mock
+      showErrorMessageMock.mockResolvedValueOnce(dontShowAgainItem)
+
+      // React to "Don't show again"
+      const context = extContext()
+      activate(context)
+
+      expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
+      await showErrorMessageMock.mock.results[0].value
+
+      // Activate extension again, with already reacted globalState
+      activate({ ...extContext(), globalState: context.globalState })
+      expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
+    })
   })
 })
 
@@ -257,13 +316,23 @@ describe('#extendMarkdownIt', () => {
         await Promise.all(themes.loadStyles(Uri.parse('.')))
 
         expect(fetch).toHaveBeenCalledWith(themeURL, expect.any(Object))
+        expect(themes.observedThemes.size).toBe(1)
         expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(css)
+
+        // Watcher events will not register
+        const [theme] = themes.observedThemes.values()
+        expect(theme.onDidChange).toBeUndefined()
+        expect(theme.onDidDelete).toBeUndefined()
+
+        // Clean up
+        themes.dispose()
+        expect(themes.observedThemes.size).toBe(0)
       })
 
       it('registers pre-loaded themes from specified path defined in configuration', async () => {
         const fsReadFile = jest
-          .spyOn(fs, 'readFile')
-          .mockImplementation((_, cb) => cb(null, Buffer.from(css)))
+          .spyOn(workspace.fs, 'readFile')
+          .mockResolvedValue(new TextEncoder().encode(css))
 
         setConfiguration({ 'markdown.marp.themes': ['./test.css'] })
 
@@ -281,16 +350,29 @@ describe('#extendMarkdownIt', () => {
         await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
 
         expect(fsReadFile).toHaveBeenCalledWith(
-          path.resolve(baseDir, './test.css'),
-          expect.any(Function)
+          expect.objectContaining({
+            fsPath: path.resolve(baseDir, './test.css'),
+          })
         )
+        expect(themes.observedThemes.size).toBe(1)
         expect(markdown.render(mdBody)).toContain(css)
+
+        // Theme object
+        const [theme] = themes.observedThemes.values()
+        expect(theme.onDidChange).toHaveProperty('dispose')
+        expect(theme.onDidDelete).toHaveProperty('dispose')
+
+        // Clean up
+        themes.dispose()
+        expect(theme.onDidChange?.dispose).toHaveBeenCalled()
+        expect(theme.onDidDelete?.dispose).toHaveBeenCalled()
+        expect(themes.observedThemes.size).toBe(0)
       })
 
       it('cannot traverse theme CSS path to parent directory as same as markdown.styles', async () => {
         jest
-          .spyOn(fs, 'readFile')
-          .mockImplementation((_, cb) => cb(null, Buffer.from(css)))
+          .spyOn(workspace.fs, 'readFile')
+          .mockResolvedValue(new TextEncoder().encode(css))
 
         setConfiguration({ 'markdown.marp.themes': ['../test.css'] })
 
