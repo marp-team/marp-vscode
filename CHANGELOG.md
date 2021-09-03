@@ -9,6 +9,7 @@
 ### Added
 
 - [Early preview] Set up build for Web extension such as [github.dev](https://github.dev) ([#281](https://github.com/marp-team/marp-vscode/issues/281), [#283](https://github.com/marp-team/marp-vscode/pull/283))
+- A guide for creating Marp Markdown quickly ([#287](https://github.com/marp-team/marp-vscode/pull/287))
 
 ### Fixed
 
