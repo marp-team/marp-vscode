@@ -13,6 +13,7 @@ import lineNumber from './plugins/line-number'
 import outline, { rule as outlineRule } from './plugins/outline'
 import themes, { Themes } from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
+import { showAlertForWebExtension } from './web/alert'
 
 const shouldRefreshConfs = [
   'markdown.marp.breaks',
@@ -131,8 +132,10 @@ export function extendMarkdownIt(md: any) {
         try {
           marp.themeSet.add(theme.css)
         } catch (e) {
+          const msg = e instanceof Error ? ` (${e.message})` : ''
+
           console.error(
-            `Failed to register custom theme from "${theme.path}". (${e.message})`
+            `Failed to register custom theme from "${theme.path}".${msg}`
           )
         }
       }
@@ -173,7 +176,9 @@ export function extendMarkdownIt(md: any) {
   return md
 }
 
-export const activate = ({ subscriptions }: ExtensionContext) => {
+export const activate = ({ subscriptions, globalState }: ExtensionContext) => {
+  showAlertForWebExtension(globalState)
+
   diagnostics(subscriptions)
   languageProvider(subscriptions)
 
