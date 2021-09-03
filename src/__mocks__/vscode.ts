@@ -220,8 +220,8 @@ export const window = {
 
 export const workspace = {
   createFileSystemWatcher: jest.fn(() => ({
-    onDidChange: jest.fn(),
-    onDidDelete: jest.fn(),
+    onDidChange: jest.fn((): any => ({ dispose: jest.fn() })),
+    onDidDelete: jest.fn((): any => ({ dispose: jest.fn() })),
   })),
   fs: FileSystem,
   getConfiguration: jest.fn((section?: string) => ({

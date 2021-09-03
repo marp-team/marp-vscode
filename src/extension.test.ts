@@ -316,7 +316,17 @@ describe('#extendMarkdownIt', () => {
         await Promise.all(themes.loadStyles(Uri.parse('.')))
 
         expect(fetch).toHaveBeenCalledWith(themeURL, expect.any(Object))
+        expect(themes.observedThemes.size).toBe(1)
         expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(css)
+
+        // Watcher events will not register
+        const [theme] = themes.observedThemes.values()
+        expect(theme.onDidChange).toBeUndefined()
+        expect(theme.onDidDelete).toBeUndefined()
+
+        // Clean up
+        themes.dispose()
+        expect(themes.observedThemes.size).toBe(0)
       })
 
       it('registers pre-loaded themes from specified path defined in configuration', async () => {
@@ -344,7 +354,19 @@ describe('#extendMarkdownIt', () => {
             fsPath: path.resolve(baseDir, './test.css'),
           })
         )
+        expect(themes.observedThemes.size).toBe(1)
         expect(markdown.render(mdBody)).toContain(css)
+
+        // Theme object
+        const [theme] = themes.observedThemes.values()
+        expect(theme.onDidChange).toHaveProperty('dispose')
+        expect(theme.onDidDelete).toHaveProperty('dispose')
+
+        // Clean up
+        themes.dispose()
+        expect(theme.onDidChange?.dispose).toHaveBeenCalled()
+        expect(theme.onDidDelete?.dispose).toHaveBeenCalled()
+        expect(themes.observedThemes.size).toBe(0)
       })
 
       it('cannot traverse theme CSS path to parent directory as same as markdown.styles', async () => {
