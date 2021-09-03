@@ -34,7 +34,13 @@ marp: true
 Start writing!
 ```
 
-It also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp feature for current Markdown"**. (`markdown.marp.toggleMarpFeature`).
+You can create a new Marp Markdown document from **"New File..."** menu (<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Win</kbd> + <kbd>N</kbd> / <kbd>Alt</kbd> + <kbd>Cmd</kbd> + <kbd>Ctrl</kbd> + <kbd>N</kbd>) to start writing presentation quickly.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/new-file.gif" alt="Create Marp Markdown" width="500" />
+</p>
+
+`marp: true` also can toggle by opening the quick picker from toolbar icon <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toolbar-icon.png" width="16" height="16" /> and selecting **"Toggle Marp feature for current Markdown"**. (`markdown.marp.toggleMarpFeature`).
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/toggle.gif" alt="Toggle Marp preview" width="600" />
