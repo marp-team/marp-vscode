@@ -30,7 +30,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.56.0"
+    "vscode": "^1.60.0"
   },
   "main": "./lib/extension.js",
   "browser": "./dist/extension.js",
@@ -268,7 +268,7 @@
     "@types/jest": "^27.0.1",
     "@types/lodash.debounce": "^4.0.6",
     "@types/markdown-it": "^12.2.0",
-    "@types/vscode": "~1.56.0",
+    "@types/vscode": "~1.60.0",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
     "abort-controller": "^3.0.0",
