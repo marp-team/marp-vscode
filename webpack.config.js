@@ -1,22 +1,17 @@
-const path = require('path')
-const pkg = require('./package.json')
-const base = require('./webpack.base.config')
+const assert = require('assert')
 
-const outputPath = path.resolve(__dirname, pkg.main)
-const dependencies = Object.keys(pkg.dependencies)
+const configurations = {
+  node: require('./webpack.node.config'),
+  preview: require('./webpack.preview.config'),
+  web: require('./webpack.web.config'),
+}
 
 module.exports = (env) => {
-  const conf = base({ ...env, outputPath })
+  const targets = (
+    (env.target && env.target.split(',')) ||
+    Object.keys(configurations)
+  ).filter(Boolean)
 
-  return {
-    ...conf,
-    target: 'node',
-    externals: {
-      ...conf.externals,
-      ...dependencies.reduce((externals, dependency) => {
-        externals[dependency] = `commonjs ${dependency}`
-        return externals
-      }, {}),
-    },
-  }
+  assert(targets.length > 0, 'No target specified')
+  return targets.map((target) => configurations[target](env))
 }
