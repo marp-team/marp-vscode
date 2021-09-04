@@ -10,6 +10,7 @@ module.exports = ({ outputPath, production }) => ({
     filename: path.basename(outputPath),
     path: path.dirname(outputPath),
     libraryTarget: 'commonjs',
+    clean: !!production,
   },
   module: {
     rules: [
