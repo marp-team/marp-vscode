@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Completely move build system from rollup to webpack ([#290](https://github.com/marp-team/marp-vscode/pull/290))
+
 ## v1.4.0 - 2021-09-03
 
 ### Breaking
