@@ -3,8 +3,16 @@ const base = require('./webpack.base.config')
 
 const outputPath = path.resolve(__dirname, './preview/preview.js')
 
-module.exports = (env) => ({
-  ...base({ ...env, outputPath }),
-  target: 'web',
-  entry: `./preview.js`,
-})
+module.exports = (env) => {
+  const conf = base({ ...env, outputPath })
+
+  return {
+    ...conf,
+    target: 'web',
+    entry: `./preview.js`,
+    output: {
+      ...conf.output,
+      library: undefined,
+    },
+  }
+}
