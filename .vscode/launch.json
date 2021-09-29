@@ -49,15 +49,15 @@
       "name": "[Web] Build and run",
       "request": "launch",
       "runtimeArgs": ["run-s", "build:web", "dev:web"],
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "npx",
       "skipFiles": ["<node_internals>/**"],
       "type": "pwa-node"
     },
     {
       "name": "[Web] Run",
       "request": "launch",
-      "runtimeArgs": ["dev:web"],
-      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["run", "dev:web"],
+      "runtimeExecutable": "npm",
       "skipFiles": ["<node_internals>/**"],
       "type": "pwa-node"
     },
