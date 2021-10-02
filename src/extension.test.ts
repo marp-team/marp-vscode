@@ -283,16 +283,17 @@ describe('#extendMarkdownIt', () => {
 
         const markdown = md()
         const mdBody = marpMd('<!--theme: example-->')
+        const mdFileName = path.resolve(baseDir, 'test.css')
         ;(workspace as any).textDocuments = [
           {
             languageId: 'markdown',
             getText: () => mdBody,
-            uri: Uri.parse(baseDir),
-            fileName: path.resolve(baseDir, 'test.css'),
+            uri: Uri.file(mdFileName),
+            fileName: mdFileName,
           } as any,
         ]
 
-        await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
+        await Promise.all(themes.loadStyles(Uri.file(baseDir)))
 
         expect(fsReadFile).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -347,14 +348,7 @@ describe('#extendMarkdownIt', () => {
       })
 
       describe('when the current workspace belongs to the virtual file system', () => {
-        const vfsUri = Object.assign(Uri.parse(baseDir), {
-          scheme: 'vscode-vfs',
-          path: 'vscode-vfs://dummy.host/path/to/workspace',
-          fsPath: '/vscode-vfs/dummy.host/path/to/workspace',
-          toString() {
-            return this.path
-          },
-        })
+        const vfsUri = Uri.parse('vscode-vfs://dummy.host/path/to/workspace')
 
         beforeEach(() => {
           jest
@@ -383,9 +377,7 @@ describe('#extendMarkdownIt', () => {
           await Promise.all(themes.loadStyles(vfsUri))
 
           expect(wsFsReadfile).toHaveBeenCalledWith(
-            expect.objectContaining({
-              path: expect.stringContaining('vscode-vfs://'),
-            })
+            expect.objectContaining({ scheme: 'vscode-vfs' })
           )
           expect(markdown.render(mdBody)).toContain(css)
         })

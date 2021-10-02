@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Custom theme CSS support for web extension ([#289](https://github.com/marp-team/marp-vscode/issues/289), [#298](https://github.com/marp-team/marp-vscode/pull/298))
+
 ### Changed
 
 - Completely move build system from rollup to webpack ([#290](https://github.com/marp-team/marp-vscode/pull/290))

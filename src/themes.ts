@@ -1,4 +1,3 @@
-import path from 'path'
 import Marp from '@marp-team/marp-core'
 import {
   commands,
@@ -32,10 +31,12 @@ export interface SizePreset {
   width: string
 }
 
-const isRemotePath = (path: string) =>
-  path.startsWith('https:') || path.startsWith('http:')
-
-const isVirtualPath = (path: string) => /^[a-z0-9.+-]+:\/\/\b/.test(path)
+const isRemotePath = (path: string | Uri) => {
+  if (typeof path === 'string') {
+    return path.startsWith('https:') || path.startsWith('http:')
+  }
+  return path.scheme === 'https' || path.scheme === 'http'
+}
 
 export class Themes {
   observedThemes = new Map<string, Theme>()
@@ -44,7 +45,7 @@ export class Themes {
     const workspaceFolder = workspace.getWorkspaceFolder(doc.uri)
     if (workspaceFolder) return workspaceFolder.uri
 
-    return doc.uri.with({ path: path.dirname(doc.fileName) })
+    return Uri.joinPath(doc.uri, '..')
   }
 
   dispose() {
@@ -73,7 +74,7 @@ export class Themes {
 
   getRegisteredStyles(rootUri: Uri | undefined): Theme[] {
     return this.getPathsFromConf(rootUri)
-      .map((p) => this.observedThemes.get(p))
+      .map((uri) => this.observedThemes.get(uri.toString()))
       .filter((t): t is Theme => !!t)
   }
 
@@ -105,10 +106,10 @@ export class Themes {
   }
 
   loadStyles(rootUri: Uri | undefined): Promise<Theme>[] {
-    return this.getPathsFromConf(rootUri).map((p) => this.registerTheme(p))
+    return this.getPathsFromConf(rootUri).map((uri) => this.registerTheme(uri))
   }
 
-  private getPathsFromConf(rootUri: Uri | undefined): string[] {
+  private getPathsFromConf(rootUri: Uri | undefined): Uri[] {
     const themes = marpConfiguration().get<string[]>('themes')
 
     if (Array.isArray(themes) && themes.length > 0) {
@@ -118,87 +119,71 @@ export class Themes {
     return []
   }
 
-  private normalizePaths(paths: string[], rootUri: Uri | undefined): string[] {
-    const normalizedPaths = new Set<string>()
+  private normalizePaths(paths: string[], rootUri: Uri | undefined): Uri[] {
+    const normalizedPaths = new Set<Uri>()
 
     for (const p of paths) {
       if (typeof p !== 'string') continue
 
       if (isRemotePath(p)) {
-        normalizedPaths.add(p)
+        normalizedPaths.add(Uri.parse(p, true))
       } else if (rootUri) {
-        if (rootUri.scheme === 'file') {
-          const resolvedPath = path.resolve(rootUri.fsPath, p)
+        const targetUri = Uri.joinPath(rootUri, p)
 
-          if (!path.relative(rootUri.fsPath, resolvedPath).startsWith('..')) {
-            normalizedPaths.add(resolvedPath)
-          }
-        } else {
-          try {
-            const { pathname: relativePath } = new URL(p, 'dummy://dummy/')
-
-            normalizedPaths.add(
-              rootUri.with({ path: rootUri.path + relativePath }).toString()
-            )
-          } catch (e) {
-            // no ops
-          }
+        // Prevent directory traversal
+        if (targetUri.path.startsWith(rootUri.path)) {
+          normalizedPaths.add(targetUri)
         }
       }
     }
 
-    return [...normalizedPaths.values()]
+    const out: Uri[] = []
+    const outStringPaths: string[] = []
+
+    for (const uri of normalizedPaths) {
+      const uriString = uri.toString()
+
+      if (!outStringPaths.includes(uriString)) {
+        out.push(uri)
+        outStringPaths.push(uriString)
+      }
+    }
+
+    return out
   }
 
-  private async registerTheme(themePath: string): Promise<Theme> {
+  private async registerTheme(themeUri: Uri): Promise<Theme> {
+    const themePath = themeUri.toString()
     const theme = this.observedThemes.get(themePath)
     if (theme) return theme
 
     console.log('Fetching theme CSS:', themePath)
 
     const type: ThemeType = (() => {
-      if (isRemotePath(themePath)) return ThemeType.Remote
-      if (isVirtualPath(themePath)) return ThemeType.VirtualFS
+      if (themeUri.scheme === 'file') return ThemeType.File
+      if (isRemotePath(themeUri)) return ThemeType.Remote
 
-      return ThemeType.File
+      return ThemeType.VirtualFS
     })()
 
     const css = await (async (): Promise<string> => {
       switch (type) {
-        case ThemeType.File:
-          return await readFile(Uri.file(themePath))
         case ThemeType.Remote:
           return await fetch(themePath, { timeout: 5000 })
-        case ThemeType.VirtualFS:
-          return await readFile(Uri.parse(themePath, true))
+        default:
+          return await readFile(themeUri)
       }
     })()
 
     const registeredTheme: Theme = { css, type, path: themePath }
 
-    const watcherPattern: GlobPattern | undefined = (() => {
-      switch (type) {
-        case ThemeType.File:
-          return new RelativePattern(
-            path.dirname(themePath),
-            path.basename(themePath)
+    const watcherPattern: GlobPattern | undefined =
+      type !== ThemeType.Remote
+        ? new RelativePattern(
+            Uri.joinPath(themeUri, '..'),
+            themeUri.path.split('/').pop()! // eslint-disable-line @typescript-eslint/no-non-null-assertion
           )
-        case ThemeType.VirtualFS:
-          try {
-            const baseUri = Uri.parse(themePath, true)
-            const { pathname } = new URL('.', themePath)
-
-            return new RelativePattern(
-              baseUri.with({ path: pathname }),
-              baseUri.path.split('/').pop()! // eslint-disable-line @typescript-eslint/no-non-null-assertion
-            )
-          } catch (e) {
-            // no ops
-          }
-      }
-
-      return undefined
-    })()
+        : undefined
 
     if (watcherPattern) {
       const fsWatcher = workspace.createFileSystemWatcher(watcherPattern)
@@ -207,7 +192,7 @@ export class Themes {
         onDidChange.dispose()
         this.observedThemes.delete(themePath)
 
-        await this.registerTheme(themePath)
+        await this.registerTheme(themeUri)
         commands.executeCommand('markdown.preview.refresh')
       })
 
