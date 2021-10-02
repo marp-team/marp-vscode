@@ -9,7 +9,6 @@
       "name": "Build and run",
       "type": "extensionHost",
       "request": "launch",
-      "runtimeExecutable": "${execPath}",
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}"
@@ -25,7 +24,6 @@
       "name": "Run",
       "type": "extensionHost",
       "request": "launch",
-      "runtimeExecutable": "${execPath}",
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}"
@@ -40,7 +38,6 @@
       "name": "Run with extenstions",
       "type": "extensionHost",
       "request": "launch",
-      "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
       "outFiles": [
         "${workspaceFolder}/lib/**/*.js",
@@ -49,11 +46,26 @@
       ]
     },
     {
-      "name": "Build and run on Web",
+      "name": "[Web] Build and run",
+      "request": "launch",
+      "runtimeArgs": ["run-s", "build:web", "dev:web"],
+      "runtimeExecutable": "npx",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node"
+    },
+    {
+      "name": "[Web] Run",
+      "request": "launch",
+      "runtimeArgs": ["run", "dev:web"],
+      "runtimeExecutable": "npm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node"
+    },
+    {
+      "name": "[Pseudo web] Build and run",
       "type": "pwa-extensionHost",
       "debugWebWorkerHost": true,
       "request": "launch",
-      "runtimeExecutable": "${execPath}",
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}",
@@ -67,11 +79,10 @@
       "preLaunchTask": "Build"
     },
     {
-      "name": "Run on Web",
+      "name": "[Pseudo web] Run",
       "type": "pwa-extensionHost",
       "debugWebWorkerHost": true,
       "request": "launch",
-      "runtimeExecutable": "${execPath}",
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}",

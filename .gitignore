@@ -2,6 +2,7 @@ lib/
 preview/
 *.vsix
 yarn.lock
+.vscode-test-web
 
 # Created by https://www.gitignore.io/api/node,windows,macos,linux,sublimetext,emacs,vim,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=node,windows,macos,linux,sublimetext,emacs,vim,visualstudiocode

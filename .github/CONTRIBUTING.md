@@ -21,15 +21,23 @@ Thus, using `npm` is the safest way to develop stable VS Code extension continuo
 
 ## Development
 
-Typically using VS Code's debugger is good. See launch configurations on [`.vscode/launch.json`](../.vscode/launch.json)
+Typically using VS Code's debugger is good. See launch configurations on [`.vscode/launch.json`](../.vscode/launch.json).
 
 ### Launch configurations
 
 - **Build and run**: Compile TypeScript and run compiled extension.
 - **Run**: Only run compiled extension. It's useful running together with `npm run watch`. Recommend to execute `Restart Debugging` manually when updated source code.
 - **Run with extensions**: Run compiled extension with enabled other installed extensions. It's useful to validate the race condition.
-- **Build and run on Web**: Compile and run the extension on [the web environment](https://code.visualstudio.com/api/extension-guides/web-extensions).
-- **Run on Web**: Run compiled extension on the web environment.
+
+#### Environment variants
+
+Launch configurations have 2 extra environment variants `[Web]` and `[Pseudo web]` to [develop web extensions][web extensions].
+
+- **No variant**: Test extension on the new VS Code host. For normal extension development.
+- **`[Web]`**: Test web extension on the new browser that opens VS Code web.
+- **`[Pseudo web]`**: Test web extension on the new VS Code host that simulates Web environment. In this mode, please note that a contribution to Markdown preview will not work correctly. ([microsoft/vscode#133399](https://github.com/microsoft/vscode/issues/133399))
+
+[web extensions]: https://code.visualstudio.com/api/extension-guides/web-extensions
 
 ### Unit testing
 

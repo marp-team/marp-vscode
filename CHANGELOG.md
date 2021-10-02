@@ -6,6 +6,10 @@
 
 - Completely move build system from rollup to webpack ([#290](https://github.com/marp-team/marp-vscode/pull/290))
 
+### Fixed
+
+- Update launch option for testing web extension ([#296](https://github.com/marp-team/marp-vscode/pull/296))
+
 ## v1.4.0 - 2021-09-03
 
 ### Breaking
