@@ -299,6 +299,7 @@
     "unified": "^10.1.0",
     "unist-util-visit": "^4.0.0",
     "vsce": "^1.96.3",
+    "vscode-uri": "^3.0.2",
     "webpack": "^5.52.0",
     "webpack-cli": "^4.8.0",
     "yaml": "^2.0.0-5"

@@ -1,3 +1,5 @@
+import { URI, Utils } from 'vscode-uri'
+
 type MockedConf = Record<string, any>
 
 const defaultVSCodeVersion = 'v1.36.0'
@@ -12,14 +14,6 @@ const defaultConf: MockedConf = {
 }
 
 let currentConf: MockedConf = {}
-
-const uriInstances: Record<string, any> = {}
-const uriInstance = (path: string) =>
-  uriInstances[path] ||
-  (() => {
-    const uri = { path, scheme: 'file', fsPath: path, with: jest.fn(() => uri) }
-    return uri
-  })()
 
 export class CodeAction {
   // command?: Command
@@ -122,11 +116,6 @@ export const RelativePattern = jest.fn()
 
 export const ThemeColor = jest.fn(() => '#000000ff')
 
-export const Uri = {
-  file: uriInstance,
-  parse: uriInstance,
-}
-
 export const commands = {
   executeCommand: jest.fn(async () => {
     // no ops
@@ -197,6 +186,12 @@ export class Memento {
   }
   async update(key: string, value: any) {
     this._map.set(key, value)
+  }
+}
+
+export class Uri extends URI {
+  static joinPath(uri: Uri, ...pathSegments: string[]) {
+    Utils.joinPath(uri, ...pathSegments)
   }
 }
 
