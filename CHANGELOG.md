@@ -11,6 +11,10 @@
 
 - Update launch option for testing web extension ([#296](https://github.com/marp-team/marp-vscode/pull/296))
 
+### Removed
+
+- Alert about preview of web extension ([#297](https://github.com/marp-team/marp-vscode/pull/297))
+
 ## v1.4.0 - 2021-09-03
 
 ### Breaking

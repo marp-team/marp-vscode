@@ -6,21 +6,12 @@ import { Marp } from '@marp-team/marp-core'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
 import * as nodeFetch from 'node-fetch'
-import {
-  Memento,
-  MessageItem,
-  Uri,
-  commands,
-  window,
-  workspace,
-  env,
-} from 'vscode'
+import { Memento, Uri, commands, workspace, env } from 'vscode'
 
 jest.mock('node-fetch')
 jest.mock('vscode')
 
 let themes: typeof import('./themes')['default']
-let dontShowAgainItem: MessageItem
 
 const extension = (): typeof import('./extension') => {
   let ext
@@ -28,7 +19,6 @@ const extension = (): typeof import('./extension') => {
   jest.isolateModules(() => {
     ext = require('./extension') // Shut up cache
     themes = require('./themes').default
-    dontShowAgainItem = require('./web/alert').dontShowAgainItem
   })
 
   return ext
@@ -71,51 +61,6 @@ describe('#activate', () => {
     expect(commands.executeCommand).toHaveBeenCalledWith(
       'markdown.preview.refresh'
     )
-  })
-
-  it('does not show alert modal', () => {
-    extension().activate(extContext())
-    expect(window.showErrorMessage).not.toHaveBeenCalled()
-  })
-
-  describe('when running Web extension', () => {
-    let previousAppHost: string
-
-    beforeEach(() => {
-      previousAppHost = env.appHost
-      ;(env as any).appHost = 'web'
-    })
-
-    afterEach(() => {
-      ;(env as any).appHost = previousAppHost
-    })
-
-    it('shows alert modal', () => {
-      extension().activate(extContext())
-      expect(window.showErrorMessage).toHaveBeenCalledWith(
-        expect.stringContaining('Marp for VS Code extension on the web'),
-        expect.objectContaining({ modal: true }),
-        expect.objectContaining({ title: expect.any(String) }),
-        expect.objectContaining({ title: expect.any(String) })
-      )
-    })
-
-    it(`does not show alert modal again if reacted to "Don't show again"`, async () => {
-      const { activate } = extension()
-      const showErrorMessageMock = window.showErrorMessage as jest.Mock
-      showErrorMessageMock.mockResolvedValueOnce(dontShowAgainItem)
-
-      // React to "Don't show again"
-      const context = extContext()
-      activate(context)
-
-      expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
-      await showErrorMessageMock.mock.results[0].value
-
-      // Activate extension again, with already reacted globalState
-      activate({ ...extContext(), globalState: context.globalState })
-      expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
-    })
   })
 })
 
@@ -540,7 +485,7 @@ describe('#extendMarkdownIt', () => {
       md.render('test', { resourceProvider })
 
       expect(_contentProvider.getScripts()).toMatchInlineSnapshot(`
-        "<script 
+        "<script
           src=\\"https://example.com/marp-vscode/preview.js\\"
           nonce=\\"0987654321\\"
         ></script>
