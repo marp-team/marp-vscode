@@ -211,10 +211,11 @@ It could allow script injection from untrusted Markdown files. Thus, this featur
 
 ## Web extension (Early preview)
 
-You can test installing and using Marp extension in VS Code on the Web environment like [github.dev](https://github.dev). The web extension has many limitations:
+You can test Marp extension in VS Code for the Web environment like [github.dev](https://github.dev). Try opening https://github.dev/marp-team/marp-vscode/blob/main/docs/example.md with an environment that has installed Marp extension.
 
-- _Export command cannot use_ because it is depending on Marp CLI that is not designed for Web. Please use VS Code that is installed to your local environment or GitHub Codespaces.
-- Custom theme CSS is not working correctly for now.
+The web extension has some limitations:
+
+- _Export command cannot use_ because it is depending on Marp CLI that is not designed for Web. Please use VS Code that is installed to your local environment, or [GitHub Codespaces](https://github.com/features/codespaces) if you wanted an environment working on Web.
 
 ## Contributing
 
