@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.4.1 - 2021-10-02
+
 ### Added
 
 - Custom theme CSS support for web extension ([#289](https://github.com/marp-team/marp-vscode/issues/289), [#298](https://github.com/marp-team/marp-vscode/pull/298))
