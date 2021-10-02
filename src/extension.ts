@@ -13,7 +13,6 @@ import lineNumber from './plugins/line-number'
 import outline, { rule as outlineRule } from './plugins/outline'
 import themes, { Themes } from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
-import { showAlertForWebExtension } from './web/alert'
 
 const shouldRefreshConfs = [
   'markdown.marp.breaks',
@@ -176,9 +175,7 @@ export function extendMarkdownIt(md: any) {
   return md
 }
 
-export const activate = ({ subscriptions, globalState }: ExtensionContext) => {
-  showAlertForWebExtension(globalState)
-
+export const activate = ({ subscriptions }: ExtensionContext) => {
   diagnostics(subscriptions)
   languageProvider(subscriptions)
 
