@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.4.2 - 2021-10-02
+
 ### Fixed
 
 - Web extension does not recognize custom theme provided by remote URL ([#300](https://github.com/marp-team/marp-vscode/issues/300), [#301](https://github.com/marp-team/marp-vscode/pull/301))
