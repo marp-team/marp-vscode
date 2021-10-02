@@ -5,6 +5,7 @@
 ### Changed
 
 - Completely move build system from rollup to webpack ([#290](https://github.com/marp-team/marp-vscode/pull/290))
+- Upgrade Marp CLI to [v1.4.1](https://github.com/marp-team/marp-cli/releases/tag/v1.4.1) ([#295](https://github.com/marp-team/marp-vscode/pull/295))
 
 ### Fixed
 
