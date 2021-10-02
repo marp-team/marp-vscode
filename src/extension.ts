@@ -52,7 +52,7 @@ const hackGetScriptsToExecuteMarpScriptFirst = (resourceProvider: any) => {
 
         if (marpScriptIdx >= 0) {
           const [marpScript] = scripts.splice(marpScriptIdx, 1)
-          scripts.unshift(marpScript.replace('async', ''))
+          scripts.unshift(marpScript.replace(/\s*async/, ''))
         }
 
         return scripts.join('\n')
