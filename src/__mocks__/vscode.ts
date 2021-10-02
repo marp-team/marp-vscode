@@ -191,7 +191,7 @@ export class Memento {
 
 export class Uri extends URI {
   static joinPath(uri: Uri, ...pathSegments: string[]) {
-    Utils.joinPath(uri, ...pathSegments)
+    return Utils.joinPath(uri, ...pathSegments)
   }
 }
 

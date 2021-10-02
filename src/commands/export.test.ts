@@ -124,7 +124,7 @@ describe('#saveDialog', () => {
 
     expect(window.showSaveDialog).toHaveBeenCalledWith(
       expect.objectContaining({
-        defaultUri: expect.objectContaining({ fsPath: 'untitled.pdf' }),
+        defaultUri: expect.objectContaining({ path: '/untitled.pdf' }),
       })
     )
   })
