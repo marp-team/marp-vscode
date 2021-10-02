@@ -19,6 +19,7 @@ module.exports = (env) => {
           __dirname,
           './src/web/commands/export'
         ),
+        'abort-controller$': require.resolve('abort-controller/browser.mjs'),
       },
       fallback: {
         // Node.js polyfills
