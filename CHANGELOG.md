@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.4.3 - 2021-10-06
+
 ### Fixed
 
 - Fix regression about export with local custom theme ([#302](https://github.com/marp-team/marp-vscode/issues/302), [#303](https://github.com/marp-team/marp-vscode/pull/303))
