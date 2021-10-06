@@ -175,7 +175,11 @@ export class Themes {
       }
     })()
 
-    const registeredTheme: Theme = { css, type, path: themePath }
+    const registeredTheme: Theme = {
+      css,
+      type,
+      path: type === ThemeType.File ? themeUri.fsPath : themePath,
+    }
 
     const watcherPattern: GlobPattern | undefined =
       type !== ThemeType.Remote
