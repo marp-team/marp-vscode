@@ -44,6 +44,7 @@ export const marpCoreOptionForPreview = (
   if (!cachedPreviewOption) {
     cachedPreviewOption = {
       container: { tag: 'div', id: 'marp-vscode' },
+      slideContainer: { tag: 'div', 'data-marp-vscode-slide-wrapper': '' },
       html: enableHtml() || undefined,
       markdown: {
         breaks: breaks(!!baseOption.breaks),
