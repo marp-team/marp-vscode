@@ -1,11 +1,14 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@3.2.0
+
 executors:
   node:
     parameters:
       version:
         type: string
-        default: lts
+        default: '14.18' # TODO: Use lts tag when bumped development Node to v16
     docker:
       - image: cimg/node:<< parameters.version >>
     working_directory: ~/marp-vscode
@@ -68,7 +71,7 @@ commands:
           environment:
             JEST_JUNIT_OUTPUT_DIR: tmp/test-results
 
-      - run: npx codecov
+      - codecov/upload
 
       - store_test_results:
           path: tmp/test-results

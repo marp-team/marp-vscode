@@ -97,7 +97,7 @@ describe('#createWorkFile', () => {
       uri: { scheme: 'file', fsPath: '/tmp/clean.md' },
     } as any)
 
-    expect(workFile.path).toEqual('/tmp/clean.md')
+    expect(workFile.path).toBe('/tmp/clean.md')
 
     await workFile.cleanup()
     expect(workspace.fs.delete).not.toHaveBeenCalled()
