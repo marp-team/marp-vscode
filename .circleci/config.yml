@@ -5,7 +5,7 @@ executors:
     parameters:
       version:
         type: string
-        default: lts
+        default: '14.18' # TODO: Use lts tag when bumped development Node to v16
     docker:
       - image: cimg/node:<< parameters.version >>
     working_directory: ~/marp-vscode
