@@ -267,7 +267,6 @@
     "@typescript-eslint/parser": "^5.3.1",
     "@vscode/test-web": "^0.0.15",
     "abort-controller": "^3.0.0",
-    "codecov": "^3.8.3",
     "dedent": "^0.7.0",
     "esbuild": "^0.13.13",
     "esbuild-loader": "^2.16.0",
