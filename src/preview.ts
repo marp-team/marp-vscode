@@ -44,11 +44,13 @@ const removeStyles = () => {
   )
 
   styles.forEach((elm) => {
+    if (elm.closest('#marp-vscode')) return
     elm.dataset.marpVscodeBody = elm.innerText
     elm.innerText = ''
   })
 
   links.forEach((elm) => {
+    if (elm.closest('#marp-vscode')) return
     const { href } = elm
     elm.dataset.marpVscodeHref = href
     elm.removeAttribute('href')
