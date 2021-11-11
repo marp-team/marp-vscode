@@ -13,10 +13,10 @@ export default function preview() {
       document.body.classList.toggle('marp-vscode', newMarpState)
 
       if (newMarpState) {
-        removeDefaultStyles()
+        removeStyles()
         marpObserverCleanup = observer()
       } else {
-        restoreDefaultStyles()
+        restoreStyles()
         marpObserverCleanup?.()
         marpObserverCleanup = undefined
       }
@@ -31,7 +31,7 @@ export default function preview() {
   updateCallback()
 }
 
-const removeDefaultStyles = () => {
+const removeStyles = () => {
   const styles = document.querySelectorAll<HTMLStyleElement>(
     'style:not(#marp-vscode-style):not(#_defaultStyles)'
   )
@@ -51,7 +51,7 @@ const removeDefaultStyles = () => {
   })
 }
 
-const restoreDefaultStyles = () => {
+const restoreStyles = () => {
   const styles = document.querySelectorAll<HTMLStyleElement>(
     'style[data-marp-vscode-body]'
   )
