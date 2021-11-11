@@ -139,10 +139,12 @@ describe('#extendMarkdownIt', () => {
           'text/html'
         )
 
-        // SVG slides
-        const svg = doc.querySelectorAll<SVGElement>('svg.code-line')
-        expect(svg[0].dataset.line).toBe('0')
-        expect(svg[1].dataset.line).toBe('8')
+        // Slide wrappers
+        const wrappers = doc.querySelectorAll<HTMLElement>(
+          '[data-marp-vscode-slide-wrapper].code-line'
+        )
+        expect(wrappers[0].dataset.line).toBe('0')
+        expect(wrappers[1].dataset.line).toBe('8')
 
         // Contents
         expect(doc.querySelector<HTMLElement>('h1')?.dataset.line).toBe('4')

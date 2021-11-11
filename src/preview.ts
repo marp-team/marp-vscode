@@ -37,16 +37,16 @@ export default function preview() {
 
 const removeStyles = () => {
   const styles = document.querySelectorAll<HTMLStyleElement>(
-    'style:not(#marp-vscode-style):not(#_defaultStyles)'
+    'style:not(#marp-vscode-style):not(#_defaultStyles):not([data-marp-vscode-body])'
   )
   const links = document.querySelectorAll<HTMLLinkElement>(
-    'link[rel="stylesheet"]:not([href*="marp-vscode"])'
+    'link[rel="stylesheet"][href]:not([href*="marp-vscode"])'
   )
 
   styles.forEach((elm) => {
     if (elm.closest('#marp-vscode')) return
-    elm.dataset.marpVscodeBody = elm.innerText
-    elm.innerText = ''
+    elm.dataset.marpVscodeBody = elm.textContent ?? ''
+    elm.textContent = ''
   })
 
   links.forEach((elm) => {
@@ -66,7 +66,7 @@ const restoreStyles = () => {
   )
 
   styles.forEach((elm) => {
-    elm.innerText = elm.dataset.marpVscodeBody || ''
+    elm.textContent = elm.dataset.marpVscodeBody || ''
     delete elm.dataset.marpVscodeBody
   })
 
