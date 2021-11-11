@@ -1,48 +1,29 @@
 // Based on the original line-number rendering rule of VS Code.
-// https://github.com/microsoft/vscode/blob/5466f27d95c52e8d7c34ed445c682b5d71f049d9/extensions/markdown-language-features/src/markdownEngine.ts#L102-L104
-
-const rules = [
-  'paragraph_open',
-  'heading_open',
-  'image',
-  'code_block',
-  'fence',
-  'blockquote_open',
-  'list_item_open',
-]
+// https://github.com/microsoft/vscode/blob/4297ff8195cfabb0f96aefd122a6e88cb6a080bb/extensions/markdown-language-features/src/markdownEngine.ts#L18-L40
 
 export default function marpVSCodeLineNumber(md) {
-  const { marpit_inline_svg_open } = md.renderer.rules
+  const { marpit_slide_containers_open } = md.renderer.rules
 
   // Enable line sync by per slides
-  md.renderer.rules.marpit_inline_svg_open = (tokens, idx, opts, env, self) => {
-    const slide = tokens
-      .slice(idx + 1)
-      .find((t) => t.type === 'marpit_slide_open')
+  md.renderer.rules.marpit_slide_containers_open = (tks, i, opts, env, slf) => {
+    const slide = tks.slice(i + 1).find((t) => t.type === 'marpit_slide_open')
 
-    if (slide.map?.length) {
-      tokens[idx].attrJoin('class', 'code-line')
-      tokens[idx].attrSet('data-line', slide.map[0])
+    if (slide?.map?.length) {
+      tks[i].attrJoin('class', 'code-line')
+      tks[i].attrSet('data-line', slide.map[0])
     }
 
-    const renderer = marpit_inline_svg_open || self.renderToken
-    return renderer.call(self, tokens, idx, opts, env, self)
+    const renderer = marpit_slide_containers_open || slf.renderToken
+    return renderer.call(slf, tks, i, opts, env, slf)
   }
 
   // Enables line sync per elements
-  for (const rule of rules) {
-    const original = md.renderer.rules[rule]
-
-    md.renderer.rules[rule] = (tokens, idx, options, env, self) => {
-      const token = tokens[idx]
-
-      if (token.map?.length) {
+  md.core.ruler.push('marp_vscode_source_map_attr', (state) => {
+    for (const token of state.tokens) {
+      if (token.map?.length && token.type !== 'inline') {
         token.attrJoin('class', 'code-line')
         token.attrSet('data-line', token.map[0])
       }
-
-      const renderer = original || self.renderToken
-      return renderer.call(self, tokens, idx, options, env, self)
     }
-  }
+  })
 }

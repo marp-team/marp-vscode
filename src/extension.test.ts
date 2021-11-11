@@ -139,10 +139,12 @@ describe('#extendMarkdownIt', () => {
           'text/html'
         )
 
-        // SVG slides
-        const svg = doc.querySelectorAll<SVGElement>('svg.code-line')
-        expect(svg[0].dataset.line).toBe('0')
-        expect(svg[1].dataset.line).toBe('8')
+        // Slide wrappers
+        const wrappers = doc.querySelectorAll<HTMLElement>(
+          '[data-marp-vscode-slide-wrapper].code-line'
+        )
+        expect(wrappers[0].dataset.line).toBe('0')
+        expect(wrappers[1].dataset.line).toBe('8')
 
         // Contents
         expect(doc.querySelector<HTMLElement>('h1')?.dataset.line).toBe('4')
@@ -448,7 +450,7 @@ describe('#extendMarkdownIt', () => {
   })
 
   describe('Patch for VS Code', () => {
-    const md = extension().extendMarkdownIt(new markdownIt('commonmark'))
+    const md = () => extension().extendMarkdownIt(new markdownIt('commonmark'))
 
     beforeEach(() => {
       jest.spyOn(console, 'debug').mockImplementation()
@@ -474,7 +476,7 @@ describe('#extendMarkdownIt', () => {
       const resourceProvider = { _contentProvider }
 
       // Apply patch by calling render method
-      md.render('test', { resourceProvider })
+      md().render('test', { resourceProvider })
 
       expect(_contentProvider.getScripts()).toMatchInlineSnapshot(`
         "<script
@@ -488,10 +490,56 @@ describe('#extendMarkdownIt', () => {
       `)
     })
 
+    it('does not apply patch if VS Code is 1.63 and later', () => {
+      const { _setVSCodeVersion } = require('vscode')
+      const scriptTag =
+        '<script async src="https://example.com/marp-vscode/preview.js"></script>'
+
+      class ContentProvider62 {
+        getScripts() {
+          return scriptTag
+        }
+      }
+      class ContentProvider63 {
+        getScripts() {
+          return scriptTag
+        }
+      }
+      class ContentProviderV2 {
+        getScripts() {
+          return scriptTag
+        }
+      }
+
+      // v1.62
+      _setVSCodeVersion('1.62.3')
+      const contentProvider62 = new ContentProvider62()
+      const resourceProvider62 = { _contentProvider: contentProvider62 }
+
+      md().render('test', { resourceProvider: resourceProvider62 })
+      expect(contentProvider62.getScripts()).not.toBe(scriptTag)
+
+      // v1.63
+      _setVSCodeVersion('1.63.0')
+      const contentProvider63 = new ContentProvider63()
+      const resourceProvider63 = { _contentProvider: contentProvider63 }
+
+      md().render('test', { resourceProvider: resourceProvider63 })
+      expect(contentProvider63.getScripts()).toBe(scriptTag)
+
+      // v2.0
+      _setVSCodeVersion('2.0.0')
+      const contentProviderV2 = new ContentProviderV2()
+      const resourceProviderV2 = { _contentProvider: contentProviderV2 }
+
+      md().render('test', { resourceProvider: resourceProviderV2 })
+      expect(contentProviderV2.getScripts()).toBe(scriptTag)
+    })
+
     it('emits warning if happened some trouble while patching', () => {
       const warn = jest.spyOn(console, 'warn').mockImplementation()
 
-      md.render('test', { resourceProvider: {} })
+      md().render('test', { resourceProvider: {} })
       expect(warn).toHaveBeenCalled()
     })
   })

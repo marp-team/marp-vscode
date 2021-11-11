@@ -29,15 +29,14 @@ body.marp-vscode blockquote {
     overflow-y: scroll;
   }
 
-  #marp-vscode svg[data-marpit-svg] {
-    box-shadow: 0 5px 10px rgb(0 0 0 / 25%);
-    display: block;
+  #marp-vscode [data-marp-vscode-slide-wrapper] {
     margin: 20px;
   }
 
-  #marp-vscode[data-polyfill] svg[data-marpit-svg] > foreignobject > section {
-    /* Workaround for wrong hit area caused by Chromium's rendering bug */
-    overflow: visible;
+  #marp-vscode svg[data-marpit-svg] {
+    box-shadow: 0 5px 10px rgb(0 0 0 / 25%);
+    display: block;
+    margin: 0;
   }
 
   /* Based on https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
@@ -68,10 +67,5 @@ body.marp-vscode blockquote {
 @media print {
   body.marp-vscode #code-csp-warning {
     display: none;
-  }
-
-  #marp-vscode[data-polyfill] svg[data-marpit-svg] > foreignobject > section {
-    /* Disable WebKit polyfill */
-    transform: none !important;
   }
 }

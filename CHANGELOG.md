@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Make compatible to upcoming new Markdown preview in VS Code v1.63 ([#307](https://github.com/marp-team/marp-vscode/pull/307))
 - Upgrade Marp Core to [v2.2.0](https://github.com/marp-team/marp-core/releases/tag/v2.2.0) ([#309](https://github.com/marp-team/marp-vscode/pull/309))
 - Upgrade Marp CLI to [v1.4.2](https://github.com/marp-team/marp-cli/releases/tag/v1.4.2) ([#309](https://github.com/marp-team/marp-vscode/pull/309))
 - Upgrade develolpment Node and dependencies to the latest ([#309](https://github.com/marp-team/marp-vscode/pull/309))
