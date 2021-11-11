@@ -1,5 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
-import { ExtensionContext, Uri, commands, workspace } from 'vscode'
+import { ExtensionContext, Uri, commands, workspace, version } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as newMarpMarkdown from './commands/new-marp-markdown'
 import * as openExtensionSettings from './commands/open-extension-settings'
@@ -30,10 +30,21 @@ const applyRefreshedConfiguration = () => {
 }
 
 // Workaround for https://github.com/microsoft/vscode/issues/126640
+// TODO: Remove this patch if Marp for VS Code dropped support for VS Code 1.62 and previous versions
 let isWarnedFailurePatch = false
 const hackGetScriptsToExecuteMarpScriptFirst = (resourceProvider: any) => {
   // resourceProvider is not passed by VS Code 1.56 and previous versions.
   if (!resourceProvider) return
+
+  // VS Code 1.63 and later has stabilized scroll because of incremental DOM update, so we don't need to patch.
+  const matchedVersion = version.match(/^(\d+)\.(\d+)/)
+
+  if (matchedVersion) {
+    const major = Number.parseInt(matchedVersion[1], 10)
+    const minor = Number.parseInt(matchedVersion[2], 10)
+
+    if (major > 1 || (major === 1 && minor >= 63)) return
+  }
 
   try {
     const { getScripts } = resourceProvider._contentProvider.__proto__
