@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.4.4 - 2021-11-11
+
 ### Changed
 
 - Make compatible to upcoming new Markdown preview in VS Code v1.63 ([#307](https://github.com/marp-team/marp-vscode/pull/307))
