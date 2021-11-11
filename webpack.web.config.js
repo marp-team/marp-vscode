@@ -1,5 +1,5 @@
 const path = require('path')
-const { ProvidePlugin } = require('webpack')
+const { ProvidePlugin, NormalModuleReplacementPlugin } = require('webpack')
 const pkg = require('./package.json')
 const base = require('./webpack.base.config')
 
@@ -27,6 +27,13 @@ module.exports = (env) => {
         path: require.resolve('path-browserify'),
       },
     },
-    plugins: [new ProvidePlugin({ process: 'process/browser.js' })],
+    plugins: [
+      new ProvidePlugin({ process: 'process/browser.js' }),
+      // Workaround for https://github.com/wooorm/parse-entities/issues/19
+      new NormalModuleReplacementPlugin(
+        /parse-entities\/lib\/decode-entity\.browser\.js/,
+        './decode-entity.js'
+      ),
+    ],
   }
 }

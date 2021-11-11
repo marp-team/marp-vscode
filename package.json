@@ -189,7 +189,7 @@
       "./preview/preview.js"
     ],
     "markdown.previewStyles": [
-      "./style.css"
+      "./marp-vscode.css"
     ],
     "menus": {
       "editor/title": [
