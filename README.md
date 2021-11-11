@@ -211,7 +211,7 @@ It could allow script injection from untrusted Markdown files. Thus, this featur
 
 ## Web extension (Early preview)
 
-You can test Marp extension in VS Code for the Web environment like [github.dev](https://github.dev). Try opening https://github.dev/marp-team/marp-vscode/blob/main/docs/example.md with an environment that has installed Marp extension.
+You can test Marp extension in VS Code for the Web environment like [vscode.dev](https://vscode.dev) and [github.dev](https://github.dev). Try opening https://github.dev/marp-team/marp-vscode/blob/main/docs/example.md, with an environment that has installed Marp extension.
 
 The web extension has some limitations:
 
