@@ -13,15 +13,19 @@ export default function preview() {
       document.body.classList.toggle('marp-vscode', newMarpState)
 
       if (newMarpState) {
-        removeStyles()
         marpObserverCleanup = observer()
       } else {
-        restoreStyles()
         marpObserverCleanup?.()
         marpObserverCleanup = undefined
       }
 
       marpState = newMarpState
+    }
+
+    if (marpState) {
+      removeStyles()
+    } else {
+      restoreStyles()
     }
   }
 
