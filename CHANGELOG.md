@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Regression about CSS attribute selector with `$=` substring matcher for slide's `class` ([#313](https://github.com/marp-team/marp-vscode/issues/313), [#314](https://github.com/marp-team/marp-vscode/pull/314))
+
 ## v1.4.4 - 2021-11-11
 
 ### Changed
