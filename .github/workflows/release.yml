@@ -67,3 +67,6 @@ jobs:
           pat: ${{ secrets.OPEN_VSX_PAT }}
           extensionFile: ${{ steps.vsix.outputs.path }}
           packagePath: ''
+        # Workaround: Uploading to Open VSX takes a long minutes, and does not respond even if uploaded successfully :(
+        timeout-minutes: 30
+        continue-on-error: true
