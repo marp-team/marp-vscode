@@ -2,6 +2,7 @@ const esModules = [
   'bail',
   'character-entities',
   'comma-separated-tokens',
+  'decode-named-character-reference',
   'hast-util-from-parse5',
   'hast-util-parse-selector',
   'hastscript',
