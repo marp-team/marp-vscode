@@ -29,6 +29,7 @@ export default function preview() {
     }
   }
 
+  window.addEventListener('load', updateCallback)
   window.addEventListener('vscode.markdown.updateContent', updateCallback)
 
   // Initial update
