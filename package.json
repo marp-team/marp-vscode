@@ -156,7 +156,7 @@
           "markdownEnumDescriptions": [
             "Disable math syntax and math global directive.",
             "Use MathJax (https://www.mathjax.org/).",
-            "Use KaTeX (https://katex.org/). It is the default library in Marp."
+            "Use KaTeX (https://katex.org/). It is the default library in Marp Core v2."
           ]
         },
         "markdown.marp.outlineExtension": {
