@@ -46,6 +46,9 @@ export const marpCoreOptionForPreview = (
       container: { tag: 'div', id: 'marp-vscode' },
       slideContainer: { tag: 'div', 'data-marp-vscode-slide-wrapper': '' },
       html: enableHtml() || undefined,
+      inlineSVG: {
+        backdropSelector: false,
+      },
       markdown: {
         breaks: breaks(!!baseOption.breaks),
         typographer: baseOption.typographer,
