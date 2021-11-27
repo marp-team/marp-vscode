@@ -6,7 +6,12 @@
 
 - Upgrade Marp Core to [v2.3.0](https://github.com/marp-team/marp-core/releases/tag/v2.3.0) ([#316](https://github.com/marp-team/marp-vscode/pull/316))
 - Upgrade Marp CLI to [v1.5.0](https://github.com/marp-team/marp-cli/releases/tag/v1.5.0) ([#316](https://github.com/marp-team/marp-vscode/pull/316))
+  - Support [`::backdrop` CSS selector provided by Marpit framework](https://marpit.marp.app/inline-svg?id=backdrop-css-selector) in HTML export
 - Upgrade dependent packages to the latest version ([#316](https://github.com/marp-team/marp-vscode/pull/316))
+
+### Fixed
+
+- Improve initialization of preview styling in VS Code 1.63 ([#317](https://github.com/marp-team/marp-vscode/pull/317))
 
 ## v1.4.5 - 2021-11-22
 
