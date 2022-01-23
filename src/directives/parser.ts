@@ -39,7 +39,7 @@ export interface MathEventHandler {
   range: Range
 }
 
-interface DirectiveParserEvents {
+type DirectiveParserEvents = {
   comment: (event: DirectiveSectionEventHandler) => void
   directive: (event: DirectiveEventHandler) => void
   endParse: (event: { document: TextDocument }) => void

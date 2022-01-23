@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp Core to [v2.3.2](https://github.com/marp-team/marp-core/releases/tag/v2.3.2) ([#325](https://github.com/marp-team/marp-vscode/pull/325))
+- Upgrade Marp CLI to [v1.5.2](https://github.com/marp-team/marp-cli/releases/tag/v1.5.2) ([#325](https://github.com/marp-team/marp-vscode/pull/325))
+  - Improved WSL 2 detection and browser resolution
+- Upgrade dependent packages to the latest version ([#325](https://github.com/marp-team/marp-vscode/pull/325))
+
 ## v1.4.6 - 2021-11-27
 
 ### Changed

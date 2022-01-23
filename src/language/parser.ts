@@ -26,7 +26,7 @@ export interface LanguageParseData {
   version: number
 }
 
-interface LanguageParserEvents {
+type LanguageParserEvents = {
   activeEditorUpdated: (
     activeEditor: TextEditor,
     parseData: LanguageParseData
