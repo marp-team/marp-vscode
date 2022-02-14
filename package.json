@@ -307,7 +307,7 @@
     "yaml": "^2.0.0-5"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^1.5.2"
+    "@marp-team/marp-cli": "^1.6.0"
   },
   "overrides": {
     "markdown-it@10": "$markdown-it",
