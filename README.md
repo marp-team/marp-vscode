@@ -209,9 +209,9 @@ You can enable previsualization of HTML code within Marp Markdown with the `mark
 
 It could allow script injection from untrusted Markdown files. Thus, this feature is disabled as a default and will be _always ignored in the untrusted workspace_. Use with caution.
 
-## Web extension (Early preview)
+## Web extension
 
-You can test Marp extension in VS Code for the Web environment like [vscode.dev](https://vscode.dev) and [github.dev](https://github.dev). Try opening https://github.dev/marp-team/marp-vscode/blob/main/docs/example.md, with an environment that has installed Marp extension.
+You can use Marp extension in VS Code for the Web environment like [vscode.dev](https://vscode.dev) and [github.dev](https://github.dev). Try opening https://github.dev/marp-team/marp-vscode/blob/main/docs/example.md, with an environment that has installed Marp extension.
 
 The web extension has some limitations:
 
