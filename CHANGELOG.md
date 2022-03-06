@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.5.0 - 2022-03-06
+
 ### Changed
 
 - Upgrade Marp CLI to [v1.7.0: The presenter view update in HTML output](https://github.com/marp-team/marp-cli/releases/tag/v1.7.0) ([#333](https://github.com/marp-team/marp-vscode/pull/333))
