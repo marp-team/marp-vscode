@@ -4,10 +4,7 @@
 
 ### Changed
 
-- Upgrade Marp CLI to [v1.7.0](https://github.com/marp-team/marp-cli/releases/tag/v1.7.0) ([#333](https://github.com/marp-team/marp-vscode/pull/333))
-  - Timer for the presenter view in HTML output
-  - The draggable splitter in the presenter view of HTML output
-  - Make notes font size changeable in the presenter view of HTML output
+- Upgrade Marp CLI to [v1.7.0: The presenter view update in HTML output](https://github.com/marp-team/marp-cli/releases/tag/v1.7.0) ([#333](https://github.com/marp-team/marp-vscode/pull/333))
 - Upgrade dependent packages to the latest version ([#333](https://github.com/marp-team/marp-vscode/pull/333))
 
 ## v1.4.7 - 2022-01-23
