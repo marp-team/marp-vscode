@@ -16,7 +16,11 @@ import {
   DirectiveType,
 } from './definitions'
 
-export { DirectiveDefinedIn, DirectiveInfo, DirectiveType } from './definitions'
+export {
+  DirectiveDefinedIn,
+  DirectiveType,
+  type DirectiveInfo,
+} from './definitions'
 
 const parseHtml = unified().use(rehypeParse).parse
 const parseMd = unified().use(remarkParse).use(remarkMath).parse
