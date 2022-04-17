@@ -8,7 +8,7 @@ executors:
     parameters:
       version:
         type: string
-        default: '14.18' # TODO: Use lts tag when bumped development Node to v16
+        default: lts
     docker:
       - image: cimg/node:<< parameters.version >>
     working_directory: ~/marp-vscode
@@ -100,6 +100,13 @@ jobs:
     steps:
       - test
 
+  unit-electron17:
+    executor:
+      name: node
+      version: '16.13.0'
+    steps:
+      - test
+
 workflows:
   test:
     jobs:
@@ -108,5 +115,8 @@ workflows:
           requires:
             - audit
       - unit-electron13:
+          requires:
+            - audit
+      - unit-electron17:
           requires:
             - audit
