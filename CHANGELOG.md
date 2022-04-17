@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp Core to [v2.4.1](https://github.com/marp-team/marp-core/releases/tag/v2.4.1) ([#343](https://github.com/marp-team/marp-vscode/pull/343))
+  - Transform Unicode 14.0 emojis into images
+  - Fixed too thickness MathJax math typesettings in PDF rendering
+  - Fixed a bug scoped style does not apply styling to pseudo elements section::before and ::after whenever using advanced background image
+- Upgrade Marp CLI to [v1.7.1](https://github.com/marp-team/marp-cli/releases/tag/v1.7.1) ([#343](https://github.com/marp-team/marp-vscode/pull/343))
+  - Fixed: Cannot write the conversion output to the drive root
+- Upgrade Node.js and dependent packages ([#343](https://github.com/marp-team/marp-vscode/pull/343))
+
 ## v1.5.0 - 2022-03-06
 
 ### Changed
