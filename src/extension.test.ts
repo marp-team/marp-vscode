@@ -79,8 +79,8 @@ describe('#extendMarkdownIt', () => {
           .extendMarkdownIt(new markdownIt())
           .render(markdown)
 
-        expect(html).not.toContain('<div id="marp-vscode">')
-        expect(html).not.toContain('<style id="marp-vscode-style">')
+        expect(html).not.toContain('<div id="__marp-vscode">')
+        expect(html).not.toContain('<style id="__marp-vscode-style">')
         expect(html).not.toContain('svg')
         expect(html).not.toContain('img')
       }
@@ -91,8 +91,8 @@ describe('#extendMarkdownIt', () => {
         .extendMarkdownIt(new markdownIt())
         .render(marpMd(baseMd))
 
-      expect(html).toContain('<div id="marp-vscode">')
-      expect(html).toContain('<style id="marp-vscode-style">')
+      expect(html).toContain('<div id="__marp-vscode">')
+      expect(html).toContain('<style id="__marp-vscode-style">')
       expect(html).toContain('svg')
       expect(html).toContain('img')
     })

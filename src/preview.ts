@@ -6,7 +6,7 @@ export default function preview() {
 
   // Detect update of DOM
   const updateCallback = () => {
-    const marpVscode = document.getElementById('marp-vscode')
+    const marpVscode = document.getElementById('__marp-vscode')
     const newMarpState = !!marpVscode
 
     if (marpState !== newMarpState) {
@@ -38,20 +38,20 @@ export default function preview() {
 
 const removeStyles = () => {
   const styles = document.querySelectorAll<HTMLStyleElement>(
-    'style:not(#marp-vscode-style):not(#_defaultStyles):not([data-marp-vscode-body])'
+    'style:not(#__marp-vscode-style):not(#_defaultStyles):not([data-marp-vscode-body])'
   )
   const links = document.querySelectorAll<HTMLLinkElement>(
     'link[rel="stylesheet"][href]:not([href*="marp-vscode"])'
   )
 
   styles.forEach((elm) => {
-    if (elm.closest('#marp-vscode')) return
+    if (elm.closest('#__marp-vscode')) return
     elm.dataset.marpVscodeBody = elm.textContent ?? ''
     elm.textContent = ''
   })
 
   links.forEach((elm) => {
-    if (elm.closest('#marp-vscode')) return
+    if (elm.closest('#__marp-vscode')) return
     const { href } = elm
     elm.dataset.marpVscodeHref = href
     elm.removeAttribute('href')

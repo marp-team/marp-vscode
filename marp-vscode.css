@@ -1,4 +1,4 @@
-#marp-vscode {
+#__marp-vscode {
   all: initial;
 }
 
@@ -29,11 +29,11 @@ body.marp-vscode blockquote {
     overflow-y: scroll;
   }
 
-  #marp-vscode [data-marp-vscode-slide-wrapper] {
+  #__marp-vscode [data-marp-vscode-slide-wrapper] {
     margin: 20px;
   }
 
-  #marp-vscode svg[data-marpit-svg] {
+  #__marp-vscode svg[data-marpit-svg] {
     box-shadow: 0 5px 10px rgb(0 0 0 / 25%);
     display: block;
     margin: 0;

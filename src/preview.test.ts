@@ -18,7 +18,7 @@ describe('Preview HTML', () => {
   })
 
   it('calls only browser context JS when HTML has Marp slide', () => {
-    document.body.innerHTML = '<div id="marp-vscode"></div>'
+    document.body.innerHTML = '<div id="__marp-vscode"></div>'
 
     preview()
     expect(document.body.classList.contains('marp-vscode')).toBe(true)
@@ -34,8 +34,8 @@ describe('Preview HTML', () => {
 
     document.body.innerHTML = `
       <style id="another-plugin">a {}</style>
-      <style id="marp-vscode-style">a {}</style>
-      <div id="marp-vscode">
+      <style id="__marp-vscode-style">a {}</style>
+      <div id="__marp-vscode">
         <style id="style-in-markdown-content">a {}</style>
         <link rel="stylesheet" href="vscode-resource:/style/in/markdown/content" />
       </div>
@@ -53,7 +53,7 @@ describe('Preview HTML', () => {
       document.querySelector<HTMLLinkElement>('link:not([href])')?.dataset
         .marpVscodeHref
     ).toContain('/other-extension/defined.css')
-    expect(document.getElementById('marp-vscode-style')).toBeTruthy()
+    expect(document.getElementById('__marp-vscode-style')).toBeTruthy()
     expect(document.getElementById('_defaultStyles')).toBeTruthy()
   })
 
@@ -70,7 +70,7 @@ describe('Preview HTML', () => {
         expect(document.body.classList.contains('marp-vscode')).toBe(false)
         expect(observer).not.toHaveBeenCalled()
 
-        document.body.innerHTML = '<div id="marp-vscode"></div>'
+        document.body.innerHTML = '<div id="__marp-vscode"></div>'
         emitUpdateEvent()
         expect(document.body.classList.contains('marp-vscode')).toBe(true)
         expect(observer).toHaveBeenCalled()
@@ -95,7 +95,7 @@ describe('Preview HTML', () => {
         expect(link.href).toBeTruthy()
         expect(style.textContent).toBeTruthy()
 
-        main.innerHTML = '<div id="marp-vscode"></div>'
+        main.innerHTML = '<div id="__marp-vscode"></div>'
         emitUpdateEvent()
         expect(link.href).toBeFalsy()
         expect(style.textContent).toBeFalsy()
