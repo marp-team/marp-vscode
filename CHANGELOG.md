@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v1.5.2 - 2022-04-22
+
 ### Fixed
 
 - Prevent accidental conflict with globally polluted variables by VS Code ([#345](https://github.com/marp-team/marp-vscode/issues/345), [#347](https://github.com/marp-team/marp-vscode/pull/347))
