@@ -221,6 +221,7 @@
       "stylelint-config-prettier"
     ],
     "rules": {
+      "selector-id-pattern": null,
       "selector-type-no-unknown": [
         true,
         {

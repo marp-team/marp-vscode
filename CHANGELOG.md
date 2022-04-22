@@ -5,6 +5,7 @@
 ### Fixed
 
 - Prevent accidental conflict with globally polluted variables by VS Code ([#345](https://github.com/marp-team/marp-vscode/issues/345), [#347](https://github.com/marp-team/marp-vscode/pull/347))
+- Prevent accidental conflict between IDs by Markdown headings and internal IDs for preview ([#348](https://github.com/marp-team/marp-vscode/pull/348))
 
 ## v1.5.1 - 2022-04-17
 
