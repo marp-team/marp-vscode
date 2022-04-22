@@ -2,7 +2,7 @@ const path = require('path')
 const esbuild = require('esbuild')
 const { ESBuildMinifyPlugin } = require('esbuild-loader')
 
-module.exports = ({ outputPath, production }) => ({
+module.exports = ({ outputPath, production, minimizerFormat }) => ({
   mode: production ? 'production' : 'none',
   resolve: { extensions: ['.ts', '.js'] },
   entry: `./src/${path.basename(outputPath, '.js')}.ts`,
@@ -29,7 +29,13 @@ module.exports = ({ outputPath, production }) => ({
     vscode: 'commonjs vscode',
   },
   optimization: {
-    minimizer: [new ESBuildMinifyPlugin({ target: 'es2019', keepNames: true })],
+    minimizer: [
+      new ESBuildMinifyPlugin({
+        target: 'es2019',
+        format: minimizerFormat,
+        keepNames: true,
+      }),
+    ],
   },
   performance: {
     hints: false,
