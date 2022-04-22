@@ -4,7 +4,7 @@ const base = require('./webpack.base.config')
 const outputPath = path.resolve(__dirname, './preview/preview.js')
 
 module.exports = (env) => {
-  const conf = base({ ...env, outputPath })
+  const conf = base({ ...env, outputPath, minimizerFormat: 'iife' })
 
   return {
     ...conf,
