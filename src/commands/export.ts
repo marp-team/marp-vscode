@@ -65,13 +65,8 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     const ext = path.extname(uri.path).replace(/^\./, '')
 
     if (chromiumRequiredExtensions.includes(ext)) {
-      // VS Code's Markdown preview may show local resources placed at the
-      // outside of workspace, and using the proxy server in that case may too
-      // much prevent file accesses.
-      //
-      // So leave handling local files to Marp CLI if the current document was
-      // assumed to use local file system.
-      return !['file', 'untitled'].includes(document.uri.scheme)
+      // Untitled document has not belonged to any workspace
+      return document.uri.scheme !== 'untitled'
     }
 
     return false
@@ -82,10 +77,16 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
     if (workspaceFolder) {
       proxyServer = await createWorkspaceProxyServer(workspaceFolder)
-      baseUrl = `http://127.0.0.1:${proxyServer.port}${document.uri.path}`
+
+      let baseUrlPath = document.uri.path
+      if (baseUrlPath.startsWith(workspaceFolder.uri.path)) {
+        baseUrlPath = baseUrlPath.slice(workspaceFolder.uri.path.length)
+      }
+
+      baseUrl = `http://127.0.0.1:${proxyServer.port}${baseUrlPath}`
 
       console.debug(
-        `Proxy server for the workspace ${workspaceFolder.name} has created (port: ${proxyServer.port})`
+        `Proxy server for the workspace ${workspaceFolder.name} has created (port: ${proxyServer.port} / baseUrl: ${baseUrl})`
       )
     }
   }

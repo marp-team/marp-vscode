@@ -2,7 +2,7 @@ import type { Server } from 'http'
 import path from 'path'
 import express from 'express'
 import { getPortPromise } from 'portfinder'
-import { FileType, workspace, WorkspaceFolder } from 'vscode'
+import { FileType, Uri, workspace, WorkspaceFolder } from 'vscode'
 
 export interface WorkspaceProxyServer {
   dispose: () => void
@@ -20,7 +20,7 @@ export const createWorkspaceProxyServer = async (
     const url = new URL(req.url, `http://${req.headers.host}`)
     const vscodeUri = workspaceFolder.uri.with({
       fragment: url.hash,
-      path: url.pathname,
+      path: Uri.joinPath(workspaceFolder.uri, url.pathname).path,
       query: url.search,
     })
 
@@ -35,6 +35,10 @@ export const createWorkspaceProxyServer = async (
         .header('Last-Modified', new Date(fileStat.mtime).toUTCString())
 
       if (!(fileStat.type & FileType.Directory)) {
+        console.debug(
+          `[Proxy request]: ${req.url} -> ${vscodeUri.toString()} (200)`
+        )
+
         res
           .status(200)
           .send(Buffer.from(await workspace.fs.readFile(vscodeUri)))
@@ -42,9 +46,12 @@ export const createWorkspaceProxyServer = async (
         return
       }
     } catch (e) {
-      // fallback
+      console.warn(e)
     }
 
+    console.debug(
+      `[Proxy request]: ${req.url} -> ${vscodeUri.toString()} (404)`
+    )
     res.status(404).send('Not found')
   })
 
