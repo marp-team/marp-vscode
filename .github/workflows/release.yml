@@ -9,23 +9,30 @@ jobs:
   github-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
+      - name: Parse pre-release flag for vsce
+        id: vsce-prerelease
+        run: echo "::set-output name=prerelease::$(cat package.json | jq '.vsce.preRelease')"
+
       - uses: marp-team/actions@v1
         with:
           task: release
           token: ${{ secrets.GITHUB_TOKEN }}
+          # TODO: https://github.com/marp-team/actions/issues/17
+          # preRelease: ${{ steps.vsce-prerelease.outputs.prerelease == 'true' }}
 
   upload-vsix:
     needs: github-release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Detect Node version from .nvmrc
         id: node_version
         run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
 
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ steps.node_version.outputs.nvmrc }}
 
@@ -43,7 +50,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: ${{ steps.vsix.outputs.name }}
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: vsix
           path: ${{ steps.vsix.outputs.name }}
@@ -52,7 +59,13 @@ jobs:
     needs: upload-vsix
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v3
+
+      - name: Parse pre-release flag for vsce
+        id: vsce-prerelease
+        run: echo "::set-output name=prerelease::$(cat package.json | jq '.vsce.preRelease')"
+
+      - uses: actions/download-artifact@v3
         with:
           name: vsix
           path: ~/vsix
@@ -62,11 +75,12 @@ jobs:
         run: echo "::set-output name=path::$(find ~/vsix -maxdepth 1 -name '*.vsix' -printf '%p\n' | head -n 1)"
 
       - name: Publish to Open VSX Registry
-        uses: HaaLeo/publish-vscode-extension@v0
+        uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.OPEN_VSX_PAT }}
           extensionFile: ${{ steps.vsix.outputs.path }}
           packagePath: ''
+          preRelease: ${{ steps.vsce-prerelease.outputs.prerelease == 'true' }}
         # Workaround: Uploading to Open VSX takes a long minutes, and does not respond even if uploaded successfully :(
         timeout-minutes: 30
         continue-on-error: true
