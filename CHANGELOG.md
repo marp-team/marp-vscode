@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+> **This is pre-released version in Visual Studio Marketplace.**
+
 ## v1.5.2 - 2022-04-22
 
 ### Fixed
