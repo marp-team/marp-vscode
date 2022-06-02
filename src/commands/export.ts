@@ -207,18 +207,7 @@ export default async function exportCommand() {
     )
 
     if (acted === ITEM_MANAGE_WORKSPACE_TRUST) {
-      commands.executeCommand('workbench.trust.manage').then(
-        () => {
-          // do nothing
-        },
-        (e) => {
-          console.error(e)
-
-          // Try alternative way (for VS Code 1.57)
-          // TODO: Remove executing alternative command if the extension requires VS Code 1.58+
-          commands.executeCommand('workbench.action.manageTrust')
-        }
-      )
+      commands.executeCommand('workbench.trust.manage')
     }
 
     return
