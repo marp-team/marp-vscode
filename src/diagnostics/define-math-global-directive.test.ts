@@ -183,7 +183,11 @@ describe('[Diagnostics rule] Define math global directive', () => {
           new rule.DefineMathGlobalDirective().provideCodeActions(
             document,
             dummyRange,
-            { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
+            {
+              diagnostics,
+              triggerKind: CodeActionTriggerKind.Invoke,
+              only: undefined,
+            },
             dummyToken
           )
 
@@ -215,7 +219,11 @@ describe('[Diagnostics rule] Define math global directive', () => {
           new rule.DefineMathGlobalDirective().provideCodeActions(
             document,
             dummyRange,
-            { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
+            {
+              diagnostics,
+              triggerKind: CodeActionTriggerKind.Invoke,
+              only: undefined,
+            },
             dummyToken
           )
 
@@ -234,7 +242,11 @@ describe('[Diagnostics rule] Define math global directive', () => {
           new rule.DefineMathGlobalDirective().provideCodeActions(
             document,
             dummyRange,
-            { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
+            {
+              diagnostics,
+              triggerKind: CodeActionTriggerKind.Invoke,
+              only: undefined,
+            },
             dummyToken
           )
 

@@ -169,7 +169,11 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         const codeActions = new rule.RemoveDollarPrefix().provideCodeActions(
           document,
           dummyRange,
-          { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
+          {
+            diagnostics,
+            triggerKind: CodeActionTriggerKind.Invoke,
+            only: undefined,
+          },
           dummyToken
         )
 
@@ -197,7 +201,11 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         const codeActions = new rule.RemoveDollarPrefix().provideCodeActions(
           document,
           dummyRange,
-          { diagnostics, triggerKind: CodeActionTriggerKind.Invoke },
+          {
+            diagnostics,
+            triggerKind: CodeActionTriggerKind.Invoke,
+            only: undefined,
+          },
           dummyToken
         )
 

@@ -1,5 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
-import { ExtensionContext, Uri, commands, workspace, version } from 'vscode'
+import { ExtensionContext, Uri, commands, workspace } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as newMarpMarkdown from './commands/new-marp-markdown'
 import * as openExtensionSettings from './commands/open-extension-settings'

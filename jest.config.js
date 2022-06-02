@@ -17,6 +17,7 @@ const esModules = [
   'micromark-util-character',
   'micromark-util-combine-extensions',
   'micromark',
+  'nanoid',
   'parse-entities',
   'property-information',
   'rehype-parse',
@@ -30,6 +31,7 @@ const esModules = [
   'unist-util-visit',
   'vfile',
   'web-namespaces',
+  'yaml',
 ]
 
 module.exports = {
