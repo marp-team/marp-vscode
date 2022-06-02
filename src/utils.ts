@@ -50,7 +50,7 @@ export const mathTypesettingConfiguration = () => {
   const conf = marpConfiguration().get<'off' | 'katex' | 'mathjax'>(
     'mathTypesetting'
   )
-  return conf ?? 'katex'
+  return conf ?? 'mathjax'
 }
 
 export const textEncoder = new globalThis.TextEncoder()

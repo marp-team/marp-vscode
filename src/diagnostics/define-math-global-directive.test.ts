@@ -46,7 +46,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
 
   describe('#register', () => {
     it('adds diagnostic when using math syntax without defining math global directive', () => {
-      setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
+      setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
 
       const diagnostics = register(marpDoc('$a=1+2$'))
       expect(diagnostics).toHaveLength(1)
@@ -63,7 +63,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
     })
 
     it('adds diagnostic only to the first math', () => {
-      setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
+      setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
 
       const diagnostics = register(marpDoc('$a$ $b$'))
       expect(diagnostics).toHaveLength(1)
@@ -75,7 +75,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
     })
 
     it("follows Marp's math syntax (based on Pandoc) as much as possible", () => {
-      setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
+      setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
 
       const m = (md: string) => register(marpDoc(md))
 
@@ -128,7 +128,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
     })
 
     it('does not add diagnostics when defined math global directive', () => {
-      setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
+      setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
 
       expect(
         register(marpDoc('$a=1+2$\n\n<!-- math: mathjax -->'))
@@ -206,12 +206,12 @@ describe('[Diagnostics rule] Define math global directive', () => {
         expect(action.edit?.insert).toHaveBeenCalledWith(
           document.uri,
           new Position(2, 0),
-          'math: katex\n'
+          'math: mathjax\n'
         )
       })
 
       it('applies the action with following current setting of math typesetting', () => {
-        setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
+        setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
 
         const document = marpDoc('$a=1+2$')
         const diagnostics = register(document)
@@ -231,7 +231,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
         expect(action.edit?.insert).toHaveBeenCalledWith(
           document.uri,
           new Position(2, 0),
-          'math: mathjax\n'
+          'math: katex\n'
         )
       })
 

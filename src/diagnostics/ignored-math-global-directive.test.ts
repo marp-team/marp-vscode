@@ -42,7 +42,7 @@ describe('[Diagnostics rule] Ignored math global directive', () => {
     it('adds diagnostics when using math global directive with disabled math feature', () => {
       setConfiguration({ 'markdown.marp.mathTypesetting': 'off' })
 
-      const diagnostics = register(doc('<!-- math: katex -->'))
+      const diagnostics = register(doc('<!-- math: mathjax -->'))
       expect(diagnostics).toHaveLength(1)
 
       const [diagnostic] = diagnostics
@@ -63,9 +63,9 @@ describe('[Diagnostics rule] Ignored math global directive', () => {
     })
 
     it('does not add diagnostics when enabled math feature even if used math global directive', () => {
-      setConfiguration({ 'markdown.marp.mathTypesetting': 'katex' })
+      setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
 
-      const diagnostics = register(doc('<!-- math: mathjax -->'))
+      const diagnostics = register(doc('<!-- math: katex -->'))
       expect(diagnostics).toHaveLength(0)
     })
   })

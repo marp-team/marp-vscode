@@ -151,12 +151,12 @@
             "mathjax",
             "katex"
           ],
-          "default": "katex",
-          "markdownDescription": "Controls math syntax and the default library for rendering math (provided by [Marp Core](https://github.com/marp-team/marp-core)). A using library can override by math global directive in Markdown. Please note that math rendering in Marp Markdown is not following the setting in `#markdown.math.enabled#`.",
+          "default": "mathjax",
+          "markdownDescription": "Controls math syntax and the default library for rendering math in [Marp Core](https://github.com/marp-team/marp-core). A using library can override by math global directive in Markdown. Please note that math rendering in Marp Markdown is not following the setting in `#markdown.math.enabled#`.",
           "markdownEnumDescriptions": [
             "Disable math syntax and math global directive.",
-            "Use MathJax (https://www.mathjax.org/).",
-            "Use KaTeX (https://katex.org/). It is the default library in Marp Core v2."
+            "Use MathJax (https://www.mathjax.org/). It is the default library in Marp Core v3.",
+            "Use KaTeX (https://katex.org/)."
           ]
         },
         "markdown.marp.outlineExtension": {
