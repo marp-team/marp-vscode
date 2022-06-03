@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v2.0.0 - 2022-06-03
+
 > **This is pre-released version of the major update. Try it and ready for [the next new core](https://marp.app/blog/202205-ecosystem-update)!**
 
 ### ⚡️ Breaking
