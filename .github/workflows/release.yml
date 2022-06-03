@@ -19,8 +19,7 @@ jobs:
         with:
           task: release
           token: ${{ secrets.GITHUB_TOKEN }}
-          # TODO: https://github.com/marp-team/actions/issues/17
-          # preRelease: ${{ steps.vsce-prerelease.outputs.prerelease == 'true' }}
+          preRelease: ${{ steps.vsce-prerelease.outputs.prerelease == 'true' }}
 
   upload-vsix:
     needs: github-release
