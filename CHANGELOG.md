@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+## v2.0.0 - 2022-06-03
+
+> **This is pre-released version of the major update. Try it and ready for [the next new core](https://marp.app/blog/202205-ecosystem-update)!**
+
+### ⚡️ Breaking
+
+- VS Code >= 1.63 is now required ([#357](https://github.com/marp-team/marp-vscode/pull/357))
+- Upgrade Marp Core to [v3.2.0](https://github.com/marp-team/marp-core/releases/tag/v3.2.0) ([#357](https://github.com/marp-team/marp-vscode/pull/357))
+  - This is the first version of using v3 core. Refer to [the article of ecosystem update](https://marp.app/blog/202205-ecosystem-update). ([Major changes in Marp Core v3.0.0](https://github.com/marp-team/marp-core/releases/tag/v3.0.0))
+- Changed the default of `markdown.marp.mathTypesetting` to `mathjax` ([#357](https://github.com/marp-team/marp-vscode/pull/357))
+
+### Changed
+
+- Upgrade Marp CLI to [v2.0.1](https://github.com/marp-team/marp-cli/releases/tag/v2.0.1) ([#357](https://github.com/marp-team/marp-vscode/pull/357))
+- Upgrade dependent packages to the latest version ([#357](https://github.com/marp-team/marp-vscode/pull/357))
+
 ## v1.5.2 - 2022-04-22
 
 ### Fixed

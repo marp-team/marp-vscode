@@ -128,20 +128,18 @@ class CompletionProvider {
     if (this.isCursorOnDirective('math')) {
       return new CompletionList([
         {
-          detail: 'KaTeX',
-          documentation: new MarkdownString(
-            'Use [KaTeX](https://katex.org/). It is generally known as faster parsing than MathJax.'
-          ),
-          kind: CompletionItemKind.EnumMember,
-          label: 'katex',
-        },
-        {
           detail: 'MathJax',
           documentation: new MarkdownString(
-            'Use [MathJax](https://www.mathjax.org/). It has more stable rendering and better syntax support.'
+            'Use [MathJax](https://www.mathjax.org/).'
           ),
           kind: CompletionItemKind.EnumMember,
           label: 'mathjax',
+        },
+        {
+          detail: 'KaTeX',
+          documentation: new MarkdownString('Use [KaTeX](https://katex.org/).'),
+          kind: CompletionItemKind.EnumMember,
+          label: 'katex',
         },
       ])
     }
