@@ -264,8 +264,8 @@ export const builtinDirectives = [
     description: dedent(`
       Choose a library to render math typesetting in the current Markdown.
 
-      - \`katex\`: Use [KaTeX](https://katex.org/). It is generally known as faster parsing than MathJax.
-      - \`mathjax\`: Use [MathJax](https://www.mathjax.org/). It has more stable rendering and better syntax support.
+      - \`mathjax\`: Use [MathJax](https://www.mathjax.org/).
+      - \`katex\`: Use [KaTeX](https://katex.org/).
 
       Marp may change the default library of the ecosystem in the future. To prevent breaking existing slides, recommend to declare used library whenever to use math typesetting.
     `),

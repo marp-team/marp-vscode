@@ -1,5 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
-import { ExtensionContext, Uri, commands, workspace, version } from 'vscode'
+import { ExtensionContext, Uri, commands, workspace } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as newMarpMarkdown from './commands/new-marp-markdown'
 import * as openExtensionSettings from './commands/open-extension-settings'
@@ -27,68 +27,6 @@ const shouldRefreshConfs = [
 const applyRefreshedConfiguration = () => {
   clearMarpCoreOptionCache()
   commands.executeCommand('markdown.preview.refresh')
-}
-
-// Workaround for https://github.com/microsoft/vscode/issues/126640
-// TODO: Remove this patch if Marp for VS Code dropped support for VS Code 1.62 and previous versions
-let isWarnedFailurePatch = false
-const hackGetScriptsToExecuteMarpScriptFirst = (resourceProvider: any) => {
-  // resourceProvider is not passed by VS Code 1.56 and previous versions.
-  if (!resourceProvider) return
-
-  // VS Code 1.63 and later has stabilized scroll because of incremental DOM update, so we don't need to patch.
-  const matchedVersion = version.match(/^(\d+)\.(\d+)/)
-
-  if (matchedVersion) {
-    const major = Number.parseInt(matchedVersion[1], 10)
-    const minor = Number.parseInt(matchedVersion[2], 10)
-
-    if (major > 1 || (major === 1 && minor >= 63)) return
-  }
-
-  try {
-    const { getScripts } = resourceProvider._contentProvider.__proto__
-
-    if (!getScripts['marpPatched']) {
-      resourceProvider._contentProvider.__proto__.getScripts = function (
-        this: any,
-        ...args: any[]
-      ) {
-        const ret: string = getScripts.apply(this, args)
-        const scripts = ret.match(/<script[^>]*><\/script>/g) ?? []
-
-        const marpScriptIdx = scripts.findIndex((script) =>
-          script.includes('marp-vscode')
-        )
-
-        if (marpScriptIdx >= 0) {
-          const [marpScript] = scripts.splice(marpScriptIdx, 1)
-          scripts.unshift(marpScript.replace(/\s*async/, ''))
-        }
-
-        return scripts.join('\n')
-      }
-
-      Object.defineProperty(
-        resourceProvider._contentProvider.__proto__.getScripts,
-        'marpPatched',
-        { value: true }
-      )
-
-      console.debug(
-        '[Marp for VS Code] Applied the patch for the order of preview scripts.'
-      )
-    }
-  } catch (e) {
-    if (!isWarnedFailurePatch) {
-      console.warn(
-        "Failed to patch for the order of preview scripts. Marp preview still will work but sometimes may fail to apply VS Code's scroll stabilizer."
-      )
-      console.warn(e)
-    }
-
-    isWarnedFailurePatch = true
-  }
 }
 
 export const marpVscode = Symbol('marp-vscode')
@@ -168,8 +106,6 @@ export function extendMarkdownIt(md: any) {
   }
 
   renderer.render = (tokens: any[], options: any, env: any) => {
-    hackGetScriptsToExecuteMarpScriptFirst(env.resourceProvider)
-
     const marp = md[marpVscode]
 
     if (marp) {

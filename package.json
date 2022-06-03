@@ -30,7 +30,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.63.0"
   },
   "main": "./lib/extension.js",
   "browser": "./dist/extension.js",
@@ -151,12 +151,12 @@
             "mathjax",
             "katex"
           ],
-          "default": "katex",
-          "markdownDescription": "Controls math syntax and the default library for rendering math (provided by [Marp Core](https://github.com/marp-team/marp-core)). A using library can override by math global directive in Markdown. Please note that math rendering in Marp Markdown is not following the setting in `#markdown.math.enabled#`.",
+          "default": "mathjax",
+          "markdownDescription": "Controls math syntax and the default library for rendering math in [Marp Core](https://github.com/marp-team/marp-core). A using library can override by math global directive in Markdown. Please note that math rendering in Marp Markdown is not following the setting in `#markdown.math.enabled#`.",
           "markdownEnumDescriptions": [
             "Disable math syntax and math global directive.",
-            "Use MathJax (https://www.mathjax.org/).",
-            "Use KaTeX (https://katex.org/). It is the default library in Marp Core v2."
+            "Use MathJax (https://www.mathjax.org/). It is the default library in Marp Core v3.",
+            "Use KaTeX (https://katex.org/)."
           ]
         },
         "markdown.marp.outlineExtension": {
@@ -209,7 +209,8 @@
   },
   "private": true,
   "vsce": {
-    "yarn": false
+    "yarn": false,
+    "preRelease": true
   },
   "prettier": {
     "semi": false,
@@ -257,32 +258,34 @@
     "watch:web": "webpack --watch --env target=web,preview"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.16.11",
-    "@marp-team/marp-core": "^2.4.2",
+    "@babel/preset-env": "^7.18.2",
+    "@marp-team/marp-core": "^3.2.0",
     "@types/express": "^4.17.13",
-    "@types/jest": "^27.4.1",
-    "@types/lodash.debounce": "^4.0.6",
+    "@types/jest": "^27.5.2",
+    "@types/lodash.debounce": "^4.0.7",
     "@types/markdown-it": "^12.2.3",
-    "@types/vscode": "~1.60.0",
-    "@typescript-eslint/eslint-plugin": "^5.19.0",
-    "@typescript-eslint/parser": "^5.19.0",
+    "@types/vscode": "~1.63.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
     "@vscode/test-web": "^0.0.24",
     "abort-controller": "^3.0.0",
     "dedent": "^0.7.0",
-    "esbuild": "^0.14.36",
-    "esbuild-loader": "^2.18.0",
-    "eslint": "^8.13.0",
+    "esbuild": "^0.14.42",
+    "esbuild-loader": "^2.19.0",
+    "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.1.4",
-    "express": "^4.17.3",
+    "eslint-plugin-jest": "^26.4.6",
+    "express": "^4.18.1",
     "fetch-ponyfill": "^7.1.0",
-    "jest": "^27.5.1",
-    "jest-junit": "^13.1.0",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
+    "jest-junit": "^13.2.0",
     "lodash.debounce": "^4.0.8",
-    "markdown-it": "^12.3.2",
-    "nanoid": "^3.3.2",
+    "markdown-it": "^13.0.1",
+    "nanoid": "^3.3.4",
+    "npm-check-updates": "^13.0.4",
     "npm-run-all": "^4.1.5",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
@@ -292,22 +295,22 @@
     "rehype-parse": "^8.0.4",
     "remark-math": "^5.1.1",
     "remark-parse": "^10.0.1",
-    "stylelint": "^14.7.0",
+    "stylelint": "^14.8.5",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^25.0.0",
-    "ts-jest": "^27.1.4",
-    "tslib": "^2.3.1",
+    "ts-jest": "^28.0.3",
+    "tslib": "^2.4.0",
     "typed-emitter": "^2.1.0",
-    "typescript": "^4.6.3",
+    "typescript": "^4.7.2",
     "unified": "^10.1.2",
     "unist-util-visit": "^4.1.0",
-    "vsce": "^2.7.0",
+    "vsce": "^2.9.1",
     "vscode-uri": "^3.0.3",
-    "webpack": "^5.72.0",
+    "webpack": "^5.73.0",
     "webpack-cli": "^4.9.2",
-    "yaml": "^2.0.1"
+    "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^1.7.2"
+    "@marp-team/marp-cli": "^2.0.1"
   }
 }

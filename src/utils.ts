@@ -1,4 +1,4 @@
-import { AbortController } from 'abort-controller'
+import { AbortController as AbortControllerShim } from 'abort-controller'
 import fetchPonyfill from 'fetch-ponyfill'
 import { TextDocument, Uri, workspace } from 'vscode'
 
@@ -29,7 +29,7 @@ export const detectMarpFromMarkdown = (markdown: string): boolean => {
 }
 
 export const fetch = (url: string, { timeout = 5000 }: FetchOption = {}) => {
-  const controller = new AbortController()
+  const controller = new AbortControllerShim() as AbortController
   const timeoutCallback = setTimeout(() => controller.abort(), timeout)
 
   return _fetchPonyfillInstance
@@ -50,7 +50,7 @@ export const mathTypesettingConfiguration = () => {
   const conf = marpConfiguration().get<'off' | 'katex' | 'mathjax'>(
     'mathTypesetting'
   )
-  return conf ?? 'katex'
+  return conf ?? 'mathjax'
 }
 
 export const textEncoder = new globalThis.TextEncoder()

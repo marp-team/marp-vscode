@@ -65,19 +65,6 @@ describe('Export command', () => {
           'workbench.trust.manage'
         )
       })
-
-      it('fallbacks to "workbench.action.manageTrust" command for VS Code 1.57 if throwed error', async () => {
-        const error = jest.spyOn(console, 'error').mockImplementation()
-        const err = new Error('!')
-
-        ;(commands.executeCommand as any).mockRejectedValueOnce(err)
-
-        await exportCommand()
-        expect(error).toHaveBeenCalledWith(err)
-        expect(commands.executeCommand).toHaveBeenCalledWith(
-          'workbench.action.manageTrust'
-        )
-      })
     })
   })
 

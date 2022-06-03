@@ -21,7 +21,6 @@ commands:
         default: []
     steps:
       - run: node --version
-      - run: sudo npm install -g npm
 
       - restore_cache:
           keys:
