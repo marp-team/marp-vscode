@@ -65,8 +65,13 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     const ext = path.extname(uri.path).replace(/^\./, '')
 
     if (chromiumRequiredExtensions.includes(ext)) {
-      // Untitled document has not belonged to any workspace
-      return document.uri.scheme !== 'untitled'
+      // VS Code's Markdown preview may show local resources placed at the
+      // outside of workspace, and using the proxy server in that case may too
+      // much prevent file accesses.
+      //
+      // So leave handling local files to Marp CLI if the current document was
+      // assumed to use local file system.
+      return !['file', 'untitled'].includes(document.uri.scheme)
     }
 
     return false
