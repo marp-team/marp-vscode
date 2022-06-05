@@ -1,8 +1,8 @@
-import { observer } from '@marp-team/marp-core/browser'
+import { browser, type MarpCoreBrowser } from '@marp-team/marp-core/browser'
 
 export default function preview() {
   let marpState: boolean | undefined
-  let marpObserverCleanup: (() => void) | undefined
+  let marpBrowser: MarpCoreBrowser | undefined
 
   // Detect update of DOM
   const updateCallback = () => {
@@ -13,16 +13,20 @@ export default function preview() {
       document.body.classList.toggle('marp-vscode', newMarpState)
 
       if (newMarpState) {
-        marpObserverCleanup = observer()
+        marpBrowser = browser()
       } else {
-        marpObserverCleanup?.()
-        marpObserverCleanup = undefined
+        marpBrowser?.cleanup()
+        marpBrowser = undefined
       }
 
       marpState = newMarpState
+    } else {
+      // Required to modify <pre is="marp-pre"> to <marp-pre>.
+      if (newMarpState) marpBrowser?.update()
     }
 
     if (marpState) {
+      if (marpVscode) forceUpgradeCustomElements(marpVscode)
       removeStyles()
     } else {
       restoreStyles()
@@ -34,6 +38,35 @@ export default function preview() {
 
   // Initial update
   updateCallback()
+}
+
+/**
+ * Detect not-upgraded custom elements defined by `is` attribute and force
+ * upgrading.
+ *
+ * In the incremental DOM update, the browser will not be triggered upgrade for
+ * native HTML elements to the custom element.
+ *
+ * @param target The target element containing elements to be upgraded.
+ */
+const forceUpgradeCustomElements = (target: Element) => {
+  target.querySelectorAll<Element>('[is]').forEach((node) => {
+    // Probably this node is already a custom element by the explicit node name
+    if (node.nodeName.includes('-')) return
+
+    // Check if the node has a different constructor from the browser
+    const testElm = document.createElement(node.nodeName)
+    if (testElm.constructor !== node.constructor) return
+
+    // The node intents to use the custom element by `is` but not upgraded!
+    const { outerHTML } = node
+    node.outerHTML = outerHTML
+
+    console.debug(
+      '[marp-vscode] Custom element has been upgraded forcibly:',
+      outerHTML.slice(0, outerHTML.indexOf('>') + 1 || undefined)
+    )
+  })
 }
 
 const removeStyles = () => {
