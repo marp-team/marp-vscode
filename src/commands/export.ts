@@ -87,6 +87,9 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
       if (baseUrlPath.startsWith(workspaceFolder.uri.path)) {
         baseUrlPath = baseUrlPath.slice(workspaceFolder.uri.path.length)
       }
+      if (!baseUrlPath.startsWith('/')) {
+        baseUrlPath = `/${baseUrlPath}`
+      }
 
       baseUrl = `http://127.0.0.1:${proxyServer.port}${baseUrlPath}`
 
