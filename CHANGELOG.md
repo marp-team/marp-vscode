@@ -11,6 +11,7 @@
 
 ### Fixed
 
+- Improved base path resolving in a proxy server for virtual workspace ([#359](https://github.com/marp-team/marp-vscode/issues/359))
 - Auto-scaling is not working in the preview ([#360](https://github.com/marp-team/marp-vscode/issues/360))
 
 ## v2.0.0 - 2022-06-03
