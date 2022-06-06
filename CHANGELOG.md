@@ -1,10 +1,19 @@
 # Change Log
 
+> ℹ️ **[v2.x](#v200---2022-06-03) is currently available as pre-released version. Try it and ready for [the next new core](https://marp.app/blog/202205-ecosystem-update)!**
+
 ## [Unreleased]
 
-## v2.0.0 - 2022-06-03
+### Changed
 
-> **This is pre-released version of the major update. Try it and ready for [the next new core](https://marp.app/blog/202205-ecosystem-update)!**
+- Upgrade Marp Core to [v3.2.1](https://github.com/marp-team/marp-core/releases/tag/v3.2.1) ([#361](https://github.com/marp-team/marp-vscode/pull/361))
+- Upgrade Marp CLI to [v2.0.3](https://github.com/marp-team/marp-cli/releases/tag/v2.0.3) ([#361](https://github.com/marp-team/marp-vscode/pull/361))
+
+### Fixed
+
+- Auto-scaling is not working in the preview ([#360](https://github.com/marp-team/marp-vscode/issues/360))
+
+## v2.0.0 - 2022-06-03
 
 ### ⚡️ Breaking
 

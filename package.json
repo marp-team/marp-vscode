@@ -259,7 +259,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.2",
-    "@marp-team/marp-core": "^3.2.0",
+    "@marp-team/marp-core": "^3.2.1",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.5.2",
     "@types/lodash.debounce": "^4.0.7",
@@ -311,6 +311,6 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^2.0.1"
+    "@marp-team/marp-cli": "^2.0.3"
   }
 }
