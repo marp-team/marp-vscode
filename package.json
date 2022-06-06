@@ -311,6 +311,6 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^2.0.1"
+    "@marp-team/marp-cli": "^2.0.3"
   }
 }
