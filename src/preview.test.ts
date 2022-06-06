@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { observer } from '@marp-team/marp-core/browser'
+import { browser } from '@marp-team/marp-core/browser'
 import preview from './preview'
 
 jest.mock('@marp-team/marp-core/browser')
@@ -12,9 +12,11 @@ beforeEach(() => {
 })
 
 describe('Preview HTML', () => {
+  beforeEach(() => jest.spyOn(console, 'debug').mockImplementation())
+
   it('does not call browser context JS when HTML has not Marp slide', () => {
     preview()
-    expect(observer).not.toHaveBeenCalled()
+    expect(browser).not.toHaveBeenCalled()
   })
 
   it('calls only browser context JS when HTML has Marp slide', () => {
@@ -22,7 +24,7 @@ describe('Preview HTML', () => {
 
     preview()
     expect(document.body.classList.contains('marp-vscode')).toBe(true)
-    expect(observer).toHaveBeenCalled()
+    expect(browser).toHaveBeenCalled()
   })
 
   it('makes inactive all styles excepted Marp and user contents when HTML has Marp slide', () => {
@@ -62,18 +64,18 @@ describe('Preview HTML', () => {
       window.dispatchEvent(new CustomEvent('vscode.markdown.updateContent'))
 
     describe('Marp Core browser context JS', () => {
-      it('calls observer when activated and calls clean-up function when deactivated', () => {
+      it('calls browser script when activated and calls clean-up function when deactivated', () => {
         const cleanup = jest.fn()
-        ;(observer as jest.Mock).mockImplementation(cleanup)
+        ;(browser as jest.Mock).mockImplementation(cleanup)
 
         preview()
         expect(document.body.classList.contains('marp-vscode')).toBe(false)
-        expect(observer).not.toHaveBeenCalled()
+        expect(browser).not.toHaveBeenCalled()
 
         document.body.innerHTML = '<div id="__marp-vscode"></div>'
         emitUpdateEvent()
         expect(document.body.classList.contains('marp-vscode')).toBe(true)
-        expect(observer).toHaveBeenCalled()
+        expect(browser).toHaveBeenCalled()
 
         document.body.innerHTML = ''
         emitUpdateEvent()
@@ -104,6 +106,41 @@ describe('Preview HTML', () => {
         emitUpdateEvent()
         expect(link.href).toBeTruthy()
         expect(style.textContent).toBeTruthy()
+      })
+    })
+
+    describe('Custom elements', () => {
+      it('forces replacing node if the custom element via "is" attribute is not upgraded', () => {
+        const CustomHTMLElement = class extends HTMLElement {}
+        customElements.define('custom-element', CustomHTMLElement)
+
+        document.body.innerHTML = `
+          <div id="__marp-vscode">
+            <custom-element is="custom-element">test</custom-element>
+            <div is="custom-element">test</div>
+            <p class="klass" data-attribute="test">test</p>
+          </div>
+        `.trim()
+
+        preview()
+
+        const explicitCustomElement = document.querySelector('custom-element')!
+        // const isExplicitCustomElement = document.querySelector('div[is]')!
+        const paragraphElement = document.querySelector('p')!
+        paragraphElement.setAttribute('is', 'custom-element')
+
+        expect(explicitCustomElement).toBeInstanceOf(CustomHTMLElement)
+        // expect(isExplicitCustomElement).toBeInstanceOf(CustomHTMLElement) // JSDOM does not support custom elements via "is"
+        expect(paragraphElement).toBeInstanceOf(HTMLParagraphElement)
+        expect(paragraphElement.isConnected).toBe(true)
+
+        emitUpdateEvent()
+        expect(paragraphElement.isConnected).toBe(false)
+
+        // Keep original attributes in a new element
+        const newParagraphElement = document.querySelector('p')!
+        expect(newParagraphElement.classList.contains('klass')).toBe(true)
+        expect(newParagraphElement.dataset.attribute).toBe('test')
       })
     })
   })
