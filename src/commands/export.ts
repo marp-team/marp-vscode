@@ -82,10 +82,19 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
     if (workspaceFolder) {
       proxyServer = await createWorkspaceProxyServer(workspaceFolder)
-      baseUrl = `http://127.0.0.1:${proxyServer.port}${document.uri.path}`
+
+      let baseUrlPath = document.uri.path
+      if (baseUrlPath.startsWith(workspaceFolder.uri.path)) {
+        baseUrlPath = baseUrlPath.slice(workspaceFolder.uri.path.length)
+      }
+      if (!baseUrlPath.startsWith('/')) {
+        baseUrlPath = `/${baseUrlPath}`
+      }
+
+      baseUrl = `http://127.0.0.1:${proxyServer.port}${baseUrlPath}`
 
       console.debug(
-        `Proxy server for the workspace ${workspaceFolder.name} has created (port: ${proxyServer.port})`
+        `Proxy server for the workspace ${workspaceFolder.name} has created (port: ${proxyServer.port} / baseUrl: ${baseUrl})`
       )
     }
   }

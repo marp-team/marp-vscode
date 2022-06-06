@@ -12,13 +12,13 @@ describe('Workspace Proxy Server', () => {
   let server: WorkspaceProxyServer | undefined
 
   const { fetch } = fetchPonyfill()
-  const wsUri: Uri = Object.assign(Uri.parse('untitled:untitled'), {
-    with: jest.fn(() => wsUri),
-  })
+  const wsUri: Uri = Uri.file('/test/path/subdir')
   const wsFolder: any = { uri: wsUri }
 
   beforeEach(() => {
-    ;(wsUri.with as any).mockReset()
+    jest.spyOn(console, 'debug').mockImplementation()
+    jest.spyOn(console, 'warn').mockImplementation()
+
     server = undefined
   })
 
@@ -28,6 +28,8 @@ describe('Workspace Proxy Server', () => {
     jest
       .spyOn(workspace.fs, 'readFile')
       .mockResolvedValue(textEncoder.encode('readFile'))
+
+    const wsUriWithSpy = jest.spyOn(wsUri, 'with')
 
     server = await createWorkspaceProxyServer(wsFolder)
     expect(server.port).toBeGreaterThanOrEqual(8192)
@@ -39,8 +41,8 @@ describe('Workspace Proxy Server', () => {
     expect(await response.text()).toMatchInlineSnapshot(`"readFile"`)
 
     expect(response.headers.get('content-type')).toContain('image/png')
-    expect(wsUri.with).toHaveBeenCalledWith({
-      path: '/test.png',
+    expect(wsUriWithSpy).toHaveBeenCalledWith({
+      path: '/test/path/subdir/test.png',
       query: '?query',
       fragment: '',
     })
