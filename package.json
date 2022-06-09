@@ -25,6 +25,9 @@
       "url": "https://github.com/yhatt"
     }
   ],
+  "sponsor": {
+    "url": "https://github.com/sponsors/yhatt"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/marp-team/marp-vscode"
