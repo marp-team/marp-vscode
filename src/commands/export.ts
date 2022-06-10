@@ -65,13 +65,23 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     const ext = path.extname(uri.path).replace(/^\./, '')
 
     if (chromiumRequiredExtensions.includes(ext)) {
-      // VS Code's Markdown preview may show local resources placed at the
-      // outside of workspace, and using the proxy server in that case may too
-      // much prevent file accesses.
-      //
-      // So leave handling local files to Marp CLI if the current document was
-      // assumed to use local file system.
-      return !['file', 'untitled'].includes(document.uri.scheme)
+      if (document.uri.scheme === 'untitled') return false
+      if (document.uri.scheme === 'file') {
+        if (
+          marpConfiguration().get<boolean>('strictPathResolutionDuringExport')
+        )
+          return true
+
+        // VS Code's Markdown preview may show local resources placed at the
+        // outside of workspace, and using the proxy server in that case may too
+        // much prevent file accesses.
+        //
+        // So leave handling local files to Marp CLI if the current document was
+        // assumed to use local file system.
+        return false
+      }
+
+      return true
     }
 
     return false
