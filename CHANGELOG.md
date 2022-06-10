@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## v2.1.0 - 2022-06-10
+
 ### Added
 
 - `deprecated-color-setting-shorthand` auto-fixable diagnostic for replacing [deprecated shorthands for setting colors](https://github.com/marp-team/marpit/issues/331) ([#358](https://github.com/marp-team/marp-vscode/issues/358), [#366](https://github.com/marp-team/marp-vscode/pull/366))
