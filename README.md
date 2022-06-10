@@ -90,17 +90,19 @@ Marp for VS Code can detect some basic problems in Marp directives. Diagnostics 
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/diagnostics.png" alt="Diagnostics" width="443" />
 </p>
 
-| Name                            | Description                                                                                        | [Quick Fix] |
-| :------------------------------ | :------------------------------------------------------------------------------------------------- | :---------: |
-| `define-math-global-directive`  | Recommend to declare math typesetting library via [`math` global directive][math global directive] |     ✅      |
-| `deprecated-dollar-prefix`      | Check [obsoleted directives prefixed by `$`][dollar-prefix]                                        |     ✅      |
-| `ignored-math-global-directive` | Report ignored `math` global directive if disabled math by the extension setting                   |             |
-| `overloading-global-directive`  | Find out overloaded global directives                                                              |             |
-| `unknown-size`                  | Notify if the specified [size preset] was not defined in a theme                                   |             |
-| `unknown-theme`                 | Notify a not recognized theme name                                                                 |             |
+| Name                                 | Description                                                                                        | [Quick Fix] |
+| :----------------------------------- | :------------------------------------------------------------------------------------------------- | :---------: |
+| `define-math-global-directive`       | Recommend to declare math typesetting library via [`math` global directive][math global directive] |     ✅      |
+| `deprecated-color-setting-shorthand` | Check [deprecated shorthands for setting slide colors][color setting shorthand]                    |     ✅      |
+| `deprecated-dollar-prefix`           | Check [obsoleted directives prefixed by `$`][dollar-prefix]                                        |     ✅      |
+| `ignored-math-global-directive`      | Report ignored `math` global directive if disabled math by the extension setting                   |             |
+| `overloading-global-directive`       | Find out overloaded global directives                                                              |             |
+| `unknown-size`                       | Notify if the specified [size preset] was not defined in a theme                                   |             |
+| `unknown-theme`                      | Notify a not recognized theme name                                                                 |             |
 
 [quick fix]: https://code.visualstudio.com/docs/editor/refactoring#_code-actions-quick-fixes-and-refactorings
 [dollar-prefix]: https://github.com/marp-team/marpit/issues/182
+[color setting shorthand]: https://github.com/marp-team/marpit/issues/331
 [math global directive]: https://github.com/marp-team/marp-core#math-global-directive
 [size preset]: https://github.com/marp-team/marp-core/tree/main/themes#size-name-width-height
 

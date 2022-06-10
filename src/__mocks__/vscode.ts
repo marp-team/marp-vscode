@@ -55,6 +55,11 @@ export class Diagnostic {
   ) {}
 }
 
+export enum DiagnosticTag {
+  Unnecessary = 1,
+  Deprecated = 2,
+}
+
 export enum DiagnosticSeverity {
   Error,
   Warning,
@@ -244,6 +249,7 @@ export const workspace = {
 export class WorkspaceEdit {
   readonly delete = jest.fn()
   readonly insert = jest.fn()
+  readonly replace = jest.fn()
 }
 
 beforeEach(() => {
