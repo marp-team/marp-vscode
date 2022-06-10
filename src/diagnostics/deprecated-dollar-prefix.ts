@@ -4,6 +4,7 @@ import {
   CodeActionProvider,
   Diagnostic,
   DiagnosticSeverity,
+  DiagnosticTag,
   Disposable,
   Range,
   TextDocument,
@@ -42,6 +43,7 @@ export function register(
 
       diagnostic.source = 'marp-vscode'
       diagnostic.code = code
+      diagnostic.tags = [DiagnosticTag.Deprecated]
 
       diagnostics.push(diagnostic)
     }

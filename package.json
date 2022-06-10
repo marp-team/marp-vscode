@@ -260,6 +260,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.18.2",
     "@marp-team/marp-core": "^3.2.1",
+    "@types/color-string": "^1.5.2",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.5.2",
     "@types/lodash.debounce": "^4.0.7",
@@ -269,6 +270,7 @@
     "@typescript-eslint/parser": "^5.27.0",
     "@vscode/test-web": "^0.0.24",
     "abort-controller": "^3.0.0",
+    "color-string": "^1.9.1",
     "dedent": "^0.7.0",
     "esbuild": "^0.14.42",
     "esbuild-loader": "^2.19.0",

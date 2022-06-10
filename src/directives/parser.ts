@@ -38,6 +38,14 @@ export interface DirectiveSectionEventHandler {
   range: Range
 }
 
+export interface ImageEventHandler {
+  alt: string
+  body: string
+  range: Range
+  title: string | null
+  url: string
+}
+
 export interface MathEventHandler {
   body: string
   range: Range
@@ -48,6 +56,7 @@ type DirectiveParserEvents = {
   directive: (event: DirectiveEventHandler) => void
   endParse: (event: { document: TextDocument }) => void
   frontMatter: (event: DirectiveSectionEventHandler) => void
+  image: (event: ImageEventHandler) => void
   maybeMath: (event: MathEventHandler) => void
   startParse: (event: { document: TextDocument }) => void
 }
@@ -119,10 +128,15 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
       markdown = markdown.slice(index)
     }
 
-    // HTML comments
+    // HTML comments and Markdown syntax
     const parsed = parseMd(markdown)
 
-    visit(parsed, ['html', 'math', 'inlineMath'], (n: any) => {
+    visit(parsed, ['html', 'image', 'math', 'inlineMath'], (n: any) => {
+      const range = new Range(
+        doc.positionAt(index + n.position.start.offset),
+        doc.positionAt(index + n.position.end.offset)
+      )
+
       switch (n.type) {
         case 'html':
           visit(parseHtml(n.value), 'comment', (c: any) => {
@@ -131,13 +145,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
               c.position.end.offset
             )
 
-            this.emit('comment', {
-              body: rawBody,
-              range: new Range(
-                doc.positionAt(index + n.position.start.offset),
-                doc.positionAt(index + n.position.end.offset)
-              ),
-            })
+            this.emit('comment', { body: rawBody, range })
 
             // c.value should not use because it has normalized CRLF to LF
             const value = rawBody.slice(4, -3)
@@ -151,6 +159,18 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
                 4 +
                 (value.length - trimmedLeft.length)
             )
+          })
+          break
+        case 'image':
+          this.emit('image', {
+            body: markdown.slice(
+              n.position.start.offset,
+              n.position.end.offset
+            ),
+            range,
+            url: n.url,
+            alt: n.alt,
+            title: n.title,
           })
           break
         case 'math':
@@ -180,10 +200,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
               n.position.start.offset,
               n.position.end.offset
             ),
-            range: new Range(
-              doc.positionAt(index + n.position.start.offset),
-              doc.positionAt(index + n.position.end.offset)
-            ),
+            range,
           })
         }
       }
