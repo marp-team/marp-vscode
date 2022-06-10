@@ -175,6 +175,7 @@ describe('#doExport', () => {
     await exportModule.doExport(uri, document)
     expect(runMarpCLI).toHaveBeenCalled()
     expect(env.openExternal).toHaveBeenCalledWith(uri)
+    expect(createWorkspaceProxyServer).not.toHaveBeenCalled()
   })
 
   it('shows error when Marp CLI throws error', async () => {
@@ -211,6 +212,42 @@ describe('#doExport', () => {
     expect(window.showErrorMessage).toHaveBeenCalledWith(
       'Failure to export by unknown error.'
     )
+  })
+
+  describe('when enabled markdown.marp.strictPathResolutionDuringExport', () => {
+    beforeEach(() => {
+      setConfiguration({
+        'markdown.marp.strictPathResolutionDuringExport': true,
+      })
+      jest.spyOn(marpCli, 'default').mockImplementation()
+    })
+
+    it('opens workspace proxy server during export if the document has file scheme', async () => {
+      const fileWorkspace: any = {
+        name: 'file',
+        index: 0,
+        uri: {
+          scheme: 'file',
+          path: 'file:///tmp',
+          fsPath: '/tmp',
+        },
+      }
+      jest.spyOn(workspace, 'getWorkspaceFolder').mockReturnValue(fileWorkspace)
+
+      await exportModule.doExport(saveURI(), document)
+      expect(createWorkspaceProxyServer).toHaveBeenCalledWith(fileWorkspace)
+    })
+
+    it('does not open workspace proxy server if the document is untitled', async () => {
+      const untitledDocument: any = {
+        uri: { scheme: 'untitled', path: 'untitled.md', fsPath: 'untitled.md' },
+        isUntitled: true,
+        getText: () => '',
+      }
+
+      await exportModule.doExport(saveURI(), untitledDocument)
+      expect(createWorkspaceProxyServer).not.toHaveBeenCalled()
+    })
   })
 
   describe('when enabled markdown.marp.pdf.noteAnnotations', () => {
