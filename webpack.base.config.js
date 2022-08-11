@@ -1,8 +1,6 @@
 const path = require('path')
 const esbuild = require('esbuild')
 const { ESBuildMinifyPlugin } = require('esbuild-loader')
-const { version: mathjaxVersion } = require('mathjax-full/package.json')
-const { DefinePlugin } = require('webpack')
 
 module.exports = ({ outputPath, production, minimizerFormat }) => ({
   mode: production ? 'production' : 'none',
@@ -22,7 +20,7 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
         options: {
           implementation: esbuild,
           loader: 'ts',
-          target: 'es2019',
+          target: 'es2021',
         },
       },
     ],
@@ -33,21 +31,15 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
   optimization: {
     minimizer: [
       new ESBuildMinifyPlugin({
-        target: 'es2019',
+        target: 'es2021',
         format: minimizerFormat,
         keepNames: true,
       }),
     ],
   },
+  plugins: [],
   performance: {
     hints: false,
   },
-  plugins: [
-    // Workaround for https://github.com/mathjax/MathJax/issues/2880
-    // @see https://github.com/mathjax/MathJax-src/issues/818
-    new DefinePlugin({
-      PACKAGE_VERSION: JSON.stringify(mathjaxVersion),
-    }),
-  ],
   devtool: production ? false : 'nosources-source-map',
 })

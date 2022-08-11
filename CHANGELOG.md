@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- VS Code >= 1.66 is now required ([#371](https://github.com/marp-team/marp-vscode/pull/371))
+
+### Changed
+
+- Upgrade Marp Core to [v3.3.0](https://github.com/marp-team/marp-core/releases/tag/v3.3.0) ([#371](https://github.com/marp-team/marp-vscode/pull/371))
+- Upgrade Marp CLI to [v2.1.0](https://github.com/marp-team/marp-cli/releases/tag/v2.1.0) ([#371](https://github.com/marp-team/marp-vscode/pull/371))
+  - macOS: `markdown.marp.chromePath` is now able to recognize the `.app` folder path
+- Upgrade Node.js and dependent packages to the latest version ([#371](https://github.com/marp-team/marp-vscode/pull/371))
+
 ## v2.1.0 - 2022-06-10
 
 ### Added
