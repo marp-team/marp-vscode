@@ -20,7 +20,7 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
         options: {
           implementation: esbuild,
           loader: 'ts',
-          target: 'es2019',
+          target: 'es2021',
         },
       },
     ],
@@ -31,12 +31,13 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
   optimization: {
     minimizer: [
       new ESBuildMinifyPlugin({
-        target: 'es2019',
+        target: 'es2021',
         format: minimizerFormat,
         keepNames: true,
       }),
     ],
   },
+  plugins: [],
   performance: {
     hints: false,
   },

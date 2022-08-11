@@ -30,11 +30,6 @@ module.exports = (env) => {
     plugins: [
       ...conf.plugins,
       new ProvidePlugin({ process: 'process/browser.js' }),
-      // Workaround for https://github.com/wooorm/parse-entities/issues/19
-      new NormalModuleReplacementPlugin(
-        /parse-entities\/lib\/decode-entity\.browser\.js/,
-        './decode-entity.js'
-      ),
     ],
   }
 }
