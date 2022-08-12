@@ -6,8 +6,8 @@
 
 ### Changed
 
-- Upgrade Marp Core to [v3.3.1](https://github.com/marp-team/marp-core/releases/tag/v3.3.1) ([#372](https://github.com/marp-team/marp-vscode/pull/372))
-- Upgrade Marp CLI to [v2.1.1](https://github.com/marp-team/marp-cli/releases/tag/v2.1.1) ([#373](https://github.com/marp-team/marp-vscode/pull/373))
+- Upgrade Marp Core to [v3.3.2](https://github.com/marp-team/marp-core/releases/tag/v3.3.2) ([#374](https://github.com/marp-team/marp-vscode/pull/374))
+- Upgrade Marp CLI to [v2.1.2](https://github.com/marp-team/marp-cli/releases/tag/v2.1.2) ([#375](https://github.com/marp-team/marp-vscode/pull/375))
 
 ## v2.2.0 - 2022-08-11
 
