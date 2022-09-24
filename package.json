@@ -181,8 +181,8 @@
             "both"
           ],
           "default": "off",
-          "markdownDescription": "Adds outlines (bookmarks) to exported PDF. It is useful for navigation in PDF viewer.",
-          "markdownEnumDescriptions": [
+          "description": "Adds outlines (bookmarks) to exported PDF. It is useful for navigation in PDF viewer.",
+          "enumDescriptions": [
             "Disable outlines.",
             "Add outlines based on each slide page.",
             "Add outlines based on each Markdown heading.",
