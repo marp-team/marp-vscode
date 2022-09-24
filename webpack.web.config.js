@@ -25,6 +25,7 @@ module.exports = (env) => {
         // Node.js polyfills
         os: require.resolve('os-browserify/browser'),
         path: require.resolve('path-browserify'),
+        util: require.resolve('util/'),
       },
     },
     plugins: [

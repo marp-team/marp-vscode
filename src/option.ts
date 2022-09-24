@@ -38,6 +38,19 @@ const math = () => {
   return conf === 'off' ? false : conf
 }
 
+const pdfOutlines = () => {
+  switch (marpConfiguration().get<string>('pdf.outlines')) {
+    case 'pages':
+      return { pages: true, headings: false }
+    case 'headings':
+      return { pages: false, headings: true }
+    case 'both':
+      return { pages: true, headings: true }
+    default:
+      return false
+  }
+}
+
 export const marpCoreOptionForPreview = (
   baseOption: Options & MarpOptions
 ): MarpOptions => {
@@ -73,6 +86,7 @@ export const marpCoreOptionForCLI = async (
   const baseOpts = {
     allowLocalFiles,
     pdfNotes,
+    pdfOutlines: pdfOutlines(),
     html: enableHtml() || undefined,
     options: {
       markdown: {

@@ -85,6 +85,31 @@ describe('Option', () => {
       ).toBe(false)
     })
 
+    it('sets pdfOutlines option in response to the preference', async () => {
+      const pdfOutlines = async () =>
+        (await subject({ uri: untitledUri })).pdfOutlines
+
+      expect(await pdfOutlines()).toBe(false)
+
+      setConfiguration({ 'markdown.marp.pdf.outlines': 'pages' })
+      expect(await pdfOutlines()).toStrictEqual({
+        pages: true,
+        headings: false,
+      })
+
+      setConfiguration({ 'markdown.marp.pdf.outlines': 'headings' })
+      expect(await pdfOutlines()).toStrictEqual({
+        pages: false,
+        headings: true,
+      })
+
+      setConfiguration({ 'markdown.marp.pdf.outlines': 'both' })
+      expect(await pdfOutlines()).toStrictEqual({
+        pages: true,
+        headings: true,
+      })
+    })
+
     describe('when targeted document belongs to workspace', () => {
       const css = '/* @theme test */'
 
