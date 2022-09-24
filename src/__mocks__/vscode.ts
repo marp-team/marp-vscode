@@ -10,6 +10,7 @@ const defaultConf: MockedConf = {
   'markdown.marp.exportType': 'pdf',
   'markdown.marp.outlineExtension': true,
   'markdown.marp.pdf.noteAnnotations': false,
+  'markdown.marp.pdf.outlines': 'off',
   'window.zoomLevel': 0,
 }
 
