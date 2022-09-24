@@ -172,10 +172,27 @@
           "default": false,
           "markdownDescription": "Adds [presenter notes](https://marpit.marp.app/usage?id=presenter-notes) to exported PDF as note annotations."
         },
+        "markdown.marp.pdf.outlines": {
+          "type": "string",
+          "enum": [
+            "off",
+            "pages",
+            "headings",
+            "both"
+          ],
+          "default": "off",
+          "markdownDescription": "Adds outlines (bookmarks) to exported PDF. It is useful for navigation in PDF viewer.",
+          "markdownEnumDescriptions": [
+            "Disable outlines.",
+            "Add outlines based on each slide page.",
+            "Add outlines based on each Markdown heading.",
+            "Add outlines based on both slide pages and Markdown headings."
+          ]
+        },
         "markdown.marp.strictPathResolutionDuringExport": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "_[Experimental]_ Enables strict path resolution during export. If enabled, the export command tries to resolve relative paths from VS Code workspace that a Markdown file belongs. If not, or the Markdown does not belong to any workspace, the export command resolves paths based on the local file system."
+          "markdownDescription": "_[Experimental]_ Enables strict path resolution during export. If enabled, the export command tries to resolve relative paths from VS Code workspace that a Markdown file belongs. If disabled, or the Markdown does not belong to any workspace, the export command resolves paths based on the local file system."
         },
         "markdown.marp.themes": {
           "type": "array",
@@ -314,6 +331,7 @@
     "typescript": "^4.7.4",
     "unified": "^10.1.2",
     "unist-util-visit": "^4.1.0",
+    "util": "^0.12.4",
     "vsce": "^2.10.0",
     "vscode-uri": "^3.0.3",
     "webpack": "^5.74.0",
