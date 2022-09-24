@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## v2.3.0 - 2022-09-24
+
 ### Added
 
 - `markdown.marp.pdf.outlines` option to generate outlines in exported PDF ([#381](https://github.com/marp-team/marp-vscode/issues/381), [#384](https://github.com/marp-team/marp-vscode/pull/384))
