@@ -2,10 +2,10 @@ import { languages, Disposable, Hover, Range } from 'vscode'
 import { DirectiveType } from '../directives/parser'
 import * as completions from './completions'
 import * as decorations from './decorations'
-import { LanguageParser } from './parser'
+import { getLanguageParser } from './parser'
 
 export function register(subscriptions: Disposable[]) {
-  const languageParser = new LanguageParser(subscriptions)
+  const languageParser = getLanguageParser()
 
   // Highlight for directives
   decorations.registerDecorations(subscriptions)

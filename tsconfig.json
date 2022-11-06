@@ -9,7 +9,12 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es6"
+    "target": "es6",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "paths": {
+      "@view-scripts/*": ["./src/views/scripts/*"]
+    }
   },
   "include": ["src"]
 }

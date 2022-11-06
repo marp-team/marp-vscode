@@ -3,7 +3,7 @@ import path from 'path'
 import { MarpOptions } from '@marp-team/marp-core'
 import { Options } from 'markdown-it'
 import { nanoid } from 'nanoid'
-import { TextDocument, Uri, workspace } from 'vscode'
+import { Disposable, TextDocument, Uri, workspace } from 'vscode'
 import themes, { ThemeType } from './themes'
 import {
   marpConfiguration,
@@ -144,4 +144,31 @@ export const marpCoreOptionForCLI = async (
 
 export const clearMarpCoreOptionCache = () => {
   cachedPreviewOption = undefined
+}
+
+const shouldRefreshConfs = [
+  'markdown.marp.breaks',
+  'markdown.marp.enableHtml',
+  'markdown.marp.mathTypesetting',
+  'markdown.marp.outlineExtension',
+  'markdown.marp.themes',
+  'markdown.preview.breaks',
+  'markdown.preview.typographer',
+]
+
+const shouldRefreshListeners = new Set<() => void>([clearMarpCoreOptionCache])
+
+export const registerConfigurationTracker = (subscriptions: Disposable[]) => {
+  subscriptions.push(
+    workspace.onDidChangeConfiguration((e) => {
+      if (shouldRefreshConfs.some((c) => e.affectsConfiguration(c))) {
+        for (const listener of shouldRefreshListeners.values()) listener()
+      }
+    })
+  )
+}
+
+export const onShouldRefresh = (listener: () => void): Disposable => {
+  shouldRefreshListeners.add(listener)
+  return { dispose: () => void shouldRefreshListeners.delete(listener) }
 }

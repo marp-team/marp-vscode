@@ -253,6 +253,24 @@ export class WorkspaceEdit {
   readonly replace = jest.fn()
 }
 
+export class Disposable {
+  #callOnDispose: () => any | undefined
+
+  static from(...disposableLikes: { dispose: () => any }[]): Disposable {
+    return new Disposable(() => {
+      for (const disposableLike of disposableLikes) disposableLike.dispose()
+    })
+  }
+
+  constructor(callOnDispose: () => any) {
+    this.#callOnDispose = callOnDispose
+  }
+
+  dispose() {
+    this.#callOnDispose()
+  }
+}
+
 beforeEach(() => {
   window.activeTextEditor = undefined
   workspace.textDocuments = []

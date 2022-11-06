@@ -174,3 +174,17 @@ export class LanguageParser
     }
   }
 }
+
+let staticLanguageParser: LanguageParser | undefined
+
+export function getLanguageParser(
+  subscriptionsForInitialization?: Disposable[]
+) {
+  if (!staticLanguageParser) {
+    if (!subscriptionsForInitialization) {
+      throw new Error('Internal error: no subscriptions')
+    }
+    staticLanguageParser = new LanguageParser(subscriptionsForInitialization)
+  }
+  return staticLanguageParser
+}

@@ -1,4 +1,8 @@
+const { pathsToModuleNameMapper } = require('ts-jest')
+const { compilerOptions } = require('./tsconfig.json')
+
 const esModules = [
+  '@preact/signals',
   'bail',
   'character-entities',
   'comma-separated-tokens',
@@ -19,6 +23,7 @@ const esModules = [
   'micromark',
   'nanoid',
   'parse-entities',
+  'preact',
   'property-information',
   'rehype-parse',
   'remark-math',
@@ -36,9 +41,17 @@ const esModules = [
 
 module.exports = {
   clearMocks: true,
-  collectCoverageFrom: ['src/**/*.ts', 'src/**/*.js'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    'src/**/*.tsx',
+    'src/**/*.js',
+    'src/**/*.jsx',
+  ],
   coveragePathIgnorePatterns: ['/node_modules/', '.*\\.d\\.ts'],
   coverageThreshold: { global: { lines: 95 } },
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>/',
+  }),
   preset: 'ts-jest/presets/js-with-babel',
   restoreMocks: true,
   setupFiles: ['<rootDir>/jest.setup.js'],

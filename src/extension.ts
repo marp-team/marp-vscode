@@ -7,22 +7,19 @@ import * as showQuickPick from './commands/show-quick-pick'
 import * as toggleMarpFeature from './commands/toggle-marp-feature'
 import diagnostics from './diagnostics/'
 import languageProvider from './language/'
-import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
+import { getLanguageParser } from './language/parser'
+import {
+  marpCoreOptionForPreview,
+  clearMarpCoreOptionCache,
+  onShouldRefresh,
+  registerConfigurationTracker,
+} from './option'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline, { rule as outlineRule } from './plugins/outline'
 import themes, { Themes } from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
-
-const shouldRefreshConfs = [
-  'markdown.marp.breaks',
-  'markdown.marp.enableHtml',
-  'markdown.marp.mathTypesetting',
-  'markdown.marp.outlineExtension',
-  'markdown.marp.themes',
-  'markdown.preview.breaks',
-  'markdown.preview.typographer',
-]
+import views from './views/'
 
 const applyRefreshedConfiguration = () => {
   clearMarpCoreOptionCache()
@@ -123,8 +120,12 @@ export function extendMarkdownIt(md: any) {
 }
 
 export const activate = ({ subscriptions }: ExtensionContext) => {
+  registerConfigurationTracker(subscriptions)
+  getLanguageParser(subscriptions)
+
   diagnostics(subscriptions)
   languageProvider(subscriptions)
+  views({ subscriptions })
 
   subscriptions.push(
     commands.registerCommand(exportCommand.command, exportCommand.default),
@@ -139,11 +140,7 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
       toggleMarpFeature.default
     ),
     themes,
-    workspace.onDidChangeConfiguration((e) => {
-      if (shouldRefreshConfs.some((c) => e.affectsConfiguration(c))) {
-        applyRefreshedConfiguration()
-      }
-    }),
+    onShouldRefresh(applyRefreshedConfiguration),
     workspace.onDidGrantWorkspaceTrust(applyRefreshedConfiguration)
   )
 

@@ -1,9 +1,11 @@
 const assert = require('assert')
 
+const viewsConf = require('./webpack.views.config')
+
 const configurations = {
-  node: require('./webpack.node.config'),
-  preview: require('./webpack.preview.config'),
-  web: require('./webpack.web.config'),
+  node: [viewsConf, require('./webpack.node.config')],
+  preview: [require('./webpack.preview.config')],
+  web: [viewsConf, require('./webpack.web.config')],
 }
 
 module.exports = (env) => {
@@ -13,5 +15,8 @@ module.exports = (env) => {
   ).filter(Boolean)
 
   assert(targets.length > 0, 'No target specified')
-  return targets.map((target) => configurations[target](env))
+
+  return targets
+    .flatMap((target) => configurations[target])
+    .map((target) => target(env))
 }

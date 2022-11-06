@@ -47,7 +47,8 @@
     "onCommand:markdown.marp.export",
     "onCommand:markdown.marp.newMarpMarkdown",
     "onCommand:markdown.marp.showQuickPick",
-    "onCommand:markdown.marp.toggleMarpFeature"
+    "onCommand:markdown.marp.toggleMarpFeature",
+    "onView:marp-vscode.slidesView"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
@@ -230,7 +231,32 @@
           "group": "file"
         }
       ]
-    }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "marp-vscode",
+          "title": "Marp",
+          "icon": "./images/icon-dark.svg"
+        }
+      ]
+    },
+    "views": {
+      "marp-vscode": [
+        {
+          "id": "marp-vscode.slidesView",
+          "name": "Slides",
+          "icon": "images/icon-dark.svg",
+          "type": "webview"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "marp-vscode.slidesView",
+        "contents": "Marp for VS Code supports writing slide deck for the presentation with Markdown.\n[New Marp Markdown](command:markdown.marp.newMarpMarkdown)\n[Enable Marp features for current Markdown](command:markdown.marp.toggleMarpFeature)\nSee the documentation of [Marpit Markdown](https://marpit.marp.app/markdown) (syntax for base framework) and [features of Marp Core](https://github.com/marp-team/marp-core#features) (additional features) about how to write."
+      }
+    ]
   },
   "private": true,
   "vsce": {
@@ -285,12 +311,15 @@
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
     "@marp-team/marp-core": "^3.3.3",
+    "@preact/signals": "^1.1.2",
     "@types/color-string": "^1.5.2",
+    "@types/dedent": "^0.7.0",
     "@types/express": "^4.17.13",
     "@types/jest": "^28.1.6",
     "@types/lodash.debounce": "^4.0.7",
     "@types/markdown-it": "^12.2.3",
     "@types/vscode": "~1.66.0",
+    "@types/vscode-webview": "^1.57.0",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "@vscode/test-web": "^0.0.29",
@@ -317,6 +346,7 @@
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "portfinder": "1.0.28",
+    "preact": "^10.11.2",
     "prettier": "^2.7.1",
     "process": "^0.11.10",
     "rehype-parse": "^8.0.4",

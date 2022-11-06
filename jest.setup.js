@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import { TextEncoder, TextDecoder } from 'util'
 
 // TextEncoder and TextDecoder are exposed to global in Node.js and the browser.
@@ -5,3 +6,10 @@ import { TextEncoder, TextDecoder } from 'util'
 // https://github.com/jsdom/jsdom/issues/2524#issuecomment-902027138
 global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder
+
+// VS Code WebView API
+global.acquireVsCodeApi = jest.fn(() => ({
+  postMessage: jest.fn(),
+  setState: jest.fn(),
+  getState: jest.fn(),
+}))

@@ -1,16 +1,18 @@
 const path = require('path')
 const base = require('./webpack.base.config')
 
-const outputPath = path.resolve(__dirname, './preview/preview.js')
+const outputPath = path.resolve(__dirname, './tmp/views/[name].js')
 
 module.exports = (env) => {
   const conf = base({ ...env, outputPath, minimizerFormat: 'iife' })
 
   return {
     ...conf,
-    name: 'preview',
+    name: 'views',
     target: 'web',
-    entry: `./preview.js`,
+    entry: {
+      slides: './src/views/scripts/slides.tsx',
+    },
     output: {
       ...conf.output,
       library: undefined,

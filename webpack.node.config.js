@@ -10,6 +10,8 @@ module.exports = (env) => {
 
   return {
     ...conf,
+    name: 'node',
+    dependencies: ['views'],
     target: 'node',
     externals: {
       ...conf.externals,

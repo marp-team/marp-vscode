@@ -10,11 +10,14 @@ module.exports = (env) => {
 
   return {
     ...conf,
+    name: 'web',
+    dependencies: ['views'],
     target: 'webworker',
     resolve: {
       ...conf.resolve,
       mainFields: ['browser', 'module', 'main'],
       alias: {
+        ...conf.resolve.alias,
         [path.resolve(__dirname, './src/commands/export')]: path.resolve(
           __dirname,
           './src/web/commands/export'
