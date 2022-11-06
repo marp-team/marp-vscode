@@ -1,12 +1,18 @@
 import { state } from '../state'
+import { MarpSlidePage } from './MarpSlidePage'
 
 export interface AppProps {}
 
 export const App = ({}: AppProps) => {
+  if (!state.value?.enabled) {
+    return <p>Open Marp document!</p>
+  }
+
   return (
     <>
-      <h1>Slides</h1>
-      <p>Enabled: {state.value?.enabled ? 'Enabled' : 'Disabled'}</p>
+      {state.value?.marp?.html.map((_, i) => (
+        <MarpSlidePage key={i} index={i} />
+      ))}
     </>
   )
 }

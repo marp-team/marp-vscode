@@ -11,10 +11,7 @@
     "strict": true,
     "target": "es6",
     "jsx": "react-jsx",
-    "jsxImportSource": "preact",
-    "paths": {
-      "@view-scripts/*": ["./src/views/scripts/*"]
-    }
+    "jsxImportSource": "preact"
   },
   "include": ["src"]
 }

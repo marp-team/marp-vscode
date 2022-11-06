@@ -1,27 +1,39 @@
+import Marp from '@marp-team/marp-core'
+import type Marpit from '@marp-team/marpit'
 import {
   Disposable,
   TextEditor,
+  Uri,
+  WebviewOptions,
   WebviewView,
   WebviewViewProvider,
 } from 'vscode'
 import { getLanguageParser, type LanguageParser } from '../../language/parser'
-import { onShouldRefresh } from '../../option'
+import {
+  marpCoreOptionsForSlidesView,
+  onChangeDependingConfiguration,
+} from '../../option'
+import themes, { Themes } from '../../themes'
 import { detectMarpDocument } from '../../utils'
 import type { ViewContext } from '../index'
+import { resolveWebViewResoruce } from '../utils'
 import { page } from './page'
 
 export interface SlideViewState {
   enabled?: boolean
+  marp?: Marpit.RenderResult<string[]>
 }
 
 export class SlidesView implements WebviewViewProvider {
   static viewType = 'marp-vscode.slidesView' as const
 
+  private readonly extensionUri: Uri
   private readonly languageParser: LanguageParser
+  private readonly internalSubscriptions: Disposable[] = []
 
-  private internalSubscriptions: Disposable[] = []
   private view?: WebviewView
 
+  // Target editor management
   #_targetEditorNext: TextEditor | undefined | false = false
 
   private _targetEditor?: TextEditor
@@ -43,7 +55,10 @@ export class SlidesView implements WebviewViewProvider {
     this.#_targetEditorNext = editor
   }
 
+  // ---
+
   constructor(readonly viewContext: ViewContext) {
+    this.extensionUri = viewContext.extensionUri
     this.languageParser = getLanguageParser()
 
     viewContext.subscriptions.push(
@@ -55,13 +70,12 @@ export class SlidesView implements WebviewViewProvider {
 
   resolveWebviewView(webviewView: WebviewView): void | Thenable<void> {
     this.view = webviewView
+    this.view.webview.options = this.webviewOptions()
+    this.view.webview.html = page({
+      scriptPath: `${this.resolveResource('views', 'slides.js')}`,
+    })
 
-    this.view.webview.options = {
-      enableScripts: true,
-    }
-    this.view.webview.html = page()
-
-    // Track active editor
+    // Initialize active editor tracking
     const onActiveEditorUpdated = (editor: TextEditor) => {
       this.targetEditor = editor
     }
@@ -72,9 +86,8 @@ export class SlidesView implements WebviewViewProvider {
     this.languageParser.on('activeEditorDisposed', onActiveEditorDisposed)
 
     this.internalSubscriptions.push(
-      onShouldRefresh(() => this.updateState()),
+      onChangeDependingConfiguration(() => this.updateState()),
       webviewView.onDidChangeVisibility(() => {
-        console.log('change visibillity')
         if (webviewView.visible) this.updateStateFromEditor()
       }),
       new Disposable(() => {
@@ -86,12 +99,24 @@ export class SlidesView implements WebviewViewProvider {
     this.targetEditor = this.languageParser.activeEditor
   }
 
-  private updateStateFromEditor(
+  private async updateStateFromEditor(
     editor: TextEditor | undefined = this.targetEditor
   ) {
-    const enabled = editor ? detectMarpDocument(editor.document) : false
+    const updateStates: Partial<SlideViewState> = {
+      enabled: editor ? detectMarpDocument(editor.document) : false,
+      marp: undefined,
+    }
 
-    this.updateState({ enabled })
+    if (updateStates.enabled && editor) {
+      const marp = await this.resolveMarp()
+      const rendered = marp.render(editor.document.getText(), {
+        htmlAsArray: true,
+      })
+
+      updateStates.marp = rendered
+    }
+
+    await this.updateState(updateStates)
   }
 
   private async updateState(updateStates: Partial<SlideViewState> = {}) {
@@ -99,5 +124,47 @@ export class SlidesView implements WebviewViewProvider {
       type: 'updateState',
       opts: updateStates,
     })
+  }
+
+  private async resolveMarp() {
+    const targetDocument = this.targetEditor?.document
+    const marp = new Marp(marpCoreOptionsForSlidesView())
+
+    themes
+      .loadStyles(
+        targetDocument
+          ? Themes.resolveBaseDirectoryForTheme(targetDocument)
+          : undefined
+      )
+      .map((promise) =>
+        promise.then(({ css }) => {
+          try {
+            marp.themeSet.add(css)
+          } catch (e) {
+            // no ops
+          }
+        })
+      )
+
+    return marp
+  }
+
+  private resolveResource(...restPath: string[]) {
+    if (!this.view) return null
+
+    return resolveWebViewResoruce(
+      this.view.webview,
+      this.extensionUri,
+      ...restPath
+    )
+  }
+
+  private webviewOptions(): WebviewOptions {
+    if (!this.view) return {}
+
+    return {
+      enableScripts: true,
+      enableForms: false,
+    }
   }
 }

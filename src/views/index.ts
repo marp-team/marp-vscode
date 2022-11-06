@@ -1,7 +1,10 @@
 import { type ExtensionContext, window } from 'vscode'
 import { SlidesView } from './slides/'
 
-export type ViewContext = Pick<ExtensionContext, 'subscriptions'>
+export type ViewContext = Pick<
+  ExtensionContext,
+  'subscriptions' | 'extensionUri'
+>
 
 export function register(context: ViewContext) {
   context.subscriptions.push(

@@ -1,5 +1,6 @@
 lib/
 preview/
+/views/
 tmp
 *.vsix
 yarn.lock

@@ -1,15 +1,19 @@
 import html from 'dedent'
 import { customAlphabet } from 'nanoid'
-import slidesScript from '@view-scripts/slides'
+import css from './page.css'
 
 const nanoid = customAlphabet(
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
   32
 )
 
-export interface PageOptions {}
+export interface PageOptions {
+  scriptPath: string
+}
 
-export const page = ({}: PageOptions = {}) => {
+console.log(css)
+
+export const page = ({ scriptPath }: PageOptions) => {
   const scriptNonce = nanoid()
 
   return html`
@@ -21,11 +25,12 @@ export const page = ({}: PageOptions = {}) => {
         http-equiv="Content-Security-Policy"
         content="script-src 'nonce-${scriptNonce}';"
       />
+      <style>
+        ${css}
+      </style>
       <body>
         <div id="root"></div>
-        <script nonce="${scriptNonce}">
-          ${slidesScript}
-        </script>
+        <script nonce="${scriptNonce}" src="${scriptPath}"></script>
       </body>
     </html>
   `

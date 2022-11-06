@@ -3,7 +3,13 @@ import path from 'path'
 import { MarpOptions } from '@marp-team/marp-core'
 import { Options } from 'markdown-it'
 import { nanoid } from 'nanoid'
-import { Disposable, TextDocument, Uri, workspace } from 'vscode'
+import {
+  ConfigurationScope,
+  Disposable,
+  TextDocument,
+  Uri,
+  workspace,
+} from 'vscode'
 import themes, { ThemeType } from './themes'
 import {
   marpConfiguration,
@@ -18,6 +24,7 @@ export interface WorkFile {
 }
 
 let cachedPreviewOption: MarpOptions | undefined
+let cachedSlidesViewOption: MarpOptions | undefined
 
 const breaks = (inheritedValue: boolean): boolean => {
   switch (marpConfiguration().get<string>('breaks')) {
@@ -51,27 +58,52 @@ const pdfOutlines = () => {
   }
 }
 
+const generateMarpCoreOptionBase = (
+  configurationScope?: ConfigurationScope
+) => {
+  const confMdPreview = workspace.getConfiguration(
+    'markdown.preview',
+    configurationScope
+  )
+
+  return {
+    html: enableHtml() || undefined,
+    inlineSVG: { backdropSelector: false },
+    markdown: {
+      breaks: breaks(!!confMdPreview.get<boolean>('breaks')),
+      typographer: confMdPreview.get<boolean>('typographer'),
+    },
+    math: math(),
+    script: false,
+  } as const
+}
+
 export const marpCoreOptionForPreview = (
   baseOption: Options & MarpOptions
 ): MarpOptions => {
   if (!cachedPreviewOption) {
     cachedPreviewOption = {
+      ...generateMarpCoreOptionBase(),
       container: { tag: 'div', id: '__marp-vscode' },
       slideContainer: { tag: 'div', 'data-marp-vscode-slide-wrapper': '' },
-      html: enableHtml() || undefined,
-      inlineSVG: {
-        backdropSelector: false,
-      },
       markdown: {
         breaks: breaks(!!baseOption.breaks),
         typographer: baseOption.typographer,
       },
-      math: math(),
       minifyCSS: false,
-      script: false,
     }
   }
   return cachedPreviewOption
+}
+
+export const marpCoreOptionsForSlidesView = (): MarpOptions => {
+  if (!cachedSlidesViewOption) {
+    cachedSlidesViewOption = {
+      ...generateMarpCoreOptionBase(),
+      container: false,
+    }
+  }
+  return cachedSlidesViewOption
 }
 
 export const marpCoreOptionForCLI = async (
@@ -81,19 +113,16 @@ export const marpCoreOptionForCLI = async (
     pdfNotes,
   }: { allowLocalFiles?: boolean; pdfNotes?: boolean } = {}
 ) => {
-  const confMdPreview = workspace.getConfiguration('markdown.preview', uri)
+  const coreOpts = generateMarpCoreOptionBase(uri)
 
   const baseOpts = {
     allowLocalFiles,
     pdfNotes,
     pdfOutlines: pdfOutlines(),
-    html: enableHtml() || undefined,
+    html: coreOpts.html,
     options: {
-      markdown: {
-        breaks: breaks(!!confMdPreview.get<boolean>('breaks')),
-        typographer: confMdPreview.get<boolean>('typographer'),
-      },
-      math: math(),
+      markdown: coreOpts.markdown,
+      math: coreOpts.math,
     },
     themeSet: [] as string[],
     vscode: {} as Record<string, any>,
@@ -144,6 +173,7 @@ export const marpCoreOptionForCLI = async (
 
 export const clearMarpCoreOptionCache = () => {
   cachedPreviewOption = undefined
+  cachedSlidesViewOption = undefined
 }
 
 const shouldRefreshConfs = [
@@ -168,7 +198,9 @@ export const registerConfigurationTracker = (subscriptions: Disposable[]) => {
   )
 }
 
-export const onShouldRefresh = (listener: () => void): Disposable => {
+export const onChangeDependingConfiguration = (
+  listener: () => void
+): Disposable => {
   shouldRefreshListeners.add(listener)
   return { dispose: () => void shouldRefreshListeners.delete(listener) }
 }

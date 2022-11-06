@@ -2,17 +2,9 @@ const path = require('path')
 const esbuild = require('esbuild')
 const { ESBuildMinifyPlugin } = require('esbuild-loader')
 
-const builtViewsDir = path.resolve(__dirname, 'tmp/views')
-
 module.exports = ({ outputPath, production, minimizerFormat }) => ({
   mode: production ? 'production' : 'none',
-  resolve: {
-    alias: {
-      // Use a built resulr of view script if the script was loaded through `@view-scripts` aliased namespace
-      '@view-scripts': builtViewsDir,
-    },
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  },
+  resolve: { extensions: ['.ts', '.tsx', '.js', '.jsx'] },
   entry: `./src/${path.basename(outputPath, '.js')}.ts`,
   output: {
     filename: path.basename(outputPath),
@@ -32,7 +24,7 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
         },
       },
       {
-        test: (path) => path.startsWith(builtViewsDir),
+        test: /\.css$/,
         type: 'asset/source',
       },
     ],

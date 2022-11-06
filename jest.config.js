@@ -1,6 +1,3 @@
-const { pathsToModuleNameMapper } = require('ts-jest')
-const { compilerOptions } = require('./tsconfig.json')
-
 const esModules = [
   '@preact/signals',
   'bail',
@@ -49,9 +46,6 @@ module.exports = {
   ],
   coveragePathIgnorePatterns: ['/node_modules/', '.*\\.d\\.ts'],
   coverageThreshold: { global: { lines: 95 } },
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>/',
-  }),
   preset: 'ts-jest/presets/js-with-babel',
   restoreMocks: true,
   setupFiles: ['<rootDir>/jest.setup.js'],

@@ -1,7 +1,7 @@
 const path = require('path')
 const base = require('./webpack.base.config')
 
-const outputPath = path.resolve(__dirname, './tmp/views/[name].js')
+const outputPath = path.resolve(__dirname, './views/[name].js')
 
 module.exports = (env) => {
   const conf = base({ ...env, outputPath, minimizerFormat: 'iife' })

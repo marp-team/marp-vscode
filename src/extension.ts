@@ -9,9 +9,9 @@ import diagnostics from './diagnostics/'
 import languageProvider from './language/'
 import { getLanguageParser } from './language/parser'
 import {
-  marpCoreOptionForPreview,
   clearMarpCoreOptionCache,
-  onShouldRefresh,
+  marpCoreOptionForPreview,
+  onChangeDependingConfiguration,
   registerConfigurationTracker,
 } from './option'
 import customTheme from './plugins/custom-theme'
@@ -20,11 +20,6 @@ import outline, { rule as outlineRule } from './plugins/outline'
 import themes, { Themes } from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 import views from './views/'
-
-const applyRefreshedConfiguration = () => {
-  clearMarpCoreOptionCache()
-  commands.executeCommand('markdown.preview.refresh')
-}
 
 export const marpVscode = Symbol('marp-vscode')
 
@@ -119,13 +114,13 @@ export function extendMarkdownIt(md: any) {
   return md
 }
 
-export const activate = ({ subscriptions }: ExtensionContext) => {
+export const activate = ({ extensionUri, subscriptions }: ExtensionContext) => {
   registerConfigurationTracker(subscriptions)
   getLanguageParser(subscriptions)
 
   diagnostics(subscriptions)
   languageProvider(subscriptions)
-  views({ subscriptions })
+  views({ extensionUri, subscriptions })
 
   subscriptions.push(
     commands.registerCommand(exportCommand.command, exportCommand.default),
@@ -140,8 +135,13 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
       toggleMarpFeature.default
     ),
     themes,
-    onShouldRefresh(applyRefreshedConfiguration),
-    workspace.onDidGrantWorkspaceTrust(applyRefreshedConfiguration)
+    onChangeDependingConfiguration(() =>
+      commands.executeCommand('markdown.preview.refresh')
+    ),
+    workspace.onDidGrantWorkspaceTrust(() => {
+      clearMarpCoreOptionCache()
+      commands.executeCommand('markdown.preview.refresh')
+    })
   )
 
   return { extendMarkdownIt }
