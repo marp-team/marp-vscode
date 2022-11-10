@@ -10,15 +10,24 @@ module.exports = {
   },
   settings: {
     'import/resolver': { typescript: { alwaysTryTypes: true } },
+    react: {
+      version: '16.0',
+      createClass: 'createElement',
+      pragma: 'h',
+    },
   },
   overrides: [
     {
-      files: ['**/*.ts'],
+      files: ['**/*.ts', '**/*.tsx'],
       parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint'],
       extends: [
         'plugin:@typescript-eslint/recommended',
         'plugin:import/typescript',
+        'plugin:react/recommended',
+        'plugin:react/jsx-runtime',
+        'plugin:react-hooks/recommended',
+        'plugin:jsx-a11y/recommended',
         'prettier',
       ],
       rules: {
@@ -28,7 +37,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/*.test.js', '**/*.test.ts'],
+      files: ['**/*.test.js', '**/*.test.ts', '**/*.test.jsx', '**/*.test.tsx'],
       plugins: ['jest'],
       extends: ['plugin:jest/recommended', 'plugin:jest/style'],
     },

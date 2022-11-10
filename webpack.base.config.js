@@ -1,6 +1,7 @@
 const path = require('path')
 const esbuild = require('esbuild')
 const { ESBuildMinifyPlugin } = require('esbuild-loader')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = ({ outputPath, production, minimizerFormat }) => ({
   mode: production ? 'production' : 'none',
@@ -25,7 +26,23 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
       },
       {
         test: /\.css$/,
-        type: 'asset/source',
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: {
+                auto: true,
+                exportLocalsConvention: 'camelCase',
+                localIdentName: production
+                  ? '[hash:base64]'
+                  : '[path][name]__[local]',
+              },
+            },
+          },
+          'postcss-loader',
+        ],
       },
     ],
   },
@@ -41,7 +58,7 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
       }),
     ],
   },
-  plugins: [],
+  plugins: [new MiniCssExtractPlugin()],
   performance: {
     hints: false,
   },

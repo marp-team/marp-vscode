@@ -1,0 +1,25 @@
+.guide p {
+  line-height: 1.4;
+  margin: 0;
+  margin-block-start: 1em;
+}
+
+.guide vscode-button {
+  width: 100%;
+  max-width: 300px;
+}
+
+.guide-btn-container {
+  margin-block-start: 1em;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  width: 100%;
+  max-width: 300px;
+  transition: max-width 0.2s ease-out;
+}
+
+@media (min-width: 640px) {
+  .guide-btn-container {
+    max-width: 100%;
+  }
+}

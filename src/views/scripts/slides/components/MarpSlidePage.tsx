@@ -19,21 +19,25 @@ export const MarpSlidePage = ({ index }: MarpSlidePageProps) => {
       elmRef.current.attachShadow({ mode: 'open' })
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const root = elmRef.current.shadowRoot!
+
     root.innerHTML = `<style>${marp.value.css}</style><style>:host>[data-marpit-svg]{display:block;}</style>${slide}`
 
     return browser(root)
-  }, [slide])
+  }, [marp.value?.css, slide])
 
   if (!slide) return null
 
   const inert: any = { inert: true }
   return (
-    <div
-      ref={elmRef}
-      role="image"
-      style="border:5px solid red;"
-      {...inert}
-    ></div>
+    <>
+      <div
+        ref={elmRef}
+        // eslint-disable-next-line jsx-a11y/aria-role
+        role="image"
+        {...inert}
+      ></div>
+    </>
   )
 }

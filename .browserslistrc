@@ -1,0 +1,6 @@
+# VS Code
+electron >= 17
+node >= 16.13
+
+# VS Code for Web
+defaults

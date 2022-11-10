@@ -2,6 +2,7 @@ export default 'Script for slides view'
 
 import { render } from 'preact'
 import { App } from './slides/components/App'
+import '../slides/page.css'
 
 const root = document.getElementById('root')
 

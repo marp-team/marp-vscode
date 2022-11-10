@@ -11,7 +11,16 @@
     "strict": true,
     "target": "es6",
     "jsx": "react-jsx",
-    "jsxImportSource": "preact"
+    "jsxImportSource": "preact",
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules",
+        "options": {
+          "classnameTransform": "camelCaseOnly"
+        }
+      }
+    ]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "files": ["./typings.d.ts"]
 }

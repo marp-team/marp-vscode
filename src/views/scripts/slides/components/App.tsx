@@ -1,12 +1,11 @@
 import { state } from '../state'
+import { Guide } from './Guide'
 import { MarpSlidePage } from './MarpSlidePage'
 
 export interface AppProps {}
 
 export const App = ({}: AppProps) => {
-  if (!state.value?.enabled) {
-    return <p>Open Marp document!</p>
-  }
+  if (!state.value?.enabled) return <Guide />
 
   return (
     <>

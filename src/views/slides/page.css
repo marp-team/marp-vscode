@@ -1,4 +1,14 @@
+:root {
+  --marp-line-height: 1.4;
+}
+
 body {
+  line-height: var(--marp-line-height);
   overflow-y: scroll;
-  background: silver;
+  user-select: none;
+}
+
+button,
+vscode-button::part(content) {
+  line-height: var(--marp-line-height);
 }

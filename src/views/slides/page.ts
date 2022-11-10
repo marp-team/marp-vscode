@@ -1,6 +1,5 @@
 import html from 'dedent'
 import { customAlphabet } from 'nanoid'
-import css from './page.css'
 
 const nanoid = customAlphabet(
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
@@ -8,12 +7,11 @@ const nanoid = customAlphabet(
 )
 
 export interface PageOptions {
+  stylePath: string
   scriptPath: string
 }
 
-console.log(css)
-
-export const page = ({ scriptPath }: PageOptions) => {
+export const page = ({ stylePath, scriptPath }: PageOptions) => {
   const scriptNonce = nanoid()
 
   return html`
@@ -25,9 +23,7 @@ export const page = ({ scriptPath }: PageOptions) => {
         http-equiv="Content-Security-Policy"
         content="script-src 'nonce-${scriptNonce}';"
       />
-      <style>
-        ${css}
-      </style>
+      <link rel="stylesheet" href="${stylePath}" />
       <body>
         <div id="root"></div>
         <script nonce="${scriptNonce}" src="${scriptPath}"></script>

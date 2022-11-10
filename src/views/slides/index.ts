@@ -72,6 +72,7 @@ export class SlidesView implements WebviewViewProvider {
     this.view = webviewView
     this.view.webview.options = this.webviewOptions()
     this.view.webview.html = page({
+      stylePath: `${this.resolveResource('views', 'slides.css')}`,
       scriptPath: `${this.resolveResource('views', 'slides.js')}`,
     })
 

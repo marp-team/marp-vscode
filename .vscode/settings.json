@@ -1,0 +1,17 @@
+{
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "files.exclude": {
+    ".vscode-test-web": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.module.css",
+    "*.js": "${capture}.module.css",
+    "*.jsx": "${capture}.module.css",
+    "*.tsx": "${capture}.module.css",
+    "webpack.config.js": "webpack.*.config.js",
+    "jest.config.js": "jest.*.js",
+    ".eslintrc*": ".eslintcache, .eslintignore",
+    "package.json": "package-lock.json"
+  }
+}
