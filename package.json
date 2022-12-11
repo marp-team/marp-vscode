@@ -201,11 +201,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "markdown.marp.toolbarButtonForQuickPick": {
-          "type": "boolean",
-          "default": true,
-          "description": "Shows editor toolbar button to Markdown document, for accessing quick pick of Marp commands."
         }
       }
     },
@@ -221,7 +216,7 @@
         {
           "command": "markdown.marp.showQuickPick",
           "group": "navigation",
-          "when": "config.markdown.marp.toolbarButtonForQuickPick && editorLangId == markdown"
+          "when": "editorLangId == markdown"
         }
       ],
       "file/newFile": [
