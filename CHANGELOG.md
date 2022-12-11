@@ -16,7 +16,7 @@
 
 ### Removed
 
-- `markdown.marp.toolbarButtonForQuickPick` setting ([#391](https://github.com/marp-team/marp-vscode/pull/391))
+- `markdown.marp.toolbarButtonForQuickPick` setting ([#385](https://github.com/marp-team/marp-vscode/issues/385), [#391](https://github.com/marp-team/marp-vscode/pull/391))
   - The toolbar button still can hide from VS Code user interface: https://code.visualstudio.com/updates/v1_72#_hide-actions-from-tool-bars
 
 ## v2.3.0 - 2022-09-24
