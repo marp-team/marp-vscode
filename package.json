@@ -229,8 +229,7 @@
   },
   "private": true,
   "vsce": {
-    "yarn": false,
-    "preRelease": true
+    "yarn": false
   },
   "prettier": {
     "semi": false,

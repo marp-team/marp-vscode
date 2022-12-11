@@ -1,11 +1,12 @@
 # Change Log
 
-> ℹ️ **[v2.x](#v200---2022-06-03) is currently available as pre-released version. Try it and ready for [the next new core](https://marp.app/blog/202205-ecosystem-update)!**
-
 ## [Unreleased]
+
+> 🆙 **This is a first stable release of v2.x!** You can see differences from v1 at [#392](https://github.com/marp-team/marp-vscode/pull/392).
 
 ### Breaking
 
+- Marp for VS Code v2 has made as stable release ([#392](https://github.com/marp-team/marp-vscode/pull/392))
 - VS Code 1.72 and later required ([#390](https://github.com/marp-team/marp-vscode/pull/390))
 
 ### Changed
