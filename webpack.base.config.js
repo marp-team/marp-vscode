@@ -4,7 +4,14 @@ const { ESBuildMinifyPlugin } = require('esbuild-loader')
 
 module.exports = ({ outputPath, production, minimizerFormat }) => ({
   mode: production ? 'production' : 'none',
-  resolve: { extensions: ['.ts', '.js'] },
+  resolve: {
+    alias: {
+      // Marp Core (CJS) is not compatible with ESM default export
+      // https://github.com/marp-team/marp-core/issues/322
+      'emoji-regex$': require.resolve('emoji-regex/index.js'),
+    },
+    extensions: ['.ts', '.js'],
+  },
   entry: `./src/${path.basename(outputPath, '.js')}.ts`,
   output: {
     filename: path.basename(outputPath),
