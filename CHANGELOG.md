@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- VS Code 1.72 and later required ([#390](https://github.com/marp-team/marp-vscode/pull/390))
+
+### Changed
+
+- Upgrade Marp Core to [v3.4.0](https://github.com/marp-team/marp-core/releases/tag/v3.4.0) ([#390](https://github.com/marp-team/marp-vscode/pull/390))
+- Upgrade Marp CLI to [v2.2.2](https://github.com/marp-team/marp-cli/releases/tag/v2.2.2) ([#390](https://github.com/marp-team/marp-vscode/pull/390))
+- Upgrade Node.js and dependent packages ([#390](https://github.com/marp-team/marp-vscode/pull/390))
+
 ## v2.3.0 - 2022-09-24
 
 ### Added
