@@ -14,6 +14,11 @@
 - Upgrade Marp CLI to [v2.2.2](https://github.com/marp-team/marp-cli/releases/tag/v2.2.2) ([#390](https://github.com/marp-team/marp-vscode/pull/390))
 - Upgrade Node.js and dependent packages ([#390](https://github.com/marp-team/marp-vscode/pull/390))
 
+### Removed
+
+- `markdown.marp.toolbarButtonForQuickPick` setting ([#385](https://github.com/marp-team/marp-vscode/issues/385), [#391](https://github.com/marp-team/marp-vscode/pull/391))
+  - The toolbar button still can hide from VS Code user interface: https://code.visualstudio.com/updates/v1_72#_hide-actions-from-tool-bars
+
 ## v2.3.0 - 2022-09-24
 
 ### Added
