@@ -110,7 +110,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "author",
             "backgroundColor",
             "backgroundImage",
@@ -152,7 +152,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "author",
             "backgroundColor",
             "backgroundImage",
@@ -191,7 +191,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "backgroundColor",
             "backgroundImage",
             "backgroundPosition",
@@ -235,7 +235,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "default",
             "gaia",
             "uncover",
@@ -259,7 +259,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "custom-theme",
             "default",
             "gaia",
@@ -283,7 +283,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "false",
             "true",
           ]
@@ -304,7 +304,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "katex",
             "mathjax",
           ]
@@ -325,7 +325,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "16:9",
             "4:3",
           ]
@@ -358,7 +358,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "16:9",
             "a4",
           ]
@@ -377,7 +377,7 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          Array [
+          [
             "16:9",
             "4:3",
           ]
