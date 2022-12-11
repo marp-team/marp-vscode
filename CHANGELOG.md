@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v2.4.0 - 2022-12-11
+
 > 🆙 **This is a first stable release of v2.x!** You can see differences from v1 at [#392](https://github.com/marp-team/marp-vscode/pull/392).
 
 ### Breaking
