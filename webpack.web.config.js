@@ -15,7 +15,7 @@ module.exports = (env) => {
       ...conf.resolve,
       mainFields: ['browser', 'module', 'main'],
       alias: {
-        ...conf.resolve.alias,
+        ...(conf.resolve.alias || {}),
         [path.resolve(__dirname, './src/commands/export')]: path.resolve(
           __dirname,
           './src/web/commands/export'

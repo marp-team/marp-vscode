@@ -217,7 +217,7 @@ You can use Marp extension in VS Code for the Web environment like [vscode.dev](
 
 The web extension has some limitations:
 
-- _Export command cannot use_ because it is depending on Marp CLI that is not designed for Web. Please use VS Code that is installed to your local environment, or [GitHub Codespaces](https://github.com/features/codespaces) if you wanted an environment working on Web.
+- _Export command cannot use_ because it is depending on Marp CLI that is not designed for Web. Please use VS Code that is installed to your local environment, or use either [VS Code Server](https://code.visualstudio.com/docs/remote/vscode-server) or [GitHub Codespaces](https://github.com/features/codespaces) if you wanted an environment working on Web.
 
 ## Contributing
 
