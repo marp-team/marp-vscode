@@ -13,7 +13,7 @@ jobs:
 
       - name: Parse pre-release flag for vsce
         id: vsce-prerelease
-        run: echo "::set-output name=prerelease::$(cat package.json | jq '.vsce.preRelease')"
+        run: echo "prerelease=$(cat package.json | jq '.vsce.preRelease')" >> $GITHUB_OUTPUT
 
       - uses: marp-team/actions@v1
         with:
@@ -36,7 +36,7 @@ jobs:
 
       - name: Find out created VSIX
         id: vsix
-        run: echo "::set-output name=name::$(find . -maxdepth 1 -name '*.vsix' -printf '%f\n' | head -n 1)"
+        run: echo "name=$(find . -maxdepth 1 -name '*.vsix' -printf '%f\n' | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Upload VSIX to GitHub Release
         uses: marp-team/actions@v1
@@ -58,7 +58,7 @@ jobs:
 
       - name: Parse pre-release flag for vsce
         id: vsce-prerelease
-        run: echo "::set-output name=prerelease::$(cat package.json | jq '.vsce.preRelease')"
+        run: echo "prerelease=$(cat package.json | jq '.vsce.preRelease')" >> $GITHUB_OUTPUT
 
       - uses: actions/download-artifact@v3
         with:
@@ -67,7 +67,7 @@ jobs:
 
       - name: Find out downloaded VSIX
         id: vsix
-        run: echo "::set-output name=path::$(find ~/vsix -maxdepth 1 -name '*.vsix' -printf '%p\n' | head -n 1)"
+        run: echo "path=$(find ~/vsix -maxdepth 1 -name '*.vsix' -printf '%p\n' | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Publish to Open VSX Registry
         uses: HaaLeo/publish-vscode-extension@v1
