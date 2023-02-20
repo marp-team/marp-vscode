@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp Core to [v3.5.0](https://github.com/marp-team/marp-core/releases/tag/v3.5.0) ([#408](https://github.com/marp-team/marp-vscode/pull/408), [#411](https://github.com/marp-team/marp-vscode/pull/411))
+- Upgrade Marp CLI to [v2.4.0](https://github.com/marp-team/marp-cli/releases/tag/v2.4.0) ([#408](https://github.com/marp-team/marp-vscode/pull/408), [#410](https://github.com/marp-team/marp-vscode/pull/410))
+- Upgrade dependent packages to the latest version ([#408](https://github.com/marp-team/marp-vscode/pull/408))
+
+### Fixed
+
+- Mitigate conflicting with `express` module in other extensions while exporting ([#408](https://github.com/marp-team/marp-vscode/pull/408), [#402](https://github.com/marp-team/marp-vscode/issues/402), [#407](https://github.com/marp-team/marp-vscode/issues/407))
+
 ## v2.4.1 - 2023-01-09
 
 ### Changed
