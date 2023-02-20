@@ -12,7 +12,15 @@ beforeEach(() => {
 })
 
 describe('Preview HTML', () => {
-  beforeEach(() => jest.spyOn(console, 'debug').mockImplementation())
+  let debugMock: jest.SpyInstance
+
+  beforeEach(() => {
+    debugMock = jest.spyOn(console, 'debug').mockImplementation()
+  })
+
+  afterEach(() => {
+    debugMock?.mockRestore()
+  })
 
   it('does not call browser context JS when HTML has not Marp slide', () => {
     preview()

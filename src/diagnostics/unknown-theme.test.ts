@@ -82,11 +82,15 @@ describe('[Diagnostics rule] Unknown theme', () => {
     })
 
     describe('when registered custom theme', () => {
+      let getRegisteredStylesMock: jest.SpyInstance
+
       beforeEach(() => {
-        jest
+        getRegisteredStylesMock = jest
           .spyOn(Themes.prototype, 'getRegisteredStyles')
           .mockReturnValue([{ css: '/* @theme custom-theme */' } as any])
       })
+
+      afterEach(() => getRegisteredStylesMock?.mockRestore())
 
       it('does not add diagnostics when specified the name of custom theme', () => {
         expect(register(doc('<!-- theme: custom-theme -->'))).toHaveLength(0)

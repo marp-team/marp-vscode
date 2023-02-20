@@ -72,14 +72,18 @@ describe('Language extension', () => {
         },
       }
 
-      jest
+      const registerHoverProviderMock = jest
         .spyOn(languages, 'registerHoverProvider')
         .mockReturnValue(mockedHoverProvider)
 
-      const subscriptions: any[] = []
-      register(subscriptions)
+      try {
+        const subscriptions: any[] = []
+        register(subscriptions)
 
-      expect(subscriptions).toContain(mockedHoverProvider)
+        expect(subscriptions).toContain(mockedHoverProvider)
+      } finally {
+        registerHoverProviderMock.mockRestore()
+      }
     })
 
     it('provides hover when the cursor is containing in the range of directive', async () => {
@@ -107,25 +111,33 @@ describe('Language extension', () => {
           ],
         } as any)
 
-      const { provideHover } = registerSpy.mock.calls[0][1]
-      const hover = await provideHover(docMock, new Position(1, 0), {} as any)
+      try {
+        const { provideHover } = registerSpy.mock.calls[0][1]
+        const hover = await provideHover(docMock, new Position(1, 0), {} as any)
 
-      expect(getParseDataSpy).toHaveBeenCalledWith(docMock)
-      expect(hover).toBeInstanceOf(Hover)
+        expect(getParseDataSpy).toHaveBeenCalledWith(docMock)
+        expect(hover).toBeInstanceOf(Hover)
+      } finally {
+        getParseDataSpy.mockRestore()
+      }
     })
 
     it('does not provide hover if the parsed document data is not provided', async () => {
       const registerSpy = jest.spyOn(languages, 'registerHoverProvider')
       register([])
 
-      jest
+      const getParseDataMock = jest
         .spyOn(LanguageParser.prototype, 'getParseData')
         .mockResolvedValue(undefined)
 
-      const provideHover: any = registerSpy.mock.calls[0][1].provideHover
-      const hover = await provideHover()
+      try {
+        const provideHover: any = registerSpy.mock.calls[0][1].provideHover
+        const hover = await provideHover()
 
-      expect(hover).toBeUndefined()
+        expect(hover).toBeUndefined()
+      } finally {
+        getParseDataMock.mockRestore()
+      }
     })
   })
 })

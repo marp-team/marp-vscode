@@ -113,23 +113,33 @@ describe('Option', () => {
     describe('when targeted document belongs to workspace', () => {
       const css = '/* @theme test */'
 
+      let getWorkspaceFolderMock: jest.SpyInstance
+      let logMock: jest.SpyInstance
+      let fetchMock: jest.SpyInstance
+
       beforeEach(() => {
         // Workspace
-        jest
+        getWorkspaceFolderMock = jest
           .spyOn(workspace, 'getWorkspaceFolder')
           .mockImplementationOnce((): any => ({
             uri: { scheme: 'file', fsPath: '/workspace/' },
           }))
 
         // Theme CSS
-        jest.spyOn(console, 'log').mockImplementation()
-        jest
+        logMock = jest.spyOn(console, 'log').mockImplementation()
+        fetchMock = jest
           .spyOn(nodeFetch, 'default')
           .mockResolvedValue({ ok: true, text: async () => css } as any) // Remote
 
         setConfiguration({
           'markdown.marp.themes': ['https://example.com/test.css'],
         })
+      })
+
+      afterEach(() => {
+        getWorkspaceFolderMock?.mockRestore()
+        logMock?.mockRestore()
+        fetchMock?.mockRestore()
       })
 
       it('loads specified theme CSS to tmp file and use it', async () => {
@@ -148,11 +158,15 @@ describe('Option', () => {
     })
 
     describe('when the current workspace is untrusted', () => {
+      let isTrustedMock: jest.SpyInstance
+
       beforeEach(() => {
-        jest
+        isTrustedMock = jest
           .spyOn(workspace, 'isTrusted', 'get')
           .mockImplementation(() => false)
       })
+
+      afterEach(() => isTrustedMock?.mockRestore())
 
       it('ignores potentially malicious options', async () => {
         setConfiguration({ 'markdown.marp.enableHtml': true })

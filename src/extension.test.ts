@@ -200,11 +200,15 @@ describe('#extendMarkdownIt', () => {
       })
 
       describe('when the current workspace is untrusted', () => {
+        let isTrustedMock: jest.SpyInstance
+
         beforeEach(() => {
-          jest
+          isTrustedMock = jest
             .spyOn(workspace, 'isTrusted', 'get')
             .mockImplementation(() => false)
         })
+
+        afterEach(() => isTrustedMock?.mockRestore())
 
         it('does not render HTML elements even if enabled', () => {
           setConfiguration({ 'markdown.marp.enableHtml': true })
@@ -247,9 +251,17 @@ describe('#extendMarkdownIt', () => {
       const css = '/* @theme example */'
       const themeURL = 'https://example.com/test.css'
 
+      let errorMock: jest.SpyInstance
+      let logMock: jest.SpyInstance
+
       beforeEach(() => {
-        jest.spyOn(console, 'error').mockImplementation()
-        jest.spyOn(console, 'log').mockImplementation()
+        errorMock = jest.spyOn(console, 'error').mockImplementation()
+        logMock = jest.spyOn(console, 'log').mockImplementation()
+      })
+
+      afterEach(() => {
+        errorMock?.mockRestore()
+        logMock?.mockRestore()
       })
 
       it('registers pre-loaded themes from URL defined in configuration', async () => {
@@ -257,23 +269,29 @@ describe('#extendMarkdownIt', () => {
           .spyOn(nodeFetch, 'default')
           .mockResolvedValue({ ok: true, text: async () => css } as any)
 
-        setConfiguration({ 'markdown.marp.themes': [themeURL] })
+        try {
+          setConfiguration({ 'markdown.marp.themes': [themeURL] })
 
-        const markdown = md()
-        await Promise.all(themes.loadStyles(Uri.parse('.')))
+          const markdown = md()
+          await Promise.all(themes.loadStyles(Uri.parse('.')))
 
-        expect(fetch).toHaveBeenCalledWith(themeURL, expect.any(Object))
-        expect(themes.observedThemes.size).toBe(1)
-        expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(css)
+          expect(fetch).toHaveBeenCalledWith(themeURL, expect.any(Object))
+          expect(themes.observedThemes.size).toBe(1)
+          expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(
+            css
+          )
 
-        // Watcher events will not register
-        const [theme] = themes.observedThemes.values()
-        expect(theme.onDidChange).toBeUndefined()
-        expect(theme.onDidDelete).toBeUndefined()
+          // Watcher events will not register
+          const [theme] = themes.observedThemes.values()
+          expect(theme.onDidChange).toBeUndefined()
+          expect(theme.onDidDelete).toBeUndefined()
 
-        // Clean up
-        themes.dispose()
-        expect(themes.observedThemes.size).toBe(0)
+          // Clean up
+          themes.dispose()
+          expect(themes.observedThemes.size).toBe(0)
+        } finally {
+          fetch.mockRestore()
+        }
       })
 
       it('registers pre-loaded themes from specified path defined in configuration', async () => {
@@ -281,81 +299,99 @@ describe('#extendMarkdownIt', () => {
           .spyOn(workspace.fs, 'readFile')
           .mockResolvedValue(new TextEncoder().encode(css))
 
-        setConfiguration({ 'markdown.marp.themes': ['./test.css'] })
+        try {
+          setConfiguration({ 'markdown.marp.themes': ['./test.css'] })
 
-        const markdown = md()
-        const mdBody = marpMd('<!--theme: example-->')
-        const mdFileName = path.resolve(baseDir, 'test.css')
-        ;(workspace as any).textDocuments = [
-          {
-            languageId: 'markdown',
-            getText: () => mdBody,
-            uri: Uri.file(mdFileName),
-            fileName: mdFileName,
-          } as any,
-        ]
+          const markdown = md()
+          const mdBody = marpMd('<!--theme: example-->')
+          const mdFileName = path.resolve(baseDir, 'test.css')
+          ;(workspace as any).textDocuments = [
+            {
+              languageId: 'markdown',
+              getText: () => mdBody,
+              uri: Uri.file(mdFileName),
+              fileName: mdFileName,
+            } as any,
+          ]
 
-        await Promise.all(themes.loadStyles(Uri.file(baseDir)))
+          await Promise.all(themes.loadStyles(Uri.file(baseDir)))
 
-        expect(fsReadFile).toHaveBeenCalledWith(
-          expect.objectContaining({
-            fsPath: path.resolve(baseDir, './test.css'),
-          })
-        )
-        expect(themes.observedThemes.size).toBe(1)
-        expect(markdown.render(mdBody)).toContain(css)
+          expect(fsReadFile).toHaveBeenCalledWith(
+            expect.objectContaining({
+              fsPath: path.resolve(baseDir, './test.css'),
+            })
+          )
+          expect(themes.observedThemes.size).toBe(1)
+          expect(markdown.render(mdBody)).toContain(css)
 
-        // Theme object
-        const [theme] = themes.observedThemes.values()
-        expect(theme.onDidChange).toHaveProperty('dispose')
-        expect(theme.onDidDelete).toHaveProperty('dispose')
+          // Theme object
+          const [theme] = themes.observedThemes.values()
+          expect(theme.onDidChange).toHaveProperty('dispose')
+          expect(theme.onDidDelete).toHaveProperty('dispose')
 
-        // Clean up
-        themes.dispose()
-        expect(theme.onDidChange?.dispose).toHaveBeenCalled()
-        expect(theme.onDidDelete?.dispose).toHaveBeenCalled()
-        expect(themes.observedThemes.size).toBe(0)
+          // Clean up
+          themes.dispose()
+          expect(theme.onDidChange?.dispose).toHaveBeenCalled()
+          expect(theme.onDidDelete?.dispose).toHaveBeenCalled()
+          expect(themes.observedThemes.size).toBe(0)
+        } finally {
+          fsReadFile.mockRestore()
+        }
       })
 
       it('cannot traverse theme CSS path to parent directory as same as markdown.styles', async () => {
-        jest
+        const readFileMock = jest
           .spyOn(workspace.fs, 'readFile')
           .mockResolvedValue(new TextEncoder().encode(css))
 
-        setConfiguration({ 'markdown.marp.themes': ['../test.css'] })
+        try {
+          setConfiguration({ 'markdown.marp.themes': ['../test.css'] })
 
-        const markdown = md()
-        markdown.normalizeLink = (url) => path.resolve(baseDir, url)
+          const markdown = md()
+          markdown.normalizeLink = (url) => path.resolve(baseDir, url)
 
-        await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
-        expect(markdown.render(marpMd('<!--theme: example-->'))).not.toContain(
-          css
-        )
+          await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
+          expect(
+            markdown.render(marpMd('<!--theme: example-->'))
+          ).not.toContain(css)
+        } finally {
+          readFileMock.mockRestore()
+        }
       })
 
       it('cannot override built-in themes by custom theme', async () => {
-        jest.spyOn(nodeFetch, 'default').mockResolvedValue({
+        const fetchMock = jest.spyOn(nodeFetch, 'default').mockResolvedValue({
           ok: true,
           text: async () => '/*\n@theme default\n@custom theme\n*/',
         } as any)
 
-        setConfiguration({ 'markdown.marp.themes': [themeURL] })
+        try {
+          setConfiguration({ 'markdown.marp.themes': [themeURL] })
 
-        const markdown = md()
-        await Promise.all(themes.loadStyles(Uri.parse('.')))
+          const markdown = md()
+          await Promise.all(themes.loadStyles(Uri.parse('.')))
 
-        expect(
-          markdown.render(marpMd('<!-- theme: default -->'))
-        ).not.toContain('@custom theme')
+          expect(
+            markdown.render(marpMd('<!-- theme: default -->'))
+          ).not.toContain('@custom theme')
+        } finally {
+          fetchMock.mockRestore()
+        }
       })
 
       describe('when the current workspace belongs to the virtual file system', () => {
         const vfsUri = Uri.parse('vscode-vfs://dummy.host/path/to/workspace')
 
+        let getWorkspaceFolderMock: jest.SpyInstance
+
         beforeEach(() => {
-          jest
+          getWorkspaceFolderMock = jest
             .spyOn(workspace, 'getWorkspaceFolder')
             .mockReturnValue({ name: 'vfs', index: 0, uri: vfsUri })
+        })
+
+        afterEach(() => {
+          getWorkspaceFolderMock?.mockRestore()
         })
 
         it('resolves theme CSS through VS Code FileSystem API', async () => {
@@ -363,25 +399,29 @@ describe('#extendMarkdownIt', () => {
             .spyOn(workspace.fs, 'readFile')
             .mockResolvedValue(new TextEncoder().encode(css))
 
-          const mdBody = marpMd('<!--theme: example-->')
+          try {
+            const mdBody = marpMd('<!--theme: example-->')
 
-          setConfiguration({ 'markdown.marp.themes': ['example.css'] })
-          ;(workspace as any).textDocuments = [
-            {
-              languageId: 'markdown',
-              getText: () => mdBody,
-              uri: Uri.parse(vfsUri.path + '/test.md'),
-              fileName: vfsUri.path + '/test.md',
-            } as any,
-          ]
+            setConfiguration({ 'markdown.marp.themes': ['example.css'] })
+            ;(workspace as any).textDocuments = [
+              {
+                languageId: 'markdown',
+                getText: () => mdBody,
+                uri: Uri.parse(vfsUri.path + '/test.md'),
+                fileName: vfsUri.path + '/test.md',
+              } as any,
+            ]
 
-          const markdown = md()
-          await Promise.all(themes.loadStyles(vfsUri))
+            const markdown = md()
+            await Promise.all(themes.loadStyles(vfsUri))
 
-          expect(wsFsReadfile).toHaveBeenCalledWith(
-            expect.objectContaining({ scheme: 'vscode-vfs' })
-          )
-          expect(markdown.render(mdBody)).toContain(css)
+            expect(wsFsReadfile).toHaveBeenCalledWith(
+              expect.objectContaining({ scheme: 'vscode-vfs' })
+            )
+            expect(markdown.render(mdBody)).toContain(css)
+          } finally {
+            wsFsReadfile.mockRestore()
+          }
         })
       })
     })

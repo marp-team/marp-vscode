@@ -26,6 +26,8 @@ describe('Export command', () => {
     saveDialog = jest.spyOn(exportModule, 'saveDialog').mockImplementation()
   })
 
+  afterEach(() => saveDialog?.mockRestore())
+
   it('has no ops when active text editor is undefined', async () => {
     window.activeTextEditor = undefined
 
@@ -42,9 +44,15 @@ describe('Export command', () => {
   })
 
   describe('when the current workspace is untrusted', () => {
+    let isTrustedMock: jest.SpyInstance
+
     beforeEach(() => {
-      jest.spyOn(workspace, 'isTrusted', 'get').mockImplementation(() => false)
+      isTrustedMock = jest
+        .spyOn(workspace, 'isTrusted', 'get')
+        .mockReturnValue(false)
     })
+
+    afterEach(() => isTrustedMock?.mockRestore())
 
     it('shows error prompt', async () => {
       await exportCommand()
@@ -137,19 +145,27 @@ describe('#saveDialog', () => {
       toString: () => 'PATH',
       fsPath: '/tmp/saveTo.pdf',
     }
-    jest.spyOn(window, 'showSaveDialog').mockImplementation(() => saveURI)
+
+    const showSaveDialogMock = jest
+      .spyOn(window, 'showSaveDialog')
+      .mockImplementation(() => saveURI)
 
     const doExportMock: jest.SpyInstance = jest
       .spyOn(exportModule, 'doExport')
       .mockImplementation()
 
-    await exportModule.saveDialog(document)
-    expect(window.withProgress).toHaveBeenCalledWith(
-      expect.objectContaining({ title: expect.stringContaining('PATH') }),
-      expect.any(Function)
-    )
-    ;(window.withProgress as any).mock.calls[0][1]()
-    expect(doExportMock).toHaveBeenCalledWith(saveURI, document)
+    try {
+      await exportModule.saveDialog(document)
+      expect(window.withProgress).toHaveBeenCalledWith(
+        expect.objectContaining({ title: expect.stringContaining('PATH') }),
+        expect.any(Function)
+      )
+      ;(window.withProgress as any).mock.calls[0][1]()
+      expect(doExportMock).toHaveBeenCalledWith(saveURI, document)
+    } finally {
+      showSaveDialogMock.mockRestore()
+      doExportMock.mockRestore()
+    }
   })
 })
 
@@ -170,57 +186,70 @@ describe('#doExport', () => {
 
   it('exports passed document via Marp CLI and opens it', async () => {
     const runMarpCLI = jest.spyOn(marpCli, 'default').mockImplementation()
-    const uri = saveURI()
 
-    await exportModule.doExport(uri, document)
-    expect(runMarpCLI).toHaveBeenCalled()
-    expect(env.openExternal).toHaveBeenCalledWith(uri)
-    expect(createWorkspaceProxyServer).not.toHaveBeenCalled()
+    try {
+      const uri = saveURI()
+      await exportModule.doExport(uri, document)
+
+      expect(runMarpCLI).toHaveBeenCalled()
+      expect(env.openExternal).toHaveBeenCalledWith(uri)
+      expect(createWorkspaceProxyServer).not.toHaveBeenCalled()
+    } finally {
+      runMarpCLI.mockRestore()
+    }
   })
 
   it('shows error when Marp CLI throws error', async () => {
     const marpCliSpy = jest.spyOn(marpCli, 'default')
 
-    // MarpCLIError
-    marpCliSpy.mockRejectedValueOnce(new marpCli.MarpCLIError('MarpCLIError'))
-    await exportModule.doExport(saveURI(), document)
+    try {
+      // MarpCLIError
+      marpCliSpy.mockRejectedValueOnce(new marpCli.MarpCLIError('MarpCLIError'))
+      await exportModule.doExport(saveURI(), document)
 
-    expect(window.showErrorMessage).toHaveBeenCalledWith(
-      expect.stringContaining('MarpCLIError')
-    )
+      expect(window.showErrorMessage).toHaveBeenCalledWith(
+        expect.stringContaining('MarpCLIError')
+      )
 
-    // Error object
-    marpCliSpy.mockRejectedValueOnce(new Error('ERROR'))
-    await exportModule.doExport(saveURI(), document)
+      // Error object
+      marpCliSpy.mockRejectedValueOnce(new Error('ERROR'))
+      await exportModule.doExport(saveURI(), document)
 
-    expect(window.showErrorMessage).toHaveBeenCalledWith(
-      expect.stringContaining('[Error] ERROR')
-    )
+      expect(window.showErrorMessage).toHaveBeenCalledWith(
+        expect.stringContaining('[Error] ERROR')
+      )
 
-    // Unknown error (via toString())
-    marpCliSpy.mockRejectedValueOnce('UNKNOWN ERROR!')
-    await exportModule.doExport(saveURI(), document)
+      // Unknown error (via toString())
+      marpCliSpy.mockRejectedValueOnce('UNKNOWN ERROR!')
+      await exportModule.doExport(saveURI(), document)
 
-    expect(window.showErrorMessage).toHaveBeenCalledWith(
-      expect.stringContaining('UNKNOWN ERROR!')
-    )
+      expect(window.showErrorMessage).toHaveBeenCalledWith(
+        expect.stringContaining('UNKNOWN ERROR!')
+      )
 
-    // WTF
-    marpCliSpy.mockRejectedValueOnce(null)
-    await exportModule.doExport(saveURI(), document)
+      // WTF
+      marpCliSpy.mockRejectedValueOnce(null)
+      await exportModule.doExport(saveURI(), document)
 
-    expect(window.showErrorMessage).toHaveBeenCalledWith(
-      'Failure to export by unknown error.'
-    )
+      expect(window.showErrorMessage).toHaveBeenCalledWith(
+        'Failure to export by unknown error.'
+      )
+    } finally {
+      marpCliSpy.mockRestore()
+    }
   })
 
   describe('when enabled markdown.marp.strictPathResolutionDuringExport', () => {
+    let marpCliMock: jest.SpyInstance
+
     beforeEach(() => {
       setConfiguration({
         'markdown.marp.strictPathResolutionDuringExport': true,
       })
-      jest.spyOn(marpCli, 'default').mockImplementation()
+      marpCliMock = jest.spyOn(marpCli, 'default').mockImplementation()
     })
+
+    afterEach(() => marpCliMock?.mockRestore())
 
     it('opens workspace proxy server during export if the document has file scheme', async () => {
       const fileWorkspace: any = {
@@ -232,10 +261,17 @@ describe('#doExport', () => {
           fsPath: '/tmp',
         },
       }
-      jest.spyOn(workspace, 'getWorkspaceFolder').mockReturnValue(fileWorkspace)
 
-      await exportModule.doExport(saveURI(), document)
-      expect(createWorkspaceProxyServer).toHaveBeenCalledWith(fileWorkspace)
+      const getWorkspaceFolderMock = jest
+        .spyOn(workspace, 'getWorkspaceFolder')
+        .mockReturnValue(fileWorkspace)
+
+      try {
+        await exportModule.doExport(saveURI(), document)
+        expect(createWorkspaceProxyServer).toHaveBeenCalledWith(fileWorkspace)
+      } finally {
+        getWorkspaceFolderMock.mockRestore()
+      }
     })
 
     it('does not open workspace proxy server if the document is untitled', async () => {
@@ -251,10 +287,14 @@ describe('#doExport', () => {
   })
 
   describe('when enabled markdown.marp.pdf.noteAnnotations', () => {
+    let marpCliMock: jest.SpyInstance
+
     beforeEach(() => {
       setConfiguration({ 'markdown.marp.pdf.noteAnnotations': true })
-      jest.spyOn(marpCli, 'default').mockImplementation()
+      marpCliMock = jest.spyOn(marpCli, 'default').mockImplementation()
     })
+
+    afterEach(() => marpCliMock?.mockRestore())
 
     it('enables pdfNotes option while exporting PDF', async () => {
       const optionGeneratorSpy = jest.spyOn(option, 'marpCoreOptionForCLI')
@@ -279,39 +319,53 @@ describe('#doExport', () => {
 
   describe('when the save path has non-file scheme', () => {
     it('exports the document into temporally path and copy it to the save path', async () => {
-      jest.spyOn(marpCli, 'default').mockImplementation()
+      const marpCliMock = jest.spyOn(marpCli, 'default').mockImplementation()
 
-      for (const isWritableFileSystem of [true, undefined]) {
-        jest
-          .spyOn(workspace.fs, 'isWritableFileSystem')
-          .mockReturnValue(isWritableFileSystem)
+      try {
+        for (const isWritableFileSystem of [true, undefined]) {
+          const isWritableFileSystemMock = jest
+            .spyOn(workspace.fs, 'isWritableFileSystem')
+            .mockReturnValue(isWritableFileSystem)
 
-        const saveURIinstance = saveURI('unknown-scheme', 'pdf')
-        await exportModule.doExport(saveURIinstance, document)
-        expect(workspace.fs.copy).toHaveBeenCalled()
+          try {
+            const saveURIinstance = saveURI('unknown-scheme', 'pdf')
+            await exportModule.doExport(saveURIinstance, document)
+            expect(workspace.fs.copy).toHaveBeenCalled()
 
-        const { calls } = (workspace.fs.copy as jest.Mock).mock
-        const [source, target] = calls[calls.length - 1]
+            const { calls } = (workspace.fs.copy as jest.Mock).mock
+            const [source, target] = calls[calls.length - 1]
 
-        expect(source.path).toContain('marp-vscode-tmp')
-        expect(source.path).toMatch(/\.pdf$/)
-        expect(source.scheme).toBe('file')
-        expect(target).toBe(saveURIinstance)
+            expect(source.path).toContain('marp-vscode-tmp')
+            expect(source.path).toMatch(/\.pdf$/)
+            expect(source.scheme).toBe('file')
+            expect(target).toBe(saveURIinstance)
 
-        expect(window.showInformationMessage).toHaveBeenCalledWith(
-          'Marp slide deck was successfully exported to unknown-scheme:///tmp/to.pdf.'
-        )
+            expect(window.showInformationMessage).toHaveBeenCalledWith(
+              'Marp slide deck was successfully exported to unknown-scheme:///tmp/to.pdf.'
+            )
+          } finally {
+            isWritableFileSystemMock.mockRestore()
+          }
+        }
+      } finally {
+        marpCliMock.mockRestore()
       }
     })
 
     it('shows warning when the scheme of save path has not-writable file system', async () => {
-      jest.spyOn(workspace.fs, 'isWritableFileSystem').mockReturnValue(false)
+      const isWritableFileSystemMock = jest
+        .spyOn(workspace.fs, 'isWritableFileSystem')
+        .mockReturnValue(false)
 
-      await exportModule.doExport(saveURI('readonly', 'pdf'), document)
+      try {
+        await exportModule.doExport(saveURI('readonly', 'pdf'), document)
 
-      expect(window.showErrorMessage).toHaveBeenCalledWith(
-        expect.stringContaining('Could not write to readonly file system.')
-      )
+        expect(window.showErrorMessage).toHaveBeenCalledWith(
+          expect.stringContaining('Could not write to readonly file system.')
+        )
+      } finally {
+        isWritableFileSystemMock.mockRestore()
+      }
     })
   })
 
@@ -335,34 +389,50 @@ describe('#doExport', () => {
       },
     }
 
+    let debugMock: jest.SpyInstance
+
     beforeEach(() => {
-      jest.spyOn(console, 'debug').mockImplementation()
+      debugMock = jest.spyOn(console, 'debug').mockImplementation()
     })
 
+    afterEach(() => debugMock?.mockRestore())
+
     it('opens workspace proxy server while exporting to pdf', async () => {
-      jest.spyOn(marpCli, 'default').mockImplementation()
-      jest
+      const marpCliMock = jest.spyOn(marpCli, 'default').mockImplementation()
+      const getWorkspaceFolderMock = jest
         .spyOn(workspace, 'getWorkspaceFolder')
         .mockReturnValue(virtualWorkspace)
 
-      await exportModule.doExport(saveURI(), vfsDocument)
-      expect(createWorkspaceProxyServer).toHaveBeenCalledWith(virtualWorkspace)
+      try {
+        await exportModule.doExport(saveURI(), vfsDocument)
+        expect(createWorkspaceProxyServer).toHaveBeenCalledWith(
+          virtualWorkspace
+        )
 
-      // dispose method
-      const proxyServer = await (createWorkspaceProxyServer as any).mock
-        .results[0].value
+        // dispose method
+        const proxyServer = await (createWorkspaceProxyServer as any).mock
+          .results[0].value
 
-      expect(proxyServer.dispose).toHaveBeenCalled()
+        expect(proxyServer.dispose).toHaveBeenCalled()
+      } finally {
+        marpCliMock.mockRestore()
+        getWorkspaceFolderMock.mockRestore()
+      }
     })
 
     it('does not open workspace proxy server while exporting to html', async () => {
-      jest.spyOn(marpCli, 'default').mockImplementation()
-      jest
+      const marpCliMock = jest.spyOn(marpCli, 'default').mockImplementation()
+      const getWorkspaceFolderMock = jest
         .spyOn(workspace, 'getWorkspaceFolder')
         .mockReturnValue(virtualWorkspace)
 
-      await exportModule.doExport(saveURI('file', 'html'), vfsDocument)
-      expect(createWorkspaceProxyServer).not.toHaveBeenCalled()
+      try {
+        await exportModule.doExport(saveURI('file', 'html'), vfsDocument)
+        expect(createWorkspaceProxyServer).not.toHaveBeenCalled()
+      } finally {
+        marpCliMock.mockRestore()
+        getWorkspaceFolderMock.mockRestore()
+      }
     })
   })
 })

@@ -22,27 +22,33 @@ describe('Language parser', () => {
     })
 
     it('subscribes VS Code events to manage the state of parsing Marp Markdown', () => {
-      jest
+      const onDidChangeActiveTextEditorMock = jest
         .spyOn(window, 'onDidChangeActiveTextEditor')
         .mockReturnValue('onDidChangeActiveTextEditor' as any)
 
-      jest
+      const onDidChangeTextDocumentMock = jest
         .spyOn(workspace, 'onDidChangeTextDocument')
         .mockReturnValue('onDidChangeTextDocument' as any)
 
-      jest
+      const onDidCloseTextDocumentMock = jest
         .spyOn(workspace, 'onDidCloseTextDocument')
         .mockReturnValue('onDidCloseTextDocument' as any)
 
-      const subscriptons: Disposable[] = []
-      const parser = new LanguageParser(subscriptons)
+      try {
+        const subscriptons: Disposable[] = []
+        const parser = new LanguageParser(subscriptons)
 
-      expect(subscriptons).toContain(parser)
-      expect(subscriptons).toContain('onDidChangeActiveTextEditor')
-      expect(subscriptons).toContain('onDidChangeTextDocument')
-      expect(subscriptons).toContain('onDidCloseTextDocument')
+        expect(subscriptons).toContain(parser)
+        expect(subscriptons).toContain('onDidChangeActiveTextEditor')
+        expect(subscriptons).toContain('onDidChangeTextDocument')
+        expect(subscriptons).toContain('onDidCloseTextDocument')
 
-      expect(parser.activeEditor).toBe(textEditorMock)
+        expect(parser.activeEditor).toBe(textEditorMock)
+      } finally {
+        onDidChangeActiveTextEditorMock.mockRestore()
+        onDidChangeTextDocumentMock.mockRestore()
+        onDidCloseTextDocumentMock.mockRestore()
+      }
     })
 
     it('notifies to parse active text editor initially', () => {
@@ -50,10 +56,14 @@ describe('Language parser', () => {
         .spyOn(LanguageParser.prototype as any, 'notifyToParse')
         .mockImplementation()
 
-      new LanguageParser([])
+      try {
+        new LanguageParser([])
 
-      expect(notifyToParse).toHaveBeenCalledTimes(1)
-      expect(notifyToParse).toHaveBeenCalledWith(textEditorMock.document)
+        expect(notifyToParse).toHaveBeenCalledTimes(1)
+        expect(notifyToParse).toHaveBeenCalledWith(textEditorMock.document)
+      } finally {
+        notifyToParse.mockRestore()
+      }
     })
   })
 
@@ -202,10 +212,16 @@ describe('Language parser', () => {
     const parser = new LanguageParser([])
 
     // Bypass the check while getting parsed data
-    jest.spyOn(parser as any, 'isEnabledLanguageFor').mockReturnValue(true)
+    const isEnabledLanguageForMock = jest
+      .spyOn(parser as any, 'isEnabledLanguageFor')
+      .mockReturnValue(true)
 
-    const data = await parser.getParseData(document as any)
-    expect(data).toBeUndefined()
+    try {
+      const data = await parser.getParseData(document as any)
+      expect(data).toBeUndefined()
+    } finally {
+      isEnabledLanguageForMock.mockRestore()
+    }
   })
 
   it('parses the Marp document when it was updated', async () => {
@@ -289,24 +305,30 @@ describe('Language parser', () => {
         expect.assertions(3)
 
         const parser = new LanguageParser([])
-        jest.spyOn(parser as any, 'isEnabledLanguageFor').mockReturnValue(true)
+        const isEnabledLanguageForMock = jest
+          .spyOn(parser as any, 'isEnabledLanguageFor')
+          .mockReturnValue(true)
 
-        let resolved = false
-        parser.getParseData({} as any, true).then(() => {
-          resolved = true
-        })
+        try {
+          let resolved = false
+          parser.getParseData({} as any, true).then(() => {
+            resolved = true
+          })
 
-        await wait()
-        expect(resolved).toBe(false)
+          await wait()
+          expect(resolved).toBe(false)
 
-        // Check whether #getParseData has margin time
-        jest.advanceTimersByTime(parser.waitForDebounce)
-        await wait()
-        expect(resolved).toBe(false)
+          // Check whether #getParseData has margin time
+          jest.advanceTimersByTime(parser.waitForDebounce)
+          await wait()
+          expect(resolved).toBe(false)
 
-        jest.advanceTimersByTime(50)
-        await wait()
-        expect(resolved).toBe(true)
+          jest.advanceTimersByTime(50)
+          await wait()
+          expect(resolved).toBe(true)
+        } finally {
+          isEnabledLanguageForMock.mockRestore()
+        }
       })
 
       it('also makes delay if a passed document has different version from parsed document', async () => {

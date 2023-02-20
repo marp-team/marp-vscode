@@ -92,10 +92,20 @@ jobs:
     steps:
       - test
 
+  unit-electron22:
+    executor:
+      name: node
+      version: '16.17.1'
+    steps:
+      - test
+
 workflows:
   test:
     jobs:
       - audit
       - unit-electron19:
+          requires:
+            - audit
+      - unit-electron22:
           requires:
             - audit

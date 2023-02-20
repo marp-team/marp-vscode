@@ -81,19 +81,25 @@ describe('[Diagnostics rule] Unknown size', () => {
     })
 
     describe('when registered custom theme', () => {
+      let getRegisteredStylesMock: jest.SpyInstance
+
       beforeEach(() => {
-        jest.spyOn(Themes.prototype, 'getRegisteredStyles').mockReturnValue([
-          {
-            css: dedent`
+        getRegisteredStylesMock = jest
+          .spyOn(Themes.prototype, 'getRegisteredStyles')
+          .mockReturnValue([
+            {
+              css: dedent`
               @import "default";
 
               /* @theme custom-theme */
               /* @size a4 210mm 297mm */
               /* @size 4:3 false */
             `,
-          } as any,
-        ])
+            } as any,
+          ])
       })
+
+      afterEach(() => getRegisteredStylesMock?.mockRestore())
 
       it('does not add diagnostics when specified the custom size preset', () => {
         expect(

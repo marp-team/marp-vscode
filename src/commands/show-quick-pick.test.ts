@@ -18,19 +18,31 @@ describe('showQuickPick command', () => {
   })
 
   it('executes command if selected item has description', async () => {
-    jest.spyOn(window, 'showQuickPick').mockResolvedValue({
-      label: 'Example command',
-      [cmdSymbol]: 'example.command',
-    } as any)
+    const showQuickPickMock = jest
+      .spyOn(window, 'showQuickPick')
+      .mockResolvedValue({
+        label: 'Example command',
+        [cmdSymbol]: 'example.command',
+      } as any)
 
-    await showQuickPick()
-    expect(commands.executeCommand).toHaveBeenCalledWith('example.command')
+    try {
+      await showQuickPick()
+      expect(commands.executeCommand).toHaveBeenCalledWith('example.command')
+    } finally {
+      showQuickPickMock.mockRestore()
+    }
   })
 
   describe('when the current workspace is untrusted', () => {
+    let isTrustedMock: jest.SpyInstance
+
     beforeEach(() => {
-      jest.spyOn(workspace, 'isTrusted', 'get').mockImplementation(() => false)
+      isTrustedMock = jest
+        .spyOn(workspace, 'isTrusted', 'get')
+        .mockReturnValue(false)
     })
+
+    afterEach(() => isTrustedMock?.mockRestore())
 
     it('shows quick pick with restricted items that have shield icon', async () => {
       const expectedItem = expect.objectContaining({

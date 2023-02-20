@@ -15,15 +15,18 @@ import { LanguageParser } from './parser'
 describe('Auto completions', () => {
   it('registers completion provider to subscriptions', () => {
     const mockedCompletionProvider = {} as any
-
-    jest
+    const mockedCompletionProviderMock = jest
       .spyOn(languages, 'registerCompletionItemProvider')
       .mockReturnValue(mockedCompletionProvider)
 
-    const subscriptions: any[] = []
+    try {
+      const subscriptions: any[] = []
 
-    register(subscriptions, {} as any)
-    expect(subscriptions).toContain(mockedCompletionProvider)
+      register(subscriptions, {} as any)
+      expect(subscriptions).toContain(mockedCompletionProvider)
+    } finally {
+      mockedCompletionProviderMock.mockRestore()
+    }
   })
 
   describe('#provideCompletionItems', () => {
@@ -244,21 +247,22 @@ describe('Auto completions', () => {
       })
 
       it('suggests the name of custom theme when recognized', async () => {
-        jest
+        const getRegisteredStylesMock = jest
           .spyOn(Themes.prototype, 'getRegisteredStyles')
           .mockReturnValue([{ css: '/* @theme custom-theme */' } as any])
 
-        const doc = setDocument('---\nmarp: true\ntheme: \n---')
-        const list = (await provideCompletionItems()(
-          doc,
-          new Position(2, 7),
-          {} as any,
-          {} as any
-        )) as CompletionList
+        try {
+          const doc = setDocument('---\nmarp: true\ntheme: \n---')
+          const list = (await provideCompletionItems()(
+            doc,
+            new Position(2, 7),
+            {} as any,
+            {} as any
+          )) as CompletionList
 
-        const labels = list.items.map((item) => item.label).sort()
+          const labels = list.items.map((item) => item.label).sort()
 
-        expect(labels).toMatchInlineSnapshot(`
+          expect(labels).toMatchInlineSnapshot(`
           [
             "custom-theme",
             "default",
@@ -266,7 +270,10 @@ describe('Auto completions', () => {
             "uncover",
           ]
         `)
-        expect(labels).toContain('custom-theme')
+          expect(labels).toContain('custom-theme')
+        } finally {
+          getRegisteredStylesMock.mockRestore()
+        }
       })
     })
 
@@ -333,36 +340,42 @@ describe('Auto completions', () => {
       })
 
       it('suggests size presets strictly defined in used custom theme', async () => {
-        jest.spyOn(Themes.prototype, 'getRegisteredStyles').mockReturnValue([
-          {
-            css: dedent`
+        const getRegisteredStylesMock = jest
+          .spyOn(Themes.prototype, 'getRegisteredStyles')
+          .mockReturnValue([
+            {
+              css: dedent`
               @import "default";
 
               /* @theme custom-theme */
               /* @size a4 210mm 297mm */
               /* @size 4:3 false */
             `,
-          } as any,
-        ])
+            } as any,
+          ])
 
-        const doc = setDocument(
-          '---\nmarp: true\ntheme: custom-theme\nsize: \n---'
-        )
-        const list = (await provideCompletionItems()(
-          doc,
-          new Position(3, 6),
-          {} as any,
-          {} as any
-        )) as CompletionList
+        try {
+          const doc = setDocument(
+            '---\nmarp: true\ntheme: custom-theme\nsize: \n---'
+          )
+          const list = (await provideCompletionItems()(
+            doc,
+            new Position(3, 6),
+            {} as any,
+            {} as any
+          )) as CompletionList
 
-        const labels = list.items.map((item) => item.label).sort()
+          const labels = list.items.map((item) => item.label).sort()
 
-        expect(labels).toMatchInlineSnapshot(`
+          expect(labels).toMatchInlineSnapshot(`
           [
             "16:9",
             "a4",
           ]
         `)
+        } finally {
+          getRegisteredStylesMock.mockRestore()
+        }
       })
 
       it('fallback to presets for the default theme if specified theme is not registered', async () => {

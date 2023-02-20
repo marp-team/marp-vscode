@@ -10,20 +10,24 @@ describe('newMarpMarkdown command', () => {
       .spyOn(workspace, 'openTextDocument')
       .mockResolvedValue({ positionAt } as any)
 
-    await newMarpMarkdown()
+    try {
+      await newMarpMarkdown()
 
-    expect(openTextDocument).toHaveBeenCalledWith(
-      expect.objectContaining({
-        content: expect.stringMatching(/^---\nmarp: true\n---/),
-        language: 'markdown',
-      })
-    )
+      expect(openTextDocument).toHaveBeenCalledWith(
+        expect.objectContaining({
+          content: expect.stringMatching(/^---\nmarp: true\n---/),
+          language: 'markdown',
+        })
+      )
 
-    const document = await openTextDocument.mock.results[0].value
-    expect(window.showTextDocument).toHaveBeenCalledWith(document)
+      const document = await openTextDocument.mock.results[0].value
+      expect(window.showTextDocument).toHaveBeenCalledWith(document)
 
-    const textEditor = await (window.showTextDocument as any).mock.results[0]
-      .value
-    expect(textEditor.selection).toStrictEqual(expect.any(Selection))
+      const textEditor = await (window.showTextDocument as any).mock.results[0]
+        .value
+      expect(textEditor.selection).toStrictEqual(expect.any(Selection))
+    } finally {
+      openTextDocument.mockRestore()
+    }
   })
 })

@@ -1,6 +1,6 @@
 const path = require('path')
 const esbuild = require('esbuild')
-const { ESBuildMinifyPlugin } = require('esbuild-loader')
+const { EsbuildPlugin } = require('esbuild-loader')
 
 module.exports = ({ outputPath, production, minimizerFormat }) => ({
   mode: production ? 'production' : 'none',
@@ -21,7 +21,6 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
         loader: 'esbuild-loader',
         options: {
           implementation: esbuild,
-          loader: 'ts',
           target: 'es2021',
         },
       },
@@ -32,7 +31,7 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
   },
   optimization: {
     minimizer: [
-      new ESBuildMinifyPlugin({
+      new EsbuildPlugin({
         target: 'es2021',
         format: minimizerFormat,
         keepNames: true,

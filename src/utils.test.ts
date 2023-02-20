@@ -16,15 +16,19 @@ describe('Utilities', () => {
         text: jest.fn(async () => 'result'),
       }
 
-      const fetch = jest
+      const fetchSpy = jest
         .spyOn(utils._fetchPonyfillInstance, 'fetch')
         .mockResolvedValue(mocked as any)
 
-      const url = 'https://example.com/'
-      const ret = await utils.fetch(url)
+      try {
+        const url = 'https://example.com/'
+        const ret = await utils.fetch(url)
 
-      expect(fetch).toHaveBeenCalledWith(url, expect.any(Object))
-      expect(ret).toBe('result')
+        expect(fetchSpy).toHaveBeenCalledWith(url, expect.any(Object))
+        expect(ret).toBe('result')
+      } finally {
+        fetchSpy.mockRestore()
+      }
     })
 
     it('throws error if the response status is not 2xx', async () => {
@@ -34,13 +38,17 @@ describe('Utilities', () => {
         status: 404,
       }
 
-      jest
+      const fetchMock = jest
         .spyOn(utils._fetchPonyfillInstance, 'fetch')
         .mockResolvedValue(mocked as any)
 
-      await expect(utils.fetch('https://example.com/')).rejects.toThrow(
-        'Failured fetching https://example.com/ (404)'
-      )
+      try {
+        await expect(utils.fetch('https://example.com/')).rejects.toThrow(
+          'Failured fetching https://example.com/ (404)'
+        )
+      } finally {
+        fetchMock.mockRestore()
+      }
     })
 
     it('throws error if timed out response (via AbortController)', () =>
@@ -63,13 +71,17 @@ describe('Utilities', () => {
           })
         })
 
-        utils.fetch('https://example.com/', { timeout }).catch((err) => {
-          // eslint-disable-next-line jest/no-conditional-expect
-          expect(err).toStrictEqual(abortError)
-          done()
-        })
+        try {
+          utils.fetch('https://example.com/', { timeout }).catch((err) => {
+            // eslint-disable-next-line jest/no-conditional-expect
+            expect(err).toStrictEqual(abortError)
+            done()
+          })
 
-        jest.advanceTimersByTime(timeout)
+          jest.advanceTimersByTime(timeout)
+        } finally {
+          fetch.mockRestore()
+        }
       }))
   })
 
