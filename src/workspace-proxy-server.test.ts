@@ -15,58 +15,82 @@ describe('Workspace Proxy Server', () => {
   const wsUri: Uri = Uri.file('/test/path/subdir')
   const wsFolder: any = { uri: wsUri }
 
+  let debugMock: jest.SpyInstance
+  let warnMock: jest.SpyInstance
+
   beforeEach(() => {
-    jest.spyOn(console, 'debug').mockImplementation()
-    jest.spyOn(console, 'warn').mockImplementation()
+    debugMock = jest.spyOn(console, 'debug').mockImplementation()
+    warnMock = jest.spyOn(console, 'warn').mockImplementation()
 
     server = undefined
   })
 
-  afterEach(() => server?.dispose())
+  afterEach(() => {
+    server?.dispose()
+
+    debugMock?.mockRestore()
+    warnMock?.mockRestore()
+  })
 
   it('listens proxy server', async () => {
-    jest
+    const readFileMock = jest
       .spyOn(workspace.fs, 'readFile')
       .mockResolvedValue(textEncoder.encode('readFile'))
 
-    const wsUriWithSpy = jest.spyOn(wsUri, 'with')
+    try {
+      const wsUriWithSpy = jest.spyOn(wsUri, 'with')
 
-    server = await createWorkspaceProxyServer(wsFolder)
-    expect(server.port).toBeGreaterThanOrEqual(8192)
+      server = await createWorkspaceProxyServer(wsFolder)
+      expect(server.port).toBeGreaterThanOrEqual(8192)
 
-    const response = await fetch(
-      `http://127.0.0.1:${server.port}/test.png?query`
-    )
-    expect(response.status).toBe(200)
-    expect(await response.text()).toMatchInlineSnapshot(`"readFile"`)
+      const response = await fetch(
+        `http://127.0.0.1:${server.port}/test.png?query`
+      )
+      expect(response.status).toBe(200)
+      expect(await response.text()).toMatchInlineSnapshot(`"readFile"`)
 
-    expect(response.headers.get('content-type')).toContain('image/png')
-    expect(wsUriWithSpy).toHaveBeenCalledWith({
-      path: '/test/path/subdir/test.png',
-      query: '?query',
-      fragment: '',
-    })
-    expect(workspace.fs.readFile).toHaveBeenCalled()
+      expect(response.headers.get('content-type')).toContain('image/png')
+      expect(wsUriWithSpy).toHaveBeenCalledWith({
+        path: '/test/path/subdir/test.png',
+        query: '?query',
+        fragment: '',
+      })
+      expect(workspace.fs.readFile).toHaveBeenCalled()
+    } finally {
+      readFileMock.mockRestore()
+    }
   })
 
   it('returns 404 when FileSystem.stat throws error', async () => {
-    jest.spyOn(workspace.fs, 'stat').mockRejectedValue(new Error('err'))
-    server = await createWorkspaceProxyServer(wsFolder)
+    const statMock = jest
+      .spyOn(workspace.fs, 'stat')
+      .mockRejectedValue(new Error('err'))
 
-    const response = await fetch(`http://127.0.0.1:${server.port}/test`)
-    expect(response.status).toBe(404)
+    try {
+      server = await createWorkspaceProxyServer(wsFolder)
+
+      const response = await fetch(`http://127.0.0.1:${server.port}/test`)
+      expect(response.status).toBe(404)
+    } finally {
+      statMock.mockRestore()
+    }
   })
 
   it('returns 404 when FileSystem.stat returns with directory type', async () => {
-    jest.spyOn(workspace.fs, 'stat').mockResolvedValue({
+    const statMock = jest.spyOn(workspace.fs, 'stat').mockResolvedValue({
       ctime: 0,
       mtime: new Date().getDate(),
       size: 0,
       type: FileType.Directory,
     })
-    server = await createWorkspaceProxyServer(wsFolder)
 
-    const response = await fetch(`http://127.0.0.1:${server.port}/test`)
-    expect(response.status).toBe(404)
+    try {
+      server = await createWorkspaceProxyServer(wsFolder)
+
+      const response = await fetch(`http://127.0.0.1:${server.port}/test`)
+      expect(response.status).toBe(404)
+    } finally {
+      statMock.mockRestore()
+    }
   })
 })

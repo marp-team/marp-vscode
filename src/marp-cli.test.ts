@@ -14,10 +14,20 @@ const setConfiguration: (conf?: Record<string, unknown>) => void = (
 describe('Marp CLI integration', () => {
   const runMarpCli = marpCli.default
 
+  let errorMock: jest.SpyInstance
+  let infoMock: jest.SpyInstance
+  let logMock: jest.SpyInstance
+
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation()
-    jest.spyOn(console, 'info').mockImplementation()
-    jest.spyOn(console, 'log').mockImplementation()
+    errorMock = jest.spyOn(console, 'error').mockImplementation()
+    infoMock = jest.spyOn(console, 'info').mockImplementation()
+    logMock = jest.spyOn(console, 'log').mockImplementation()
+  })
+
+  afterEach(() => {
+    errorMock?.mockRestore()
+    infoMock?.mockRestore()
+    logMock?.mockRestore()
   })
 
   it('runs Marp CLI with passed args', async () => {
@@ -28,10 +38,17 @@ describe('Marp CLI integration', () => {
   })
 
   it('throws MarpCLIError when returned error exit code', async () => {
-    jest.spyOn(marpCliModule, 'marpCli').mockResolvedValue(1)
-    await expect(runMarpCli(['--version'])).rejects.toThrow(
-      marpCli.MarpCLIError
-    )
+    const marpCliMock = jest
+      .spyOn(marpCliModule, 'marpCli')
+      .mockResolvedValue(1)
+
+    try {
+      await expect(runMarpCli(['--version'])).rejects.toThrow(
+        marpCli.MarpCLIError
+      )
+    } finally {
+      marpCliMock.mockRestore()
+    }
   })
 
   it.each`
@@ -49,7 +66,7 @@ describe('Marp CLI integration', () => {
       try {
         Object.defineProperty(process, 'platform', { value: platform })
 
-        jest
+        const marpCliMock = jest
           .spyOn(marpCliModule, 'marpCli')
           .mockRejectedValue(
             new marpCliModule.CLIError(
@@ -58,8 +75,12 @@ describe('Marp CLI integration', () => {
             )
           )
 
-        for (const fragment of expected) {
-          await expect(runMarpCli(['--version'])).rejects.toThrow(fragment)
+        try {
+          for (const fragment of expected) {
+            await expect(runMarpCli(['--version'])).rejects.toThrow(fragment)
+          }
+        } finally {
+          marpCliMock.mockRestore()
         }
       } finally {
         Object.defineProperty(process, 'platform', { value: originalPlatform })
@@ -74,16 +95,20 @@ describe('Marp CLI integration', () => {
 
       setConfiguration({ 'markdown.marp.chromePath': __filename })
 
-      const marpCliSpy = jest
+      const marpCliMock = jest
         .spyOn(marpCliModule, 'marpCli')
         .mockImplementation(async () => {
           expect(process.env.CHROME_PATH).toBe(__filename)
           return 0
         })
 
-      await runMarpCli(['--version'])
-      expect(marpCliSpy).toHaveBeenCalled()
-      expect(process.env.CHROME_PATH).toBe(CHROME_PATH)
+      try {
+        await runMarpCli(['--version'])
+        expect(marpCliMock).toHaveBeenCalled()
+        expect(process.env.CHROME_PATH).toBe(CHROME_PATH)
+      } finally {
+        marpCliMock.mockRestore()
+      }
     })
   })
 })
@@ -128,23 +153,30 @@ describe('#createWorkFile', () => {
 
   it('creates tmpfile to workspace root when failed creating to same dir', async () => {
     // Simulate that creation to same directory is not permitted
-    jest.spyOn(workspace.fs, 'writeFile').mockRejectedValueOnce(new Error())
+    const writeFileMock = jest
+      .spyOn(workspace.fs, 'writeFile')
+      .mockRejectedValueOnce(new Error())
 
-    jest
+    const getWorkspaceFolderMock = jest
       .spyOn(workspace, 'getWorkspaceFolder')
       .mockImplementationOnce((): any => ({
         uri: { scheme: 'file', fsPath: '/workspace/' },
       }))
 
-    const workFile = await createWorkFile({
-      getText: jest.fn(),
-      isDirty: true,
-      uri: { scheme: 'file', fsPath: '/workspace/tmp/dirty.md' },
-    } as any)
+    try {
+      const workFile = await createWorkFile({
+        getText: jest.fn(),
+        isDirty: true,
+        uri: { scheme: 'file', fsPath: '/workspace/tmp/dirty.md' },
+      } as any)
 
-    expect(
-      workFile.path.startsWith(path.join('/workspace', '.marp-vscode-tmp'))
-    ).toBe(true)
+      expect(
+        workFile.path.startsWith(path.join('/workspace', '.marp-vscode-tmp'))
+      ).toBe(true)
+    } finally {
+      writeFileMock.mockRestore()
+      getWorkspaceFolderMock.mockRestore()
+    }
   })
 
   it('creates tmpfile to os specific directory when failed all creations', async () => {

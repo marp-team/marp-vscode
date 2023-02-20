@@ -12,6 +12,8 @@ describe('toggleMarpFeature command', () => {
     toggleFunc = jest.spyOn(toggleMarpFeature, 'toggle').mockImplementation()
   })
 
+  afterEach(() => toggleFunc?.mockRestore())
+
   it('has no ops when active text editor is undefined', async () => {
     window.activeTextEditor = undefined
 
