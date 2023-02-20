@@ -283,7 +283,7 @@
     "@types/jest": "^29.4.0",
     "@types/lodash.debounce": "^4.0.7",
     "@types/markdown-it": "^12.2.3",
-    "@types/vscode": "~1.75.1",
+    "@types/vscode": "~1.72.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "@vscode/test-web": "^0.0.34",
