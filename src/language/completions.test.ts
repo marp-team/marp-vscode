@@ -135,6 +135,7 @@ describe('Auto completions', () => {
             "style",
             "theme",
             "title",
+            "transition",
             "url",
           ]
         `)
@@ -176,6 +177,7 @@ describe('Auto completions', () => {
             "style",
             "theme",
             "title",
+            "transition",
             "url",
           ]
         `)
@@ -205,6 +207,7 @@ describe('Auto completions', () => {
             "footer",
             "header",
             "paginate",
+            "transition",
           ]
         `)
 
@@ -263,13 +266,13 @@ describe('Auto completions', () => {
           const labels = list.items.map((item) => item.label).sort()
 
           expect(labels).toMatchInlineSnapshot(`
-          [
-            "custom-theme",
-            "default",
-            "gaia",
-            "uncover",
-          ]
-        `)
+                      [
+                        "custom-theme",
+                        "default",
+                        "gaia",
+                        "uncover",
+                      ]
+                  `)
           expect(labels).toContain('custom-theme')
         } finally {
           getRegisteredStylesMock.mockRestore()
@@ -368,11 +371,11 @@ describe('Auto completions', () => {
           const labels = list.items.map((item) => item.label).sort()
 
           expect(labels).toMatchInlineSnapshot(`
-          [
-            "16:9",
-            "a4",
-          ]
-        `)
+                      [
+                        "16:9",
+                        "a4",
+                      ]
+                  `)
         } finally {
           getRegisteredStylesMock.mockRestore()
         }
