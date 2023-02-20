@@ -266,13 +266,13 @@ describe('Auto completions', () => {
           const labels = list.items.map((item) => item.label).sort()
 
           expect(labels).toMatchInlineSnapshot(`
-                      [
-                        "custom-theme",
-                        "default",
-                        "gaia",
-                        "uncover",
-                      ]
-                  `)
+            [
+              "custom-theme",
+              "default",
+              "gaia",
+              "uncover",
+            ]
+          `)
           expect(labels).toContain('custom-theme')
         } finally {
           getRegisteredStylesMock.mockRestore()
@@ -396,6 +396,110 @@ describe('Auto completions', () => {
           [
             "16:9",
             "4:3",
+          ]
+        `)
+      })
+    })
+
+    describe('Built-in transitions suggestion', () => {
+      it('suggests transition when the cursor is on transition directive', async () => {
+        const doc = setDocument('---\nmarp: true\ntransition: \n---')
+        const list = (await provideCompletionItems()(
+          doc,
+          new Position(2, 12),
+          {} as any,
+          {} as any
+        )) as CompletionList
+
+        const labels = list.items.map((item) => item.label).sort()
+
+        expect(labels).toMatchInlineSnapshot(`
+          [
+            "clockwise",
+            "counterclockwise",
+            "cover",
+            "coverflow",
+            "cube",
+            "cylinder",
+            "diamond",
+            "drop",
+            "explode",
+            "fade",
+            "fade-out",
+            "fall",
+            "flip",
+            "glow",
+            "implode",
+            "in-out",
+            "iris-in",
+            "iris-out",
+            "melt",
+            "none",
+            "overlap",
+            "pivot",
+            "pull",
+            "push",
+            "reveal",
+            "rotate",
+            "slide",
+            "star",
+            "swap",
+            "swipe",
+            "swoosh",
+            "wipe",
+            "wiper",
+            "zoom",
+          ]
+        `)
+      })
+
+      it('suggests transition when the cursor is on transition scoped directive', async () => {
+        const doc = setDocument('---\nmarp: true\n_transition: \n---')
+        const list = (await provideCompletionItems()(
+          doc,
+          new Position(2, 13),
+          {} as any,
+          {} as any
+        )) as CompletionList
+
+        const labels = list.items.map((item) => item.label).sort()
+
+        expect(labels).toMatchInlineSnapshot(`
+          [
+            "clockwise",
+            "counterclockwise",
+            "cover",
+            "coverflow",
+            "cube",
+            "cylinder",
+            "diamond",
+            "drop",
+            "explode",
+            "fade",
+            "fade-out",
+            "fall",
+            "flip",
+            "glow",
+            "implode",
+            "in-out",
+            "iris-in",
+            "iris-out",
+            "melt",
+            "none",
+            "overlap",
+            "pivot",
+            "pull",
+            "push",
+            "reveal",
+            "rotate",
+            "slide",
+            "star",
+            "swap",
+            "swipe",
+            "swoosh",
+            "wipe",
+            "wiper",
+            "zoom",
           ]
         `)
       })
