@@ -10,7 +10,7 @@
 
 ### Fixed
 
-- Mitigate conflicting with `express` module in other extensions while exporting ([#408](https://github.com/marp-team/marp-vscode/pull/408), [#402](https://github.com/marp-team/marp-vscode/issues/402), [#407](https://github.com/marp-team/marp-vscode/issues/407))
+- Mitigate conflicting with `express` module in other extensions while exporting ([#402](https://github.com/marp-team/marp-vscode/issues/402), [#407](https://github.com/marp-team/marp-vscode/issues/407), [#408](https://github.com/marp-team/marp-vscode/pull/408))
 
 ## v2.4.1 - 2023-01-09
 
