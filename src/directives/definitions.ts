@@ -339,4 +339,32 @@ export const builtinDirectives = [
     type: DirectiveType.Global,
     details: 'https://github.com/marp-team/marp-cli#metadata',
   }),
+
+  // Marp CLI transitions for bespoke template
+  createDirectiveInfo({
+    name: 'transition',
+    description: dedent(`
+      Set the slide transition effect to the next page boundary.
+
+      When viewing the HTML slide deck in a browser that supports the [View Transitions API](https://www.w3.org/TR/css-view-transitions-1/), the animation of the specified effect will be visible when navigating the presentation.
+
+      You can choose the effect from [33 built-in transitions in Marp CLI](https://github.com/marp-team/marp-cli/blob/main/docs/bespoke-transitions/README.md#built-in-transitions), or [the custom transition effects defined in CSS](https://github.com/marp-team/marp-cli/blob/main/docs/bespoke-transitions/README.md#custom-transitions).
+
+      \`\`\`yaml
+      transition: fade
+      \`\`\`
+
+      You can also set the custom duration of the specified effect with a space-separated parameter.
+
+      \`\`\`yaml
+      transition: fade 1s
+      \`\`\`
+    `),
+    allowed: directiveAlwaysAllowed,
+    providedBy: DirectiveProvidedBy.MarpCLI,
+    type: DirectiveType.Local,
+    details:
+      'https://github.com/marp-team/marp-cli/blob/main/docs/bespoke-transitions/README.md',
+    completable: true,
+  }),
 ] as const
