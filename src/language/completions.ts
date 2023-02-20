@@ -70,6 +70,42 @@ const themeDocs = {
   `),
 } as const
 
+const cliBuiltInTransitions = [
+  'clockwise',
+  'counterclockwise',
+  'cover',
+  'coverflow',
+  'cube',
+  'cylinder',
+  'diamond',
+  'drop',
+  'explode',
+  'fade',
+  'fade-out',
+  'fall',
+  'flip',
+  'glow',
+  'implode',
+  'in-out',
+  'iris-in',
+  'iris-out',
+  'melt',
+  'overlap',
+  'pivot',
+  'pull',
+  'push',
+  'reveal',
+  'rotate',
+  'slide',
+  'star',
+  'swap',
+  'swipe',
+  'swoosh',
+  'wipe',
+  'wiper',
+  'zoom',
+] as const
+
 class CompletionProvider {
   constructor(
     private readonly document: TextDocument,
@@ -84,6 +120,7 @@ class CompletionProvider {
       this.completionBoolean() ||
       this.completionMath() ||
       this.completionSizePreset() ||
+      this.completionBuiltInTransitions() ||
       this.completionDirectives()
     )
   }
@@ -165,6 +202,26 @@ class CompletionProvider {
           }))
         )
       }
+    }
+  }
+
+  private completionBuiltInTransitions() {
+    if (this.isCursorOnDirective('transition', DirectiveType.Local)) {
+      return new CompletionList([
+        {
+          documentation: 'Disable the transition effect.',
+          kind: CompletionItemKind.EnumMember,
+          label: 'none',
+        },
+        ...cliBuiltInTransitions.map((transition) => ({
+          detail: 'Marp CLI built-in transition effect',
+          documentation: new MarkdownString(
+            `![${transition} transition](https://raw.githubusercontent.com/marp-team/marp-cli/main/docs/bespoke-transitions/images/${transition}.gif)`
+          ),
+          kind: CompletionItemKind.EnumMember,
+          label: transition,
+        })),
+      ])
     }
   }
 
