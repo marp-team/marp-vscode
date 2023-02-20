@@ -6,7 +6,12 @@
 
 - Upgrade Marp Core to [v3.5.0](https://github.com/marp-team/marp-core/releases/tag/v3.5.0) ([#408](https://github.com/marp-team/marp-vscode/pull/408), [#411](https://github.com/marp-team/marp-vscode/pull/411))
 - Upgrade Marp CLI to [v2.4.0](https://github.com/marp-team/marp-cli/releases/tag/v2.4.0) ([#408](https://github.com/marp-team/marp-vscode/pull/408), [#410](https://github.com/marp-team/marp-vscode/pull/410))
+  - [Slide transitions](https://github.com/marp-team/marp-cli/blob/main/docs/bespoke-transitions/README.md) powered by [View Transition API](https://www.w3.org/TR/css-view-transitions-1/) is stably available
 - Upgrade dependent packages to the latest version ([#408](https://github.com/marp-team/marp-vscode/pull/408))
+
+### Added
+
+- Auto completion for [Marp CLI's `transition` local directive](https://github.com/marp-team/marp-cli/blob/main/docs/bespoke-transitions/README.md#transition-local-directive) ([#409](https://github.com/marp-team/marp-vscode/issues/409), [#412](https://github.com/marp-team/marp-vscode/pull/412))
 
 ### Fixed
 
