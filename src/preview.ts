@@ -71,7 +71,7 @@ const forceUpgradeCustomElements = (target: Element) => {
 
 const removeStyles = () => {
   const styles = document.querySelectorAll<HTMLStyleElement>(
-    'style:not(#__marp-vscode-style):not(#_defaultStyles):not([data-marp-vscode-body])'
+    'style:not(#__marp-vscode-style,#_defaultStyles,[data-marp-vscode-body])'
   )
   const links = document.querySelectorAll<HTMLLinkElement>(
     'link[rel="stylesheet"][href]:not([href*="marp-vscode"])'
