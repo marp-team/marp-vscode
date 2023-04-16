@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v2.6.0 - 2023-04-16
+
 ### Added
 
 - Support named anchor links in Markdown preview and exported HTML ([#415](https://github.com/marp-team/marp-vscode/pull/415))
