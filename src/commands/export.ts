@@ -187,7 +187,6 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 export const saveDialog = async (document: TextDocument) => {
   const { fsPath } = document.uri
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const defaultType = marpConfiguration().get<string>('exportType')!
   const ext = extensions[defaultType] ? `.${extensions[defaultType][0]}` : ''
   const baseTypes = Object.keys(extensions)

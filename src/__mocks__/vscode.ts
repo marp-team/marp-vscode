@@ -194,7 +194,7 @@ export class MarkdownString {
 }
 
 export class Memento {
-  private _map: Map<string, any> = new Map()
+  private _map = new Map<string, any>()
 
   get(key: string) {
     return this._map.get(key)

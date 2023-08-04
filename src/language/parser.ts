@@ -26,6 +26,7 @@ export interface LanguageParseData {
   version: number
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type LanguageParserEvents = {
   activeEditorUpdated: (
     activeEditor: TextEditor,

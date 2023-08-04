@@ -185,7 +185,7 @@ export class Themes {
       type !== ThemeType.Remote
         ? new RelativePattern(
             Uri.joinPath(themeUri, '..'),
-            themeUri.path.split('/').pop()!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            themeUri.path.split('/').pop()!,
           )
         : undefined
 

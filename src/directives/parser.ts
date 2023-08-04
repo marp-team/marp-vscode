@@ -51,6 +51,7 @@ export interface MathEventHandler {
   range: Range
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type DirectiveParserEvents = {
   comment: (event: DirectiveSectionEventHandler) => void
   directive: (event: DirectiveEventHandler) => void

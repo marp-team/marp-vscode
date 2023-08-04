@@ -22,7 +22,6 @@ const doc = (text: string): TextDocument =>
     positionAt: (offset: number) => {
       const lines = text.slice(0, offset).split('\n')
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: '/test/document',

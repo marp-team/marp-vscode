@@ -1,5 +1,4 @@
 /** @jest-environment jsdom */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { browser } from '@marp-team/marp-core/browser'
 import preview from './preview'
 

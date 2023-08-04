@@ -18,6 +18,7 @@ module.exports = {
       plugins: ['@typescript-eslint'],
       extends: [
         'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/stylistic',
         'plugin:import/typescript',
         'prettier',
       ],
@@ -25,6 +26,10 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
+      },
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: __dirname,
       },
     },
     {
