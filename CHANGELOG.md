@@ -7,6 +7,7 @@
 - Upgrade Marp Core to [v3.8.0](https://github.com/marp-team/marp-core/releases/tag/v3.8.0) ([#427](https://github.com/marp-team/marp-vscode/pull/427))
   - Support `paginate: skip` and `paginate: hold` from Marpit framework [v2.5.0](https://github.com/marp-team/marpit/releases/v2.5.0)
 - Upgrade Marp CLI to [v3.2.0](https://github.com/marp-team/marp-cli/releases/tag/v3.2.0) ([#427](https://github.com/marp-team/marp-vscode/pull/427))
+- Update IntelliSense for `paginate` directive: Suggest new keywords `skip` and `hold` ([#429](https://github.com/marp-team/marp-vscode/pull/429))
 
 ### Fixed
 
