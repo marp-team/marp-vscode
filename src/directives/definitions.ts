@@ -143,7 +143,18 @@ export const builtinDirectives = [
   // Marpit local directives
   createDirectiveInfo({
     name: 'paginate',
-    description: 'Show page number on the slide if set `true`.',
+    description: dedent(`
+      Control the slide page number.
+
+      Use the boolean values \`true\` and \`false\` to control the visibility of the page number on the slide.
+
+      You can also manage the page number increment behavior using the additional keywords \`skip\` and \`hold\`.
+
+      - \`false\`: Hide the page number. (default)
+      - \`true\`: Show the page number.
+      - \`skip\`: Hide the page number and prevent its increment.
+      - \`hold\`: Show the page number, but prevent increment even on the following page(s).
+    `),
     allowed: directiveAlwaysAllowed,
     providedBy: DirectiveProvidedBy.Marpit,
     type: DirectiveType.Local,
