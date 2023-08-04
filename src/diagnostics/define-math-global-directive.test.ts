@@ -23,11 +23,10 @@ const marpDoc = (text: string, frontMatter = 'marp: true'): TextDocument =>
     positionAt: function (offset: number) {
       const lines = this.getText().slice(0, offset).split('\n')
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: '/test/document',
-  } as any)
+  }) as any
 
 const setConfiguration: (conf?: Record<string, unknown>) => void = (
   workspace as any
@@ -58,7 +57,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
       expect(diagnostic.severity).toBe(DiagnosticSeverity.Warning)
 
       expect(diagnostic.range).toStrictEqual(
-        new Range(new Position(4, 0), new Position(4, 1))
+        new Range(new Position(4, 0), new Position(4, 1)),
       )
     })
 
@@ -70,7 +69,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
 
       const [diagnostic] = diagnostics
       expect(diagnostic.range).toStrictEqual(
-        new Range(new Position(4, 0), new Position(4, 1))
+        new Range(new Position(4, 0), new Position(4, 1)),
       )
     })
 
@@ -101,13 +100,13 @@ describe('[Diagnostics rule] Define math global directive', () => {
       expect(m('$$[\n[1, 2]\n[3, 4]\n]$$')).toHaveLength(1)
       expect(m('Foo \\$1$ bar\n\\$\\$\n1\n\\$\\$')).toHaveLength(0)
       expect(
-        m("Thus, $20,000 and USD$30,000 won't parse as math.")
+        m("Thus, $20,000 and USD$30,000 won't parse as math."),
       ).toHaveLength(0)
       expect(
-        m('For some Europeans, it is 2$ for a can of soda, not 1$.')
+        m('For some Europeans, it is 2$ for a can of soda, not 1$.'),
       ).toHaveLength(0)
       expect(
-        m('I will give you $20 today, if you give me more $ tomorrow.')
+        m('I will give you $20 today, if you give me more $ tomorrow.'),
       ).toHaveLength(0)
       // expect(
       //   m("It's well know that $$1 + 1 = 3$$ for sufficiently large 1.")
@@ -115,8 +114,8 @@ describe('[Diagnostics rule] Define math global directive', () => {
       expect(m('Money adds: $\\$X + \\$Y = \\$Z$.')).toHaveLength(1)
       expect(
         m(
-          'Weird-o: $\\displaystyle{\\begin{pmatrix} \\$ & 1\\\\\\$ \\end{pmatrix}}$.'
-        )
+          'Weird-o: $\\displaystyle{\\begin{pmatrix} \\$ & 1\\\\\\$ \\end{pmatrix}}$.',
+        ),
       ).toHaveLength(1)
     })
 
@@ -131,10 +130,10 @@ describe('[Diagnostics rule] Define math global directive', () => {
       setConfiguration({ 'markdown.marp.mathTypesetting': 'mathjax' })
 
       expect(
-        register(marpDoc('$a=1+2$\n\n<!-- math: mathjax -->'))
+        register(marpDoc('$a=1+2$\n\n<!-- math: mathjax -->')),
       ).toHaveLength(0)
       expect(
-        register(marpDoc('$a=1+2$', 'marp: true\nmath: katex'))
+        register(marpDoc('$a=1+2$', 'marp: true\nmath: katex')),
       ).toHaveLength(0)
     })
   })
@@ -147,7 +146,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
       rule.subscribe(subscriptions, refresh)
 
       expect(workspace.onDidChangeConfiguration).toHaveBeenCalledWith(
-        expect.any(Function)
+        expect.any(Function),
       )
 
       const [callback] = (workspace.onDidChangeConfiguration as jest.Mock).mock
@@ -166,7 +165,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
         expect.any(rule.DefineMathGlobalDirective),
         {
           providedCodeActionKinds: [CodeActionKind.QuickFix],
-        }
+        },
       )
     })
   })
@@ -188,7 +187,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
               triggerKind: CodeActionTriggerKind.Invoke,
               only: undefined,
             },
-            dummyToken
+            dummyToken,
           )
 
         expect(codeActions).toHaveLength(1)
@@ -206,7 +205,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
         expect(action.edit?.insert).toHaveBeenCalledWith(
           document.uri,
           new Position(2, 0),
-          'math: mathjax\n'
+          'math: mathjax\n',
         )
       })
 
@@ -224,14 +223,14 @@ describe('[Diagnostics rule] Define math global directive', () => {
               triggerKind: CodeActionTriggerKind.Invoke,
               only: undefined,
             },
-            dummyToken
+            dummyToken,
           )
 
         const action: CodeAction = codeActions?.[0]
         expect(action.edit?.insert).toHaveBeenCalledWith(
           document.uri,
           new Position(2, 0),
-          'math: katex\n'
+          'math: katex\n',
         )
       })
 
@@ -247,7 +246,7 @@ describe('[Diagnostics rule] Define math global directive', () => {
               triggerKind: CodeActionTriggerKind.Invoke,
               only: undefined,
             },
-            dummyToken
+            dummyToken,
           )
 
         expect(codeActions).toHaveLength(0)

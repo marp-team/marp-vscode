@@ -12,7 +12,7 @@ export const code = 'overloading-global-directive'
 export function register(
   doc: TextDocument,
   directiveParser: DirectiveParser,
-  diagnostics: Diagnostic[]
+  diagnostics: Diagnostic[],
 ) {
   const parsedGlobalDirectives = new Map<string, ParsedGlobalDirective[]>()
 
@@ -31,7 +31,7 @@ export function register(
           item,
           range: new Range(
             doc.positionAt(start + offset),
-            doc.positionAt(end + offset)
+            doc.positionAt(end + offset),
           ),
         },
       ])
@@ -49,7 +49,7 @@ export function register(
           const diagnostic = new Diagnostic(
             parsed[i].range,
             `The ${key} global directive may be overloaded the subsequent definition.`,
-            DiagnosticSeverity.Warning
+            DiagnosticSeverity.Warning,
           )
 
           diagnostic.source = 'marp-vscode'

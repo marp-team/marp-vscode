@@ -26,10 +26,11 @@ export interface LanguageParseData {
   version: number
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type LanguageParserEvents = {
   activeEditorUpdated: (
     activeEditor: TextEditor,
-    parseData: LanguageParseData
+    parseData: LanguageParseData,
   ) => void
   activeEditorDisposed: (activeEditor: TextEditor) => void
 }
@@ -65,7 +66,7 @@ export class LanguageParser
       window.onDidChangeActiveTextEditor(setActiveEditor),
       workspace.onDidChangeTextDocument((e) => this.notifyToParse(e.document)),
       workspace.onDidCloseTextDocument((d) => this.disposeDocument(d)),
-      this
+      this,
     )
   }
 
@@ -78,7 +79,7 @@ export class LanguageParser
 
   async getParseData(
     document: TextDocument,
-    ensureLatest = false
+    ensureLatest = false,
   ): Promise<LanguageParseData | undefined> {
     if (!this.isEnabledLanguageFor(document)) return undefined
 
@@ -122,11 +123,11 @@ export class LanguageParser
             info,
             keyRange: new Range(
               document.positionAt(start + offset),
-              document.positionAt(end + offset)
+              document.positionAt(end + offset),
             ),
             range: new Range(
               document.positionAt(start + offset),
-              document.positionAt(vEnd + offset)
+              document.positionAt(vEnd + offset),
             ),
             value: item.value?.value,
           })
@@ -155,7 +156,7 @@ export class LanguageParser
       if (!parseFunc) {
         parseFunc = lodashDebounce(
           () => this.parseDocument(document),
-          this.waitForDebounce
+          this.waitForDebounce,
         )
         this._parseFuncs.set(document, parseFunc)
       }

@@ -19,12 +19,11 @@ const doc = (text: string): TextDocument =>
     positionAt: (offset: number) => {
       const lines = text.slice(0, offset).split('\n')
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: Uri.parse('/test/document'),
     fileName: '/test/document',
-  } as any)
+  }) as any
 
 describe('[Diagnostics rule] Unknown size', () => {
   const register = (doc: TextDocument): Diagnostic[] => {
@@ -46,7 +45,7 @@ describe('[Diagnostics rule] Unknown size', () => {
           size: unknown
           test: test
           ---
-        `)
+        `),
       )
       expect(diagnostics).toHaveLength(1)
 
@@ -56,7 +55,7 @@ describe('[Diagnostics rule] Unknown size', () => {
       expect($size.source).toBe('marp-vscode')
       expect($size.severity).toBe(DiagnosticSeverity.Warning)
       expect($size.range).toStrictEqual(
-        new Range(new Position(2, 0), new Position(2, 13))
+        new Range(new Position(2, 0), new Position(2, 13)),
       )
     })
 
@@ -103,10 +102,10 @@ describe('[Diagnostics rule] Unknown size', () => {
 
       it('does not add diagnostics when specified the custom size preset', () => {
         expect(
-          register(doc('<!--\ntheme: custom-theme\nsize: a4\n-->'))
+          register(doc('<!--\ntheme: custom-theme\nsize: a4\n-->')),
         ).toHaveLength(0)
         expect(
-          register(doc('<!--\ntheme: custom-theme\nsize: 16:9\n-->'))
+          register(doc('<!--\ntheme: custom-theme\nsize: 16:9\n-->')),
         ).toHaveLength(0)
       })
 

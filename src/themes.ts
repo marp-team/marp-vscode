@@ -60,7 +60,7 @@ export class Themes {
     const marp = new Marp()
 
     for (const { css } of this.getRegisteredStyles(
-      Themes.resolveBaseDirectoryForTheme(doc)
+      Themes.resolveBaseDirectoryForTheme(doc),
     )) {
       try {
         marp.themeSet.add(css)
@@ -80,7 +80,7 @@ export class Themes {
 
   getSizePresets(
     doc: TextDocument,
-    themeName: string | undefined
+    themeName: string | undefined,
   ): SizePreset[] {
     const themeSet = this.getMarpThemeSetFor(doc)
     const theme = themeSet.get(themeName ?? '', true)?.name || 'default'
@@ -185,7 +185,7 @@ export class Themes {
       type !== ThemeType.Remote
         ? new RelativePattern(
             Uri.joinPath(themeUri, '..'),
-            themeUri.path.split('/').pop()! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            themeUri.path.split('/').pop()!,
           )
         : undefined
 

@@ -51,6 +51,7 @@ export interface MathEventHandler {
   range: Range
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type DirectiveParserEvents = {
   comment: (event: DirectiveSectionEventHandler) => void
   directive: (event: DirectiveEventHandler) => void
@@ -75,7 +76,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     const detectDirectives = (
       text: string,
       offset: number,
-      definedIn = DirectiveDefinedIn.Comment
+      definedIn = DirectiveDefinedIn.Comment,
     ) => {
       const { contents, errors } = parseYaml(text.replace(/\r$/, ''))
 
@@ -134,7 +135,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
     visit(parsed, ['html', 'image', 'math', 'inlineMath'], (n: any) => {
       const range = new Range(
         doc.positionAt(index + n.position.start.offset),
-        doc.positionAt(index + n.position.end.offset)
+        doc.positionAt(index + n.position.end.offset),
       )
 
       switch (n.type) {
@@ -142,7 +143,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
           visit(parseHtml(n.value), 'comment', (c: any) => {
             const rawBody = n.value.slice(
               c.position.start.offset,
-              c.position.end.offset
+              c.position.end.offset,
             )
 
             this.emit('comment', { body: rawBody, range })
@@ -157,7 +158,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
                 n.position.start.offset +
                 c.position.start.offset +
                 4 +
-                (value.length - trimmedLeft.length)
+                (value.length - trimmedLeft.length),
             )
           })
           break
@@ -165,7 +166,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
           this.emit('image', {
             body: markdown.slice(
               n.position.start.offset,
-              n.position.end.offset
+              n.position.end.offset,
             ),
             range,
             url: n.url,
@@ -198,7 +199,7 @@ export class DirectiveParser extends (EventEmitter as new () => TypedEmitter<Dir
           this.emit('maybeMath', {
             body: markdown.slice(
               n.position.start.offset,
-              n.position.end.offset
+              n.position.end.offset,
             ),
             range,
           })

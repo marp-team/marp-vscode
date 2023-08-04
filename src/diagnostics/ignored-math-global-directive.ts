@@ -18,7 +18,7 @@ export const code = 'ignored-math-global-directive'
 export function register(
   doc: TextDocument,
   directiveParser: DirectiveParser,
-  diagnostics: Diagnostic[]
+  diagnostics: Diagnostic[],
 ) {
   if (mathTypesettingConfiguration() === 'off') {
     // Tell the user the thing that math global directive is ignored
@@ -35,7 +35,7 @@ export function register(
         mathDirective = {
           range: new Range(
             doc.positionAt(start + offset),
-            doc.positionAt(end + offset)
+            doc.positionAt(end + offset),
           ),
         }
       }
@@ -46,7 +46,7 @@ export function register(
         const diagnostic = new Diagnostic(
           mathDirective.range,
           `A definition of math global directive will be ignored due to disabled math typesetting in VS Code setting.`,
-          DiagnosticSeverity.Information
+          DiagnosticSeverity.Information,
         )
 
         diagnostic.source = 'marp-vscode'
@@ -62,6 +62,6 @@ export function subscribe(subscriptions: Disposable[], refresh: () => void) {
   subscriptions.push(
     workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('markdown.marp.mathTypesetting')) refresh()
-    })
+    }),
   )
 }

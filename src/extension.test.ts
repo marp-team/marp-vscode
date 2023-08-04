@@ -11,7 +11,7 @@ import { Memento, Uri, commands, workspace, env } from 'vscode'
 jest.mock('node-fetch')
 jest.mock('vscode')
 
-let themes: typeof import('./themes')['default']
+let themes: (typeof import('./themes'))['default']
 
 const extension = (): typeof import('./extension') => {
   let ext
@@ -40,7 +40,7 @@ describe('#activate', () => {
     const { activate, extendMarkdownIt } = extension()
 
     expect(activate(extContext())).toEqual(
-      expect.objectContaining({ extendMarkdownIt })
+      expect.objectContaining({ extendMarkdownIt }),
     )
   })
 
@@ -53,13 +53,13 @@ describe('#activate', () => {
     for (const [callback] of onDidChgConf.mock.calls) {
       callback({
         affectsConfiguration: jest.fn(
-          (conf) => conf === 'markdown.marp.breaks'
+          (conf) => conf === 'markdown.marp.breaks',
         ),
       })
     }
 
     expect(commands.executeCommand).toHaveBeenCalledWith(
-      'markdown.preview.refresh'
+      'markdown.preview.refresh',
     )
   })
 })
@@ -136,12 +136,12 @@ describe('#extendMarkdownIt', () => {
       it('adds code-line class and data-line attribute to DOM', () => {
         const doc = new DOMParser().parseFromString(
           extension().extendMarkdownIt(new markdownIt()).render(markdown),
-          'text/html'
+          'text/html',
         )
 
         // Slide wrappers
         const wrappers = doc.querySelectorAll<HTMLElement>(
-          '[data-marp-vscode-slide-wrapper].code-line'
+          '[data-marp-vscode-slide-wrapper].code-line',
         )
         expect(wrappers[0].dataset.line).toBe('0')
         expect(wrappers[1].dataset.line).toBe('8')
@@ -278,7 +278,7 @@ describe('#extendMarkdownIt', () => {
           expect(fetch).toHaveBeenCalledWith(themeURL, expect.any(Object))
           expect(themes.observedThemes.size).toBe(1)
           expect(markdown.render(marpMd('<!--theme: example-->'))).toContain(
-            css
+            css,
           )
 
           // Watcher events will not register
@@ -319,7 +319,7 @@ describe('#extendMarkdownIt', () => {
           expect(fsReadFile).toHaveBeenCalledWith(
             expect.objectContaining({
               fsPath: path.resolve(baseDir, './test.css'),
-            })
+            }),
           )
           expect(themes.observedThemes.size).toBe(1)
           expect(markdown.render(mdBody)).toContain(css)
@@ -352,7 +352,7 @@ describe('#extendMarkdownIt', () => {
 
           await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
           expect(
-            markdown.render(marpMd('<!--theme: example-->'))
+            markdown.render(marpMd('<!--theme: example-->')),
           ).not.toContain(css)
         } finally {
           readFileMock.mockRestore()
@@ -372,7 +372,7 @@ describe('#extendMarkdownIt', () => {
           await Promise.all(themes.loadStyles(Uri.parse('.')))
 
           expect(
-            markdown.render(marpMd('<!-- theme: default -->'))
+            markdown.render(marpMd('<!-- theme: default -->')),
           ).not.toContain('@custom theme')
         } finally {
           fetchMock.mockRestore()
@@ -416,7 +416,7 @@ describe('#extendMarkdownIt', () => {
             await Promise.all(themes.loadStyles(vfsUri))
 
             expect(wsFsReadfile).toHaveBeenCalledWith(
-              expect.objectContaining({ scheme: 'vscode-vfs' })
+              expect.objectContaining({ scheme: 'vscode-vfs' }),
             )
             expect(markdown.render(mdBody)).toContain(css)
           } finally {
@@ -444,7 +444,7 @@ describe('#extendMarkdownIt', () => {
 
         const parsed = md().parse(markdown)
         const hiddenHeadings = parsed.filter(
-          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden
+          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden,
         )
 
         expect(hiddenHeadings).toHaveLength(2)
@@ -467,7 +467,7 @@ describe('#extendMarkdownIt', () => {
           ## 4
         `)
         const hiddenHeadingDividers = headingDivider.filter(
-          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden
+          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden,
         )
 
         expect(hiddenHeadingDividers).toHaveLength(3)
@@ -481,7 +481,7 @@ describe('#extendMarkdownIt', () => {
 
         const parsed = md().parse(markdown)
         const hiddenHeadings = parsed.filter(
-          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden
+          (t) => t.type === 'heading_open' && t.level === 0 && t.hidden,
         )
 
         expect(hiddenHeadings).toHaveLength(0)

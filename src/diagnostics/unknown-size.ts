@@ -14,7 +14,7 @@ export const code = 'unknown-size'
 export function register(
   doc: TextDocument,
   directiveParser: DirectiveParser,
-  diagnostics: Diagnostic[]
+  diagnostics: Diagnostic[],
 ) {
   let parsed: ParsedSizeValue = {}
 
@@ -35,11 +35,11 @@ export function register(
           parsed.size = item.value.value
           parsed.range = new Range(
             doc.positionAt(start + offset),
-            doc.positionAt(end + offset)
+            doc.positionAt(end + offset),
           )
           parsed.vRange = new Range(
             doc.positionAt(vStart + offset),
-            doc.positionAt(end + offset)
+            doc.positionAt(end + offset),
           )
         }
         break
@@ -61,7 +61,7 @@ export function register(
         const diagnostic = new Diagnostic(
           parsed.range,
           `A specified size preset "${parsed.size}" will be ignored because it is not defined by used theme.`,
-          DiagnosticSeverity.Warning
+          DiagnosticSeverity.Warning,
         )
 
         diagnostic.source = 'marp-vscode'

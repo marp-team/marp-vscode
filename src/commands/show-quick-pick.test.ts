@@ -13,7 +13,7 @@ describe('showQuickPick command', () => {
     await showQuickPick()
     expect(window.showQuickPick).toHaveBeenCalledWith(
       expect.arrayContaining([expectedItem]),
-      expect.anything()
+      expect.anything(),
     )
   })
 
@@ -52,7 +52,7 @@ describe('showQuickPick command', () => {
       await showQuickPick()
       expect(window.showQuickPick).toHaveBeenCalledWith(
         expect.arrayContaining([expectedItem]),
-        expect.anything()
+        expect.anything(),
       )
     })
   })

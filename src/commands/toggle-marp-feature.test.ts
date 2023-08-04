@@ -44,13 +44,13 @@ describe('toggleMarpFeature command', () => {
     it('changes editor language and continues process when reacted on the notification', async () => {
       const { showWarningMessage }: any = window
       showWarningMessage.mockResolvedValue(
-        toggleMarpFeature.ITEM_CONTINUE_BY_CHANGING_LANGUAGE
+        toggleMarpFeature.ITEM_CONTINUE_BY_CHANGING_LANGUAGE,
       )
 
       await toggleMarpFeatureCommand()
       expect(languages.setTextDocumentLanguage).toHaveBeenCalledWith(
         textEditor.document,
-        'markdown'
+        'markdown',
       )
       expect(toggleFunc).toHaveBeenCalledWith(window.activeTextEditor)
     })
@@ -86,7 +86,7 @@ describe('#toggle', () => {
 
     expect(editor._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(0, 0),
-      '---\nmarp: true\n---\n\n'
+      '---\nmarp: true\n---\n\n',
     )
   })
 
@@ -96,7 +96,7 @@ describe('#toggle', () => {
 
     expect(editor._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(3, 0),
-      'marp: true\n'
+      'marp: true\n',
     )
 
     // Empty frontmatter
@@ -105,7 +105,7 @@ describe('#toggle', () => {
 
     expect(editorEmptyFm._editBuilders[0].insert).toHaveBeenCalledWith(
       new Position(1, 0),
-      'marp: true\n'
+      'marp: true\n',
     )
   })
 
@@ -116,7 +116,7 @@ describe('#toggle', () => {
 
     expect(editorEnabled._editBuilders[0].replace).toHaveBeenCalledWith(
       new Range(new Position(1, 6), new Position(1, 10)),
-      'false'
+      'false',
     )
 
     // false => true
@@ -125,7 +125,7 @@ describe('#toggle', () => {
 
     expect(editorDisabled._editBuilders[0].replace).toHaveBeenCalledWith(
       new Range(new Position(2, 8), new Position(2, 13)),
-      'true'
+      'true',
     )
   })
 })

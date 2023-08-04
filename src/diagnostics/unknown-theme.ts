@@ -12,7 +12,7 @@ export const code = 'unknown-theme'
 export function register(
   doc: TextDocument,
   directiveParser: DirectiveParser,
-  diagnostics: Diagnostic[]
+  diagnostics: Diagnostic[],
 ) {
   let parsed: ParsedThemeValue | undefined
 
@@ -28,7 +28,7 @@ export function register(
         value: item.value.value,
         range: new Range(
           doc.positionAt(start + offset),
-          doc.positionAt(end + offset)
+          doc.positionAt(end + offset),
         ),
       }
     }
@@ -45,7 +45,7 @@ export function register(
         const diagnostic = new Diagnostic(
           parsed.range,
           `The specified theme "${parsed.value}" is not recognized by Marp for VS Code.`,
-          DiagnosticSeverity.Warning
+          DiagnosticSeverity.Warning,
         )
 
         diagnostic.source = 'marp-vscode'

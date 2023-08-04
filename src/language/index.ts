@@ -37,12 +37,12 @@ export function register(subscriptions: Disposable[]) {
           if (collected.range.contains(pos)) {
             return new Hover(
               collected.info.markdownDescription,
-              collected.range
+              collected.range,
             )
           }
         }
       },
-    })
+    }),
   )
 
   // Auto completion

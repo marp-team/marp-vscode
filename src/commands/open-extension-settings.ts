@@ -6,6 +6,6 @@ export const command = 'markdown.marp.openExtensionSettings'
 export default async function openExtensionSettings() {
   await commands.executeCommand(
     'workbench.action.openSettings',
-    `@ext:${pkg.publisher}.${pkg.name}`
+    `@ext:${pkg.publisher}.${pkg.name}`,
   )
 }

@@ -22,7 +22,10 @@ export class CodeAction {
   edit?: WorkspaceEdit
   isPreferred?: boolean
 
-  constructor(public title: string, public kind?: CodeActionKind) {}
+  constructor(
+    public title: string,
+    public kind?: CodeActionKind,
+  ) {}
 }
 
 export class CodeActionKind {
@@ -52,7 +55,7 @@ export class Diagnostic {
   constructor(
     public range: Range,
     public message: string,
-    public severity?: DiagnosticSeverity
+    public severity?: DiagnosticSeverity,
   ) {}
 }
 
@@ -77,7 +80,7 @@ export class Position {
     }
     return new Position(
       this.line + (args[0] ?? 0),
-      this.character + (args[1] ?? 0)
+      this.character + (args[1] ?? 0),
     )
   }
 
@@ -85,7 +88,10 @@ export class Position {
     return this.line === other.line && this.character === other.character
   }
 
-  constructor(readonly line: number, readonly character: number) {}
+  constructor(
+    readonly line: number,
+    readonly character: number,
+  ) {}
 }
 
 export const ProgressLocation = {
@@ -93,7 +99,10 @@ export const ProgressLocation = {
 }
 
 export class Range {
-  constructor(readonly start: Position, readonly end: Position) {}
+  constructor(
+    readonly start: Position,
+    readonly end: Position,
+  ) {}
 
   contains(position: Position) {
     return !(
@@ -158,7 +167,10 @@ export enum FileType {
 }
 
 export class Hover {
-  constructor(public contents: string, public range?: Range) {}
+  constructor(
+    public contents: string,
+    public range?: Range,
+  ) {}
 }
 
 export const languages = {
@@ -182,7 +194,7 @@ export class MarkdownString {
 }
 
 export class Memento {
-  private _map: Map<string, any> = new Map()
+  private _map = new Map<string, any>()
 
   get(key: string) {
     return this._map.get(key)
@@ -228,7 +240,7 @@ export const workspace = {
   getConfiguration: jest.fn((section?: string) => ({
     get: jest.fn(
       (subSection?: string) =>
-        currentConf[[section, subSection].filter((s) => s).join('.')]
+        currentConf[[section, subSection].filter((s) => s).join('.')],
     ),
   })),
   getWorkspaceFolder: jest.fn(),

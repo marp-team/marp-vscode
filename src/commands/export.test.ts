@@ -63,14 +63,14 @@ describe('Export command', () => {
     describe('when reacted with "Manage Workspace Trust..."', () => {
       beforeEach(() => {
         ;(window.showErrorMessage as any).mockResolvedValue(
-          exportModule.ITEM_MANAGE_WORKSPACE_TRUST
+          exportModule.ITEM_MANAGE_WORKSPACE_TRUST,
         )
       })
 
       it('executes "workbench.trust.manage" command when reacted on the prompt', async () => {
         await exportCommand()
         expect(commands.executeCommand).toHaveBeenCalledWith(
-          'workbench.trust.manage'
+          'workbench.trust.manage',
         )
       })
     })
@@ -108,7 +108,7 @@ describe('#saveDialog', () => {
     expect(window.showSaveDialog).toHaveBeenCalledWith(
       expect.objectContaining({
         defaultUri: expect.objectContaining({ fsPath: '/tmp/test.pdf' }),
-      })
+      }),
     )
   })
 
@@ -120,7 +120,7 @@ describe('#saveDialog', () => {
     expect(window.showSaveDialog).toHaveBeenCalledWith(
       expect.objectContaining({
         defaultUri: expect.objectContaining({ path: '/untitled.pdf' }),
-      })
+      }),
     )
   })
 
@@ -134,7 +134,7 @@ describe('#saveDialog', () => {
       .calls[0][0]
 
     expect(defaultUri).toStrictEqual(
-      expect.objectContaining({ fsPath: '/tmp/test.pptx' })
+      expect.objectContaining({ fsPath: '/tmp/test.pptx' }),
     )
     expect(Object.values(filters)[0]).toStrictEqual(['pptx'])
   })
@@ -158,7 +158,7 @@ describe('#saveDialog', () => {
       await exportModule.saveDialog(document)
       expect(window.withProgress).toHaveBeenCalledWith(
         expect.objectContaining({ title: expect.stringContaining('PATH') }),
-        expect.any(Function)
+        expect.any(Function),
       )
       ;(window.withProgress as any).mock.calls[0][1]()
       expect(doExportMock).toHaveBeenCalledWith(saveURI, document)
@@ -208,7 +208,7 @@ describe('#doExport', () => {
       await exportModule.doExport(saveURI(), document)
 
       expect(window.showErrorMessage).toHaveBeenCalledWith(
-        expect.stringContaining('MarpCLIError')
+        expect.stringContaining('MarpCLIError'),
       )
 
       // Error object
@@ -216,7 +216,7 @@ describe('#doExport', () => {
       await exportModule.doExport(saveURI(), document)
 
       expect(window.showErrorMessage).toHaveBeenCalledWith(
-        expect.stringContaining('[Error] ERROR')
+        expect.stringContaining('[Error] ERROR'),
       )
 
       // Unknown error (via toString())
@@ -224,7 +224,7 @@ describe('#doExport', () => {
       await exportModule.doExport(saveURI(), document)
 
       expect(window.showErrorMessage).toHaveBeenCalledWith(
-        expect.stringContaining('UNKNOWN ERROR!')
+        expect.stringContaining('UNKNOWN ERROR!'),
       )
 
       // WTF
@@ -232,7 +232,7 @@ describe('#doExport', () => {
       await exportModule.doExport(saveURI(), document)
 
       expect(window.showErrorMessage).toHaveBeenCalledWith(
-        'Failure to export by unknown error.'
+        'Failure to export by unknown error.',
       )
     } finally {
       marpCliSpy.mockRestore()
@@ -302,7 +302,7 @@ describe('#doExport', () => {
 
       expect(optionGeneratorSpy).toHaveBeenCalledWith(
         document,
-        expect.objectContaining({ pdfNotes: true })
+        expect.objectContaining({ pdfNotes: true }),
       )
     })
 
@@ -312,7 +312,7 @@ describe('#doExport', () => {
 
       expect(optionGeneratorSpy).toHaveBeenCalledWith(
         document,
-        expect.objectContaining({ pdfNotes: false })
+        expect.objectContaining({ pdfNotes: false }),
       )
     })
   })
@@ -341,7 +341,7 @@ describe('#doExport', () => {
             expect(target).toBe(saveURIinstance)
 
             expect(window.showInformationMessage).toHaveBeenCalledWith(
-              'Marp slide deck was successfully exported to unknown-scheme:///tmp/to.pdf.'
+              'Marp slide deck was successfully exported to unknown-scheme:///tmp/to.pdf.',
             )
           } finally {
             isWritableFileSystemMock.mockRestore()
@@ -361,7 +361,7 @@ describe('#doExport', () => {
         await exportModule.doExport(saveURI('readonly', 'pdf'), document)
 
         expect(window.showErrorMessage).toHaveBeenCalledWith(
-          expect.stringContaining('Could not write to readonly file system.')
+          expect.stringContaining('Could not write to readonly file system.'),
         )
       } finally {
         isWritableFileSystemMock.mockRestore()
@@ -406,7 +406,7 @@ describe('#doExport', () => {
       try {
         await exportModule.doExport(saveURI(), vfsDocument)
         expect(createWorkspaceProxyServer).toHaveBeenCalledWith(
-          virtualWorkspace
+          virtualWorkspace,
         )
 
         // dispose method

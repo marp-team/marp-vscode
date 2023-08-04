@@ -23,7 +23,7 @@ export const code = 'deprecated-color-setting-shorthand'
 
 export function register(
   directiveParser: DirectiveParser,
-  diagnostics: Diagnostic[]
+  diagnostics: Diagnostic[],
 ) {
   directiveParser.on('image', ({ alt, range, url }) => {
     const directive = (() => {
@@ -38,7 +38,7 @@ export function register(
         new Diagnostic(
           range,
           `Shorthand for setting colors via Markdown image syntax is deprecated, and will be removed in future. Please replace to the scoped local direcitve <!-- _${directive}: "${url}" -->, or consider to use the scoped style.`,
-          DiagnosticSeverity.Warning
+          DiagnosticSeverity.Warning,
         ),
         {
           source: 'marp-vscode',
@@ -47,7 +47,7 @@ export function register(
           [diagnosticMeta]: {
             replacement: `<!-- _${directive}: "${url}" -->`,
           },
-        }
+        },
       )
 
       diagnostics.push(diagnostic)
@@ -61,22 +61,22 @@ export class DeprecatedColorSettingShorthand implements CodeActionProvider {
   readonly provideCodeActions: CodeActionProvider['provideCodeActions'] = (
     doc,
     _,
-    context
+    context,
   ) =>
     context.diagnostics
       .filter(
         (d): d is DeprecatedColorSettingShorthandDiagnostic =>
-          d.source === 'marp-vscode' && d.code === code && d[diagnosticMeta]
+          d.source === 'marp-vscode' && d.code === code && d[diagnosticMeta],
       )
       .map((d) => this.createCodeAction(d, doc))
 
   private createCodeAction(
     diag: DeprecatedColorSettingShorthandDiagnostic,
-    doc: TextDocument
+    doc: TextDocument,
   ): CodeAction {
     const act = new CodeAction(
       `Replace to the scoped local direcitve: ${diag[diagnosticMeta].replacement}`,
-      CodeActionKind.QuickFix
+      CodeActionKind.QuickFix,
     )
 
     act.diagnostics = [diag]
@@ -96,7 +96,7 @@ export function subscribe(subscriptions: Disposable[]) {
       {
         providedCodeActionKinds:
           DeprecatedColorSettingShorthand.providedCodeActionKinds,
-      }
-    )
+      },
+    ),
   )
 }

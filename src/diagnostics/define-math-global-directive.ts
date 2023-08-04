@@ -27,7 +27,7 @@ interface DefineMathGlobalDirectiveDiagnosticContext {
 }
 
 const isDefineMathGlobalDirectiveDiagnostic = (
-  diag: Diagnostic
+  diag: Diagnostic,
 ): diag is DefineMathGlobalDirectiveDiagnostic =>
   diag.source === 'marp-vscode' &&
   diag.code === code &&
@@ -38,7 +38,7 @@ export const code = 'define-math-global-directive'
 
 export function register(
   directiveParser: DirectiveParser,
-  diagnostics: Diagnostic[]
+  diagnostics: Diagnostic[],
 ) {
   const mathSetting = mathTypesettingConfiguration()
 
@@ -85,14 +85,14 @@ export function register(
           new Diagnostic(
             context.firstMathRange,
             `Whenever using math syntax in Marp, recommend to declare math typesetting library in current document by defining math global directive.`,
-            DiagnosticSeverity.Warning
+            DiagnosticSeverity.Warning,
           ),
           {
             code,
             mathSetting,
             frontMatterRange: context.frontMatterRange,
             source: 'marp-vscode',
-          }
+          },
         )
 
         diagnostics.push(diagnostic)
@@ -107,7 +107,7 @@ export class DefineMathGlobalDirective implements CodeActionProvider {
   readonly provideCodeActions: CodeActionProvider['provideCodeActions'] = (
     doc,
     _,
-    context
+    context,
   ) =>
     context.diagnostics
       .filter(isDefineMathGlobalDirectiveDiagnostic)
@@ -115,11 +115,11 @@ export class DefineMathGlobalDirective implements CodeActionProvider {
 
   private createCodeAction(
     diag: DefineMathGlobalDirectiveDiagnostic,
-    doc: TextDocument
+    doc: TextDocument,
   ): CodeAction {
     const act = new CodeAction(
       `Define math global directive as "${diag.mathSetting}"`,
-      CodeActionKind.QuickFix
+      CodeActionKind.QuickFix,
     )
 
     act.diagnostics = [diag]
@@ -127,7 +127,7 @@ export class DefineMathGlobalDirective implements CodeActionProvider {
     act.edit.insert(
       doc.uri,
       new Position(diag.frontMatterRange.end.line, 0),
-      `math: ${diag.mathSetting}\n`
+      `math: ${diag.mathSetting}\n`,
     )
     act.isPreferred = true
 
@@ -147,7 +147,7 @@ export function subscribe(subscriptions: Disposable[], refresh: () => void) {
       {
         providedCodeActionKinds:
           DefineMathGlobalDirective.providedCodeActionKinds,
-      }
-    )
+      },
+    ),
   )
 }

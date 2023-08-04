@@ -23,11 +23,10 @@ const doc = (text: string): TextDocument =>
     positionAt: (offset: number) => {
       const lines = text.slice(0, offset).split('\n')
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: '/test/document',
-  } as any)
+  }) as any
 
 describe('[Diagnostics rule] Deprecated dollar prefix', () => {
   const register = (doc: TextDocument): Diagnostic[] => {
@@ -49,7 +48,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
 
     it('does not add diagnostics when passed valid directives', () =>
       expect(
-        register(doc('---\nmarp: true\ntheme: default\n---'))
+        register(doc('---\nmarp: true\ntheme: default\n---')),
       ).toHaveLength(0))
 
     it('adds diagnostics to warn deprecated directives when passed outdated directives', () => {
@@ -60,7 +59,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
       expect($theme.source).toBe('marp-vscode')
       expect($theme.severity).toBe(DiagnosticSeverity.Error)
       expect($theme.range).toStrictEqual(
-        new Range(new Position(2, 0), new Position(2, 6))
+        new Range(new Position(2, 0), new Position(2, 6)),
       )
 
       // Multiple deprecated directives
@@ -85,13 +84,13 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
 
       const [$size, $headingDivider, $style] = diagnostics
       expect($size.range).toStrictEqual(
-        new Range(new Position(1, 0), new Position(1, 5))
+        new Range(new Position(1, 0), new Position(1, 5)),
       )
       expect($headingDivider.range).toStrictEqual(
-        new Range(new Position(4, 0), new Position(4, 15))
+        new Range(new Position(4, 0), new Position(4, 15)),
       )
       expect($style.range).toStrictEqual(
-        new Range(new Position(5, 0), new Position(5, 6))
+        new Range(new Position(5, 0), new Position(5, 6)),
       )
     })
 
@@ -129,16 +128,16 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
 
       const [$theme, $size, $style, $headingDivider] = diagnostics
       expect($theme.range).toStrictEqual(
-        new Range(new Position(4, 5), new Position(4, 11))
+        new Range(new Position(4, 5), new Position(4, 11)),
       )
       expect($size.range).toStrictEqual(
-        new Range(new Position(8, 0), new Position(8, 5))
+        new Range(new Position(8, 0), new Position(8, 5)),
       )
       expect($style.range).toStrictEqual(
-        new Range(new Position(17, 7), new Position(17, 13))
+        new Range(new Position(17, 7), new Position(17, 13)),
       )
       expect($headingDivider.range).toStrictEqual(
-        new Range(new Position(21, 11), new Position(21, 26))
+        new Range(new Position(21, 11), new Position(21, 26)),
       )
     })
   })
@@ -153,7 +152,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         expect.any(rule.RemoveDollarPrefix),
         {
           providedCodeActionKinds: [CodeActionKind.QuickFix],
-        }
+        },
       )
     })
   })
@@ -174,7 +173,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
             triggerKind: CodeActionTriggerKind.Invoke,
             only: undefined,
           },
-          dummyToken
+          dummyToken,
         )
 
         expect(codeActions).toHaveLength(1)
@@ -191,7 +190,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
         expect(action.edit?.delete).toHaveBeenCalledTimes(1)
         expect(action.edit?.delete).toHaveBeenCalledWith(
           document.uri,
-          new Range(new Position(2, 0), new Position(2, 1)) // "$"
+          new Range(new Position(2, 0), new Position(2, 1)), // "$"
         )
       })
 
@@ -206,7 +205,7 @@ describe('[Diagnostics rule] Deprecated dollar prefix', () => {
             triggerKind: CodeActionTriggerKind.Invoke,
             only: undefined,
           },
-          dummyToken
+          dummyToken,
         )
 
         expect(codeActions).toHaveLength(0)

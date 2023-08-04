@@ -48,7 +48,7 @@ export const marpConfiguration = () =>
 
 export const mathTypesettingConfiguration = () => {
   const conf = marpConfiguration().get<'off' | 'katex' | 'mathjax'>(
-    'mathTypesetting'
+    'mathTypesetting',
   )
   return conf ?? 'mathjax'
 }
@@ -66,7 +66,7 @@ export const unlink = (target: Uri) =>
   workspace.fs.delete(target, { useTrash: false })
 
 export const hasToString = (
-  target: unknown
+  target: unknown,
 ): target is { toString(): string } => {
   switch (typeof target) {
     case 'object':

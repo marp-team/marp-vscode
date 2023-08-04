@@ -1,5 +1,4 @@
 /** @jest-environment jsdom */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { browser } from '@marp-team/marp-core/browser'
 import preview from './preview'
 
@@ -61,7 +60,7 @@ describe('Preview HTML', () => {
     expect(document.querySelectorAll('link[href]')).toHaveLength(2)
     expect(
       document.querySelector<HTMLLinkElement>('link:not([href])')?.dataset
-        .marpVscodeHref
+        .marpVscodeHref,
     ).toContain('/other-extension/defined.css')
     expect(document.getElementById('__marp-vscode-style')).toBeTruthy()
     expect(document.getElementById('_defaultStyles')).toBeTruthy()

@@ -19,12 +19,11 @@ const doc = (text: string): TextDocument =>
     positionAt: (offset: number) => {
       const lines = text.slice(0, offset).split('\n')
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: Uri.parse('/test/document'),
     fileName: '/test/document',
-  } as any)
+  }) as any
 
 describe('[Diagnostics rule] Unknown theme', () => {
   const register = (doc: TextDocument): Diagnostic[] => {
@@ -46,7 +45,7 @@ describe('[Diagnostics rule] Unknown theme', () => {
           theme: unknown
           test: test
           ---
-        `)
+        `),
       )
       expect(diagnostics).toHaveLength(1)
 
@@ -56,7 +55,7 @@ describe('[Diagnostics rule] Unknown theme', () => {
       expect($theme.source).toBe('marp-vscode')
       expect($theme.severity).toBe(DiagnosticSeverity.Warning)
       expect($theme.range).toStrictEqual(
-        new Range(new Position(2, 7), new Position(2, 14))
+        new Range(new Position(2, 7), new Position(2, 14)),
       )
     })
 

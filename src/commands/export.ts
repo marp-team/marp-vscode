@@ -104,7 +104,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
       baseUrl = `http://127.0.0.1:${proxyServer.port}${baseUrlPath}`
 
       console.debug(
-        `Proxy server for the workspace ${workspaceFolder.name} has created (port: ${proxyServer.port} / baseUrl: ${baseUrl})`
+        `Proxy server for the workspace ${workspaceFolder.name} has created (port: ${proxyServer.port} / baseUrl: ${baseUrl})`,
       )
     }
   }
@@ -127,7 +127,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
       if (!outputToLocalFS) {
         outputPath = path.join(
           tmpdir(),
-          `marp-vscode-tmp-${nanoid()}${ouputExt}`
+          `marp-vscode-tmp-${nanoid()}${ouputExt}`,
         )
       }
 
@@ -160,7 +160,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
           }
 
           window.showInformationMessage(
-            `Marp slide deck was successfully exported to ${uri.toString()}.`
+            `Marp slide deck was successfully exported to ${uri.toString()}.`,
           )
         }
       } finally {
@@ -174,7 +174,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
           if (hasToString(e)) return `. ${e.toString()}`
 
           return ' by unknown error.'
-        })()}`
+        })()}`,
       )
     } finally {
       input.cleanup()
@@ -187,7 +187,6 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 export const saveDialog = async (document: TextDocument) => {
   const { fsPath } = document.uri
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const defaultType = marpConfiguration().get<string>('exportType')!
   const ext = extensions[defaultType] ? `.${extensions[defaultType][0]}` : ''
   const baseTypes = Object.keys(extensions)
@@ -197,7 +196,7 @@ export const saveDialog = async (document: TextDocument) => {
     defaultUri: Uri.file(
       (document.isUntitled
         ? 'untitled'
-        : fsPath.slice(0, -path.extname(fsPath).length)) + ext
+        : fsPath.slice(0, -path.extname(fsPath).length)) + ext,
     ),
     filters: types.reduce((f, t) => {
       if (baseTypes.includes(t)) f[descriptions[t]] = extensions[t]
@@ -213,7 +212,7 @@ export const saveDialog = async (document: TextDocument) => {
         location: ProgressLocation.Notification,
         title: `Exporting Marp slide deck to ${saveURI.toString()}...`,
       },
-      () => doExport(saveURI, document)
+      () => doExport(saveURI, document),
     )
   }
 }
@@ -222,7 +221,7 @@ export default async function exportCommand() {
   if (!workspace.isTrusted) {
     const acted = await window.showErrorMessage(
       'Export command cannot run in untrusted workspace.',
-      ITEM_MANAGE_WORKSPACE_TRUST
+      ITEM_MANAGE_WORKSPACE_TRUST,
     )
 
     if (acted === ITEM_MANAGE_WORKSPACE_TRUST) {
@@ -240,7 +239,7 @@ export default async function exportCommand() {
     } else {
       const acted = await window.showWarningMessage(
         'A current document is not Markdown document.',
-        ITEM_CONTINUE_TO_EXPORT
+        ITEM_CONTINUE_TO_EXPORT,
       )
 
       if (acted === ITEM_CONTINUE_TO_EXPORT) {

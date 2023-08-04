@@ -44,7 +44,7 @@ describe('Utilities', () => {
 
       try {
         await expect(utils.fetch('https://example.com/')).rejects.toThrow(
-          'Failured fetching https://example.com/ (404)'
+          'Failured fetching https://example.com/ (404)',
         )
       } finally {
         fetchMock.mockRestore()
@@ -60,7 +60,7 @@ describe('Utilities', () => {
 
         const fetch: jest.SpyInstance = jest.spyOn(
           utils._fetchPonyfillInstance,
-          'fetch'
+          'fetch',
         )
 
         fetch.mockImplementation((_, opts) => {

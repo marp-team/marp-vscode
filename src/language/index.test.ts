@@ -12,7 +12,7 @@ describe('Language extension', () => {
       register(subscriptions)
 
       const langParser: LanguageParser = subscriptions.find(
-        (subscribed) => subscribed instanceof LanguageParser
+        (subscribed) => subscribed instanceof LanguageParser,
       )
       expect(langParser).toBeInstanceOf(LanguageParser)
 
@@ -34,16 +34,16 @@ describe('Language extension', () => {
             { info: { type: DirectiveType.Global }, keyRange: dummyRangeG },
             { info: { type: DirectiveType.Local }, keyRange: dummyRangeL },
           ],
-        } as any
+        } as any,
       )
 
       expect(editorMock.setDecorations).toHaveBeenCalledWith(
         expect.objectContaining({ fontWeight: 'bold' }), // for directive keys
-        [dummyRangeG, dummyRangeL]
+        [dummyRangeG, dummyRangeL],
       )
       expect(editorMock.setDecorations).toHaveBeenCalledWith(
         expect.objectContaining({ fontStyle: 'italic' }), // for global directive keys
-        [dummyRangeG]
+        [dummyRangeG],
       )
     })
 
@@ -55,11 +55,11 @@ describe('Language extension', () => {
 
       expect(editorMock.setDecorations).toHaveBeenCalledWith(
         expect.objectContaining({ fontWeight: 'bold' }), // for directive keys
-        []
+        [],
       )
       expect(editorMock.setDecorations).toHaveBeenCalledWith(
         expect.objectContaining({ fontStyle: 'italic' }), // for global directive keys
-        []
+        [],
       )
     })
   })
@@ -94,7 +94,7 @@ describe('Language extension', () => {
       expect(registerSpy).toHaveBeenCalledTimes(1)
       expect(registerSpy).toHaveBeenCalledWith(
         'markdown',
-        expect.objectContaining({ provideHover: expect.any(Function) })
+        expect.objectContaining({ provideHover: expect.any(Function) }),
       )
 
       // Call providerHover

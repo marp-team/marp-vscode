@@ -22,11 +22,10 @@ const doc = (text: string): TextDocument =>
     positionAt: (offset: number) => {
       const lines = text.slice(0, offset).split('\n')
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: '/test/document',
-  } as any)
+  }) as any
 
 describe('[Diagnostics rule] Deprecated color setting shorthand', () => {
   const register = (doc: TextDocument): Diagnostic[] => {
@@ -54,7 +53,7 @@ describe('[Diagnostics rule] Deprecated color setting shorthand', () => {
       expect($text.source).toBe('marp-vscode')
       expect($text.severity).toBe(DiagnosticSeverity.Warning)
       expect($text.range).toStrictEqual(
-        new Range(new Position(0, 0), new Position(0, 8))
+        new Range(new Position(0, 0), new Position(0, 8)),
       )
 
       // Background
@@ -65,23 +64,23 @@ describe('[Diagnostics rule] Deprecated color setting shorthand', () => {
       expect($bg.source).toBe('marp-vscode')
       expect($bg.severity).toBe(DiagnosticSeverity.Warning)
       expect($bg.range).toStrictEqual(
-        new Range(new Position(0, 0), new Position(0, 19))
+        new Range(new Position(0, 0), new Position(0, 19)),
       )
 
       // Multiple syntaxes in inline
       const [$inlineText, $inlineBg] = register(
-        doc('![](#abc)![bg](rgb(0,0,0))')
+        doc('![](#abc)![bg](rgb(0,0,0))'),
       )
 
       expect($inlineText).toBeInstanceOf(Diagnostic)
       expect($inlineText.code).toBe(rule.code)
       expect($inlineText.range).toStrictEqual(
-        new Range(new Position(0, 0), new Position(0, 9))
+        new Range(new Position(0, 0), new Position(0, 9)),
       )
       expect($inlineBg).toBeInstanceOf(Diagnostic)
       expect($inlineBg.code).toBe(rule.code)
       expect($inlineBg.range).toStrictEqual(
-        new Range(new Position(0, 9), new Position(0, 26))
+        new Range(new Position(0, 9), new Position(0, 26)),
       )
     })
   })
@@ -96,7 +95,7 @@ describe('[Diagnostics rule] Deprecated color setting shorthand', () => {
         expect.any(rule.DeprecatedColorSettingShorthand),
         {
           providedCodeActionKinds: [CodeActionKind.QuickFix],
-        }
+        },
       )
     })
   })
@@ -118,7 +117,7 @@ describe('[Diagnostics rule] Deprecated color setting shorthand', () => {
               triggerKind: CodeActionTriggerKind.Invoke,
               only: undefined,
             },
-            dummyToken
+            dummyToken,
           )
 
         expect(codeActions).toHaveLength(2)
@@ -135,7 +134,7 @@ describe('[Diagnostics rule] Deprecated color setting shorthand', () => {
         expect(textAction.edit?.replace).toHaveBeenCalledWith(
           document.uri,
           new Range(new Position(0, 0), new Position(0, 12)),
-          '<!-- _color: "#012abc" -->'
+          '<!-- _color: "#012abc" -->',
         )
 
         const bgAction: CodeAction = codeActions?.[1]
@@ -147,7 +146,7 @@ describe('[Diagnostics rule] Deprecated color setting shorthand', () => {
         expect(bgAction.edit?.replace).toHaveBeenCalledWith(
           document.uri,
           new Range(new Position(1, 0), new Position(1, 22)),
-          '<!-- _backgroundColor: "rgba(1,2,3,0.5)" -->'
+          '<!-- _backgroundColor: "rgba(1,2,3,0.5)" -->',
         )
       })
 
@@ -163,7 +162,7 @@ describe('[Diagnostics rule] Deprecated color setting shorthand', () => {
               triggerKind: CodeActionTriggerKind.Invoke,
               only: undefined,
             },
-            dummyToken
+            dummyToken,
           )
 
         expect(codeActions).toHaveLength(0)
