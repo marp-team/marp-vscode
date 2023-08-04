@@ -17,7 +17,7 @@ const marpGlobalDirectiveKeyDecoration = window.createTextEditorDecorationType({
 export function registerDecorations(subscriptions: Disposable[]) {
   subscriptions.push(
     marpDirectiveKeyDecoration,
-    marpGlobalDirectiveKeyDecoration
+    marpGlobalDirectiveKeyDecoration,
   )
 }
 
@@ -25,7 +25,7 @@ export function setDecorations(editor: TextEditor, option: DecorationOption) {
   editor.setDecorations(marpDirectiveKeyDecoration, option.directiveKeys)
   editor.setDecorations(
     marpGlobalDirectiveKeyDecoration,
-    option.globalDirectiveKeys
+    option.globalDirectiveKeys,
   )
 }
 

@@ -15,7 +15,7 @@ export default function marpVSCodeOutline(instance) {
           }),
           Object.assign(new state.Token('heading_close', '', -1), {
             hidden: true,
-          })
+          }),
         )
       }
       tokens.push(token)

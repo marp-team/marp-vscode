@@ -21,7 +21,7 @@ const doc = (text: string): TextDocument =>
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: '/test/document',
-  } as any)
+  }) as any
 
 describe('[Diagnostics rule] Overloading global directive', () => {
   const register = (doc: TextDocument): Diagnostic[] => {
@@ -44,7 +44,7 @@ describe('[Diagnostics rule] Overloading global directive', () => {
           ---
 
           <!-- theme: gaia -->
-        `)
+        `),
       )
       expect(basic).toHaveLength(1)
 
@@ -54,7 +54,7 @@ describe('[Diagnostics rule] Overloading global directive', () => {
       expect($theme.source).toBe('marp-vscode')
       expect($theme.severity).toBe(DiagnosticSeverity.Warning)
       expect($theme.range).toStrictEqual(
-        new Range(new Position(1, 0), new Position(1, 14))
+        new Range(new Position(1, 0), new Position(1, 14)),
       )
     })
 
@@ -71,7 +71,7 @@ describe('[Diagnostics rule] Overloading global directive', () => {
           -->
 
           <!-- theme: gaia -->
-        `)
+        `),
       )
       expect(multiple).toHaveLength(2)
 
@@ -81,10 +81,10 @@ describe('[Diagnostics rule] Overloading global directive', () => {
 
       const [$default, $unknown] = multiple
       expect($default.range).toStrictEqual(
-        new Range(new Position(1, 0), new Position(1, 14))
+        new Range(new Position(1, 0), new Position(1, 14)),
       )
       expect($unknown.range).toStrictEqual(
-        new Range(new Position(5, 0), new Position(6, 9))
+        new Range(new Position(5, 0), new Position(6, 9)),
       )
     })
 
@@ -100,8 +100,8 @@ describe('[Diagnostics rule] Overloading global directive', () => {
             <!--
             paginate: false
             -->
-          `)
-        )
+          `),
+        ),
       ).toHaveLength(0))
 
     it('does not add diagnostics when overloaded unknown directives', () =>
@@ -113,8 +113,8 @@ describe('[Diagnostics rule] Overloading global directive', () => {
             ---
 
             <!-- unknown: false -->
-          `)
-        )
+          `),
+        ),
       ).toHaveLength(0))
   })
 })

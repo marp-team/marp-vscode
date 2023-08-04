@@ -24,7 +24,7 @@ const doc = (text: string): TextDocument =>
     },
     uri: Uri.parse('/test/document'),
     fileName: '/test/document',
-  } as any)
+  }) as any
 
 describe('[Diagnostics rule] Unknown theme', () => {
   const register = (doc: TextDocument): Diagnostic[] => {
@@ -46,7 +46,7 @@ describe('[Diagnostics rule] Unknown theme', () => {
           theme: unknown
           test: test
           ---
-        `)
+        `),
       )
       expect(diagnostics).toHaveLength(1)
 
@@ -56,7 +56,7 @@ describe('[Diagnostics rule] Unknown theme', () => {
       expect($theme.source).toBe('marp-vscode')
       expect($theme.severity).toBe(DiagnosticSeverity.Warning)
       expect($theme.range).toStrictEqual(
-        new Range(new Position(2, 7), new Position(2, 14))
+        new Range(new Position(2, 7), new Position(2, 14)),
       )
     })
 

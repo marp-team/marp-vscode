@@ -10,7 +10,7 @@ export interface WorkspaceProxyServer {
 }
 
 export const createWorkspaceProxyServer = async (
-  workspaceFolder: WorkspaceFolder
+  workspaceFolder: WorkspaceFolder,
 ): Promise<WorkspaceProxyServer> => {
   const port = await getPortPromise({
     port: 8192 + Math.floor(Math.random() * 10000),
@@ -36,7 +36,7 @@ export const createWorkspaceProxyServer = async (
 
       if (!(fileStat.type & FileType.Directory)) {
         console.debug(
-          `[Proxy request]: ${req.url} -> ${vscodeUri.toString()} (200)`
+          `[Proxy request]: ${req.url} -> ${vscodeUri.toString()} (200)`,
         )
 
         res
@@ -50,7 +50,7 @@ export const createWorkspaceProxyServer = async (
     }
 
     console.debug(
-      `[Proxy request]: ${req.url} -> ${vscodeUri.toString()} (404)`
+      `[Proxy request]: ${req.url} -> ${vscodeUri.toString()} (404)`,
     )
     res.status(404).send('Not found')
   })

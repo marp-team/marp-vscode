@@ -44,7 +44,7 @@ describe('Workspace Proxy Server', () => {
       expect(server.port).toBeGreaterThanOrEqual(8192)
 
       const response = await fetch(
-        `http://127.0.0.1:${server.port}/test.png?query`
+        `http://127.0.0.1:${server.port}/test.png?query`,
       )
       expect(response.status).toBe(200)
       expect(await response.text()).toMatchInlineSnapshot(`"readFile"`)

@@ -59,7 +59,7 @@ describe('Auto completions', () => {
 
           const range = new Range(
             new Position(position.line, matched.index),
-            new Position(position.line, matched.index + matched[0].length)
+            new Position(position.line, matched.index + matched[0].length),
           )
 
           if (range.contains(new Position(position.line, position.character))) {
@@ -83,7 +83,7 @@ describe('Auto completions', () => {
     }
 
     const provideCompletionItems = (
-      parser: LanguageParser = new LanguageParser([])
+      parser: LanguageParser = new LanguageParser([]),
     ) => {
       const spy = jest.spyOn(languages, 'registerCompletionItemProvider')
 
@@ -94,7 +94,7 @@ describe('Auto completions', () => {
         'markdown',
         expect.objectContaining({
           provideCompletionItems: expect.any(Function),
-        })
+        }),
       )
 
       return spy.mock.calls[0][1].provideCompletionItems
@@ -107,7 +107,7 @@ describe('Auto completions', () => {
           doc,
           new Position(2, 0),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -150,7 +150,7 @@ describe('Auto completions', () => {
           doc,
           new Position(4, 5),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -190,7 +190,7 @@ describe('Auto completions', () => {
           doc,
           new Position(2, 0),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -221,7 +221,7 @@ describe('Auto completions', () => {
           doc,
           new Position(4, 0),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         expect(list).toBeUndefined()
@@ -235,7 +235,7 @@ describe('Auto completions', () => {
           doc,
           new Position(2, 7),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -260,7 +260,7 @@ describe('Auto completions', () => {
             doc,
             new Position(2, 7),
             {} as any,
-            {} as any
+            {} as any,
           )) as CompletionList
 
           const labels = list.items.map((item) => item.label).sort()
@@ -287,7 +287,7 @@ describe('Auto completions', () => {
           doc,
           new Position(2, 10),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -308,7 +308,7 @@ describe('Auto completions', () => {
           doc,
           new Position(2, 6),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -329,7 +329,7 @@ describe('Auto completions', () => {
           doc,
           new Position(2, 6),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -359,13 +359,13 @@ describe('Auto completions', () => {
 
         try {
           const doc = setDocument(
-            '---\nmarp: true\ntheme: custom-theme\nsize: \n---'
+            '---\nmarp: true\ntheme: custom-theme\nsize: \n---',
           )
           const list = (await provideCompletionItems()(
             doc,
             new Position(3, 6),
             {} as any,
-            {} as any
+            {} as any,
           )) as CompletionList
 
           const labels = list.items.map((item) => item.label).sort()
@@ -387,7 +387,7 @@ describe('Auto completions', () => {
           doc,
           new Position(3, 6),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -408,7 +408,7 @@ describe('Auto completions', () => {
           doc,
           new Position(2, 12),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()
@@ -459,7 +459,7 @@ describe('Auto completions', () => {
           doc,
           new Position(2, 13),
           {} as any,
-          {} as any
+          {} as any,
         )) as CompletionList
 
         const labels = list.items.map((item) => item.label).sort()

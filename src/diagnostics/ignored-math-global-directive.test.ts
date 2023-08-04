@@ -21,7 +21,7 @@ const doc = (text: string): TextDocument =>
       return new Position(lines.length - 1, lines.pop()!.length)
     },
     uri: '/test/document',
-  } as any)
+  }) as any
 
 const setConfiguration: (conf?: Record<string, unknown>) => void = (
   workspace as any
@@ -51,7 +51,7 @@ describe('[Diagnostics rule] Ignored math global directive', () => {
       expect(diagnostic.source).toBe('marp-vscode')
       expect(diagnostic.severity).toBe(DiagnosticSeverity.Information)
       expect(diagnostic.range).toStrictEqual(
-        new Range(new Position(0, 5), new Position(0, 9))
+        new Range(new Position(0, 5), new Position(0, 9)),
       )
     })
 
@@ -78,7 +78,7 @@ describe('[Diagnostics rule] Ignored math global directive', () => {
       rule.subscribe(subscriptions, refresh)
 
       expect(workspace.onDidChangeConfiguration).toHaveBeenCalledWith(
-        expect.any(Function)
+        expect.any(Function),
       )
 
       const [callback] = (workspace.onDidChangeConfiguration as jest.Mock).mock

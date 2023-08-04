@@ -20,7 +20,7 @@ import { LanguageParser, LanguageParseData } from './parser'
 
 const getCompletionTarget = (
   position: Position,
-  data: LanguageParseData
+  data: LanguageParseData,
 ): DirectiveDefinedIn | undefined => {
   if (data.frontMatterRange?.contains(position)) {
     return DirectiveDefinedIn.FrontMatter
@@ -44,7 +44,7 @@ export function register(subscriptions: Disposable[], parser: LanguageParser) {
         const provider = new CompletionProvider(doc, pos, data, definedIn)
         return provider.getCompletionList()
       },
-    })
+    }),
   )
 }
 
@@ -111,7 +111,7 @@ class CompletionProvider {
     private readonly document: TextDocument,
     private readonly position: Position,
     private readonly data: LanguageParseData,
-    private readonly definedIn: DirectiveDefinedIn
+    private readonly definedIn: DirectiveDefinedIn,
   ) {}
 
   getCompletionList() {
@@ -139,7 +139,7 @@ class CompletionProvider {
             label: theme.name,
             documentation: docs ? new MarkdownString(docs, true) : undefined,
           }
-        })
+        }),
       )
     }
   }
@@ -167,7 +167,7 @@ class CompletionProvider {
         {
           detail: 'MathJax',
           documentation: new MarkdownString(
-            'Use [MathJax](https://www.mathjax.org/).'
+            'Use [MathJax](https://www.mathjax.org/).',
           ),
           kind: CompletionItemKind.EnumMember,
           label: 'mathjax',
@@ -199,7 +199,7 @@ class CompletionProvider {
             documentation: `${preset.width} X ${preset.height}`,
             kind: CompletionItemKind.EnumMember,
             label: preset.name,
-          }))
+          })),
         )
       }
     }
@@ -216,7 +216,7 @@ class CompletionProvider {
         ...cliBuiltInTransitions.map((transition) => ({
           detail: 'Marp CLI built-in transition effect',
           documentation: new MarkdownString(
-            `![${transition} transition](https://raw.githubusercontent.com/marp-team/marp-cli/main/docs/bespoke-transitions/images/${transition}.gif)`
+            `![${transition} transition](https://raw.githubusercontent.com/marp-team/marp-cli/main/docs/bespoke-transitions/images/${transition}.gif)`,
           ),
           kind: CompletionItemKind.EnumMember,
           label: transition,
@@ -234,7 +234,7 @@ class CompletionProvider {
     const wordRange = this.document.getWordRangeAtPosition(this.position, /\w+/)
     const wordRangeWithColon = this.document.getWordRangeAtPosition(
       this.position,
-      /[\w:]+/
+      /[\w:]+/,
     )
 
     if (wordRange || wordRangeWithColon) {
@@ -277,7 +277,7 @@ class CompletionProvider {
             detail: `${d.type} directive${scoped ? ' [Scoped]' : ''}`,
             documentation: new MarkdownString(
               d.description + '\n\n' + d.markdownDetails.value,
-              true
+              true,
             ),
             insertText: generateInsertText(d.name),
             kind: CompletionItemKind.Property,
@@ -289,8 +289,8 @@ class CompletionProvider {
                   title: 'Trigger suggest',
                 }
               : undefined,
-          })
-        )
+          }),
+        ),
     )
   }
 

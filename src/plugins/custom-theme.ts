@@ -13,7 +13,7 @@ export default function marpVSCodeCustomTheme(instance) {
   marpit.themeSet.addTheme = (theme) => {
     if (!whileParsing && registeredThemes.includes(theme.name)) {
       throw new CustomThemeError(
-        `Custom theme cannot override "${theme.name}" built-in theme.`
+        `Custom theme cannot override "${theme.name}" built-in theme.`,
       )
     } else {
       return addTheme.call(marpit.themeSet, theme)

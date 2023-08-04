@@ -60,7 +60,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
 
 export async function createConfigFile(
   target: TextDocument,
-  opts?: Parameters<typeof marpCoreOptionForCLI>[1]
+  opts?: Parameters<typeof marpCoreOptionForCLI>[1],
 ): Promise<WorkFile> {
   const tmpFileName = `.marp-vscode-cli-conf-${nanoid()}.json`
   const tmpPath = path.join(tmpdir(), tmpFileName)
@@ -114,7 +114,7 @@ export default async function runMarpCli(
       throw new MarpCLIError(
         `It requires to install ${browsers
           .join(', ')
-          .replace(/, ([^,]*)$/, ' or $1')} for exporting.`
+          .replace(/, ([^,]*)$/, ' or $1')} for exporting.`,
       )
     }
 
@@ -125,7 +125,7 @@ export default async function runMarpCli(
 
   if (exitCode !== 0) {
     throw new MarpCLIError(
-      `Marp CLI throwed unexpected error with exit code ${exitCode}.`
+      `Marp CLI throwed unexpected error with exit code ${exitCode}.`,
     )
   }
 }

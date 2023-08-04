@@ -17,7 +17,7 @@ describe('newMarpMarkdown command', () => {
         expect.objectContaining({
           content: expect.stringMatching(/^---\nmarp: true\n---/),
           language: 'markdown',
-        })
+        }),
       )
 
       const document = await openTextDocument.mock.results[0].value

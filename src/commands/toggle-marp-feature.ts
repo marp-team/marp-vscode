@@ -19,7 +19,7 @@ export const toggle = async (editor: TextEditor) => {
       if (matched) {
         targetRange = new Range(
           new Position(line, matched[1].length),
-          new Position(line, matched[1].length + matched[2].length)
+          new Position(line, matched[1].length + matched[2].length),
         )
         toggleValue = matched[2] === 'true' ? 'false' : 'true'
       }
@@ -36,7 +36,7 @@ export const toggle = async (editor: TextEditor) => {
     })
   } else {
     await editor.edit((e) =>
-      e.insert(new Position(0, 0), '---\nmarp: true\n---\n\n')
+      e.insert(new Position(0, 0), '---\nmarp: true\n---\n\n'),
     )
   }
 }
@@ -52,13 +52,13 @@ export default async function toggleMarpFeature() {
     } else {
       const acted = await window.showWarningMessage(
         'A current document is not Markdown document. Do you want to continue by changing language?',
-        ITEM_CONTINUE_BY_CHANGING_LANGUAGE
+        ITEM_CONTINUE_BY_CHANGING_LANGUAGE,
       )
 
       if (acted === ITEM_CONTINUE_BY_CHANGING_LANGUAGE) {
         await languages.setTextDocumentLanguage(
           activeEditor.document,
-          'markdown'
+          'markdown',
         )
         await toggle(activeEditor)
       }

@@ -11,7 +11,7 @@ const availableCommands: (QuickPickItem & { [cmdSymbol]: string })[] = []
 
 for (const cmdPath of contributedCommands) {
   const cmd = pkg.contributes.commands.find(
-    ({ command }) => cmdPath === command
+    ({ command }) => cmdPath === command,
   )
 
   if (cmd) {
@@ -40,12 +40,12 @@ export default async function showQuickPick() {
     availableCommands.map((cmd) =>
       isTrustedCommand(cmd[cmdSymbol])
         ? cmd
-        : { ...cmd, description: `${cmd.description} $(shield)` }
+        : { ...cmd, description: `${cmd.description} $(shield)` },
     ),
     {
       matchOnDescription: true,
       placeHolder: 'Select available command in Marp for VS Code...',
-    }
+    },
   )
 
   if (command?.[cmdSymbol]) {

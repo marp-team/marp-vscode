@@ -26,7 +26,7 @@ const mdDocMock = (text: string): TextDocument =>
     languageId: 'markdown',
     uri: '/markdown',
     positionAt: (idx: number) => new Position(0, idx),
-  } as any)
+  }) as any
 
 describe('Diagnostics', () => {
   describe('#subscribe', () => {
@@ -40,14 +40,14 @@ describe('Diagnostics', () => {
       // Actions
       expect(defineMathGlobalDirective.subscribe).toHaveBeenCalledWith(
         subscriptions,
-        expect.any(Function)
+        expect.any(Function),
       )
       expect(deprecatedDollarPrefix.subscribe).toHaveBeenCalledWith(
-        subscriptions
+        subscriptions,
       )
       expect(ignoredMathGlobalDirective.subscribe).toHaveBeenCalledWith(
         subscriptions,
-        expect.any(Function)
+        expect.any(Function),
       )
     })
 
@@ -88,22 +88,22 @@ describe('Diagnostics', () => {
       // Rules
       expect(defineMathGlobalDirective.register).toHaveBeenCalledWith(
         parser,
-        arr
+        arr,
       )
       expect(deprecatedDollarPrefix.register).toHaveBeenCalledWith(
         doc,
         parser,
-        arr
+        arr,
       )
       expect(ignoredMathGlobalDirective.register).toHaveBeenCalledWith(
         doc,
         parser,
-        arr
+        arr,
       )
       expect(overloadingGlobalDirective.register).toHaveBeenCalledWith(
         doc,
         parser,
-        arr
+        arr,
       )
       expect(unknownTheme.register).toHaveBeenCalledWith(doc, parser, arr)
     })

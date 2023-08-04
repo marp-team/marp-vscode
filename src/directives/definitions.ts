@@ -50,7 +50,7 @@ export type DirectiveInfo = GlobalDirectiveInfo | LocalDirectiveInfo
 export const createDirectiveInfo = (
   info:
     | Omit<GlobalDirectiveInfo, 'markdownDescription' | 'markdownDetails'>
-    | Omit<LocalDirectiveInfo, 'markdownDescription' | 'markdownDetails'>
+    | Omit<LocalDirectiveInfo, 'markdownDescription' | 'markdownDetails'>,
 ): Readonly<DirectiveInfo> => {
   const directiveText = `\`${info.name}\` [${
     info.type
@@ -67,7 +67,7 @@ export const createDirectiveInfo = (
     markdownDetails: new MarkdownString(mdDetails),
     markdownDescription: new MarkdownString(
       [directiveText, info.description, mdDetails].join('\n\n---\n\n'),
-      true
+      true,
     ),
   })
 }

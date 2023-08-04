@@ -64,17 +64,17 @@ const forceUpgradeCustomElements = (target: Element) => {
 
     console.debug(
       '[marp-vscode] Custom element has been upgraded forcibly:',
-      outerHTML.slice(0, outerHTML.indexOf('>') + 1 || undefined)
+      outerHTML.slice(0, outerHTML.indexOf('>') + 1 || undefined),
     )
   })
 }
 
 const removeStyles = () => {
   const styles = document.querySelectorAll<HTMLStyleElement>(
-    'style:not(#__marp-vscode-style,#_defaultStyles,[data-marp-vscode-body])'
+    'style:not(#__marp-vscode-style,#_defaultStyles,[data-marp-vscode-body])',
   )
   const links = document.querySelectorAll<HTMLLinkElement>(
-    'link[rel="stylesheet"][href]:not([href*="marp-vscode"])'
+    'link[rel="stylesheet"][href]:not([href*="marp-vscode"])',
   )
 
   styles.forEach((elm) => {
@@ -93,10 +93,10 @@ const removeStyles = () => {
 
 const restoreStyles = () => {
   const styles = document.querySelectorAll<HTMLStyleElement>(
-    'style[data-marp-vscode-body]'
+    'style[data-marp-vscode-body]',
   )
   const links = document.querySelectorAll<HTMLLinkElement>(
-    'link[data-marp-vscode-href]'
+    'link[data-marp-vscode-href]',
   )
 
   styles.forEach((elm) => {

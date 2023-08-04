@@ -65,7 +65,7 @@ export function subscribe(subscriptions: Disposable[]) {
   subscriptions.push(
     window.onDidChangeActiveTextEditor((e) => e && refresh(e.document)),
     workspace.onDidChangeTextDocument((e) => refresh(e.document)),
-    workspace.onDidCloseTextDocument((d) => collection.delete(d.uri))
+    workspace.onDidCloseTextDocument((d) => collection.delete(d.uri)),
   )
 }
 

@@ -67,9 +67,9 @@ export function extendMarkdownIt(md: any) {
         themes.loadStyles(baseFolder).map((p) =>
           p.then(
             (theme) => theme.registered,
-            (e) => console.error(e)
-          )
-        )
+            (e) => console.error(e),
+          ),
+        ),
       ).then((registered) => {
         if (registered.some((f) => f === true)) {
           commands.executeCommand('markdown.preview.refresh')
@@ -83,7 +83,7 @@ export function extendMarkdownIt(md: any) {
           const msg = e instanceof Error ? ` (${e.message})` : ''
 
           console.error(
-            `Failed to register custom theme from "${theme.path}".${msg}`
+            `Failed to register custom theme from "${theme.path}".${msg}`,
           )
         }
       }
@@ -131,12 +131,12 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
     commands.registerCommand(newMarpMarkdown.command, newMarpMarkdown.default),
     commands.registerCommand(
       openExtensionSettings.command,
-      openExtensionSettings.default
+      openExtensionSettings.default,
     ),
     commands.registerCommand(showQuickPick.command, showQuickPick.default),
     commands.registerCommand(
       toggleMarpFeature.command,
-      toggleMarpFeature.default
+      toggleMarpFeature.default,
     ),
     themes,
     workspace.onDidChangeConfiguration((e) => {
@@ -144,7 +144,7 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
         applyRefreshedConfiguration()
       }
     }),
-    workspace.onDidGrantWorkspaceTrust(applyRefreshedConfiguration)
+    workspace.onDidGrantWorkspaceTrust(applyRefreshedConfiguration),
   )
 
   return { extendMarkdownIt }

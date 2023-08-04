@@ -25,7 +25,7 @@ describe('Option', () => {
 
       const custom = await subject(
         { uri: untitledUri },
-        { allowLocalFiles: false, pdfNotes: true }
+        { allowLocalFiles: false, pdfNotes: true },
       )
 
       expect(custom.allowLocalFiles).toBe(false)
@@ -43,12 +43,12 @@ describe('Option', () => {
     it('enables breaks in markdown conversion by preference', async () => {
       setConfiguration({ 'markdown.marp.breaks': 'on' })
       expect(
-        (await subject({ uri: untitledUri })).options.markdown.breaks
+        (await subject({ uri: untitledUri })).options.markdown.breaks,
       ).toBe(true)
 
       setConfiguration({ 'markdown.marp.breaks': 'off' })
       expect(
-        (await subject({ uri: untitledUri })).options.markdown.breaks
+        (await subject({ uri: untitledUri })).options.markdown.breaks,
       ).toBe(false)
 
       // inherit option (markdown.preview.breaks)
@@ -57,7 +57,7 @@ describe('Option', () => {
         'markdown.preview.breaks': true,
       })
       expect(
-        (await subject({ uri: untitledUri })).options.markdown.breaks
+        (await subject({ uri: untitledUri })).options.markdown.breaks,
       ).toBe(true)
 
       setConfiguration({
@@ -65,23 +65,23 @@ describe('Option', () => {
         'markdown.preview.breaks': false,
       })
       expect(
-        (await subject({ uri: untitledUri })).options.markdown.breaks
+        (await subject({ uri: untitledUri })).options.markdown.breaks,
       ).toBe(false)
     })
 
     it('enables typographer by preference', async () => {
       expect(
-        (await subject({ uri: untitledUri })).options.markdown.typographer
+        (await subject({ uri: untitledUri })).options.markdown.typographer,
       ).toBeUndefined()
 
       setConfiguration({ 'markdown.preview.typographer': true })
       expect(
-        (await subject({ uri: untitledUri })).options.markdown.typographer
+        (await subject({ uri: untitledUri })).options.markdown.typographer,
       ).toBe(true)
 
       setConfiguration({ 'markdown.preview.typographer': false })
       expect(
-        (await subject({ uri: untitledUri })).options.markdown.typographer
+        (await subject({ uri: untitledUri })).options.markdown.typographer,
       ).toBe(false)
     })
 
@@ -149,7 +149,7 @@ describe('Option', () => {
           expect(themeSet).toHaveLength(1)
           expect(workspace.fs.writeFile).toHaveBeenCalledWith(
             expect.objectContaining({ fsPath: themeSet[0] }),
-            textEncoder.encode(css)
+            textEncoder.encode(css),
           )
         } finally {
           await Promise.all(vscode.themeFiles.map((w) => w.cleanup()))

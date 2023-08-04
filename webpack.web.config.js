@@ -18,7 +18,7 @@ module.exports = (env) => {
         ...(conf.resolve.alias || {}),
         [path.resolve(__dirname, './src/commands/export')]: path.resolve(
           __dirname,
-          './src/web/commands/export'
+          './src/web/commands/export',
         ),
         'abort-controller$': require.resolve('abort-controller/browser.mjs'),
       },

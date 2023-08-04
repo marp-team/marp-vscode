@@ -52,7 +52,7 @@ const pdfOutlines = () => {
 }
 
 export const marpCoreOptionForPreview = (
-  baseOption: Options & MarpOptions
+  baseOption: Options & MarpOptions,
 ): MarpOptions => {
   if (!cachedPreviewOption) {
     cachedPreviewOption = {
@@ -79,7 +79,7 @@ export const marpCoreOptionForCLI = async (
   {
     allowLocalFiles = true,
     pdfNotes,
-  }: { allowLocalFiles?: boolean; pdfNotes?: boolean } = {}
+  }: { allowLocalFiles?: boolean; pdfNotes?: boolean } = {},
 ) => {
   const confMdPreview = workspace.getConfiguration('markdown.preview', uri)
 
@@ -130,9 +130,9 @@ export const marpCoreOptionForCLI = async (
               return { path: tmp, cleanup: () => unlink(tmpUri) }
             }
           },
-          (e) => console.error(e)
-        )
-      )
+          (e) => console.error(e),
+        ),
+      ),
     )
   ).filter((w): w is WorkFile => !!w)
 

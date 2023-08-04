@@ -12,6 +12,6 @@ export default async function newMarpMarkdown() {
 
   editor.selection = new Selection(
     newDocument.positionAt(20),
-    newDocument.positionAt(20)
+    newDocument.positionAt(20),
   )
 }

@@ -44,7 +44,7 @@ describe('Marp CLI integration', () => {
 
     try {
       await expect(runMarpCli(['--version'])).rejects.toThrow(
-        marpCli.MarpCLIError
+        marpCli.MarpCLIError,
       )
     } finally {
       marpCliMock.mockRestore()
@@ -71,8 +71,8 @@ describe('Marp CLI integration', () => {
           .mockRejectedValue(
             new marpCliModule.CLIError(
               'mocked error',
-              marpCliModule.CLIErrorCode.NOT_FOUND_CHROMIUM
-            )
+              marpCliModule.CLIErrorCode.NOT_FOUND_CHROMIUM,
+            ),
           )
 
         try {
@@ -85,7 +85,7 @@ describe('Marp CLI integration', () => {
       } finally {
         Object.defineProperty(process, 'platform', { value: originalPlatform })
       }
-    }
+    },
   )
 
   describe('with markdown.marp.chromePath preference', () => {
@@ -136,18 +136,18 @@ describe('#createWorkFile', () => {
     } as any)
 
     expect(
-      workFile.path.startsWith(path.join('/tmp', '.marp-vscode-tmp'))
+      workFile.path.startsWith(path.join('/tmp', '.marp-vscode-tmp')),
     ).toBe(true)
 
     expect(workspace.fs.writeFile).toHaveBeenCalledWith(
       expect.objectContaining({ fsPath: workFile.path }),
-      textEncoder.encode('example')
+      textEncoder.encode('example'),
     )
 
     await workFile.cleanup()
     expect(workspace.fs.delete).toHaveBeenCalledWith(
       expect.objectContaining({ fsPath: workFile.path }),
-      expect.any(Object)
+      expect.any(Object),
     )
   })
 
@@ -171,7 +171,7 @@ describe('#createWorkFile', () => {
       } as any)
 
       expect(
-        workFile.path.startsWith(path.join('/workspace', '.marp-vscode-tmp'))
+        workFile.path.startsWith(path.join('/workspace', '.marp-vscode-tmp')),
       ).toBe(true)
     } finally {
       writeFileMock.mockRestore()

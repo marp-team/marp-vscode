@@ -28,7 +28,7 @@ export const code = 'deprecated-dollar-prefix'
 export function register(
   doc: TextDocument,
   directiveParser: DirectiveParser,
-  diagnostics: Diagnostic[]
+  diagnostics: Diagnostic[],
 ) {
   directiveParser.on('directive', ({ item, offset }) => {
     if (warnDirectives.includes(item.key.value) && item.key.range) {
@@ -38,7 +38,7 @@ export function register(
       const diagnostic = new Diagnostic(
         new Range(doc.positionAt(start + offset), doc.positionAt(end + offset)),
         `Dollar prefix for ${name} global directive is no longer working. Remove "$" to fix.`,
-        DiagnosticSeverity.Error
+        DiagnosticSeverity.Error,
       )
 
       diagnostic.source = 'marp-vscode'
@@ -56,7 +56,7 @@ export class RemoveDollarPrefix implements CodeActionProvider {
   readonly provideCodeActions: CodeActionProvider['provideCodeActions'] = (
     doc,
     _,
-    context
+    context,
   ) =>
     context.diagnostics
       .filter((d) => d.source === 'marp-vscode' && d.code === code)
@@ -65,14 +65,14 @@ export class RemoveDollarPrefix implements CodeActionProvider {
   private createCodeAction(diag: Diagnostic, doc: TextDocument): CodeAction {
     const act = new CodeAction(
       'Remove dollar prefix from global directive',
-      CodeActionKind.QuickFix
+      CodeActionKind.QuickFix,
     )
 
     act.diagnostics = [diag]
     act.edit = new WorkspaceEdit()
     act.edit.delete(
       doc.uri,
-      new Range(diag.range.start, diag.range.start.translate(0, 1))
+      new Range(diag.range.start, diag.range.start.translate(0, 1)),
     )
     act.isPreferred = true
 
@@ -87,7 +87,7 @@ export function subscribe(subscriptions: Disposable[]) {
       new RemoveDollarPrefix(),
       {
         providedCodeActionKinds: RemoveDollarPrefix.providedCodeActionKinds,
-      }
-    )
+      },
+    ),
   )
 }
