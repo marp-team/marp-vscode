@@ -88,8 +88,9 @@ export function extendMarkdownIt(md: any) {
         }
       }
 
-      // Use image stabilizer and link normalizer from VS Code
+      // Use image stabilizer, link renderer and link normalizer from VS Code
       marp.markdown.renderer.rules.image = md.renderer.rules.image
+      marp.markdown.renderer.rules.link_open = md.renderer.rules.link_open
       marp.markdown.normalizeLink = md.normalizeLink
 
       // validateLink prefers Marp's default. If overridden by VS Code's it,
