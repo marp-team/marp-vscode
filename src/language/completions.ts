@@ -117,7 +117,7 @@ class CompletionProvider {
   getCompletionList() {
     return (
       this.completionThemes() ||
-      this.completionBoolean() ||
+      this.completionPaginate() ||
       this.completionMath() ||
       this.completionSizePreset() ||
       this.completionBuiltInTransitions() ||
@@ -144,18 +144,33 @@ class CompletionProvider {
     }
   }
 
-  private completionBoolean() {
+  private completionPaginate() {
     if (this.isCursorOnDirective('paginate', DirectiveType.Local)) {
       return new CompletionList([
         {
-          detail: 'Boolean',
+          detail: 'Keyword for paginate directive',
           kind: CompletionItemKind.EnumMember,
           label: 'true',
+          documentation: 'Show the page number.',
         },
         {
-          detail: 'Boolean',
+          detail: 'Keyword for paginate directive',
           kind: CompletionItemKind.EnumMember,
           label: 'false',
+          documentation: 'Hide the page number.',
+        },
+        {
+          detail: 'Keyword for paginate directive',
+          kind: CompletionItemKind.EnumMember,
+          label: 'skip',
+          documentation: 'Hide the page number and prevent its increment.',
+        },
+        {
+          detail: 'Keyword for paginate directive',
+          kind: CompletionItemKind.EnumMember,
+          label: 'hold',
+          documentation:
+            'Show the page number, but prevent increment even on the following page(s).',
         },
       ])
     }

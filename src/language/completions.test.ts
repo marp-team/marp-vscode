@@ -279,8 +279,8 @@ describe('Auto completions', () => {
       })
     })
 
-    describe('Boolean suggestion', () => {
-      it('suggests boolean values when the cursor is on paginate directive', async () => {
+    describe('Paginate directive suggestion', () => {
+      it('suggests acceptable values for paginate directive when the cursor is on the directive', async () => {
         const doc = setDocument('---\nmarp: true\npaginate: \n---')
         const list = (await provideCompletionItems()(
           doc,
@@ -294,6 +294,8 @@ describe('Auto completions', () => {
         expect(labels).toMatchInlineSnapshot(`
           [
             "false",
+            "hold",
+            "skip",
             "true",
           ]
         `)
