@@ -8,6 +8,10 @@
   - Support `paginate: skip` and `paginate: hold` from Marpit framework [v2.5.0](https://github.com/marp-team/marpit/releases/v2.5.0)
 - Upgrade Marp CLI to [v3.2.0](https://github.com/marp-team/marp-cli/releases/tag/v3.2.0) ([#427](https://github.com/marp-team/marp-vscode/pull/427))
 
+### Fixed
+
+- Apply VS Code's link renderer when rendering Markdown in preview ([#428](https://github.com/marp-team/marp-vscode/pull/428))
+
 ## v2.6.0 - 2023-04-16
 
 ### Added
