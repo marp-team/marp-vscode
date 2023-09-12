@@ -277,7 +277,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
-    "@marp-team/marp-core": "^3.8.0",
+    "@marp-team/marp-core": "^3.8.1",
     "@types/color-string": "^1.5.2",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.3",
