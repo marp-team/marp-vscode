@@ -99,6 +99,13 @@ jobs:
     steps:
       - test
 
+  unit-electron25:
+    executor:
+      name: node
+      version: '18.15.0'
+    steps:
+      - test
+
 workflows:
   test:
     jobs:
@@ -107,5 +114,8 @@ workflows:
           requires:
             - audit
       - unit-electron22:
+          requires:
+            - audit
+      - unit-electron25:
           requires:
             - audit
