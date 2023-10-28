@@ -5,6 +5,10 @@
 ### Changed
 
 - Upgrade Node.js to v18 LTS ([#437](https://github.com/marp-team/marp-vscode/pull/437))
+- Upgrade Marp Core to [v3.9.0](https://github.com/marp-team/marp-core/releases/tag/v3.9.0) ([#440](https://github.com/marp-team/marp-vscode/pull/440))
+  - Added `lang` global directive
+  - Enabled [CSS container query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_container_queries) support for child elements of `section` element by default
+- Upgrade Marp CLI to [v3.4.0](https://github.com/marp-team/marp-cli/releases/tag/v3.4.0) ([#444](https://github.com/marp-team/marp-vscode/pull/444))
 
 ## v2.7.0 - 2023-08-04
 
