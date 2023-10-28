@@ -11,6 +11,10 @@
 - Upgrade Marp CLI to [v3.4.0](https://github.com/marp-team/marp-cli/releases/tag/v3.4.0) ([#444](https://github.com/marp-team/marp-vscode/pull/444))
 - Upgrade dependent packages to the latest version ([#445](https://github.com/marp-team/marp-vscode/pull/445))
 
+### Added
+
+- IntelliSense definition for `lang` global directive ([#430](https://github.com/marp-team/marp-vscode/issues/430), [#446](https://github.com/marp-team/marp-vscode/pull/446))
+
 ### Fixed
 
 - Disappeared inline elements with `position: relative` that are the direct children of the slide ([#442](https://github.com/marp-team/marp-vscode/issues/442), [#443](https://github.com/marp-team/marp-vscode/pull/443))
