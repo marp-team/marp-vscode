@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Node.js to v18 LTS ([#437](https://github.com/marp-team/marp-vscode/pull/437))
+
 ## v2.7.0 - 2023-08-04
 
 ### Changed
