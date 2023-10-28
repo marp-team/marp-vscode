@@ -3,6 +3,8 @@ const esModules = [
   'character-entities',
   'comma-separated-tokens',
   'decode-named-character-reference',
+  'devlop',
+  'hast-util-from-html',
   'hast-util-from-parse5',
   'hast-util-parse-selector',
   'hastscript',

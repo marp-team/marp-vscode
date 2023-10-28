@@ -1,9 +1,11 @@
 import { EventEmitter } from 'events'
 import rehypeParse from 'rehype-parse'
+import type { Root as RehypeRoot } from 'rehype-parse/lib'
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
+import type { Root as RemarkRoot } from 'remark-parse/lib'
 import TypedEmitter from 'typed-emitter'
-import { unified } from 'unified'
+import { Processor, unified } from 'unified'
 import { visit } from 'unist-util-visit'
 import { Range, TextDocument } from 'vscode'
 import yaml, { Pair, Scalar, YAMLMap } from 'yaml'
@@ -22,8 +24,16 @@ export {
   type DirectiveInfo,
 } from './definitions'
 
-const parseHtml = unified().use(rehypeParse).parse
-const parseMd = unified().use(remarkParse).use(remarkMath).parse
+const parseHtml: Processor<RehypeRoot>['parse'] = (...args) => {
+  const parser = unified().use(rehypeParse)
+  return parser.parse(...args)
+}
+
+const parseMd: Processor<RemarkRoot>['parse'] = (...args) => {
+  const parser = unified().use(remarkParse).use(remarkMath)
+  return parser.parse(...args)
+}
+
 const parseYaml = (yamlBody: string) =>
   yaml.parseDocument(yamlBody, { schema: 'failsafe' })
 
