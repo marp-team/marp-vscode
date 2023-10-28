@@ -9,6 +9,7 @@
   - Added `lang` global directive
   - Enabled [CSS container query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_container_queries) support for child elements of `section` element by default
 - Upgrade Marp CLI to [v3.4.0](https://github.com/marp-team/marp-cli/releases/tag/v3.4.0) ([#444](https://github.com/marp-team/marp-vscode/pull/444))
+- Upgrade dependent packages to the latest version ([#445](https://github.com/marp-team/marp-vscode/pull/445))
 
 ## v2.7.0 - 2023-08-04
 
