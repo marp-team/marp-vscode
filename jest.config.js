@@ -42,6 +42,7 @@ module.exports = {
   coveragePathIgnorePatterns: ['/node_modules/', '.*\\.d\\.ts'],
   coverageThreshold: { global: { lines: 95 } },
   preset: 'ts-jest/presets/js-with-babel',
+  prettierPath: null,
   setupFiles: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'node',
   transformIgnorePatterns: [`/node_modules/(?!${esModules.join('|')})`],
