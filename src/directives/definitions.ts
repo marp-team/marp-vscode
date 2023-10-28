@@ -98,6 +98,13 @@ export const builtinDirectives = [
     completable: true,
   }),
   createDirectiveInfo({
+    name: 'lang',
+    description: 'Set the `lang` attribute of the entire slide deck.',
+    allowed: directiveAlwaysAllowed,
+    providedBy: DirectiveProvidedBy.Marpit,
+    type: DirectiveType.Global,
+  }),
+  createDirectiveInfo({
     name: 'style',
     description: dedent(`
       Specify CSS for tweaking theme.

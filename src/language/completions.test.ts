@@ -112,32 +112,33 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          [
-            "author",
-            "backgroundColor",
-            "backgroundImage",
-            "backgroundPosition",
-            "backgroundRepeat",
-            "backgroundSize",
-            "class",
-            "color",
-            "description",
-            "footer",
-            "header",
-            "headingDivider",
-            "image",
-            "keywords",
-            "marp",
-            "math",
-            "paginate",
-            "size",
-            "style",
-            "theme",
-            "title",
-            "transition",
-            "url",
-          ]
-        `)
+[
+  "author",
+  "backgroundColor",
+  "backgroundImage",
+  "backgroundPosition",
+  "backgroundRepeat",
+  "backgroundSize",
+  "class",
+  "color",
+  "description",
+  "footer",
+  "header",
+  "headingDivider",
+  "image",
+  "keywords",
+  "lang",
+  "marp",
+  "math",
+  "paginate",
+  "size",
+  "style",
+  "theme",
+  "title",
+  "transition",
+  "url",
+]
+`)
 
         // The insert text has semicolon
         expect(list.items[0].insertText).toBe(`${list.items[0].label}: `)
@@ -155,31 +156,32 @@ describe('Auto completions', () => {
         const labels = list.items.map((item) => item.label).sort()
 
         expect(labels).toMatchInlineSnapshot(`
-          [
-            "author",
-            "backgroundColor",
-            "backgroundImage",
-            "backgroundPosition",
-            "backgroundRepeat",
-            "backgroundSize",
-            "class",
-            "color",
-            "description",
-            "footer",
-            "header",
-            "headingDivider",
-            "image",
-            "keywords",
-            "math",
-            "paginate",
-            "size",
-            "style",
-            "theme",
-            "title",
-            "transition",
-            "url",
-          ]
-        `)
+[
+  "author",
+  "backgroundColor",
+  "backgroundImage",
+  "backgroundPosition",
+  "backgroundRepeat",
+  "backgroundSize",
+  "class",
+  "color",
+  "description",
+  "footer",
+  "header",
+  "headingDivider",
+  "image",
+  "keywords",
+  "lang",
+  "math",
+  "paginate",
+  "size",
+  "style",
+  "theme",
+  "title",
+  "transition",
+  "url",
+]
+`)
         expect(labels).not.toContain('marp')
       })
 
