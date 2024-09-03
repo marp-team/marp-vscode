@@ -60,7 +60,7 @@ jobs:
         id: vsce-prerelease
         run: echo "prerelease=$(cat package.json | jq '.vsce.preRelease')" >> $GITHUB_OUTPUT
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: vsix
           path: ~/vsix
