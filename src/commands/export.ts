@@ -144,8 +144,12 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
           baseUrl,
         })
 
+        const shouldOpen = marpConfiguration().get<boolean>('exportAutoOpen')!
+
         if (outputToLocalFS) {
-          env.openExternal(uri)
+          if (shouldOpen) {
+            env.openExternal(uri)
+          }
         } else {
           const outputUri = Uri.file(outputPath)
 
