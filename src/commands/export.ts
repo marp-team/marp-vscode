@@ -49,6 +49,7 @@ export const ITEM_CONTINUE_TO_EXPORT = 'Continue to export...'
 export const ITEM_MANAGE_WORKSPACE_TRUST = 'Manage Workspace Trust...'
 
 export const command = 'markdown.marp.export'
+export const commandQuick = 'markdown.marp.exportQuick'
 
 const chromiumRequiredExtensions = [
   ...extensions.pdf,
@@ -57,7 +58,7 @@ const chromiumRequiredExtensions = [
   ...extensions.jpeg,
 ] as string[]
 
-export const doExport = async (uri: Uri, document: TextDocument) => {
+export async function doExport(uri: Uri, document: TextDocument) {
   let proxyServer: WorkspaceProxyServer | undefined
   let baseUrl: string | undefined
 
@@ -246,5 +247,57 @@ export default async function exportCommand() {
         await saveDialog(activeEditor.document)
       }
     }
+  }
+}
+
+export const quickExportCommand = async() => {
+  const activeEditor = window.activeTextEditor
+
+  if (activeEditor) {
+    if (activeEditor.document.languageId === 'markdown') {
+      await quickExport(activeEditor.document)
+    } else {
+      const acted = await window.showWarningMessage(
+        'A current document is not Markdown document.',
+        ITEM_CONTINUE_TO_EXPORT,
+      )
+
+      if (acted === ITEM_CONTINUE_TO_EXPORT) {
+        await quickExport(activeEditor.document)
+      }
+    }
+  }
+}
+
+export const quickExport = async (document: TextDocument) => {
+  const baseTypes = Object.keys(Types)
+  const types = [...new Set<string>([...baseTypes])]
+
+  // Ask the user on which type we should export. 
+  const selectedType = await window.showQuickPick(types, {
+    placeHolder: 'Please choose an export type',
+    canPickMany: false,
+  })
+
+  if (selectedType) {
+    const { fsPath } = document.uri
+
+    const saveURI = Uri.file(
+      (document.isUntitled
+        ? 'untitled'
+        : fsPath.slice(0, -path.extname(fsPath).length)) + "." + selectedType,
+    )
+
+    if (saveURI) {
+      await window.withProgress(
+        {
+          location: ProgressLocation.Notification,
+          title: `Exporting Marp slide deck to ${saveURI.toString()}...`,
+        },
+        () => doExport(saveURI, document),
+      )
+    }
+  } else {
+    window.showWarningMessage('No export type selected')
   }
 }
