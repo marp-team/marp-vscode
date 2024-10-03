@@ -129,7 +129,7 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
 
   subscriptions.push(
     commands.registerCommand(exportCommand.command, exportCommand.default),
-    commands.registerCommand(newMarpMarkdown.command, newMarpMarkdown.default),
+    commands.registerCommand(exportCommand.commandQuick, exportCommand.quickExportCommand),
     commands.registerCommand(
       openExtensionSettings.command,
       openExtensionSettings.default,
