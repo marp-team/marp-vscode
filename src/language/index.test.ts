@@ -11,9 +11,10 @@ describe('Language extension', () => {
       const subscriptions: any[] = []
       register(subscriptions)
 
-      const langParser: LanguageParser = subscriptions.find(
-        (subscribed) => subscribed instanceof LanguageParser,
-      )
+      const langParser = subscriptions.find(
+        (subscribed): subscribed is LanguageParser =>
+          subscribed instanceof LanguageParser,
+      )!
       expect(langParser).toBeInstanceOf(LanguageParser)
 
       return langParser

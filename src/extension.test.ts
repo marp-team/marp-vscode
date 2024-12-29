@@ -1,5 +1,4 @@
 /** @jest-environment jsdom */
-/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path'
 import { TextEncoder } from 'util'
 import { Marp } from '@marp-team/marp-core'
@@ -17,8 +16,9 @@ const extension = (): typeof import('./extension') => {
   let ext
 
   jest.isolateModules(() => {
-    ext = require('./extension') // Shut up cache
-    themes = require('./themes').default
+    // Shut up cache
+    ext = require('./extension') // eslint-disable-line @typescript-eslint/no-require-imports
+    themes = require('./themes').default // eslint-disable-line @typescript-eslint/no-require-imports
   })
 
   return ext
