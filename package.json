@@ -33,7 +33,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.72.0"
+    "vscode": "^1.86.0"
   },
   "main": "./lib/extension.js",
   "browser": "./dist/extension.js",
@@ -43,11 +43,7 @@
     "theme": "light"
   },
   "activationEvents": [
-    "onLanguage:markdown",
-    "onCommand:markdown.marp.export",
-    "onCommand:markdown.marp.newMarpMarkdown",
-    "onCommand:markdown.marp.showQuickPick",
-    "onCommand:markdown.marp.toggleMarpFeature"
+    "onLanguage:markdown"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
