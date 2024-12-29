@@ -178,25 +178,25 @@ describe('#extendMarkdownIt', () => {
     })
 
     describe('markdown.marp.enableHtml', () => {
-      it('does not render HTML elements when disabled', () => {
+      it('does not render not allowed HTML elements when disabled', () => {
         setConfiguration({ 'markdown.marp.enableHtml': false })
 
-        const html = md().render(marpMd('<b>Hi</b>'))
-        expect(html).not.toContain('<b>Hi</b>')
+        const html = md().render(marpMd('<script>console.log("Hi")</script>'))
+        expect(html).not.toContain('<script>console.log("Hi")</script>')
       })
 
-      it("allows Marp Core's whitelisted HTML elements when disabled", () => {
+      it("allows Marp Core's allowed HTML elements even if disabled", () => {
         setConfiguration({ 'markdown.marp.enableHtml': false })
 
         const html = md().render(marpMd('line<br>break'))
         expect(html).toContain('line<br />break')
       })
 
-      it('renders HTML elements when enabled', () => {
+      it('renders not allowed HTML elements when enabled', () => {
         setConfiguration({ 'markdown.marp.enableHtml': true })
 
-        const html = md().render(marpMd('<b>Hi</b>'))
-        expect(html).toContain('<b>Hi</b>')
+        const html = md().render(marpMd('<script>console.log("Hi")</script>'))
+        expect(html).toContain('<script>console.log("Hi")</script>')
       })
 
       describe('when the current workspace is untrusted', () => {
@@ -210,11 +210,11 @@ describe('#extendMarkdownIt', () => {
 
         afterEach(() => isTrustedMock?.mockRestore())
 
-        it('does not render HTML elements even if enabled', () => {
+        it('does not render not allowed HTML elements even if enabled', () => {
           setConfiguration({ 'markdown.marp.enableHtml': true })
 
-          const html = md().render(marpMd('<b>Hi</b>'))
-          expect(html).not.toContain('<b>Hi</b>')
+          const html = md().render(marpMd('<script>console.log("Hi")</script>'))
+          expect(html).not.toContain('<script>console.log("Hi")</script>')
         })
       })
     })
