@@ -45,7 +45,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: ${{ steps.vsix.outputs.name }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: vsix
           path: ${{ steps.vsix.outputs.name }}
@@ -60,7 +60,7 @@ jobs:
         id: vsce-prerelease
         run: echo "prerelease=$(cat package.json | jq '.vsce.preRelease')" >> $GITHUB_OUTPUT
 
-      - uses: actions/download-artifact@v4.1.7
+      - uses: actions/download-artifact@v4
         with:
           name: vsix
           path: ~/vsix
