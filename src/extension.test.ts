@@ -5,7 +5,7 @@ import { Marp } from '@marp-team/marp-core'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
 import * as nodeFetch from 'node-fetch'
-import { Memento, Uri, commands, workspace, env } from 'vscode'
+import { Memento, Uri, commands, window, workspace, env } from 'vscode'
 
 jest.mock('node-fetch')
 jest.mock('vscode')
@@ -177,23 +177,37 @@ describe('#extendMarkdownIt', () => {
       })
     })
 
-    describe('markdown.marp.enableHtml', () => {
-      it('does not render not allowed HTML elements when disabled', () => {
-        setConfiguration({ 'markdown.marp.enableHtml': false })
+    describe('markdown.marp.html', () => {
+      it('does not render not allowed HTML elements when the setting is "off"', () => {
+        setConfiguration({ 'markdown.marp.html': 'off' })
 
         const html = md().render(marpMd('<script>console.log("Hi")</script>'))
         expect(html).not.toContain('<script>console.log("Hi")</script>')
       })
 
-      it("allows Marp Core's allowed HTML elements even if disabled", () => {
-        setConfiguration({ 'markdown.marp.enableHtml': false })
+      it(`does not render Marp Core allowed HTML elements when the setting is "off"`, () => {
+        setConfiguration({ 'markdown.marp.html': 'off' })
+
+        const html = md().render(marpMd('line<br>break'))
+        expect(html).not.toContain('line<br />break')
+      })
+
+      it('does not render not allowed HTML elements when the setting is "default"', () => {
+        setConfiguration({ 'markdown.marp.html': 'default' })
+
+        const html = md().render(marpMd('<script>console.log("Hi")</script>'))
+        expect(html).not.toContain('<script>console.log("Hi")</script>')
+      })
+
+      it(`allows Marp Core's allowed HTML elements even if the setting is "default"`, () => {
+        setConfiguration({ 'markdown.marp.html': 'default' })
 
         const html = md().render(marpMd('line<br>break'))
         expect(html).toContain('line<br />break')
       })
 
-      it('renders not allowed HTML elements when enabled', () => {
-        setConfiguration({ 'markdown.marp.enableHtml': true })
+      it('renders not allowed HTML elements when the setting is "all"', () => {
+        setConfiguration({ 'markdown.marp.html': 'all' })
 
         const html = md().render(marpMd('<script>console.log("Hi")</script>'))
         expect(html).toContain('<script>console.log("Hi")</script>')
@@ -210,12 +224,51 @@ describe('#extendMarkdownIt', () => {
 
         afterEach(() => isTrustedMock?.mockRestore())
 
-        it('does not render not allowed HTML elements even if enabled', () => {
-          setConfiguration({ 'markdown.marp.enableHtml': true })
+        it('does not render not allowed HTML elements even the setting is "all"', () => {
+          setConfiguration({ 'markdown.marp.html': 'all' })
 
-          const html = md().render(marpMd('<script>console.log("Hi")</script>'))
-          expect(html).not.toContain('<script>console.log("Hi")</script>')
+          const br = md().render(marpMd('line<br>break'))
+          expect(br).not.toContain('line<br />break')
+
+          const script = md().render(
+            marpMd('<script>console.log("Hi")</script>'),
+          )
+          expect(script).not.toContain('<script>console.log("Hi")</script>')
         })
+      })
+    })
+
+    describe('[Deprecated] markdown.marp.enableHtml', () => {
+      it('renders not allowed HTML elements when the value is true', () => {
+        setConfiguration({ 'markdown.marp.enableHtml': true })
+
+        const html = md().render(marpMd('<script>console.log("Hi")</script>'))
+        expect(html).toContain('<script>console.log("Hi")</script>')
+      })
+
+      it('prefers explicit "markdown.marp.html" setting than "markdown.marp.enableHtml" setting', () => {
+        setConfiguration({
+          'markdown.marp.html': 'off',
+          'markdown.marp.enableHtml': true,
+        })
+
+        const html = md().render(marpMd('<script>console.log("Hi")</script>'))
+        expect(html).not.toContain('<script>console.log("Hi")</script>')
+      })
+
+      it('shows deprecation warning while rendering if "markdown.marp.html" is the default value and "markdown.marp.enableHtml" is enabled', () => {
+        setConfiguration({
+          'markdown.marp.html': 'default',
+          'markdown.marp.enableHtml': true,
+        })
+
+        md().render(marpMd('<script>console.log("Hi")</script>'))
+        expect(window.showWarningMessage).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'The setting "markdown.marp.enableHtml" is deprecated',
+          ),
+          expect.anything(),
+        )
       })
     })
 
