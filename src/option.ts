@@ -3,7 +3,8 @@ import path from 'node:path'
 import { MarpOptions } from '@marp-team/marp-core'
 import { Options } from 'markdown-it'
 import { nanoid } from 'nanoid'
-import { TextDocument, Uri, workspace } from 'vscode'
+import { TextDocument, Uri, window, workspace } from 'vscode'
+import openExtensionSettings from './commands/open-extension-settings'
 import themes, { ThemeType } from './themes'
 import {
   marpConfiguration,
@@ -30,17 +31,20 @@ const breaks = (inheritedValue: boolean): boolean => {
   }
 }
 
-const enableHtml = () => {
+const html = () => {
   if (workspace.isTrusted) {
-    const conf = marpConfiguration().get<boolean | string>('enableHtml')
+    const htmlConf = marpConfiguration().get<string>('html')
 
-    // Boolean is for v1 backward compatibility
-    if (conf === 'all' || conf === true) return true
-    if (conf === 'off' || conf === false) return false
+    if (htmlConf === 'all') return { value: true }
+    if (htmlConf === 'off') return { value: false }
 
-    return undefined
+    // Legacy configuration compatibility
+    const legacyConf = marpConfiguration().get<boolean>('enableHtml')
+    if (legacyConf) return { value: true, legacy: true }
+
+    return { value: undefined }
   } else {
-    return false
+    return { value: false }
   }
 }
 
@@ -66,10 +70,24 @@ export const marpCoreOptionForPreview = (
   baseOption: Options & MarpOptions,
 ): MarpOptions => {
   if (!cachedPreviewOption) {
+    const htmlOption = html()
+
+    if (htmlOption.legacy) {
+      // Show warning for legacy configuration
+      window
+        .showWarningMessage(
+          'The setting "markdown.marp.enableHtml" is deprecated. Please use "markdown.marp.html" instead. Please review your settings JSON to make silence this warning.',
+          'Open Extension Settings',
+        )
+        .then((selected) => {
+          if (selected) void openExtensionSettings()
+        })
+    }
+
     cachedPreviewOption = {
       container: { tag: 'div', id: '__marp-vscode' },
       slideContainer: { tag: 'div', 'data-marp-vscode-slide-wrapper': '' },
-      html: enableHtml() || undefined,
+      html: htmlOption.value,
       inlineSVG: {
         backdropSelector: false,
       },
@@ -98,7 +116,7 @@ export const marpCoreOptionForCLI = async (
     allowLocalFiles,
     pdfNotes,
     pdfOutlines: pdfOutlines(),
-    html: enableHtml() || undefined,
+    html: html().value,
     options: {
       markdown: {
         breaks: breaks(!!confMdPreview.get<boolean>('breaks')),
