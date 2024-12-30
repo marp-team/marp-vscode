@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
-import path from 'path'
-import { TextEncoder } from 'util'
+import path from 'node:path'
+import { TextEncoder } from 'node:util'
 import { Marp } from '@marp-team/marp-core'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'

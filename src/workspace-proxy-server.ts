@@ -1,5 +1,5 @@
-import type { Server } from 'http'
-import path from 'path'
+import type { Server } from 'node:http'
+import path from 'node:path'
 import express from 'express'
 import { getPortPromise } from 'portfinder'
 import { FileType, Uri, workspace, WorkspaceFolder } from 'vscode'

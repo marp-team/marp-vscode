@@ -1,4 +1,4 @@
-import { TextEncoder, TextDecoder } from 'util'
+import { TextEncoder, TextDecoder } from 'node:util'
 
 // TextEncoder and TextDecoder are exposed to global in Node.js and the browser.
 // Jest VM for testing seems not to expose them to JSDOM.

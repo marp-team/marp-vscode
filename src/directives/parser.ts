@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'node:events'
 import type { Root as RehypeRoot } from 'hast'
 import rehypeParse from 'rehype-parse'
 import remarkMath from 'remark-math'

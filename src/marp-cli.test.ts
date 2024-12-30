@@ -1,5 +1,5 @@
-import { tmpdir } from 'os'
-import path from 'path'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import * as marpCliModule from '@marp-team/marp-cli'
 import { workspace } from 'vscode'
 import * as marpCli from './marp-cli'
