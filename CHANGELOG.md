@@ -12,7 +12,8 @@
 
 ### Changed
 
-- Upgrade dependent packages to the latest version ([#474](https://github.com/marp-team/marp-vscode/pull/474))
+- Upgrade development Node.js and dependent packages to the latest version ([#474](https://github.com/marp-team/marp-vscode/pull/474))
+- Migrate ESLint config to flat config ([#475](https://github.com/marp-team/marp-vscode/pull/475))
 
 ## v2.8.0 - 2023-10-28
 
