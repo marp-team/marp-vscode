@@ -1,4 +1,4 @@
-import { nextTick } from 'process'
+import { nextTick } from 'node:process'
 import dedent from 'dedent'
 import {
   Disposable,

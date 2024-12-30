@@ -1,5 +1,5 @@
-import { tmpdir } from 'os'
-import path from 'path'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import type { marpCli } from '@marp-team/marp-cli'
 import { nanoid } from 'nanoid'
 import { TextDocument, Uri, workspace } from 'vscode'

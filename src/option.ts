@@ -1,5 +1,5 @@
-import { tmpdir } from 'os'
-import path from 'path'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import { MarpOptions } from '@marp-team/marp-core'
 import { Options } from 'markdown-it'
 import { nanoid } from 'nanoid'

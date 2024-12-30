@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('node:path')
 const { ProvidePlugin } = require('webpack')
 const pkg = require('./package.json')
 const base = require('./webpack.base.config')

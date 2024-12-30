@@ -1,6 +1,7 @@
-const path = require('path')
+const path = require('node:path')
 const esbuild = require('esbuild')
 const { EsbuildPlugin } = require('esbuild-loader')
+const { NormalModuleReplacementPlugin } = require('webpack')
 
 module.exports = ({ outputPath, production, minimizerFormat }) => ({
   mode: production ? 'production' : 'none',
@@ -38,7 +39,12 @@ module.exports = ({ outputPath, production, minimizerFormat }) => ({
       }),
     ],
   },
-  plugins: [],
+  plugins: [
+    // Remove 'node:' prefix
+    new NormalModuleReplacementPlugin(/^node:/, (resource) => {
+      resource.request = resource.request.replace(/^node:/, '')
+    }),
+  ],
   performance: {
     hints: false,
   },
