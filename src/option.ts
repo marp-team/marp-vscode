@@ -30,8 +30,19 @@ const breaks = (inheritedValue: boolean): boolean => {
   }
 }
 
-const enableHtml = () =>
-  marpConfiguration().get<boolean>('enableHtml') && workspace.isTrusted
+const enableHtml = () => {
+  if (workspace.isTrusted) {
+    const conf = marpConfiguration().get<boolean | string>('enableHtml')
+
+    // Boolean is for v1 backward compatibility
+    if (conf === 'all' || conf === true) return true
+    if (conf === 'off' || conf === false) return false
+
+    return undefined
+  } else {
+    return false
+  }
+}
 
 const math = () => {
   const conf = mathTypesettingConfiguration()
