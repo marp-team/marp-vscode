@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
+import type { Root as RehypeRoot } from 'hast'
 import rehypeParse from 'rehype-parse'
-import type { Root as RehypeRoot } from 'rehype-parse/lib'
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import type { Root as RemarkRoot } from 'remark-parse/lib'

@@ -29,7 +29,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
     try {
       await writeFile(tmpUri, text)
       return { path: sameDirTmpPath, cleanup: createCleanup(tmpUri) }
-    } catch (e) {
+    } catch {
       // no ops
     }
   }
@@ -45,7 +45,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
     try {
       await writeFile(tmpUri, text)
       return { path: workspaceDirTmpPath, cleanup: createCleanup(tmpUri) }
-    } catch (e) {
+    } catch {
       // no ops
     }
   }

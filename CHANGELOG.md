@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+> 🆙 **This update is including the major update of [Marp Core](https://github.com/marp-team/marp-core) and [Marp CLI](https://github.com/marp-team/marp-cli) v3 → v4.** Please check "**[Changes in new Marp Core v4](https://github.com/orgs/marp-team/discussions/533)**" for details.
+
+### ⚡️ Breaking
+
+- VS Code v1.86.0 and later is now required ([#474](https://github.com/marp-team/marp-vscode/pull/474))
+- Upgrade Marp Core to [v4.0.1](https://github.com/marp-team/marp-core/releases/v4.0.1) ([#472](https://github.com/marp-team/marp-vscode/pull/472), [#474](https://github.com/marp-team/marp-vscode/pull/474))
+- Upgrade Marp CLI to [v4.0.4](https://github.com/marp-team/marp-cli/releases/v4.0.4) ([#473](https://github.com/marp-team/marp-vscode/pull/473), [#474](https://github.com/marp-team/marp-vscode/pull/474))
+
+### Changed
+
+- Upgrade dependent packages to the latest version ([#474](https://github.com/marp-team/marp-vscode/pull/474))
+
 ## v2.8.0 - 2023-10-28
 
 ### Changed
