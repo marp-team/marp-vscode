@@ -45,9 +45,9 @@ commands:
 
   test:
     parameters:
-      run-in-band:
+      jest-parameters:
         type: boolean
-        default: false
+        default: --maxWorkers=2
     steps:
       - checkout
       - install
@@ -70,7 +70,7 @@ commands:
 
       - run:
           name: Jest
-          command: npm run test:unit:coverage -- --ci --maxWorkers=2 <<# parameters.run-in-band >>-i<</ parameters.run-in-band >> --reporters=default --reporters=jest-junit
+          command: npm run test:unit:coverage -- --ci --reporters=default --reporters=jest-junit << parameters.jest-parameters >>
           environment:
             JEST_JUNIT_OUTPUT_DIR: tmp/test-results
 
@@ -95,7 +95,7 @@ jobs:
       version: '18.17.1'
     steps:
       - test:
-          run-in-band: true
+          jest-parameters: -i
 
   unit-electron28:
     executor:
@@ -103,7 +103,7 @@ jobs:
       version: '18.18.2'
     steps:
       - test:
-          run-in-band: true
+          jest-parameters: -i
 
   unit-electron29:
     executor:
