@@ -13,10 +13,12 @@
 ### Added
 
 - `markdown.marp.html` setting to control rendering HTML within Marp Markdown ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+- `markdown.marp.browser` and `markdown.marp.browserPath` settings to control internally using browser to export ([#478](https://github.com/marp-team/marp-vscode/pull/478))
 
 ### Deprecated
 
-- `markdown.marp.enableHtml` setting ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+- Deprecated `markdown.marp.enableHtml` setting in favor of `markdown.marp.html` ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+- Deprecated `markdown.marp.chromePath` setting in favor of `markdown.marp.browserPath` ([#478](https://github.com/marp-team/marp-vscode/pull/478))
 
 ### Changed
 
