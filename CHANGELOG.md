@@ -13,15 +13,19 @@
 ### Added
 
 - `markdown.marp.html` setting to control rendering HTML within Marp Markdown ([#476](https://github.com/marp-team/marp-vscode/pull/476))
-
-### Deprecated
-
-- `markdown.marp.enableHtml` setting ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+- `markdown.marp.browser` and `markdown.marp.browserPath` settings to control internally using browser to export ([#478](https://github.com/marp-team/marp-vscode/pull/478))
+- Support Firefox as a browser for exporting ([#473](https://github.com/marp-team/marp-vscode/pull/473), [#474](https://github.com/marp-team/marp-vscode/pull/474), [#478](https://github.com/marp-team/marp-vscode/pull/478))
 
 ### Changed
 
+- Several allowed HTML elements through Marp Core are enabled by default ([#472](https://github.com/marp-team/marp-vscode/pull/472), [#474](https://github.com/marp-team/marp-vscode/pull/474), [#476](https://github.com/marp-team/marp-vscode/pull/476))
 - Upgrade development Node.js and dependent packages to the latest version ([#474](https://github.com/marp-team/marp-vscode/pull/474))
 - Migrate ESLint config to flat config ([#475](https://github.com/marp-team/marp-vscode/pull/475))
+
+### Deprecated
+
+- Deprecated `markdown.marp.enableHtml` setting in favor of `markdown.marp.html` ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+- Deprecated `markdown.marp.chromePath` setting in favor of `markdown.marp.browserPath` ([#478](https://github.com/marp-team/marp-vscode/pull/478))
 
 ## v2.8.0 - 2023-10-28
 

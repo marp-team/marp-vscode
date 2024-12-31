@@ -128,9 +128,13 @@ You can also execute command from the Command Palette (<kbd>F1</kbd> or <kbd>Ctr
 - **PNG** (_First slide only)_
 - **JPEG** (_First slide only)_
 
-Default file type can choose by `markdown.marp.exportType` preference.
+Default file type can choose by the `markdown.marp.exportType` setting.
 
-> ⚠️ Export except HTML requires to install any one of [Google Chrome](https://www.google.com/chrome/), [Chromium](https://www.chromium.org/), or [Microsoft Edge](https://www.microsoft.com/edge). You may also specify the custom path for Chrome / Chromium-based browser by preference `markdown.marp.chromePath`.
+> [!IMPORTANT]
+> Exporting PDF, PPTX, and image formats requires to install any one of [Google Chrome](https://www.google.com/chrome/), [Chromium](https://www.chromium.org/), [Microsoft Edge](https://www.microsoft.com/edge), or [Firefox](https://www.mozilla.org/firefox/). You may control using browser and the custom path for the browser by `markdown.marp.browser` and `markdown.marp.browserPath` settings.
+
+> [!NOTE]
+> A legacy setting `markdown.marp.chromePath` is deprecated since v2. Please use `markdown.marp.browserPath` instead.
 
 ### Use custom theme CSS 🛡️
 
@@ -175,7 +179,7 @@ Markdown preview will reload updated theme CSS automatically when you edited the
 
 ### Outline extension
 
-When Marp Markdown is enabled, you can use the extended [outline view](https://code.visualstudio.com/docs/languages/markdown#_outline-view) like following. They are enabled by default but you may disable by `markdown.marp.outlineExtension` preference.
+When Marp Markdown is enabled, you can use the extended [outline view](https://code.visualstudio.com/docs/languages/markdown#_outline-view) like following. They are enabled by default but you may disable by the `markdown.marp.outlineExtension` setting.
 
 #### Outline view for each slide
 

@@ -115,10 +115,27 @@
             "Use inherited setting from `#markdown.preview.breaks#`."
           ]
         },
-        "markdown.marp.chromePath": {
+        "markdown.marp.browser": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "chrome",
+            "edge",
+            "firefox"
+          ],
+          "default": "auto",
+          "description": "Controls the installed browser using internally to export PDF, PPTX, and the image.",
+          "enumDescriptions": [
+            "Automatically detect Chrome, Chromium, Edge, or Firefox.",
+            "Use Google Chrome.",
+            "Use Microsoft Edge.",
+            "Use Mozilla Firefox."
+          ]
+        },
+        "markdown.marp.browserPath": {
           "type": "string",
           "default": "",
-          "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome / Chromium / Microsoft Edge."
+          "markdownDescription": "Configure the custom path for the installed browser using internally to export PDF, PPTX, and the image. The kind of browser is determined by `#markdown.marp.browser#`. When set to empty, Marp will find out a suitable installed browser automatically."
         },
         "markdown.marp.html": {
           "type": "string",
@@ -214,6 +231,12 @@
           "default": false,
           "description": "Enables all HTML elements in Marp Markdown. This setting is working only in the trusted workspace.",
           "deprecationMessage": "The setting \"markdown.marp.enableHtml\" is deprecated. Please use \"markdown.marp.html\" instead."
+        },
+        "markdown.marp.chromePath": {
+          "type": "string",
+          "default": "",
+          "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome / Chromium / Microsoft Edge.",
+          "deprecationMessage": "The setting \"markdown.marp.chromePath\" is deprecated. Please use \"markdown.marp.browserPath\" instead."
         }
       }
     },

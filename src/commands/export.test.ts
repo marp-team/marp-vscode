@@ -1,3 +1,4 @@
+import * as marpCliModule from '@marp-team/marp-cli'
 import { commands, env, window, workspace } from 'vscode'
 import * as marpCli from '../marp-cli'
 import * as option from '../option'
@@ -315,6 +316,65 @@ describe('#doExport', () => {
         expect.objectContaining({ pdfNotes: false }),
       )
     })
+  })
+
+  describe('when CLI was thrown CLIError with BROWSER_NOT_FOUND error code', () => {
+    it.each`
+      browser      | platform    | expected
+      ${'auto'}    | ${'win32'}  | ${['Google Chrome', 'Microsoft Edge', 'Firefox']}
+      ${'auto'}    | ${'darwin'} | ${['Google Chrome', 'Microsoft Edge', 'Firefox']}
+      ${'auto'}    | ${'linux'}  | ${['Google Chrome', 'Chromium', 'Microsoft Edge', 'Firefox']}
+      ${'chrome'}  | ${'win32'}  | ${['Google Chrome']}
+      ${'chrome'}  | ${'darwin'} | ${['Google Chrome']}
+      ${'chrome'}  | ${'linux'}  | ${['Google Chrome', 'Chromium']}
+      ${'edge'}    | ${'win32'}  | ${['Microsoft Edge']}
+      ${'edge'}    | ${'darwin'} | ${['Microsoft Edge']}
+      ${'edge'}    | ${'linux'}  | ${['Microsoft Edge']}
+      ${'firefox'} | ${'win32'}  | ${['Firefox']}
+      ${'firefox'} | ${'darwin'} | ${['Firefox']}
+      ${'firefox'} | ${'linux'}  | ${['Firefox']}
+    `(
+      'throws MarpCLIError with the message contains $expected to suggest browsers when running on $platform with browser option as $browser',
+      async ({ browser, platform, expected }) => {
+        expect.assertions(expected.length + 1)
+        setConfiguration({ 'markdown.marp.browser': browser })
+
+        const { platform: originalPlatform } = process
+
+        try {
+          Object.defineProperty(process, 'platform', { value: platform })
+
+          const runMarpCLI = jest
+            .spyOn(marpCli, 'default')
+            .mockImplementation(async (_, __, opts) => {
+              opts?.onCLIError?.({
+                error: new marpCliModule.CLIError(
+                  'mocked error',
+                  marpCliModule.CLIErrorCode.NOT_FOUND_BROWSER,
+                ),
+                codes: marpCliModule.CLIErrorCode,
+              })
+            })
+
+          try {
+            await exportModule.doExport(saveURI(), document)
+            expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
+
+            for (const fragment of expected) {
+              expect(window.showErrorMessage).toHaveBeenCalledWith(
+                expect.stringContaining(fragment),
+              )
+            }
+          } finally {
+            runMarpCLI.mockRestore()
+          }
+        } finally {
+          Object.defineProperty(process, 'platform', {
+            value: originalPlatform,
+          })
+        }
+      },
+    )
   })
 
   describe('when the save path has non-file scheme', () => {
