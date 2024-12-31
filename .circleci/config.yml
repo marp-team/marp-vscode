@@ -44,6 +44,10 @@ commands:
             - run: npm run check:audit
 
   test:
+    parameters:
+      run-in-band:
+        type: boolean
+        default: false
     steps:
       - checkout
       - install
@@ -66,7 +70,7 @@ commands:
 
       - run:
           name: Jest
-          command: npm run test:unit:coverage -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          command: npm run test:unit:coverage -- --ci --maxWorkers=2 <<# parameters.run-in-band >>-i<</ parameters.run-in-band >> --reporters=default --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: tmp/test-results
 
@@ -90,14 +94,16 @@ jobs:
       name: node
       version: '18.17.1'
     steps:
-      - test
+      - test:
+          run-in-band: true
 
   unit-electron28:
     executor:
       name: node
       version: '18.18.2'
     steps:
-      - test
+      - test:
+          run-in-band: true
 
   unit-electron29:
     executor:
