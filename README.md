@@ -93,7 +93,7 @@ Marp for VS Code can detect some basic problems in Marp directives. Diagnostics 
 | Name                                 | Description                                                                                        | [Quick Fix] |
 | :----------------------------------- | :------------------------------------------------------------------------------------------------- | :---------: |
 | `define-math-global-directive`       | Recommend to declare math typesetting library via [`math` global directive][math global directive] |     ✅      |
-| `deprecated-color-setting-shorthand` | Check [deprecated shorthands for setting slide colors][color setting shorthand]                    |     ✅      |
+| `deprecated-color-setting-shorthand` | Check [obsoleted shorthands for setting slide colors][color setting shorthand]                     |     ✅      |
 | `deprecated-dollar-prefix`           | Check [obsoleted directives prefixed by `$`][dollar-prefix]                                        |     ✅      |
 | `ignored-math-global-directive`      | Report ignored `math` global directive if disabled math by the extension setting                   |             |
 | `overloading-global-directive`       | Find out overloaded global directives                                                              |             |
