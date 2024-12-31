@@ -46,7 +46,7 @@ commands:
   test:
     parameters:
       jest-parameters:
-        type: boolean
+        type: string
         default: --maxWorkers=2
     steps:
       - checkout
