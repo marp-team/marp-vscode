@@ -88,21 +88,17 @@ export default async function runMarpCli(
   const { marpCli, CLIError, CLIErrorCode } = await import(
     '@marp-team/marp-cli'
   )
-  const { CHROME_PATH } = process.env
 
   let exitCode: number
 
   try {
-    process.env.CHROME_PATH =
-      marpConfiguration().get<string>('chromePath') || CHROME_PATH
-
     exitCode = await marpCli(argv, opts)
   } catch (e) {
     console.error(e)
 
     if (
       e instanceof CLIError &&
-      e.errorCode === CLIErrorCode.NOT_FOUND_CHROMIUM
+      e.errorCode === CLIErrorCode.NOT_FOUND_BROWSER
     ) {
       const browsers = ['[Google Chrome](https://www.google.com/chrome/)']
 
@@ -119,8 +115,6 @@ export default async function runMarpCli(
     }
 
     throw e
-  } finally {
-    process.env.CHROME_PATH = CHROME_PATH
   }
 
   if (exitCode !== 0) {
