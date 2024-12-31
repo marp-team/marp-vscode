@@ -1,16 +1,29 @@
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import type { marpCli } from '@marp-team/marp-cli'
+import type {
+  marpCli,
+  CLIError as CLIErrorType,
+  CLIErrorCode as CLIErrorCodeType,
+} from '@marp-team/marp-cli'
 import { nanoid } from 'nanoid'
 import { TextDocument, Uri, workspace } from 'vscode'
 import { WorkFile, marpCoreOptionForCLI } from './option'
-import { marpConfiguration, writeFile, unlink } from './utils'
+import { writeFile, unlink } from './utils'
 
 const createCleanup = (target: Uri) => async () => {
   await unlink(target)
 }
 
 export class MarpCLIError extends Error {}
+
+export interface RunMarpCLIOptions {
+  onCLIError?: (e: MarpCLIErrorHandler) => void
+}
+
+export interface MarpCLIErrorHandler {
+  error: CLIErrorType
+  codes: typeof CLIErrorCodeType
+}
 
 export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
   // Use a real file if posibble
@@ -81,7 +94,9 @@ export async function createConfigFile(
 }
 
 export default async function runMarpCli(
-  ...[argv, opts]: Parameters<typeof marpCli>
+  argv: Parameters<typeof marpCli>[0],
+  opts?: Parameters<typeof marpCli>[1],
+  { onCLIError }: RunMarpCLIOptions = {},
 ): Promise<void> {
   console.info(`Execute Marp CLI [${argv.join(' ')}] (${JSON.stringify(opts)})`)
 
@@ -94,26 +109,9 @@ export default async function runMarpCli(
   try {
     exitCode = await marpCli(argv, opts)
   } catch (e) {
+    if (e instanceof CLIError) onCLIError?.({ error: e, codes: CLIErrorCode })
+
     console.error(e)
-
-    if (
-      e instanceof CLIError &&
-      e.errorCode === CLIErrorCode.NOT_FOUND_BROWSER
-    ) {
-      const browsers = ['[Google Chrome](https://www.google.com/chrome/)']
-
-      if (process.platform === 'linux')
-        browsers.push('[Chromium](https://www.chromium.org/)')
-
-      browsers.push('[Microsoft Edge](https://www.microsoft.com/edge)')
-
-      throw new MarpCLIError(
-        `It requires to install ${browsers
-          .join(', ')
-          .replace(/, ([^,]*)$/, ' or $1')} for exporting.`,
-      )
-    }
-
     throw e
   }
 

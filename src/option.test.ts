@@ -1,5 +1,5 @@
 import * as nodeFetch from 'node-fetch'
-import { Uri, workspace } from 'vscode'
+import { Uri, window, workspace } from 'vscode'
 import * as option from './option'
 import { textEncoder } from './utils'
 
@@ -108,6 +108,62 @@ describe('Option', () => {
         pages: true,
         headings: true,
       })
+    })
+
+    it('sets correct browser option and browser path option', async () => {
+      setConfiguration({
+        'markdown.marp.browser': 'chrome',
+        'markdown.marp.browserPath': '',
+      })
+      expect(await subject({ uri: untitledUri })).toStrictEqual(
+        expect.objectContaining({
+          browser: 'chrome',
+          browserPath: undefined,
+        }),
+      )
+
+      // With browser path
+      setConfiguration({
+        'markdown.marp.browser': 'auto',
+        'markdown.marp.browserPath': '/path/to/browser',
+      })
+      expect(await subject({ uri: untitledUri })).toStrictEqual(
+        expect.objectContaining({
+          browser: 'auto',
+          browserPath: '/path/to/browser',
+        }),
+      )
+
+      // Firefox browser auto detection
+      setConfiguration({
+        'markdown.marp.browser': 'auto',
+        'markdown.marp.browserPath': '/path/to/firefox',
+      })
+      expect(await subject({ uri: untitledUri })).toStrictEqual(
+        expect.objectContaining({
+          browser: 'firefox',
+          browserPath: '/path/to/firefox',
+        }),
+      )
+
+      // [Legacy] markdown.marp.chromePath
+      setConfiguration({
+        'markdown.marp.browser': 'auto',
+        'markdown.marp.browserPath': '',
+        'markdown.marp.chromePath': '/path/to/browser',
+      })
+      expect(await subject({ uri: untitledUri })).toStrictEqual(
+        expect.objectContaining({
+          browser: 'chrome',
+          browserPath: '/path/to/browser',
+        }),
+      )
+      expect(window.showWarningMessage).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'The setting "markdown.marp.chromePath" is deprecated',
+        ),
+        expect.anything(),
+      )
     })
 
     describe('when targeted document belongs to workspace', () => {

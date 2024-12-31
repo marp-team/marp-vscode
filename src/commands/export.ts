@@ -45,6 +45,13 @@ const descriptions = {
   [Types.jpeg]: 'JPEG image (first slide only)' as const,
 }
 
+const browsers = {
+  chrome: '[Google Chrome](https://www.google.com/chrome/)',
+  chromium: '[Chromium](https://www.chromium.org/)',
+  edge: '[Microsoft Edge](https://www.microsoft.com/edge)',
+  firefox: '[Mozilla Firefox](https://www.mozilla.org/firefox/)',
+} as const
+
 export const ITEM_CONTINUE_TO_EXPORT = 'Continue to export...'
 export const ITEM_MANAGE_WORKSPACE_TRUST = 'Manage Workspace Trust...'
 
@@ -140,9 +147,51 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
       })
 
       try {
-        await marpCli(['-c', conf.path, input.path, '-o', outputPath], {
-          baseUrl,
-        })
+        await marpCli(
+          ['-c', conf.path, input.path, '-o', outputPath],
+          { baseUrl },
+          {
+            onCLIError: ({ error, codes }) => {
+              if (error.errorCode === codes.NOT_FOUND_BROWSER) {
+                // Throw error with user-friendly instructions based on the current configuration
+                const browserOption = marpConfiguration().get<string>('browser')
+                const suggestBrowsers: string[] = []
+
+                switch (browserOption) {
+                  case 'chrome':
+                    suggestBrowsers.push(
+                      ...[
+                        browsers.chrome,
+                        process.platform === 'linux' ? browsers.chromium : '',
+                      ].filter((b) => !!b),
+                    )
+                    break
+                  case 'edge':
+                    suggestBrowsers.push(browsers.edge)
+                    break
+                  case 'firefox':
+                    suggestBrowsers.push(browsers.firefox)
+                    break
+                  default:
+                    suggestBrowsers.push(
+                      ...[
+                        browsers.chrome,
+                        process.platform === 'linux' ? browsers.chromium : '',
+                        browsers.edge,
+                        browsers.firefox,
+                      ].filter((b) => !!b),
+                    )
+                }
+
+                throw new MarpCLIError(
+                  `It requires to install a suitable browser, ${suggestBrowsers
+                    .join(', ')
+                    .replace(/, ([^,]*)$/, ' or $1')} for exporting.`,
+                )
+              }
+            },
+          },
+        )
 
         if (outputToLocalFS) {
           env.openExternal(uri)
