@@ -344,16 +344,17 @@ describe('#doExport', () => {
         try {
           Object.defineProperty(process, 'platform', { value: platform })
 
-          const consoleDebug = jest.spyOn(console, 'debug').mockImplementation()
-          const consoleInfo = jest.spyOn(console, 'info').mockImplementation()
-          const marpCliMock = jest
-            .spyOn(marpCliModule, 'marpCli')
-            .mockRejectedValue(
-              new marpCliModule.CLIError(
-                'mocked error',
-                marpCliModule.CLIErrorCode.NOT_FOUND_BROWSER,
-              ),
-            )
+          const runMarpCLI = jest
+            .spyOn(marpCli, 'default')
+            .mockImplementation(async (_, __, opts) => {
+              opts?.onCLIError?.({
+                error: new marpCliModule.CLIError(
+                  'mocked error',
+                  marpCliModule.CLIErrorCode.NOT_FOUND_BROWSER,
+                ),
+                codes: marpCliModule.CLIErrorCode,
+              })
+            })
 
           try {
             await exportModule.doExport(saveURI(), document)
@@ -365,9 +366,7 @@ describe('#doExport', () => {
               )
             }
           } finally {
-            consoleDebug.mockRestore()
-            consoleInfo.mockRestore()
-            marpCliMock.mockRestore()
+            runMarpCLI.mockRestore()
           }
         } finally {
           Object.defineProperty(process, 'platform', {
