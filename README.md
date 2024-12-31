@@ -205,11 +205,16 @@ Features may be restricted are marked by the shield icon 🛡️ in this documen
 
 [workspace trust]: https://code.visualstudio.com/docs/editor/workspace-trust
 
-#### Enable HTML in Marp Markdown 🛡️
+#### HTML elements in Markdown 🛡️
 
-You can enable previsualization of HTML code within Marp Markdown with the `markdown.marp.enableHtml` option.
+In the trusted workspace, if Marp Markdown was included HTML elements, [only selectivity HTML elements by Marp](https://github.com/marp-team/marp-core/blob/main/src/html/allowlist.ts) can render by default. You can control which HTML elements will be rendered by setting the `markdown.marp.html` option,
 
-It could allow script injection from untrusted Markdown files. Thus, this feature is disabled as a default and will be _always ignored in the untrusted workspace_. Use with caution.
+You can control which HTML elements will be rendered by setting the `markdown.marp.html` option. You can set it as `all` to allow all HTML elements, but could allow script injection from untrusted Markdown files. Use with caution.
+
+In the untrusted workspace, HTML elements in Marp Markdown will be always ignored regardless of the selected option in `markdown.marp.html`.
+
+> [!NOTE]
+> A legacy setting `markdown.marp.enableHtml` is deprecated since v2. Please use `markdown.marp.html` instead.
 
 ## Web extension
 

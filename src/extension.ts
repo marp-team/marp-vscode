@@ -17,6 +17,7 @@ import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 const shouldRefreshConfs = [
   'markdown.marp.breaks',
   'markdown.marp.enableHtml',
+  'markdown.marp.html',
   'markdown.marp.mathTypesetting',
   'markdown.marp.outlineExtension',
   'markdown.marp.themes',

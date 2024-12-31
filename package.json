@@ -50,6 +50,7 @@
       "supported": "limited",
       "description": "Workspace trust is required for exporting slide deck, and using themes configured in the workspace.",
       "restrictedConfigurations": [
+        "markdown.marp.html",
         "markdown.marp.enableHtml",
         "markdown.marp.themes"
       ]
@@ -119,10 +120,20 @@
           "default": "",
           "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome / Chromium / Microsoft Edge."
         },
-        "markdown.marp.enableHtml": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enables all HTML elements in Marp Markdown. This setting is working only in the trusted workspace."
+        "markdown.marp.html": {
+          "type": "string",
+          "enum": [
+            "off",
+            "default",
+            "all"
+          ],
+          "markdownEnumDescriptions": [
+            "Disable all HTML elements, including originally allowed HTML elements by Marp.",
+            "Enable only selectively enabled HTML elements by Marp. _([See the list of HTML elements](https://github.com/marp-team/marp-core/blob/main/src/html/allowlist.ts))_",
+            "Enable all HTML elements. This setting may become the slide rendering insecure."
+          ],
+          "default": "default",
+          "description": "Sets which HTML elements within Marp Markdown are enabled in rendered slides. If the workspace is not trusted, this setting treats as always \"off\"."
         },
         "markdown.marp.exportType": {
           "type": "string",
@@ -197,6 +208,12 @@
           "items": {
             "type": "string"
           }
+        },
+        "markdown.marp.enableHtml": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enables all HTML elements in Marp Markdown. This setting is working only in the trusted workspace.",
+          "deprecationMessage": "The setting \"markdown.marp.enableHtml\" is deprecated. Please use \"markdown.marp.html\" instead."
         }
       }
     },

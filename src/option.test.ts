@@ -168,9 +168,9 @@ describe('Option', () => {
 
       afterEach(() => isTrustedMock?.mockRestore())
 
-      it('ignores potentially malicious options', async () => {
-        setConfiguration({ 'markdown.marp.enableHtml': true })
-        expect((await subject({ uri: untitledUri })).html).toBeUndefined()
+      it('disallows potentially malicious options', async () => {
+        setConfiguration({ 'markdown.marp.html': 'all' })
+        expect((await subject({ uri: untitledUri })).html).toBe(false)
       })
     })
   })

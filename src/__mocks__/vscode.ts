@@ -7,6 +7,7 @@ const defaultConf: MockedConf = {
   'markdown.marp.breaks': 'on',
   'markdown.marp.chromePath': '',
   'markdown.marp.enableHtml': false,
+  'markdown.marp.html': 'default',
   'markdown.marp.exportType': 'pdf',
   'markdown.marp.outlineExtension': true,
   'markdown.marp.pdf.noteAnnotations': false,
@@ -227,7 +228,7 @@ export const window = {
   showQuickPick: jest.fn(),
   showSaveDialog: jest.fn(),
   showTextDocument: jest.fn(async () => ({})),
-  showWarningMessage: jest.fn(),
+  showWarningMessage: jest.fn(async () => undefined),
   withProgress: jest.fn(),
 }
 
