@@ -10,6 +10,14 @@
 - Upgrade Marp Core to [v4.0.1](https://github.com/marp-team/marp-core/releases/v4.0.1) ([#472](https://github.com/marp-team/marp-vscode/pull/472), [#474](https://github.com/marp-team/marp-vscode/pull/474))
 - Upgrade Marp CLI to [v4.0.4](https://github.com/marp-team/marp-cli/releases/v4.0.4) ([#473](https://github.com/marp-team/marp-vscode/pull/473), [#474](https://github.com/marp-team/marp-vscode/pull/474))
 
+### Added
+
+- `markdown.marp.html` setting to control rendering HTML within Marp Markdown ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+
+### Deprecated
+
+- `markdown.marp.enableHtml` setting ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+
 ### Changed
 
 - Upgrade development Node.js and dependent packages to the latest version ([#474](https://github.com/marp-team/marp-vscode/pull/474))
