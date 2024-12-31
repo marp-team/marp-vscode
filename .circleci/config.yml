@@ -44,10 +44,6 @@ commands:
             - run: npm run check:audit
 
   test:
-    parameters:
-      jest-parameters:
-        type: string
-        default: --maxWorkers=2
     steps:
       - checkout
       - install
@@ -70,7 +66,7 @@ commands:
 
       - run:
           name: Jest
-          command: npm run test:unit:coverage -- --ci --reporters=default --reporters=jest-junit --detectOpenHandles << parameters.jest-parameters >>
+          command: npm run test:unit:coverage -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: tmp/test-results
 
@@ -94,16 +90,14 @@ jobs:
       name: node
       version: '18.17.1'
     steps:
-      - test:
-          jest-parameters: -i
+      - test
 
   unit-electron28:
     executor:
       name: node
       version: '18.18.2'
     steps:
-      - test:
-          jest-parameters: -i
+      - test
 
   unit-electron29:
     executor:

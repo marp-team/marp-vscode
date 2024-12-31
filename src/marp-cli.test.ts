@@ -27,7 +27,7 @@ describe('Marp CLI integration', () => {
   })
 
   it('runs Marp CLI with passed args', async () => {
-    const marpCliSpy = jest.spyOn(marpCliModule, 'marpCli')
+    const marpCliSpy = jest.spyOn(marpCliModule, 'marpCli').mockResolvedValue(0)
     await runMarpCli(['--version'])
 
     expect(marpCliSpy).toHaveBeenCalledWith(['--version'], undefined)
