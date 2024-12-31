@@ -6,18 +6,12 @@ We are following [**the contributing guideline of Marp team projects**](https://
 
 ## Setup repository
 
-The most important difference of Marp for VS Code from common Marp team packages is **using npm package manager instead of yarn**.
-
 ```bash
 git clone https://github.com/marp-team/marp-vscode.git
 cd ./marp-vscode
 
 npm install
 ```
-
-We had met the trouble of VSIX packaging with yarn many times. [An opened issue in vscode-vsce](https://github.com/microsoft/vscode-vsce/issues/432) is not so received attentions from developers in spite of that many extension authors are using yarn.
-
-Thus, using `npm` is the safest way to develop stable VS Code extension continuously for now.
 
 ## Development
 
