@@ -136,6 +136,14 @@ Default file type can choose by the `markdown.marp.exportType` setting.
 > [!NOTE]
 > A legacy setting `markdown.marp.chromePath` is deprecated since v2. Please use `markdown.marp.browserPath` instead.
 
+> [!NOTE]
+> For Ubuntu Users : you may have to set
+```json
+"markdown.marp.browserPath": "/snap/chromium/current/usr/lib/chromium-browser/chrome"
+```
+> For snap package of chromium
+
+
 ### Use custom theme CSS 🛡️
 
 You can register and use [custom theme CSS for Marpit](https://marpit.marp.app/theme-css) / [Marp Core](https://github.com/marp-team/marp-core/tree/main/themes#readme) by setting `markdown.marp.themes`, that includes remote URLs, or relative paths to local files in the current workspace.
