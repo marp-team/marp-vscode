@@ -85,10 +85,7 @@
         "category": "Marp",
         "command": "markdown.marp.showQuickPick",
         "title": "Show Quick Pick Of Marp Commands...",
-        "icon": {
-          "dark": "./images/icon-dark.svg",
-          "light": "./images/icon-light.svg"
-        }
+        "icon": "$(marp-brand)"
       },
       {
         "category": "Marp",
@@ -237,6 +234,15 @@
           "default": "",
           "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome / Chromium / Microsoft Edge.",
           "deprecationMessage": "The setting \"markdown.marp.chromePath\" is deprecated. Please use \"markdown.marp.browserPath\" instead."
+        }
+      }
+    },
+    "icons": {
+      "marp-brand": {
+        "description": "Marp brand",
+        "default": {
+          "fontPath": "./images/icon.woff",
+          "fontCharacter": "\\e000"
         }
       }
     },
