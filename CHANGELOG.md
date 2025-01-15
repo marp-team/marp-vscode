@@ -5,6 +5,7 @@
 ### Fixed
 
 - Apply theme color to Marp icon ([#479](https://github.com/marp-team/marp-vscode/issues/479), [#484](https://github.com/marp-team/marp-vscode/pull/484))
+- Mark `markdown.marp.strictPathResolutionDuringExport` with "Experimental" UI label ([#485](https://github.com/marp-team/marp-vscode/pull/485))
 
 ## v3.0.0 - 2024-12-31
 
