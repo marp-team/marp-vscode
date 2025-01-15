@@ -213,7 +213,10 @@
         "markdown.marp.strictPathResolutionDuringExport": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "_[Experimental]_ Enables strict path resolution during export. If enabled, the export command tries to resolve relative paths from VS Code workspace that a Markdown file belongs. If disabled, or the Markdown does not belong to any workspace, the export command resolves paths based on the local file system."
+          "description": "Enables strict path resolution during export. If enabled, the export command tries to resolve relative paths from VS Code workspace that a Markdown file belongs. If disabled, or the Markdown does not belong to any workspace, the export command resolves paths based on the local file system.",
+          "tags": [
+            "experimental"
+          ]
         },
         "markdown.marp.themes": {
           "type": "array",
