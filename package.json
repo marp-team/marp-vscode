@@ -168,9 +168,9 @@
             "JPEG image (first slide only)"
           ]
         },
-        "markdown.marp.exportAutoOpen":{
-          "type":"boolean",
-          "default":true,
+        "markdown.marp.exportAutoOpen": {
+          "type": "boolean",
+          "default": true,
           "description": "Automatically opens the exported file using the default application installed on your operating system."
         },
         "markdown.marp.mathTypesetting": {
