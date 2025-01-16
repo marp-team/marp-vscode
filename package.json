@@ -210,6 +210,24 @@
             "Add outlines based on both slide pages and Markdown headings."
           ]
         },
+        "markdown.marp.pptx.editable": {
+          "type": "string",
+          "enum": [
+            "off",
+            "on",
+            "smart"
+          ],
+          "default": "off",
+          "markdownDescription": "Sets whether make editable or not when exporting to PowerPoint document. You should install both of the browser and [LibreOffice Impress](https://libreoffice.org/) to export the editable PPTX. Please note that the editable PPTX output may fail to convert or be generated with an incomplete layout depending on the slide content.",
+          "markdownEnumDescriptions": [
+            "Always export non-editable PPTX. It has full visual reproducibillity and presenter note support.",
+            "Always export editable PPTX. Please note that the editable PPTX may fail to convert or be generated with an incomplete layout depending on the slide content.",
+            "Try to export editable PPTX first, and fallback to non-editable PPTX if failed."
+          ],
+          "tags": [
+            "experimental"
+          ]
+        },
         "markdown.marp.strictPathResolutionDuringExport": {
           "type": "boolean",
           "default": false,
