@@ -7,6 +7,7 @@ import * as showQuickPick from './commands/show-quick-pick'
 import * as toggleMarpFeature from './commands/toggle-marp-feature'
 import diagnostics from './diagnostics/'
 import languageProvider from './language/'
+import { incompatiblePreviewExtensionsObserver } from './observer'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
@@ -147,6 +148,7 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
       }
     }),
     workspace.onDidGrantWorkspaceTrust(applyRefreshedConfiguration),
+    incompatiblePreviewExtensionsObserver(),
   )
 
   return { extendMarkdownIt }
