@@ -64,7 +64,7 @@ export class Themes {
     )) {
       try {
         marp.themeSet.add(css)
-      } catch (e) {
+      } catch {
         // no ops
       }
     }

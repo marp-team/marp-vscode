@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('node:path')
 const base = require('./webpack.base.config')
 
 const outputPath = path.resolve(__dirname, './preview/preview.js')

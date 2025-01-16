@@ -1,15 +1,11 @@
-import { tmpdir } from 'os'
-import path from 'path'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import * as marpCliModule from '@marp-team/marp-cli'
 import { workspace } from 'vscode'
 import * as marpCli from './marp-cli'
 import { textEncoder } from './utils'
 
 jest.mock('vscode')
-
-const setConfiguration: (conf?: Record<string, unknown>) => void = (
-  workspace as any
-)._setConfiguration
 
 describe('Marp CLI integration', () => {
   const runMarpCli = marpCli.default
@@ -31,7 +27,7 @@ describe('Marp CLI integration', () => {
   })
 
   it('runs Marp CLI with passed args', async () => {
-    const marpCliSpy = jest.spyOn(marpCliModule, 'marpCli')
+    const marpCliSpy = jest.spyOn(marpCliModule, 'marpCli').mockResolvedValue(0)
     await runMarpCli(['--version'])
 
     expect(marpCliSpy).toHaveBeenCalledWith(['--version'], undefined)
@@ -49,67 +45,6 @@ describe('Marp CLI integration', () => {
     } finally {
       marpCliMock.mockRestore()
     }
-  })
-
-  it.each`
-    platform    | expected
-    ${'win32'}  | ${[/Google Chrome/, /Microsoft Edge/]}
-    ${'darwin'} | ${[/Google Chrome/, /Microsoft Edge/]}
-    ${'linux'}  | ${[/Google Chrome/, /Chromium/]}
-  `(
-    'contains $expected to suggested browsers in error message when running on $platform',
-    async ({ platform, expected }) => {
-      expect.assertions(expected.length)
-
-      const originalPlatform = process.platform
-
-      try {
-        Object.defineProperty(process, 'platform', { value: platform })
-
-        const marpCliMock = jest
-          .spyOn(marpCliModule, 'marpCli')
-          .mockRejectedValue(
-            new marpCliModule.CLIError(
-              'mocked error',
-              marpCliModule.CLIErrorCode.NOT_FOUND_CHROMIUM,
-            ),
-          )
-
-        try {
-          for (const fragment of expected) {
-            await expect(runMarpCli(['--version'])).rejects.toThrow(fragment)
-          }
-        } finally {
-          marpCliMock.mockRestore()
-        }
-      } finally {
-        Object.defineProperty(process, 'platform', { value: originalPlatform })
-      }
-    },
-  )
-
-  describe('with markdown.marp.chromePath preference', () => {
-    it('runs Marp CLI with overridden CHROME_PATH environment', async () => {
-      const { CHROME_PATH } = process.env
-      expect(process.env.CHROME_PATH).toBe(CHROME_PATH)
-
-      setConfiguration({ 'markdown.marp.chromePath': __filename })
-
-      const marpCliMock = jest
-        .spyOn(marpCliModule, 'marpCli')
-        .mockImplementation(async () => {
-          expect(process.env.CHROME_PATH).toBe(__filename)
-          return 0
-        })
-
-      try {
-        await runMarpCli(['--version'])
-        expect(marpCliMock).toHaveBeenCalled()
-        expect(process.env.CHROME_PATH).toBe(CHROME_PATH)
-      } finally {
-        marpCliMock.mockRestore()
-      }
-    })
   })
 })
 

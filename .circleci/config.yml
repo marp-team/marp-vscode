@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  codecov: codecov/codecov@3.2.0
+  codecov: codecov/codecov@5.0.3
 
 executors:
   node:
@@ -85,24 +85,38 @@ jobs:
     steps:
       - audit
 
-  unit-electron19:
+  unit-electron27:
     executor:
       name: node
-      version: '16.14.2'
+      version: '18.17.1'
     steps:
       - test
 
-  unit-electron22:
+  unit-electron28:
     executor:
       name: node
-      version: '16.17.1'
+      version: '18.18.2'
     steps:
       - test
 
-  unit-electron25:
+  unit-electron29:
     executor:
       name: node
-      version: '18.15.0'
+      version: '20.9.0'
+    steps:
+      - test
+
+  unit-electron30:
+    executor:
+      name: node
+      version: '20.14.0'
+    steps:
+      - test
+
+  unit-electron32:
+    executor:
+      name: node
+      version: '20.18.0'
     steps:
       - test
 
@@ -110,12 +124,18 @@ workflows:
   test:
     jobs:
       - audit
-      - unit-electron19:
+      - unit-electron27:
           requires:
             - audit
-      - unit-electron22:
+      - unit-electron28:
           requires:
             - audit
-      - unit-electron25:
+      - unit-electron29:
+          requires:
+            - audit
+      - unit-electron30:
+          requires:
+            - audit
+      - unit-electron32:
           requires:
             - audit

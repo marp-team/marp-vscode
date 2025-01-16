@@ -5,13 +5,18 @@ type MockedConf = Record<string, any>
 const defaultVSCodeVersion = 'v1.62.1'
 const defaultConf: MockedConf = {
   'markdown.marp.breaks': 'on',
-  'markdown.marp.chromePath': '',
-  'markdown.marp.enableHtml': false,
+  'markdown.marp.browser': 'auto',
+  'markdown.marp.browserPath': '',
+  'markdown.marp.html': 'default',
   'markdown.marp.exportType': 'pdf',
   'markdown.marp.outlineExtension': true,
   'markdown.marp.pdf.noteAnnotations': false,
   'markdown.marp.pdf.outlines': 'off',
   'window.zoomLevel': 0,
+
+  // Legacy
+  'markdown.marp.chromePath': '',
+  'markdown.marp.enableHtml': false,
 }
 
 let currentConf: MockedConf = {}
@@ -227,7 +232,7 @@ export const window = {
   showQuickPick: jest.fn(),
   showSaveDialog: jest.fn(),
   showTextDocument: jest.fn(async () => ({})),
-  showWarningMessage: jest.fn(),
+  showWarningMessage: jest.fn(async () => undefined),
   withProgress: jest.fn(),
 }
 

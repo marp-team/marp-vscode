@@ -2,6 +2,42 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp CLI to [v4.1.0](https://github.com/marp-team/marp-cli/releases/tag/v4.1.0) ([#487](https://github.com/marp-team/marp-vscode/pull/487))
+
+### Fixed
+
+- Apply theme color to Marp icon ([#479](https://github.com/marp-team/marp-vscode/issues/479), [#484](https://github.com/marp-team/marp-vscode/pull/484))
+- Mark `markdown.marp.strictPathResolutionDuringExport` with "Experimental" UI label ([#485](https://github.com/marp-team/marp-vscode/pull/485))
+
+## v3.0.0 - 2024-12-31
+
+> 🆙 **This update is including the major update of [Marp Core](https://github.com/marp-team/marp-core) and [Marp CLI](https://github.com/marp-team/marp-cli) v3 → v4.** Please check "**[Changes in new Marp Core v4](https://github.com/orgs/marp-team/discussions/533)**" for details.
+
+### ⚡️ Breaking
+
+- VS Code v1.86.0 and later is now required ([#474](https://github.com/marp-team/marp-vscode/pull/474))
+- Upgrade Marp Core to [v4.0.1](https://github.com/marp-team/marp-core/releases/v4.0.1) ([#472](https://github.com/marp-team/marp-vscode/pull/472), [#474](https://github.com/marp-team/marp-vscode/pull/474))
+- Upgrade Marp CLI to [v4.0.4](https://github.com/marp-team/marp-cli/releases/v4.0.4) ([#473](https://github.com/marp-team/marp-vscode/pull/473), [#474](https://github.com/marp-team/marp-vscode/pull/474))
+
+### Added
+
+- `markdown.marp.html` setting to control rendering HTML within Marp Markdown ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+- `markdown.marp.browser` and `markdown.marp.browserPath` settings to control internally using browser to export ([#478](https://github.com/marp-team/marp-vscode/pull/478))
+- Support Firefox as a browser for exporting ([#473](https://github.com/marp-team/marp-vscode/pull/473), [#474](https://github.com/marp-team/marp-vscode/pull/474), [#478](https://github.com/marp-team/marp-vscode/pull/478))
+
+### Changed
+
+- Several allowed HTML elements through Marp Core are enabled by default ([#472](https://github.com/marp-team/marp-vscode/pull/472), [#474](https://github.com/marp-team/marp-vscode/pull/474), [#476](https://github.com/marp-team/marp-vscode/pull/476))
+- Upgrade development Node.js and dependent packages to the latest version ([#474](https://github.com/marp-team/marp-vscode/pull/474))
+- Migrate ESLint config to flat config ([#475](https://github.com/marp-team/marp-vscode/pull/475))
+
+### Deprecated
+
+- Deprecated `markdown.marp.enableHtml` setting in favor of `markdown.marp.html` ([#476](https://github.com/marp-team/marp-vscode/pull/476))
+- Deprecated `markdown.marp.chromePath` setting in favor of `markdown.marp.browserPath` ([#478](https://github.com/marp-team/marp-vscode/pull/478))
+
 ## v2.8.0 - 2023-10-28
 
 ### Changed

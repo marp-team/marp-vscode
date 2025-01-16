@@ -2,7 +2,7 @@
   "name": "marp-vscode",
   "displayName": "Marp for VS Code",
   "publisher": "marp-team",
-  "version": "2.8.0",
+  "version": "3.0.0",
   "description": "Create slide deck written in Marp Markdown on VS Code",
   "categories": [
     "Other"
@@ -33,7 +33,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.72.0"
+    "vscode": "^1.86.0"
   },
   "main": "./lib/extension.js",
   "browser": "./dist/extension.js",
@@ -43,17 +43,14 @@
     "theme": "light"
   },
   "activationEvents": [
-    "onLanguage:markdown",
-    "onCommand:markdown.marp.export",
-    "onCommand:markdown.marp.newMarpMarkdown",
-    "onCommand:markdown.marp.showQuickPick",
-    "onCommand:markdown.marp.toggleMarpFeature"
+    "onLanguage:markdown"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": "limited",
       "description": "Workspace trust is required for exporting slide deck, and using themes configured in the workspace.",
       "restrictedConfigurations": [
+        "markdown.marp.html",
         "markdown.marp.enableHtml",
         "markdown.marp.themes"
       ]
@@ -88,10 +85,7 @@
         "category": "Marp",
         "command": "markdown.marp.showQuickPick",
         "title": "Show Quick Pick Of Marp Commands...",
-        "icon": {
-          "dark": "./images/icon-dark.svg",
-          "light": "./images/icon-light.svg"
-        }
+        "icon": "$(marp-brand)"
       },
       {
         "category": "Marp",
@@ -118,15 +112,42 @@
             "Use inherited setting from `#markdown.preview.breaks#`."
           ]
         },
-        "markdown.marp.chromePath": {
+        "markdown.marp.browser": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "chrome",
+            "edge",
+            "firefox"
+          ],
+          "default": "auto",
+          "description": "Controls the installed browser using internally to export PDF, PPTX, and the image.",
+          "enumDescriptions": [
+            "Automatically detect Chrome, Chromium, Edge, or Firefox.",
+            "Use Google Chrome.",
+            "Use Microsoft Edge.",
+            "Use Mozilla Firefox."
+          ]
+        },
+        "markdown.marp.browserPath": {
           "type": "string",
           "default": "",
-          "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome / Chromium / Microsoft Edge."
+          "markdownDescription": "Configure the custom path for the installed browser using internally to export PDF, PPTX, and the image. The kind of browser is determined by `#markdown.marp.browser#`. When set to empty, Marp will find out a suitable installed browser automatically."
         },
-        "markdown.marp.enableHtml": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enables all HTML elements in Marp Markdown. This setting is working only in the trusted workspace."
+        "markdown.marp.html": {
+          "type": "string",
+          "enum": [
+            "off",
+            "default",
+            "all"
+          ],
+          "markdownEnumDescriptions": [
+            "Disable all HTML elements, including originally allowed HTML elements by Marp.",
+            "Enable only selectively enabled HTML elements by Marp. _([See the list of HTML elements](https://github.com/marp-team/marp-core/blob/main/src/html/allowlist.ts))_",
+            "Enable all HTML elements. This setting may become the slide rendering insecure."
+          ],
+          "default": "default",
+          "description": "Sets which HTML elements within Marp Markdown are enabled in rendered slides. If the workspace is not trusted, this setting treats as always \"off\"."
         },
         "markdown.marp.exportType": {
           "type": "string",
@@ -197,7 +218,10 @@
         "markdown.marp.strictPathResolutionDuringExport": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "_[Experimental]_ Enables strict path resolution during export. If enabled, the export command tries to resolve relative paths from VS Code workspace that a Markdown file belongs. If disabled, or the Markdown does not belong to any workspace, the export command resolves paths based on the local file system."
+          "description": "Enables strict path resolution during export. If enabled, the export command tries to resolve relative paths from VS Code workspace that a Markdown file belongs. If disabled, or the Markdown does not belong to any workspace, the export command resolves paths based on the local file system.",
+          "tags": [
+            "experimental"
+          ]
         },
         "markdown.marp.themes": {
           "type": "array",
@@ -206,6 +230,27 @@
           "items": {
             "type": "string"
           }
+        },
+        "markdown.marp.enableHtml": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enables all HTML elements in Marp Markdown. This setting is working only in the trusted workspace.",
+          "deprecationMessage": "The setting \"markdown.marp.enableHtml\" is deprecated. Please use \"markdown.marp.html\" instead."
+        },
+        "markdown.marp.chromePath": {
+          "type": "string",
+          "default": "",
+          "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome / Chromium / Microsoft Edge.",
+          "deprecationMessage": "The setting \"markdown.marp.chromePath\" is deprecated. Please use \"markdown.marp.browserPath\" instead."
+        }
+      }
+    },
+    "icons": {
+      "marp-brand": {
+        "description": "Marp brand",
+        "default": {
+          "fontPath": "./images/icon.woff",
+          "fontCharacter": "\\e000"
         }
       }
     },
@@ -268,7 +313,7 @@
     "format": "prettier \"**/*.{css,js,json,md,scss,ts,yaml,yml}\"",
     "format:write": "npm run -s format -- --write",
     "lint:css": "stylelint \"./*.{css,scss}\"",
-    "lint:js": "eslint --ext .js,.ts --report-unused-disable-directives --cache .",
+    "lint:js": "eslint --cache",
     "package": "vsce package",
     "preversion": "run-p check:* lint:* test:*:coverage",
     "test:unit": "jest",
@@ -281,61 +326,63 @@
     "watch:web": "webpack --watch --env target=web,preview"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.2",
-    "@marp-team/marp-core": "^3.9.0",
-    "@types/color-string": "^1.5.4",
-    "@types/express": "^4.17.20",
-    "@types/jest": "^29.5.6",
-    "@types/lodash.debounce": "^4.0.8",
-    "@types/markdown-it": "^13.0.5",
-    "@types/vscode": "~1.72.0",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
-    "@vscode/test-web": "^0.0.48",
-    "@vscode/vsce": "^2.21.1",
+    "@babel/preset-env": "^7.26.0",
+    "@eslint/js": "^9.17.0",
+    "@marp-team/marp-core": "^4.0.1",
+    "@types/color-string": "^1.5.5",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.14",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/markdown-it": "^14.1.2",
+    "@types/vscode": "~1.86.0",
+    "@vscode/test-web": "^0.0.65",
+    "@vscode/vsce": "^3.2.1",
     "abort-controller": "^3.0.0",
     "color-string": "^1.9.1",
-    "dedent": "^1.5.1",
-    "esbuild": "^0.19.5",
-    "esbuild-loader": "^4.0.2",
-    "eslint": "^8.52.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-jest": "^27.6.0",
-    "express": "^4.18.2",
+    "dedent": "^1.5.3",
+    "esbuild": "^0.24.2",
+    "esbuild-loader": "^4.2.2",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jest": "^28.10.0",
+    "eslint-plugin-unicorn": "^56.0.1",
+    "express": "^4.21.2",
     "fetch-ponyfill": "^7.1.0",
+    "globals": "^15.14.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-junit": "^16.0.0",
     "lodash.debounce": "^4.0.8",
-    "markdown-it": "^13.0.2",
-    "nanoid": "^5.0.2",
-    "npm-check-updates": "^16.14.6",
-    "npm-run-all2": "^6.1.1",
+    "markdown-it": "^14.1.0",
+    "nanoid": "^5.0.9",
+    "npm-check-updates": "^17.1.12",
+    "npm-run-all2": "^7.0.2",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "portfinder": "1.0.32",
-    "prettier": "^3.0.3",
+    "prettier": "^3.4.2",
     "process": "^0.11.10",
-    "rehype-parse": "^9.0.0",
+    "rehype-parse": "^9.0.1",
     "remark-math": "^6.0.0",
     "remark-parse": "^11.0.0",
-    "stylelint": "^15.11.0",
-    "stylelint-config-standard": "^34.0.0",
-    "ts-jest": "^29.1.1",
-    "tslib": "^2.6.2",
+    "stylelint": "^16.12.0",
+    "stylelint-config-standard": "^36.0.1",
+    "ts-jest": "^29.2.5",
+    "tslib": "^2.8.1",
     "typed-emitter": "^2.1.0",
-    "typescript": "^5.2.2",
-    "unified": "^11.0.4",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2",
+    "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
     "vscode-uri": "^3.0.8",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4",
-    "yaml": "^2.3.3"
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "yaml": "^2.6.1"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^3.4.0"
+    "@marp-team/marp-cli": "^4.1.0"
   }
 }
