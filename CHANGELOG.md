@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp CLI to [v4.1.0](https://github.com/marp-team/marp-cli/releases/tag/v4.1.0) ([#487](https://github.com/marp-team/marp-vscode/pull/487))
+
 ### Fixed
 
 - Apply theme color to Marp icon ([#479](https://github.com/marp-team/marp-vscode/issues/479), [#484](https://github.com/marp-team/marp-vscode/pull/484))
