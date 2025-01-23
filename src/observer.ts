@@ -36,7 +36,7 @@ type ViewObserverEvents = {
   stop: (event: ViewObserverEventHandler) => void
 }
 
-class ViewObserver
+export class ViewObserver
   extends (EventEmitter as new () => TypedEmitter<ViewObserverEvents>)
   implements Disposable
 {
@@ -124,8 +124,10 @@ class ViewObserver
   }
 }
 
-const OPEN_MARKDOWN_PREVIEW_BY_VS_CODE = 'Open Markdown preview by VS Code'
-const DONT_NOTIFY_AGAIN = "Don't notify again"
+export const OPEN_MARKDOWN_PREVIEW_BY_VS_CODE =
+  'Open Markdown preview by VS Code'
+
+export const DONT_NOTIFY_AGAIN = "Don't notify again"
 
 export const incompatiblePreviewExtensionsObserver = () => {
   const observer = new ViewObserver(1000)
