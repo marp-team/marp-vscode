@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Upgrade Marp CLI to [v4.1.0](https://github.com/marp-team/marp-cli/releases/tag/v4.1.0) ([#487](https://github.com/marp-team/marp-vscode/pull/487))
+- Upgrade Marp CLI to [v4.1.1](https://github.com/marp-team/marp-cli/releases/tag/v4.1.1) ([#487](https://github.com/marp-team/marp-vscode/pull/487), [#490](https://github.com/marp-team/marp-vscode/pull/490))
 
 ### Fixed
 
