@@ -144,7 +144,9 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
       const runMarpCli = async ({
         pptxEditable,
-      }: { pptxEditable?: boolean } = {}) => {
+      }: {
+        pptxEditable?: boolean
+      }) => {
         const conf = await createConfigFile(document, {
           allowLocalFiles: !proxyServer,
           pdfNotes:
@@ -217,7 +219,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
           conf.cleanup()
         }
 
-        const shouldOpen = marpConfiguration().get<boolean>('exportAutoOpen')!
+        const shouldOpen = marpConfiguration().get<boolean>('exportAutoOpen')
 
         if (outputToLocalFS && shouldOpen) {
           env.openExternal(uri)
