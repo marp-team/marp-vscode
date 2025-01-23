@@ -220,6 +220,22 @@ In the untrusted workspace, HTML elements in Marp Markdown will be always ignore
 > [!NOTE]
 > A legacy setting `markdown.marp.enableHtml` is deprecated since v2. Please use `markdown.marp.html` instead.
 
+## Experimental settings
+
+Some of settings are marked as experimental. These feature may be unstable and change the spec in the future.
+
+### [`markdown.marp.pptx.editable`](https://github.com/marp-team/marp-vscode/pull/489)
+
+You can enable the experimental feature to export PPTX with editable contents, based on [Marp CLI's corresponding experimental option](https://github.com/marp-team/marp-cli#experimental-generate-editable-pptx---pptx-editable). This feature requires to install both of the compatible browser and [LibreOffice Impress](https://www.libreoffice.org/).
+
+If set this setting as `smart`, Marp for VS Code will try to export into editable PPTX first, and then fallback to the regular PPTX export (non-editable) if failed.
+
+### [`markdown.marp.strictPathResolutionDuringExport`](https://github.com/marp-team/marp-vscode/pull/367)
+
+This experimental setting is useful to improve the export result compatibility with VS Code preview. If enabled, the export command will try to resolve relative paths in Markdown from VS Code workspace that a Markdown file belongs.
+
+If disabled, or the Markdown does not belong to any workspace, the export command will resolve paths based on the local file system. This behavior is same as [Marp CLI](https://github.com/marp-team/marp-cli).
+
 ## Web extension
 
 You can use Marp extension in VS Code for the Web environment like [vscode.dev](https://vscode.dev) and [github.dev](https://github.dev). Try opening https://github.dev/marp-team/marp-vscode/blob/main/docs/example.md, with an environment that has installed Marp extension.
