@@ -85,10 +85,7 @@
         "category": "Marp",
         "command": "markdown.marp.showQuickPick",
         "title": "Show Quick Pick Of Marp Commands...",
-        "icon": {
-          "dark": "./images/icon-dark.svg",
-          "light": "./images/icon-light.svg"
-        }
+        "icon": "$(marp-brand)"
       },
       {
         "category": "Marp",
@@ -171,6 +168,11 @@
             "JPEG image (first slide only)"
           ]
         },
+        "markdown.marp.exportAutoOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically opens the exported file using the default application installed on your operating system."
+        },
         "markdown.marp.mathTypesetting": {
           "type": "string",
           "enum": [
@@ -213,10 +215,31 @@
             "Add outlines based on both slide pages and Markdown headings."
           ]
         },
+        "markdown.marp.pptx.editable": {
+          "type": "string",
+          "enum": [
+            "off",
+            "on",
+            "smart"
+          ],
+          "default": "off",
+          "markdownDescription": "Sets whether make editable or not when exporting to PowerPoint document. You should install both of the browser and [LibreOffice Impress](https://libreoffice.org/) to export the editable PPTX. Please note that the editable PPTX output may fail to convert or be generated with an incomplete layout depending on the slide content.",
+          "markdownEnumDescriptions": [
+            "Always export non-editable PPTX. It has full visual reproducibillity and presenter note support.",
+            "Always export editable PPTX. Please note that the editable PPTX may fail to convert or be generated with an incomplete layout depending on the slide content.",
+            "Try to export editable PPTX first, and fallback to non-editable PPTX if failed."
+          ],
+          "tags": [
+            "experimental"
+          ]
+        },
         "markdown.marp.strictPathResolutionDuringExport": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "_[Experimental]_ Enables strict path resolution during export. If enabled, the export command tries to resolve relative paths from VS Code workspace that a Markdown file belongs. If disabled, or the Markdown does not belong to any workspace, the export command resolves paths based on the local file system."
+          "description": "Enables strict path resolution during export. If enabled, the export command tries to resolve relative paths from VS Code workspace that a Markdown file belongs. If disabled, or the Markdown does not belong to any workspace, the export command resolves paths based on the local file system.",
+          "tags": [
+            "experimental"
+          ]
         },
         "markdown.marp.themes": {
           "type": "array",
@@ -237,6 +260,15 @@
           "default": "",
           "description": "Sets the custom path for Chrome or Chromium-based browser to export PDF, PPTX, and image. If it's empty, Marp will find out the installed Google Chrome / Chromium / Microsoft Edge.",
           "deprecationMessage": "The setting \"markdown.marp.chromePath\" is deprecated. Please use \"markdown.marp.browserPath\" instead."
+        }
+      }
+    },
+    "icons": {
+      "marp-brand": {
+        "description": "Marp brand",
+        "default": {
+          "fontPath": "./images/icon.woff",
+          "fontCharacter": "\\e000"
         }
       }
     },
@@ -369,6 +401,6 @@
     "yaml": "^2.6.1"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^4.0.4"
+    "@marp-team/marp-cli": "^4.1.1"
   }
 }

@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Added
+
+- `markdown.marp.exportAutoOpen` setting ([#464](https://github.com/marp-team/marp-vscode/pull/464) by [@rtfmkiesel](https://github.com/rtfmkiesel))
+- Experimental `markdown.marp.pptx.editable` setting ([#489](https://github.com/marp-team/marp-vscode/pull/489))
+
+### Changed
+
+- Upgrade Marp CLI to [v4.1.1](https://github.com/marp-team/marp-cli/releases/tag/v4.1.1) ([#487](https://github.com/marp-team/marp-vscode/pull/487), [#490](https://github.com/marp-team/marp-vscode/pull/490))
+
+### Fixed
+
+- Apply theme color to Marp icon ([#479](https://github.com/marp-team/marp-vscode/issues/479), [#484](https://github.com/marp-team/marp-vscode/pull/484))
+- Mark `markdown.marp.strictPathResolutionDuringExport` with "Experimental" UI label ([#485](https://github.com/marp-team/marp-vscode/pull/485))
+
 ## v3.0.0 - 2024-12-31
 
 > 🆙 **This update is including the major update of [Marp Core](https://github.com/marp-team/marp-core) and [Marp CLI](https://github.com/marp-team/marp-cli) v3 → v4.** Please check "**[Changes in new Marp Core v4](https://github.com/orgs/marp-team/discussions/533)**" for details.

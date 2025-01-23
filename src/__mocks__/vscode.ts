@@ -8,10 +8,12 @@ const defaultConf: MockedConf = {
   'markdown.marp.browser': 'auto',
   'markdown.marp.browserPath': '',
   'markdown.marp.html': 'default',
+  'markdown.marp.exportAutoOpen': true,
   'markdown.marp.exportType': 'pdf',
   'markdown.marp.outlineExtension': true,
   'markdown.marp.pdf.noteAnnotations': false,
   'markdown.marp.pdf.outlines': 'off',
+  'markdown.marp.pptx.editable': 'off',
   'window.zoomLevel': 0,
 
   // Legacy

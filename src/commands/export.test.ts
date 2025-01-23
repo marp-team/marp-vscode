@@ -318,6 +318,62 @@ describe('#doExport', () => {
     })
   })
 
+  describe('when enabled markdown.marp.pptx.editable', () => {
+    let marpCliMock: jest.SpyInstance
+
+    beforeEach(() => {
+      marpCliMock = jest.spyOn(marpCli, 'default').mockImplementation()
+    })
+
+    afterEach(() => marpCliMock?.mockRestore())
+
+    it('enables pptxEditable option while exporting PPTX when the setting is "on"', async () => {
+      setConfiguration({ 'markdown.marp.pptx.editable': 'on' })
+
+      const optionGeneratorSpy = jest.spyOn(option, 'marpCoreOptionForCLI')
+      await exportModule.doExport(saveURI('file', 'pptx'), document)
+      expect(optionGeneratorSpy).toHaveBeenCalledTimes(1)
+
+      const ret = await optionGeneratorSpy.mock.results[0].value
+      expect(ret).toStrictEqual(expect.objectContaining({ pptxEditable: true }))
+    })
+
+    it('enables pptxEditable option while exporting PPTX when the setting is "smart"', async () => {
+      setConfiguration({ 'markdown.marp.pptx.editable': 'smart' })
+
+      const optionGeneratorSpy = jest.spyOn(option, 'marpCoreOptionForCLI')
+      await exportModule.doExport(saveURI('file', 'pptx'), document)
+
+      expect(marpCliMock).toHaveBeenCalledTimes(1)
+      expect(optionGeneratorSpy).toHaveBeenCalledTimes(1)
+
+      const ret = await optionGeneratorSpy.mock.results[0].value
+      expect(ret).toStrictEqual(expect.objectContaining({ pptxEditable: true }))
+    })
+
+    it('retries exporting with disabling pptxEditable option when the setting is "smart" and failed the first export', async () => {
+      setConfiguration({ 'markdown.marp.pptx.editable': 'smart' })
+
+      marpCliMock.mockRejectedValueOnce(new Error('Failed to export'))
+
+      const optionGeneratorSpy = jest.spyOn(option, 'marpCoreOptionForCLI')
+      await exportModule.doExport(saveURI('file', 'pptx'), document)
+
+      expect(marpCliMock).toHaveBeenCalledTimes(2)
+      expect(optionGeneratorSpy).toHaveBeenCalledTimes(2)
+
+      const first = await optionGeneratorSpy.mock.results[0].value
+      expect(first).toStrictEqual(
+        expect.objectContaining({ pptxEditable: true }),
+      )
+
+      const second = await optionGeneratorSpy.mock.results[1].value
+      expect(second).toStrictEqual(
+        expect.objectContaining({ pptxEditable: false }),
+      )
+    })
+  })
+
   describe('when CLI was thrown CLIError with BROWSER_NOT_FOUND error code', () => {
     it.each`
       browser      | platform    | expected
@@ -375,6 +431,35 @@ describe('#doExport', () => {
         }
       },
     )
+  })
+
+  describe('when CLI was thrown CLIError with NOT_FOUND_SOFFICE error code', () => {
+    it('throws MarpCLIError with the user-friendly message to suggest installing LibreOffice', async () => {
+      const runMarpCLI = jest
+        .spyOn(marpCli, 'default')
+        .mockImplementation(async (_, __, opts) => {
+          opts?.onCLIError?.({
+            error: new marpCliModule.CLIError(
+              'mocked error',
+              marpCliModule.CLIErrorCode.NOT_FOUND_SOFFICE,
+            ),
+            codes: marpCliModule.CLIErrorCode,
+          })
+        })
+
+      try {
+        await exportModule.doExport(saveURI(), document)
+
+        expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
+        expect(window.showErrorMessage).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'It requires to install LibreOffice Impress for exporting to the editable PowerPoint document.',
+          ),
+        )
+      } finally {
+        runMarpCLI.mockRestore()
+      }
+    })
   })
 
   describe('when the save path has non-file scheme', () => {
