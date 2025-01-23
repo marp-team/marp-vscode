@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## v3.1.0 - 2025-01-23
+
 ### Added
 
 - `markdown.marp.exportAutoOpen` setting ([#464](https://github.com/marp-team/marp-vscode/pull/464) by [@rtfmkiesel](https://github.com/rtfmkiesel))
