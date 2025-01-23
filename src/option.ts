@@ -130,8 +130,6 @@ export const marpCoreOptionForCLI = async (
     const v = marpConfiguration().get<'off' | 'on' | 'smart'>('pptx.editable')
     if (v === 'on') return true
     if (v === 'off') return false
-
-    return undefined
   })()
 
   let browser = marpConfiguration().get<'auto' | 'chrome' | 'edge' | 'firefox'>(
