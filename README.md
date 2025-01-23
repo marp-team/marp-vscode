@@ -16,7 +16,7 @@ We will enhance your VS Code as the slide deck writer. Mark `marp: true`, and wr
 
 See the documentation of [Marpit Markdown](https://marpit.marp.app/markdown) and [the features of Marp Core](https://github.com/marp-team/marp-core#features) about how to write.
 
-> Please refer **[https://marp.app/][marp]** for more details of Marp ecosystem. We have powerful tools for Marp Markdown: [Marpit Framework](https://marpit.marp.app/), [CLI tool](https://github.com/marp-team/marp-cli), [Web interface](https://web.marp.app/) and so on.
+> Please refer **[https://marp.app/][marp]** for more details of Marp ecosystem. We have powerful tools for Marp Markdown: [Marpit Framework](https://marpit.marp.app/), [Marp Core](https://github.com/marp-team/marp-core), [CLI tool](https://github.com/marp-team/marp-cli) and so on.
 
 [marp]: https://marp.app/
 
@@ -189,7 +189,9 @@ We extend the outline view to support slide pages in Marp Markdown.
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/outline.png" alt="Outline view for each slide" width="400" />
 </p>
 
-> ℹ️ Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order.
+> [!TIP]
+>
+> Please choose `Sort By: Position` from context menu of its panel if you see incorrect slide order.
 
 #### Slide folding in editor
 
