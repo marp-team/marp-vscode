@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `markdown.marp.exportAutoOpen` setting ([#464](https://github.com/marp-team/marp-vscode/pull/464) by [@rtfmkiesel](https://github.com/rtfmkiesel))
+
 ### Changed
 
 - Upgrade Marp CLI to [v4.1.1](https://github.com/marp-team/marp-cli/releases/tag/v4.1.1) ([#487](https://github.com/marp-team/marp-vscode/pull/487), [#490](https://github.com/marp-team/marp-vscode/pull/490))
