@@ -187,9 +187,6 @@ describe('#doExport', () => {
 
   it('exports passed document via Marp CLI and opens it', async () => {
     const runMarpCLI = jest.spyOn(marpCli, 'default').mockImplementation()
-    setConfiguration({
-      'markdown.marp.exportAutoOpen': true,
-    })
 
     try {
       const uri = saveURI()
