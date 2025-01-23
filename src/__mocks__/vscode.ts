@@ -13,6 +13,7 @@ const defaultConf: MockedConf = {
   'markdown.marp.outlineExtension': true,
   'markdown.marp.pdf.noteAnnotations': false,
   'markdown.marp.pdf.outlines': 'off',
+  'markdown.marp.pptx.editable': 'off',
   'window.zoomLevel': 0,
 
   // Legacy

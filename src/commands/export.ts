@@ -138,62 +138,88 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
         )
       }
 
-      // Run Marp CLI
-      const conf = await createConfigFile(document, {
-        allowLocalFiles: !proxyServer,
-        pdfNotes:
-          ouputExt === '.pdf' &&
-          marpConfiguration().get<boolean>('pdf.noteAnnotations'),
-      })
+      const pptxEditableSmart =
+        ouputExt === '.pptx' &&
+        marpConfiguration().get<string>('pptx.editable') === 'smart'
 
-      try {
-        await marpCli(
-          ['-c', conf.path, input.path, '-o', outputPath],
-          { baseUrl },
-          {
-            onCLIError: ({ error, codes }) => {
-              if (error.errorCode === codes.NOT_FOUND_BROWSER) {
-                // Throw error with user-friendly instructions based on the current configuration
-                const browserOption = marpConfiguration().get<string>('browser')
-                const suggestBrowsers: string[] = []
+      const runMarpCli = async ({
+        pptxEditable,
+      }: {
+        pptxEditable?: boolean
+      }) => {
+        const conf = await createConfigFile(document, {
+          allowLocalFiles: !proxyServer,
+          pdfNotes:
+            ouputExt === '.pdf' &&
+            marpConfiguration().get<boolean>('pdf.noteAnnotations'),
+          pptxEditable,
+        })
 
-                switch (browserOption) {
-                  case 'chrome':
-                    suggestBrowsers.push(
-                      ...[
-                        browsers.chrome,
-                        process.platform === 'linux' ? browsers.chromium : '',
-                      ].filter((b) => !!b),
+        try {
+          await marpCli(
+            ['-c', conf.path, input.path, '-o', outputPath],
+            { baseUrl },
+            {
+              onCLIError: ({ error, codes }) => {
+                switch (error.errorCode) {
+                  case codes.NOT_FOUND_BROWSER: {
+                    // Throw error with user-friendly instructions based on the current configuration
+                    const suggestBrowsers: string[] = []
+
+                    switch (marpConfiguration().get<string>('browser')) {
+                      case 'chrome':
+                        suggestBrowsers.push(
+                          ...[
+                            browsers.chrome,
+                            process.platform === 'linux'
+                              ? browsers.chromium
+                              : '',
+                          ].filter((b) => !!b),
+                        )
+                        break
+                      case 'edge':
+                        suggestBrowsers.push(browsers.edge)
+                        break
+                      case 'firefox':
+                        suggestBrowsers.push(browsers.firefox)
+                        break
+                      default:
+                        suggestBrowsers.push(
+                          ...[
+                            browsers.chrome,
+                            process.platform === 'linux'
+                              ? browsers.chromium
+                              : '',
+                            browsers.edge,
+                            browsers.firefox,
+                          ].filter((b) => !!b),
+                        )
+                    }
+
+                    throw new MarpCLIError(
+                      `It requires to install a suitable browser, ${suggestBrowsers
+                        .join(', ')
+                        .replace(/, ([^,]*)$/, ' or $1')} for exporting.`,
                     )
-                    break
-                  case 'edge':
-                    suggestBrowsers.push(browsers.edge)
-                    break
-                  case 'firefox':
-                    suggestBrowsers.push(browsers.firefox)
-                    break
-                  default:
-                    suggestBrowsers.push(
-                      ...[
-                        browsers.chrome,
-                        process.platform === 'linux' ? browsers.chromium : '',
-                        browsers.edge,
-                        browsers.firefox,
-                      ].filter((b) => !!b),
+                  }
+                  case codes.NOT_FOUND_SOFFICE:
+                    throw new MarpCLIError(
+                      'It requires to install LibreOffice Impress for exporting to the editable PowerPoint document.',
                     )
                 }
-
-                throw new MarpCLIError(
-                  `It requires to install a suitable browser, ${suggestBrowsers
-                    .join(', ')
-                    .replace(/, ([^,]*)$/, ' or $1')} for exporting.`,
-                )
-              }
+              },
             },
-          },
-        )
+          )
+        } catch (e) {
+          if (pptxEditableSmart && pptxEditable === true) {
+            return await runMarpCli({ pptxEditable: false })
+          }
+          throw e
+        } finally {
+          conf.cleanup()
+        }
 
-        const shouldOpen = marpConfiguration().get<boolean>('exportAutoOpen')!
+        const shouldOpen = marpConfiguration().get<boolean>('exportAutoOpen')
 
         if (outputToLocalFS && shouldOpen) {
           env.openExternal(uri)
@@ -214,9 +240,9 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
             `Marp slide deck was successfully exported to ${uri.toString()}.`,
           )
         }
-      } finally {
-        conf.cleanup()
       }
+
+      await runMarpCli({ pptxEditable: pptxEditableSmart ? true : undefined })
     } catch (e) {
       window.showErrorMessage(
         `Failure to export${(() => {

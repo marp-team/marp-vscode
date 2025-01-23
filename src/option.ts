@@ -115,9 +115,22 @@ export const marpCoreOptionForCLI = async (
   {
     allowLocalFiles = true,
     pdfNotes,
-  }: { allowLocalFiles?: boolean; pdfNotes?: boolean } = {},
+    pptxEditable: _pptxEditable,
+  }: {
+    allowLocalFiles?: boolean
+    pdfNotes?: boolean
+    pptxEditable?: boolean
+  } = {},
 ) => {
   const confMdPreview = workspace.getConfiguration('markdown.preview', uri)
+
+  const pptxEditable = (() => {
+    if (_pptxEditable !== undefined) return _pptxEditable
+
+    const v = marpConfiguration().get<'off' | 'on' | 'smart'>('pptx.editable')
+    if (v === 'on') return true
+    if (v === 'off') return false
+  })()
 
   let browser = marpConfiguration().get<'auto' | 'chrome' | 'edge' | 'firefox'>(
     'browser',
@@ -180,8 +193,9 @@ export const marpCoreOptionForCLI = async (
       },
       math: math(),
     },
+    pptxEditable,
     themeSet: [] as string[],
-  } as ConfigForCLI
+  } satisfies Config as ConfigForCLI
 
   const workspaceFolder = workspace.getWorkspaceFolder(uri)
   const parentFolder = uri.scheme === 'file' && path.dirname(uri.fsPath)
