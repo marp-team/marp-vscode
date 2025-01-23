@@ -6,6 +6,7 @@
 
 - `markdown.marp.exportAutoOpen` setting ([#464](https://github.com/marp-team/marp-vscode/pull/464) by [@rtfmkiesel](https://github.com/rtfmkiesel))
 - Experimental `markdown.marp.pptx.editable` setting ([#489](https://github.com/marp-team/marp-vscode/pull/489))
+- Implement observer to notify about incompatible extensions ([#82](https://github.com/marp-team/marp-vscode/issues/82), [#453](https://github.com/marp-team/marp-vscode/issues/453), [#459](https://github.com/marp-team/marp-vscode/issues/459), [#488](https://github.com/marp-team/marp-vscode/pull/488))
 
 ### Changed
 

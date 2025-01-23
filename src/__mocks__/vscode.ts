@@ -214,6 +214,10 @@ export class Memento {
   }
 }
 
+export class TabInputWebview {
+  constructor(public readonly viewType: string) {}
+}
+
 export class Uri extends URI {
   static joinPath(uri: Uri, ...pathSegments: string[]) {
     return Utils.joinPath(uri, ...pathSegments)
@@ -236,6 +240,10 @@ export const window = {
   showTextDocument: jest.fn(async () => ({})),
   showWarningMessage: jest.fn(async () => undefined),
   withProgress: jest.fn(),
+  visibleTextEditors: [],
+  tabGroups: {
+    all: [],
+  },
 }
 
 export const workspace = {

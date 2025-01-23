@@ -9,6 +9,9 @@ import { Memento, Uri, commands, window, workspace, env } from 'vscode'
 
 jest.mock('node-fetch')
 jest.mock('vscode')
+jest.mock('./observer', () => ({
+  incompatiblePreviewExtensionsObserver: jest.fn(),
+}))
 
 let themes: (typeof import('./themes'))['default']
 
