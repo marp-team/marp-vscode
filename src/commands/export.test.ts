@@ -1,11 +1,9 @@
 import * as marpCliModule from '@marp-team/marp-cli'
-import { commands, env, window, workspace } from 'vscode'
+import { TextDocument, commands, env, window, workspace } from 'vscode'
 import * as marpCli from '../marp-cli'
 import * as option from '../option'
 import { createWorkspaceProxyServer } from '../workspace-proxy-server'
 import * as exportModule from './export'
-
-const exportCommand = exportModule.default
 
 jest.mock('fs')
 jest.mock('vscode')
@@ -20,83 +18,280 @@ const setConfiguration: (conf?: Record<string, unknown>) => void = (
   workspace as any
 )._setConfiguration
 
-describe('Export command', () => {
+describe('Export commands', () => {
   let saveDialog: jest.SpyInstance
+  let startExport: jest.SpyInstance
+  let doExport: jest.SpyInstance
 
   beforeEach(() => {
     saveDialog = jest.spyOn(exportModule, 'saveDialog').mockImplementation()
+    startExport = jest.spyOn(exportModule, 'startExport').mockImplementation()
+    doExport = jest.spyOn(exportModule, 'doExport').mockImplementation()
   })
 
-  afterEach(() => saveDialog?.mockRestore())
-
-  it('has no ops when active text editor is undefined', async () => {
-    window.activeTextEditor = undefined
-
-    await exportCommand()
-    expect(saveDialog).not.toHaveBeenCalled()
+  afterEach(() => {
+    saveDialog?.mockRestore()
+    startExport?.mockRestore()
+    doExport?.mockRestore()
   })
 
-  it('opens save dialog when active text editor is Markdown', async () => {
-    const textEditor = { document: { languageId: 'markdown' } }
-    window.activeTextEditor = textEditor as any
+  describe('exportCommandAs', () => {
+    it('has no ops when active text editor is undefined', async () => {
+      window.activeTextEditor = undefined
 
-    await exportCommand()
-    expect(saveDialog).toHaveBeenCalledWith(textEditor.document)
-  })
-
-  describe('when the current workspace is untrusted', () => {
-    let isTrustedMock: jest.SpyInstance
-
-    beforeEach(() => {
-      isTrustedMock = jest
-        .spyOn(workspace, 'isTrusted', 'get')
-        .mockReturnValue(false)
-    })
-
-    afterEach(() => isTrustedMock?.mockRestore())
-
-    it('shows error prompt', async () => {
-      await exportCommand()
+      await exportModule.exportCommandAs()
       expect(saveDialog).not.toHaveBeenCalled()
-      expect(window.showErrorMessage).toHaveBeenCalled()
     })
 
-    describe('when reacted with "Manage Workspace Trust..."', () => {
-      beforeEach(() => {
-        ;(window.showErrorMessage as any).mockResolvedValue(
-          exportModule.ITEM_MANAGE_WORKSPACE_TRUST,
-        )
-      })
-
-      it('executes "workbench.trust.manage" command when reacted on the prompt', async () => {
-        await exportCommand()
-        expect(commands.executeCommand).toHaveBeenCalledWith(
-          'workbench.trust.manage',
-        )
-      })
-    })
-  })
-
-  describe('when active text editor is not Markdown', () => {
-    const textEditor = { document: { languageId: 'plaintext' } }
-
-    beforeEach(() => {
+    it('opens save dialog when active text editor is Markdown', async () => {
+      const textEditor = { document: { languageId: 'markdown' } }
       window.activeTextEditor = textEditor as any
-    })
 
-    it('shows warning notification', async () => {
-      await exportCommand()
-      expect(saveDialog).not.toHaveBeenCalled()
-      expect(window.showWarningMessage).toHaveBeenCalled()
-    })
-
-    it('continues exporting when reacted on the notification to continue', async () => {
-      const { showWarningMessage }: any = window
-      showWarningMessage.mockResolvedValue(exportModule.ITEM_CONTINUE_TO_EXPORT)
-
-      await exportCommand()
+      await exportModule.exportCommandAs()
       expect(saveDialog).toHaveBeenCalledWith(textEditor.document)
     })
+
+    describe('when the current workspace is untrusted', () => {
+      let isTrustedMock: jest.SpyInstance
+
+      beforeEach(() => {
+        isTrustedMock = jest
+          .spyOn(workspace, 'isTrusted', 'get')
+          .mockReturnValue(false)
+      })
+
+      afterEach(() => isTrustedMock?.mockRestore())
+
+      it('shows error prompt', async () => {
+        await exportModule.exportCommandAs()
+        expect(saveDialog).not.toHaveBeenCalled()
+        expect(window.showErrorMessage).toHaveBeenCalled()
+      })
+
+      describe('when reacted with "Manage Workspace Trust..."', () => {
+        beforeEach(() => {
+          ;(window.showErrorMessage as any).mockResolvedValue(
+            exportModule.ITEM_MANAGE_WORKSPACE_TRUST,
+          )
+        })
+
+        it('executes "workbench.trust.manage" command when reacted on the prompt', async () => {
+          await exportModule.exportCommandAs()
+          expect(commands.executeCommand).toHaveBeenCalledWith(
+            'workbench.trust.manage',
+          )
+        })
+      })
+    })
+
+    describe('when active text editor is not Markdown', () => {
+      const textEditor = { document: { languageId: 'plaintext' } }
+
+      beforeEach(() => {
+        window.activeTextEditor = textEditor as any
+      })
+
+      it('shows warning notification', async () => {
+        await exportModule.exportCommandAs()
+        expect(saveDialog).not.toHaveBeenCalled()
+        expect(window.showWarningMessage).toHaveBeenCalled()
+      })
+
+      it('continues exporting when reacted on the notification to continue', async () => {
+        const { showWarningMessage }: any = window
+        showWarningMessage.mockResolvedValue(
+          exportModule.ITEM_CONTINUE_TO_EXPORT,
+        )
+
+        await exportModule.exportCommandAs()
+        expect(saveDialog).toHaveBeenCalledWith(textEditor.document)
+      })
+    })
+  })
+
+  describe('exportCommandQuick', () => {
+    it('has no ops when active text editor is undefined', async () => {
+      window.activeTextEditor = undefined
+
+      await exportModule.exportCommandQuick()
+      expect(doExport).not.toHaveBeenCalled()
+    })
+
+    it('quick export', async () => {
+      const textEditor = {
+        document: { languageId: 'plaintext', uri: { fsPath: '/test/doc.md' } },
+      }
+      window.activeTextEditor = textEditor as any
+
+      await exportModule.exportCommandQuick()
+      expect(startExport).toHaveBeenCalled()
+    })
+
+    describe('when the current workspace is untrusted', () => {
+      let isTrustedMock: jest.SpyInstance
+
+      beforeEach(() => {
+        isTrustedMock = jest
+          .spyOn(workspace, 'isTrusted', 'get')
+          .mockReturnValue(false)
+      })
+
+      afterEach(() => isTrustedMock?.mockRestore())
+
+      it('shows error prompt', async () => {
+        await exportModule.exportCommandQuick()
+        expect(saveDialog).not.toHaveBeenCalled()
+        expect(window.showErrorMessage).toHaveBeenCalled()
+      })
+
+      describe('when reacted with "Manage Workspace Trust..."', () => {
+        beforeEach(() => {
+          ;(window.showErrorMessage as any).mockResolvedValue(
+            exportModule.ITEM_MANAGE_WORKSPACE_TRUST,
+          )
+        })
+
+        it('executes "workbench.trust.manage" command when reacted on the prompt', async () => {
+          await exportModule.exportCommandQuick()
+          expect(commands.executeCommand).toHaveBeenCalledWith(
+            'workbench.trust.manage',
+          )
+        })
+      })
+    })
+
+    describe('when active text editor is not Markdown', () => {
+      const textEditor = {
+        document: { languageId: 'plaintext', uri: { fsPath: '/test/doc.md' } },
+      }
+
+      beforeEach(() => {
+        window.activeTextEditor = textEditor as any
+      })
+
+      it('shows warning notification', async () => {
+        await exportModule.exportCommandQuick()
+        expect(saveDialog).not.toHaveBeenCalled()
+        expect(window.showWarningMessage).toHaveBeenCalled()
+      })
+
+      it('continues exporting when reacted on the notification to continue', async () => {
+        const { showWarningMessage }: any = window
+        showWarningMessage.mockResolvedValue(
+          exportModule.ITEM_CONTINUE_TO_EXPORT,
+        )
+
+        await exportModule.exportCommandQuick()
+        expect(startExport).toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('exportCommandToSelectedFormat', () => {
+    beforeEach(() => {
+      jest.spyOn(window, 'showQuickPick').mockResolvedValue({
+        label: 'PDF slide deck',
+        description: 'pdf',
+      })
+    })
+
+    it('has no ops when active text editor is undefined', async () => {
+      window.activeTextEditor = undefined
+
+      await exportModule.exportCommandToSelectedFormat()
+      expect(doExport).not.toHaveBeenCalled()
+    })
+
+    it('export to selected format', async () => {
+      const textEditor = {
+        document: { languageId: 'plaintext', uri: { fsPath: '/test/doc.md' } },
+      }
+      window.activeTextEditor = textEditor as any
+
+      await exportModule.exportCommandToSelectedFormat()
+      expect(startExport).toHaveBeenCalled()
+    })
+
+    describe('when the current workspace is untrusted', () => {
+      let isTrustedMock: jest.SpyInstance
+
+      beforeEach(() => {
+        isTrustedMock = jest
+          .spyOn(workspace, 'isTrusted', 'get')
+          .mockReturnValue(false)
+      })
+
+      afterEach(() => isTrustedMock?.mockRestore())
+
+      it('shows error prompt', async () => {
+        await exportModule.exportCommandToSelectedFormat()
+        expect(saveDialog).not.toHaveBeenCalled()
+        expect(window.showErrorMessage).toHaveBeenCalled()
+      })
+
+      describe('when reacted with "Manage Workspace Trust..."', () => {
+        beforeEach(() => {
+          ;(window.showErrorMessage as any).mockResolvedValue(
+            exportModule.ITEM_MANAGE_WORKSPACE_TRUST,
+          )
+        })
+
+        it('executes "workbench.trust.manage" command when reacted on the prompt', async () => {
+          await exportModule.exportCommandToSelectedFormat()
+          expect(commands.executeCommand).toHaveBeenCalledWith(
+            'workbench.trust.manage',
+          )
+        })
+      })
+    })
+
+    describe('when active text editor is not Markdown', () => {
+      const textEditor = {
+        document: { languageId: 'plaintext', uri: { fsPath: '/test/doc.md' } },
+      }
+
+      beforeEach(() => {
+        window.activeTextEditor = textEditor as any
+      })
+
+      it('shows warning notification', async () => {
+        await exportModule.exportCommandToSelectedFormat()
+        expect(saveDialog).not.toHaveBeenCalled()
+        expect(window.showWarningMessage).toHaveBeenCalled()
+      })
+
+      it('continues exporting when reacted on the notification to continue', async () => {
+        const { showWarningMessage }: any = window
+        showWarningMessage.mockResolvedValue(
+          exportModule.ITEM_CONTINUE_TO_EXPORT,
+        )
+
+        await exportModule.exportCommandToSelectedFormat()
+        expect(startExport).toHaveBeenCalled()
+      })
+    })
+  })
+})
+
+describe('createSaveUri', () => {
+  it('should create correct URI for normal document', () => {
+    const doc = {
+      uri: { fsPath: '/test/doc.md' },
+      isUntitled: false,
+    } as TextDocument
+
+    const uri = exportModule.saveUri(doc, 'pdf')
+    expect(uri.fsPath).toBe('/test/doc.pdf')
+  })
+
+  it('should create URI in cwd for untitled document', () => {
+    const doc = {
+      uri: { fsPath: '' },
+      isUntitled: true,
+    } as TextDocument
+
+    const uri = exportModule.saveUri(doc, 'pdf')
+    expect(uri.fsPath).toMatch(/untitled\.pdf$/)
   })
 })
 

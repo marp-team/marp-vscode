@@ -72,8 +72,18 @@
     "commands": [
       {
         "category": "Marp",
-        "command": "markdown.marp.export",
-        "title": "Export Slide Deck..."
+        "command": "markdown.marp.exportAs",
+        "title": "Export Slide Deck As..."
+      },
+      {
+        "category": "Marp",
+        "command": "markdown.marp.exportQuick",
+        "title": "Export Slide Deck (Quick Export)"
+      },
+      {
+        "category": "Marp",
+        "command": "markdown.marp.exportToSelectedFormat",
+        "title": "Export Slide Deck To Selected Format ..."
       },
       {
         "category": "Marp",

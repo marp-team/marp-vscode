@@ -1,9 +1,29 @@
 import { window } from 'vscode'
-import exportCommand from './export'
+import {
+  exportCommandAs,
+  exportCommandQuick,
+  exportCommandToSelectedFormat,
+} from './export'
 
-describe('Export command for web', () => {
-  it('shows warning message', () => {
-    exportCommand()
-    expect(window.showErrorMessage).toHaveBeenCalledWith(expect.any(String))
+describe('Export commands for web', () => {
+  describe('exportCommandAs', () => {
+    it('shows warning message', () => {
+      exportCommandAs()
+      expect(window.showErrorMessage).toHaveBeenCalledWith(expect.any(String))
+    })
+  })
+
+  describe('exportCommandQuick', () => {
+    it('shows warning message', () => {
+      exportCommandQuick()
+      expect(window.showErrorMessage).toHaveBeenCalledWith(expect.any(String))
+    })
+  })
+
+  describe('exportCommandToSelectedFormat', () => {
+    it('shows warning message', () => {
+      exportCommandToSelectedFormat()
+      expect(window.showErrorMessage).toHaveBeenCalledWith(expect.any(String))
+    })
   })
 })
