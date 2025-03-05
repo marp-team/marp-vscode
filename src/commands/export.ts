@@ -233,7 +233,9 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
         if (outputToLocalFS && shouldOpen) {
           env.openExternal(uri)
-        } else {
+        } 
+        
+        if (!outputToLocalFS) {
           const outputUri = Uri.file(outputPath)
 
           try {
@@ -245,11 +247,11 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
               // no ops
             }
           }
-
-          window.showInformationMessage(
-            `Marp slide deck was successfully exported to ${uri.toString()}.`,
-          )
         }
+
+        window.showInformationMessage(
+          `Marp slide deck was successfully exported to ${uri.toString()}.`,
+        )
       }
 
       await runMarpCli({ pptxEditable: pptxEditableSmart ? true : undefined })
