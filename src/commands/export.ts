@@ -233,8 +233,8 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
         if (outputToLocalFS && shouldOpen) {
           env.openExternal(uri)
-        } 
-        
+        }
+
         if (!outputToLocalFS) {
           const outputUri = Uri.file(outputPath)
 
