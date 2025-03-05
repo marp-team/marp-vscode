@@ -55,7 +55,17 @@ const browsers = {
 export const ITEM_CONTINUE_TO_EXPORT = 'Continue to export...'
 export const ITEM_MANAGE_WORKSPACE_TRUST = 'Manage Workspace Trust...'
 
-export const command = 'markdown.marp.export'
+export const command = 'markdown.marp.export' // Legacy, mapped to 'markdown.marp.exportAs' in '../extension.ts'
+export const commandAs = 'markdown.marp.exportAs'
+export const commandQuick = 'markdown.marp.exportQuick'
+export const commandToSelectedFormat = 'markdown.marp.exportToSelectedFormat'
+
+export const allCommands = [
+  command,
+  commandAs,
+  commandQuick,
+  commandToSelectedFormat,
+] as string[]
 
 const chromiumRequiredExtensions = [
   ...extensions.pdf,
@@ -223,7 +233,9 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
         if (outputToLocalFS && shouldOpen) {
           env.openExternal(uri)
-        } else {
+        }
+
+        if (!outputToLocalFS) {
           const outputUri = Uri.file(outputPath)
 
           try {
@@ -235,11 +247,11 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
               // no ops
             }
           }
-
-          window.showInformationMessage(
-            `Marp slide deck was successfully exported to ${uri.toString()}.`,
-          )
         }
+
+        window.showInformationMessage(
+          `Marp slide deck was successfully exported to ${uri.toString()}.`,
+        )
       }
 
       await runMarpCli({ pptxEditable: pptxEditableSmart ? true : undefined })
@@ -259,6 +271,16 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
   } finally {
     proxyServer?.dispose()
   }
+}
+
+export const startExport = async (uri: Uri, document: TextDocument) => {
+  await window.withProgress(
+    {
+      location: ProgressLocation.Notification,
+      title: `Exporting Marp slide deck to ${uri.toString()}...`,
+    },
+    () => doExport(uri, document),
+  )
 }
 
 export const saveDialog = async (document: TextDocument) => {
@@ -284,17 +306,23 @@ export const saveDialog = async (document: TextDocument) => {
   })
 
   if (saveURI) {
-    await window.withProgress(
-      {
-        location: ProgressLocation.Notification,
-        title: `Exporting Marp slide deck to ${saveURI.toString()}...`,
-      },
-      () => doExport(saveURI, document),
-    )
+    startExport(saveURI, document)
   }
 }
 
-export default async function exportCommand() {
+export function saveUri(document: TextDocument, extension: string) {
+  const { fsPath } = document.uri
+
+  const basePath = document.isUntitled
+    ? path.join(process.cwd(), 'untitled')
+    : fsPath.slice(0, -path.extname(fsPath).length)
+
+  const outputPath = `${basePath}.${extension}`
+
+  return Uri.file(outputPath)
+}
+
+export async function checkWorkspaceTrust() {
   if (!workspace.isTrusted) {
     const acted = await window.showErrorMessage(
       'Export command cannot run in untrusted workspace.',
@@ -304,24 +332,86 @@ export default async function exportCommand() {
     if (acted === ITEM_MANAGE_WORKSPACE_TRUST) {
       commands.executeCommand('workbench.trust.manage')
     }
-
-    return
+    return false
   }
+  return true
+}
+
+export async function validateMarkdownDocument(document: TextDocument) {
+  if (document.languageId !== 'markdown') {
+    const acted = await window.showWarningMessage(
+      'A current document is not Markdown document.',
+      ITEM_CONTINUE_TO_EXPORT,
+    )
+    return acted === ITEM_CONTINUE_TO_EXPORT
+  }
+  return true
+}
+
+export async function exportCommandAs() {
+  const isTrusted = await checkWorkspaceTrust()
+  if (!isTrusted) return
 
   const activeEditor = window.activeTextEditor
+  if (!activeEditor) return
 
-  if (activeEditor) {
-    if (activeEditor.document.languageId === 'markdown') {
-      await saveDialog(activeEditor.document)
-    } else {
-      const acted = await window.showWarningMessage(
-        'A current document is not Markdown document.',
-        ITEM_CONTINUE_TO_EXPORT,
-      )
+  const isMarkdownOrContinue = await validateMarkdownDocument(
+    activeEditor.document,
+  )
+  if (!isMarkdownOrContinue) return
 
-      if (acted === ITEM_CONTINUE_TO_EXPORT) {
-        await saveDialog(activeEditor.document)
-      }
-    }
+  await saveDialog(activeEditor.document)
+}
+
+export async function exportCommandQuick() {
+  const isTrusted = await checkWorkspaceTrust()
+  if (!isTrusted) return
+
+  const activeEditor = window.activeTextEditor
+  if (!activeEditor) return
+
+  const isMarkdownOrContinue = await validateMarkdownDocument(
+    activeEditor.document,
+  )
+  if (!isMarkdownOrContinue) return
+
+  const exportType = marpConfiguration().get<string>('exportType')!
+  const ext = extensions[exportType]
+  const saveURI = saveUri(activeEditor.document, ext)
+
+  if (saveURI) {
+    startExport(saveURI, activeEditor.document)
+  }
+}
+
+export async function exportCommandToSelectedFormat() {
+  const isTrusted = await checkWorkspaceTrust()
+  if (!isTrusted) return
+
+  const activeEditor = window.activeTextEditor
+  if (!activeEditor) return
+
+  const isMarkdownOrContinue = await validateMarkdownDocument(
+    activeEditor.document,
+  )
+  if (!isMarkdownOrContinue) return
+
+  const items = Object.keys(extensions).map((type) => ({
+    label: descriptions[type],
+    description: type,
+  }))
+
+  const selected = await window.showQuickPick(items, {
+    placeHolder: 'Select export format',
+  })
+  if (!selected) return
+
+  const saveURI = saveUri(
+    activeEditor.document,
+    extensions[selected.description][0],
+  )
+
+  if (saveURI) {
+    startExport(saveURI, activeEditor.document)
   }
 }

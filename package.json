@@ -72,8 +72,18 @@
     "commands": [
       {
         "category": "Marp",
-        "command": "markdown.marp.export",
-        "title": "Export Slide Deck..."
+        "command": "markdown.marp.exportAs",
+        "title": "Export Slide Deck to ..."
+      },
+      {
+        "category": "Marp",
+        "command": "markdown.marp.exportQuick",
+        "title": "Export Slide Deck (Quick)"
+      },
+      {
+        "category": "Marp",
+        "command": "markdown.marp.exportToSelectedFormat",
+        "title": "Export Slide Deck as ... (Quick)"
       },
       {
         "category": "Marp",
@@ -358,7 +368,7 @@
     "abort-controller": "^3.0.0",
     "color-string": "^1.9.1",
     "dedent": "^1.5.3",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.0",
     "esbuild-loader": "^4.2.2",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
