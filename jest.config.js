@@ -1,6 +1,8 @@
 const esModules = [
   'bail',
   'character-entities',
+  'color-name',
+  'color-string',
   'comma-separated-tokens',
   'decode-named-character-reference',
   'devlop',
