@@ -120,7 +120,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     const input = await createWorkFile(document)
 
     try {
-      let outputPath = uri.fsPath
+      let output = { path: uri.fsPath, isTmp: false }
 
       const ouputExt = path.extname(uri.path)
       const outputToLocalFS = uri.scheme === 'file'
@@ -132,10 +132,14 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
       }
 
       if (!outputToLocalFS) {
-        outputPath = path.join(
-          tmpdir(),
-          `marp-vscode-tmp-${nanoid()}${ouputExt}`,
-        )
+        // Marp CLI cannot write the output directly to the path that has a
+        // virtual scheme. So export to a temporary file and after copy it to
+        // the actual path by using VS Code API if the output path has not a
+        // scheme of the local file system.
+        output = {
+          path: path.join(tmpdir(), `marp-vscode-tmp-${nanoid()}${ouputExt}`),
+          isTmp: true,
+        }
       }
 
       const pptxEditableSmart =
@@ -157,7 +161,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
         try {
           await marpCli(
-            ['-c', conf.path, input.path, '-o', outputPath],
+            ['-c', conf.path, input.path, '-o', output.path],
             { baseUrl },
             {
               onCLIError: ({ error, codes }) => {
@@ -219,12 +223,10 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
           conf.cleanup()
         }
 
-        const shouldOpen = marpConfiguration().get<boolean>('exportAutoOpen')
-
-        if (outputToLocalFS && shouldOpen) {
-          env.openExternal(uri)
-        } else {
-          const outputUri = Uri.file(outputPath)
+        // If the output has been created in the temporary directory, we should
+        // copy it to the actual path and remove the tmpfile.
+        if (output.isTmp) {
+          const outputUri = Uri.file(output.path)
 
           try {
             await workspace.fs.copy(outputUri, uri, { overwrite: true })
@@ -235,7 +237,16 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
               // no ops
             }
           }
+        }
 
+        if (
+          marpConfiguration().get<boolean>('exportAutoOpen') &&
+          outputToLocalFS // Only local files can open in a relevant application
+        ) {
+          env.openExternal(uri)
+        } else {
+          // Show success message if the auto open preference is disabled, or
+          // the output is not local file: Remote path, Virtual file system, etc.
           window.showInformationMessage(
             `Marp slide deck was successfully exported to ${uri.toString()}.`,
           )
