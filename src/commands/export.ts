@@ -120,8 +120,6 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
     const input = await createWorkFile(document)
 
     try {
-      let output = { path: uri.fsPath, isTmp: false }
-
       const ouputExt = path.extname(uri.path)
       const outputToLocalFS = uri.scheme === 'file'
 
@@ -131,16 +129,16 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
         throw new Error(`Could not write to ${uri.scheme} file system.`)
       }
 
-      if (!outputToLocalFS) {
-        // Marp CLI cannot write the output directly to the path that has a
-        // virtual scheme. So export to a temporary file and after copy it to
-        // the actual path by using VS Code API if the output path has not a
-        // scheme of the local file system.
-        output = {
-          path: path.join(tmpdir(), `marp-vscode-tmp-${nanoid()}${ouputExt}`),
-          isTmp: true,
-        }
-      }
+      // Marp CLI cannot write the output directly to the path that has a
+      // virtual scheme. So export to a temporary file and after copy it to the
+      // actual path by using VS Code API if the output path has not a scheme of
+      // the local file system.
+      const cliOutput = outputToLocalFS
+        ? { path: uri.fsPath, isTmp: false }
+        : {
+            path: path.join(tmpdir(), `marp-vscode-tmp-${nanoid()}${ouputExt}`),
+            isTmp: true,
+          }
 
       const pptxEditableSmart =
         ouputExt === '.pptx' &&
@@ -161,7 +159,7 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
         try {
           await marpCli(
-            ['-c', conf.path, input.path, '-o', output.path],
+            ['-c', conf.path, input.path, '-o', cliOutput.path],
             { baseUrl },
             {
               onCLIError: ({ error, codes }) => {
@@ -225,8 +223,8 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
 
         // If the output has been created in the temporary directory, we should
         // copy it to the actual path and remove the tmpfile.
-        if (output.isTmp) {
-          const outputUri = Uri.file(output.path)
+        if (cliOutput.isTmp) {
+          const outputUri = Uri.file(cliOutput.path)
 
           try {
             await workspace.fs.copy(outputUri, uri, { overwrite: true })
