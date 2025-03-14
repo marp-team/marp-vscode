@@ -43,7 +43,7 @@ commands:
           postinstall:
             - run: npm run check:audit
 
-  test:
+  lint:
     steps:
       - checkout
       - install
@@ -63,6 +63,11 @@ commands:
       - run:
           name: stylelint
           command: npm run lint:css
+
+  test:
+    steps:
+      - checkout
+      - install
 
       - run:
           name: Jest
@@ -84,6 +89,11 @@ jobs:
     executor: node
     steps:
       - audit
+
+  lint:
+    executor: node
+    steps:
+      - lint
 
   unit-electron27:
     executor:
@@ -124,18 +134,26 @@ workflows:
   test:
     jobs:
       - audit
+      - lint:
+          requires:
+            - audit
       - unit-electron27:
           requires:
             - audit
+            - lint
       - unit-electron28:
           requires:
             - audit
+            - lint
       - unit-electron29:
           requires:
             - audit
+            - lint
       - unit-electron30:
           requires:
             - audit
+            - lint
       - unit-electron32:
           requires:
             - audit
+            - lint
