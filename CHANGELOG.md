@@ -7,6 +7,10 @@
 - Upgrade Marp CLI to [v4.1.2](https://github.com/marp-team/marp-cli/releases/tag/v4.1.2) ([#495](https://github.com/marp-team/marp-vscode/pull/495), [#499](https://github.com/marp-team/marp-vscode/pull/499))
 - Upgrade dependent packages to the latest version ([#499](https://github.com/marp-team/marp-vscode/pull/499))
 
+### Fixed
+
+- The exported document does not save correctly if `markdown.marp.exportAutoOpen` was disabled ([#496](https://github.com/marp-team/marp-vscode/issues/496), [#500](https://github.com/marp-team/marp-vscode/pull/500))
+
 ## v3.1.0 - 2025-01-23
 
 ### Added
