@@ -27,7 +27,11 @@ export interface MarpCLIErrorHandler {
 
 export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
   // Use a real file if posibble
-  if (doc.uri.scheme === 'file' && !doc.isDirty) {
+  if (
+    doc.uri.scheme === 'file' &&
+    !doc.isDirty &&
+    (doc.encoding === 'utf8' || doc.encoding === 'utf8bom')
+  ) {
     return { path: doc.uri.fsPath, cleanup: () => Promise.resolve() }
   }
 
