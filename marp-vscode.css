@@ -27,10 +27,31 @@ body.marp-vscode blockquote {
 @media screen {
   body.marp-vscode {
     overflow-y: scroll;
+
+    /* stylelint-disable-next-line selector-class-pattern */
+    &.showEditorSelection {
+      --marp-vscode-highlight-color: rgb(255 255 255 / 40%);
+
+      &.vscode-light {
+        --marp-vscode-highlight-color: rgb(0 0 0 / 15%);
+      }
+    }
   }
 
   #__marp-vscode [data-marp-vscode-slide-wrapper] {
     margin: 20px;
+    position: relative;
+
+    &.code-active-line,
+    &:has(.code-active-line) {
+      &::before {
+        position: absolute;
+        content: '';
+        inset: -7px;
+        border: 3px solid var(--marp-vscode-highlight-color, transparent);
+        pointer-events: none;
+      }
+    }
   }
 
   #__marp-vscode svg[data-marpit-svg] {
