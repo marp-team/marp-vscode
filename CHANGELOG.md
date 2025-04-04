@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Highlight the slide based on the cursor position if `markdown.preview.markEditorSelection` is enabled ([#504](https://github.com/marp-team/marp-vscode/issues/504), [#506](https://github.com/marp-team/marp-vscode/pull/506))
+
 ## v3.1.1 - 2025-03-14
 
 ### Changed

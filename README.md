@@ -52,7 +52,10 @@ You can create a new Marp Markdown document from **"New File..."** menu (<kbd>Al
 
 While enabled Marp features by `marp: true`, Marp for VS Code can preview your Marp Markdown with the same way as [a built-in Markdown preview](https://code.visualstudio.com/docs/languages/markdown#_markdown-preview).
 
-If you are not familiar with editing Markdown on VS Code, we recommend to learn what you can do in [VS Code documentation](https://code.visualstudio.com/docs/languages/markdown) at first.
+In the preview, an active slide is highlighted based on the current position of the editor, as like as the regular Markdown preview. To disable this highlight, you can set `markdown.preview.markEditorSelection` setting to `false`.
+
+> [!NOTE]
+> If you are not familiar with editing Markdown on VS Code, we recommend to learn what you can do in [VS Code documentation](https://code.visualstudio.com/docs/languages/markdown) at first.
 
 ### IntelliSense for Marp directives
 
