@@ -35,6 +35,10 @@ body.marp-vscode blockquote {
       &.vscode-light {
         --marp-vscode-highlight-color: rgb(0 0 0 / 15%);
       }
+
+      &.vscode-high-contrast {
+        --marp-vscode-highlight-color: rgb(255 160 0 / 70%);
+      }
     }
   }
 
