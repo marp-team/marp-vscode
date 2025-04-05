@@ -86,9 +86,8 @@ describe('ExportMarpTool class', () => {
         ),
       )
 
-      // WTF
-      spy.mockRejectedValue('WTF')
-
+      // Unexpected error
+      spy.mockRejectedValue('Unexpected error')
       const invalidErrorRet = await tool.invoke({
         input,
         toolInvocationToken: undefined,
