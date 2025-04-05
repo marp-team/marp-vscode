@@ -1,6 +1,8 @@
 import * as vscode from 'vscode'
 import { doExport } from '../../commands/export'
 
+export const id = 'export_marp' as const
+
 export interface ExportMarpToolParams {
   inputFilePath: string
   outputFilePath: string

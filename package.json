@@ -277,7 +277,7 @@
         "name": "export_marp",
         "displayName": "Export Marp slide deck",
         "icon": "$(marp-brand)",
-        "modelDescription": "Export Marp slide deck from given Markdown file to specific path. This will be invoked the export command in the current workspace preferences, and only returns a exported file path when the export is successful.",
+        "modelDescription": "Export Marp slide deck from given Markdown file to specific path. Export command will be invoked in the current workspace.",
         "canBeReferencedInPrompt": true,
         "toolReferenceName": "exportMarp",
         "inputSchema": {
@@ -285,7 +285,7 @@
           "properties": {
             "inputFilePath": {
               "type": "string",
-              "description": "An absolute path to the inpout Markdown file."
+              "description": "An absolute path to the input Markdown file."
             },
             "outputFilePath": {
               "type": "string",
