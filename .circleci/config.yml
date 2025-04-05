@@ -95,38 +95,17 @@ jobs:
     steps:
       - lint
 
-  unit-electron27:
-    executor:
-      name: node
-      version: '18.17.1'
-    steps:
-      - test
-
-  unit-electron28:
-    executor:
-      name: node
-      version: '18.18.2'
-    steps:
-      - test
-
-  unit-electron29:
-    executor:
-      name: node
-      version: '20.9.0'
-    steps:
-      - test
-
-  unit-electron30:
-    executor:
-      name: node
-      version: '20.14.0'
-    steps:
-      - test
-
   unit-electron32:
     executor:
       name: node
       version: '20.18.0'
+    steps:
+      - test
+
+  unit-electron34:
+    executor:
+      name: node
+      version: '20.18.2'
     steps:
       - test
 
@@ -137,23 +116,11 @@ workflows:
       - lint:
           requires:
             - audit
-      - unit-electron27:
-          requires:
-            - audit
-            - lint
-      - unit-electron28:
-          requires:
-            - audit
-            - lint
-      - unit-electron29:
-          requires:
-            - audit
-            - lint
-      - unit-electron30:
-          requires:
-            - audit
-            - lint
       - unit-electron32:
+          requires:
+            - audit
+            - lint
+      - unit-electron34:
           requires:
             - audit
             - lint
