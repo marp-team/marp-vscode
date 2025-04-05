@@ -64,7 +64,20 @@ const chromiumRequiredExtensions = [
   ...extensions.jpeg,
 ] as string[]
 
-export const doExport = async (uri: Uri, document: TextDocument) => {
+export interface ExportOptions {
+  silent?: boolean
+}
+
+export interface ExportResult {
+  uri: Uri
+  error?: string
+}
+
+export const doExport = async (
+  uri: Uri,
+  document: TextDocument,
+  { silent = false }: ExportOptions = {},
+): Promise<ExportResult> => {
   let proxyServer: WorkspaceProxyServer | undefined
   let baseUrl: string | undefined
 
@@ -237,31 +250,37 @@ export const doExport = async (uri: Uri, document: TextDocument) => {
           }
         }
 
-        if (
-          marpConfiguration().get<boolean>('exportAutoOpen') &&
-          outputToLocalFS // Only local files can open in a relevant application
-        ) {
-          env.openExternal(uri)
-        } else {
-          // Show success message if the auto open preference is disabled, or
-          // the output is not local file: Remote path, Virtual file system, etc.
-          window.showInformationMessage(
-            `Marp slide deck was successfully exported to ${uri.toString()}.`,
-          )
+        if (!silent) {
+          if (
+            marpConfiguration().get<boolean>('exportAutoOpen') &&
+            outputToLocalFS // Only local files can open in a relevant application
+          ) {
+            env.openExternal(uri)
+          } else {
+            // Show success message if the auto open preference is disabled, or
+            // the output is not local file: Remote path, Virtual file system, etc.
+            window.showInformationMessage(
+              `Marp slide deck was successfully exported to ${uri.toString()}.`,
+            )
+          }
         }
       }
 
       await runMarpCli({ pptxEditable: pptxEditableSmart ? true : undefined })
-    } catch (e) {
-      window.showErrorMessage(
-        `Failure to export${(() => {
-          if (e instanceof MarpCLIError) return `. ${e.message}`
-          if (e instanceof Error) return `: [${e.name}] ${e.message}`
-          if (hasToString(e)) return `. ${e.toString()}`
 
-          return ' by unknown error.'
-        })()}`,
-      )
+      return { uri }
+    } catch (e) {
+      const errorMessage = `Failure to export${(() => {
+        if (e instanceof MarpCLIError) return `. ${e.message}`
+        if (e instanceof Error) return `: [${e.name}] ${e.message}`
+        if (hasToString(e)) return `. ${e.toString()}`
+
+        return ' by unknown error.'
+      })()}`
+
+      if (!silent) window.showErrorMessage(errorMessage)
+
+      return { uri, error: errorMessage }
     } finally {
       input.cleanup()
     }
@@ -298,7 +317,9 @@ export const saveDialog = async (document: TextDocument) => {
         location: ProgressLocation.Notification,
         title: `Exporting Marp slide deck to ${saveURI.toString()}...`,
       },
-      () => doExport(saveURI, document),
+      async () => {
+        await doExport(saveURI, document)
+      },
     )
   }
 }
