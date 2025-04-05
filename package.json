@@ -33,7 +33,7 @@
     "url": "https://github.com/marp-team/marp-vscode"
   },
   "engines": {
-    "vscode": "^1.99.0"
+    "vscode": "^1.95.0"
   },
   "main": "./lib/extension.js",
   "browser": "./dist/extension.js",
@@ -383,7 +383,7 @@
     "@types/jest": "^29.5.14",
     "@types/lodash.debounce": "^4.0.9",
     "@types/markdown-it": "^14.1.2",
-    "@types/vscode": "~1.99.0",
+    "@types/vscode": "~1.95.0",
     "@vscode/test-web": "^0.0.67",
     "@vscode/vsce": "^3.2.2",
     "abort-controller": "^3.0.0",
