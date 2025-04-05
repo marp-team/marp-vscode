@@ -277,9 +277,8 @@
         "name": "export_marp",
         "displayName": "Export Marp Slide Deck",
         "icon": "$(marp-brand)",
+        "when": "isWorkspaceTrusted",
         "modelDescription": "Export Marp slide deck from given Markdown file to specific path. Export command will be invoked in the current workspace.",
-        "canBeReferencedInPrompt": true,
-        "toolReferenceName": "exportMarp",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -299,7 +298,9 @@
         },
         "tags": [
           "marp"
-        ]
+        ],
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "exportMarp"
       }
     ],
     "markdown.markdownItPlugins": true,

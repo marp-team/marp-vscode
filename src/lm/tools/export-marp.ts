@@ -29,6 +29,14 @@ export class ExportMarpTool
   async invoke({
     input: { inputFilePath, outputFilePath },
   }: vscode.LanguageModelToolInvocationOptions<ExportMarpToolParams>) {
+    if (!vscode.workspace.isTrusted) {
+      return new vscode.LanguageModelToolResult([
+        new vscode.LanguageModelTextPart(
+          'Export cannot be performed in a not trusted workspace.',
+        ),
+      ])
+    }
+
     const inputUri = vscode.Uri.file(inputFilePath)
     const outputUri = vscode.Uri.file(outputFilePath)
 
