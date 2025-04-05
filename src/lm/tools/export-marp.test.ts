@@ -97,7 +97,7 @@ describe('ExportMarpTool class', () => {
       expect(invalidErrorRet.content).toHaveLength(1)
       expect(invalidErrorRet.content[0]).toStrictEqual(
         new LanguageModelTextPart(
-          'The export process failed. Error details:\n\nUnknown error (WTF)',
+          'The export process failed. Error details:\n\nUnknown error (Unexpected error)',
         ),
       )
     })
