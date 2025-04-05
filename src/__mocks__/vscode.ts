@@ -2,7 +2,7 @@ import { URI, Utils } from 'vscode-uri'
 
 type MockedConf = Record<string, any>
 
-const defaultVSCodeVersion = 'v1.62.1'
+const defaultVSCodeVersion = 'v1.95.0'
 const defaultConf: MockedConf = {
   'markdown.marp.breaks': 'on',
   'markdown.marp.browser': 'auto',
@@ -76,6 +76,10 @@ export enum DiagnosticSeverity {
   Warning,
   Information,
   Hint,
+}
+
+export const lm = {
+  registerTool: jest.fn(),
 }
 
 export class Position {
@@ -192,6 +196,14 @@ export const languages = {
   setTextDocumentLanguage: jest.fn(),
 }
 
+export class LanguageModelTextPart {
+  constructor(public value: string) {}
+}
+
+export class LanguageModelToolResult {
+  constructor(public content: LanguageModelTextPart[]) {}
+}
+
 export class MarkdownString {
   constructor(public value: string) {}
 
@@ -239,7 +251,7 @@ export const window = {
   showSaveDialog: jest.fn(),
   showTextDocument: jest.fn(async () => ({})),
   showWarningMessage: jest.fn(async () => undefined),
-  withProgress: jest.fn(),
+  withProgress: jest.fn((_, promise) => Promise.resolve(promise())),
   visibleTextEditors: [],
   tabGroups: {
     all: [],

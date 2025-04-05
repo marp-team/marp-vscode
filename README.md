@@ -139,6 +139,28 @@ Default file type can choose by the `markdown.marp.exportType` setting.
 > [!NOTE]
 > A legacy setting `markdown.marp.chromePath` is deprecated since v2. Please use `markdown.marp.browserPath` instead.
 
+#### Integration with GitHub Copilot agent mode
+
+Marp for VS Code also provides the export tool for [GitHub Copilot agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode).
+
+By instructing to export Markdown in the specified file format, Copilot in the agent mode can process the export using preferences in the current workspace.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/docs/copilot-agent.png" alt="Integration with GitHub Copilot agent mode" width="240" />
+</p>
+
+<!--
+
+Developer note:
+
+Currently the export command can be accessible from GitHub Copilot Chat with `#exportMarp`, but this is not intended design. Do not mention to `#exportMarp` in README.
+
+Users may feel strange to attach the side-effect command like `#exportMarp` as the chat context, so we want to hide this command. However, the current VS Code API does not support splitting contributions for agent's tool and for references in the chat.
+
+https://github.com/microsoft/vscode/issues/245129#issuecomment-2767129358
+
+-->
+
 ### Use custom theme CSS 🛡️
 
 You can register and use [custom theme CSS for Marpit](https://marpit.marp.app/theme-css) / [Marp Core](https://github.com/marp-team/marp-core/tree/main/themes#readme) by setting `markdown.marp.themes`, that includes remote URLs, or relative paths to local files in the current workspace.

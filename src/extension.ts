@@ -7,6 +7,7 @@ import * as showQuickPick from './commands/show-quick-pick'
 import * as toggleMarpFeature from './commands/toggle-marp-feature'
 import diagnostics from './diagnostics/'
 import languageProvider from './language/'
+import { registerLM } from './lm/lm'
 import { incompatiblePreviewExtensionsObserver } from './observer'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import customTheme from './plugins/custom-theme'
@@ -128,6 +129,7 @@ export function extendMarkdownIt(md: any) {
 export const activate = ({ subscriptions }: ExtensionContext) => {
   diagnostics(subscriptions)
   languageProvider(subscriptions)
+  registerLM(subscriptions)
 
   subscriptions.push(
     commands.registerCommand(exportCommand.command, exportCommand.default),

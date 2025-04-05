@@ -140,33 +140,64 @@ describe('#saveDialog', () => {
     expect(Object.values(filters)[0]).toStrictEqual(['pptx'])
   })
 
-  it('runs exporting with notification when file path is specified', async () => {
+  describe('when confirmed save dialog', () => {
     const saveURI: any = {
       scheme: 'file',
       toString: () => 'PATH',
       fsPath: '/tmp/saveTo.pdf',
     }
 
-    const showSaveDialogMock = jest
-      .spyOn(window, 'showSaveDialog')
-      .mockImplementation(() => saveURI)
+    let showSaveDialogMock: jest.SpyInstance
+    let doExportMock: jest.SpyInstance
+    let exportResult: exportModule.ExportResult
 
-    const doExportMock: jest.SpyInstance = jest
-      .spyOn(exportModule, 'doExport')
-      .mockImplementation()
+    beforeEach(() => {
+      exportResult = { uri: saveURI }
 
-    try {
+      showSaveDialogMock = jest
+        .spyOn(window, 'showSaveDialog')
+        .mockImplementation(() => saveURI)
+
+      doExportMock = jest
+        .spyOn(exportModule, 'doExport')
+        .mockResolvedValue(exportResult)
+    })
+
+    afterEach(() => {
+      showSaveDialogMock.mockRestore()
+      doExportMock.mockRestore()
+    })
+
+    it('runs exporting with notification when file path is specified', async () => {
       await exportModule.saveDialog(document)
+
+      expect(doExportMock).toHaveBeenCalledWith(saveURI, document)
       expect(window.withProgress).toHaveBeenCalledWith(
         expect.objectContaining({ title: expect.stringContaining('PATH') }),
         expect.any(Function),
       )
-      ;(window.withProgress as any).mock.calls[0][1]()
-      expect(doExportMock).toHaveBeenCalledWith(saveURI, document)
-    } finally {
-      showSaveDialogMock.mockRestore()
-      doExportMock.mockRestore()
-    }
+
+      // Success notification
+      expect(window.showInformationMessage).toHaveBeenCalledWith(
+        expect.stringContaining('Marp slide deck was successfully exported'),
+      )
+    })
+
+    it('opens in external when doExport() returns with autoOpen field', async () => {
+      exportResult.autoOpen = true
+
+      await exportModule.saveDialog(document)
+      expect(window.showInformationMessage).not.toHaveBeenCalled()
+      expect(env.openExternal).toHaveBeenCalledWith(saveURI)
+    })
+
+    it('shows error message when doExport() returns with error field', async () => {
+      exportResult.error = 'ERROR'
+
+      await exportModule.saveDialog(document)
+      expect(window.showInformationMessage).not.toHaveBeenCalled()
+      expect(window.showErrorMessage).toHaveBeenCalledWith(exportResult.error)
+    })
   })
 })
 
@@ -185,55 +216,62 @@ describe('#doExport', () => {
     uri: { scheme: 'file', path: '/tmp/md.md', fsPath: '/tmp/md.md' },
   }
 
-  it('exports passed document via Marp CLI and opens it', async () => {
+  it('exports passed document via Marp CLI', async () => {
     const runMarpCLI = jest.spyOn(marpCli, 'default').mockImplementation()
 
     try {
       const uri = saveURI()
-      await exportModule.doExport(uri, document)
+      const ret = await exportModule.doExport(uri, document)
 
+      expect(ret).toStrictEqual(expect.objectContaining({ uri }))
       expect(runMarpCLI).toHaveBeenCalled()
-      expect(env.openExternal).toHaveBeenCalledWith(uri)
       expect(createWorkspaceProxyServer).not.toHaveBeenCalled()
     } finally {
       runMarpCLI.mockRestore()
     }
   })
 
-  it('shows error when Marp CLI throws error', async () => {
+  it('contains error message when Marp CLI throws error', async () => {
     const marpCliSpy = jest.spyOn(marpCli, 'default')
 
     try {
       // MarpCLIError
       marpCliSpy.mockRejectedValueOnce(new marpCli.MarpCLIError('MarpCLIError'))
-      await exportModule.doExport(saveURI(), document)
-
-      expect(window.showErrorMessage).toHaveBeenCalledWith(
-        expect.stringContaining('MarpCLIError'),
+      expect(await exportModule.doExport(saveURI(), document)).toStrictEqual(
+        expect.objectContaining({
+          error: expect.stringContaining('MarpCLIError'),
+        }),
       )
 
       // Error object
       marpCliSpy.mockRejectedValueOnce(new Error('ERROR'))
-      await exportModule.doExport(saveURI(), document)
-
-      expect(window.showErrorMessage).toHaveBeenCalledWith(
-        expect.stringContaining('[Error] ERROR'),
+      expect(await exportModule.doExport(saveURI(), document)).toStrictEqual(
+        expect.objectContaining({
+          error: expect.stringContaining('[Error] ERROR'),
+        }),
       )
 
       // Unknown error (via toString())
       marpCliSpy.mockRejectedValueOnce('UNKNOWN ERROR!')
-      await exportModule.doExport(saveURI(), document)
+      expect(await exportModule.doExport(saveURI(), document)).toStrictEqual(
+        expect.objectContaining({
+          error: expect.stringContaining('UNKNOWN ERROR!'),
+        }),
+      )
 
-      expect(window.showErrorMessage).toHaveBeenCalledWith(
-        expect.stringContaining('UNKNOWN ERROR!'),
+      marpCliSpy.mockRejectedValueOnce('UNKNOWN ERROR!')
+      expect(await exportModule.doExport(saveURI(), document)).toStrictEqual(
+        expect.objectContaining({
+          error: expect.stringContaining('UNKNOWN ERROR!'),
+        }),
       )
 
       // WTF
       marpCliSpy.mockRejectedValueOnce(null)
-      await exportModule.doExport(saveURI(), document)
-
-      expect(window.showErrorMessage).toHaveBeenCalledWith(
-        'Failure to export by unknown error.',
+      expect(await exportModule.doExport(saveURI(), document)).toStrictEqual(
+        expect.objectContaining({
+          error: 'Failure to export by unknown error.',
+        }),
       )
     } finally {
       marpCliSpy.mockRestore()
@@ -390,9 +428,9 @@ describe('#doExport', () => {
       ${'firefox'} | ${'darwin'} | ${['Firefox']}
       ${'firefox'} | ${'linux'}  | ${['Firefox']}
     `(
-      'throws MarpCLIError with the message contains $expected to suggest browsers when running on $platform with browser option as $browser',
+      'returns error with the message contains $expected to suggest browsers when running on $platform with browser option as $browser',
       async ({ browser, platform, expected }) => {
-        expect.assertions(expected.length + 1)
+        expect.assertions(expected.length)
         setConfiguration({ 'markdown.marp.browser': browser })
 
         const { platform: originalPlatform } = process
@@ -413,13 +451,10 @@ describe('#doExport', () => {
             })
 
           try {
-            await exportModule.doExport(saveURI(), document)
-            expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
+            const ret = await exportModule.doExport(saveURI(), document)
 
             for (const fragment of expected) {
-              expect(window.showErrorMessage).toHaveBeenCalledWith(
-                expect.stringContaining(fragment),
-              )
+              expect(ret.error).toContain(fragment)
             }
           } finally {
             runMarpCLI.mockRestore()
@@ -434,7 +469,7 @@ describe('#doExport', () => {
   })
 
   describe('when CLI was thrown CLIError with NOT_FOUND_SOFFICE error code', () => {
-    it('throws MarpCLIError with the user-friendly message to suggest installing LibreOffice', async () => {
+    it('returns error with the user-friendly message to suggest installing LibreOffice', async () => {
       const runMarpCLI = jest
         .spyOn(marpCli, 'default')
         .mockImplementation(async (_, __, opts) => {
@@ -448,13 +483,10 @@ describe('#doExport', () => {
         })
 
       try {
-        await exportModule.doExport(saveURI(), document)
+        const ret = await exportModule.doExport(saveURI(), document)
 
-        expect(window.showErrorMessage).toHaveBeenCalledTimes(1)
-        expect(window.showErrorMessage).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'It requires to install LibreOffice Impress for exporting to the editable PowerPoint document.',
-          ),
+        expect(ret.error).toContain(
+          'It requires to install LibreOffice Impress for exporting to the editable PowerPoint document.',
         )
       } finally {
         runMarpCLI.mockRestore()
@@ -484,10 +516,6 @@ describe('#doExport', () => {
             expect(source.path).toMatch(/\.pdf$/)
             expect(source.scheme).toBe('file')
             expect(target).toBe(saveURIinstance)
-
-            expect(window.showInformationMessage).toHaveBeenCalledWith(
-              'Marp slide deck was successfully exported to unknown-scheme:///tmp/to.pdf.',
-            )
           } finally {
             isWritableFileSystemMock.mockRestore()
           }
@@ -503,11 +531,12 @@ describe('#doExport', () => {
         .mockReturnValue(false)
 
       try {
-        await exportModule.doExport(saveURI('readonly', 'pdf'), document)
-
-        expect(window.showErrorMessage).toHaveBeenCalledWith(
-          expect.stringContaining('Could not write to readonly file system.'),
+        const ret = await exportModule.doExport(
+          saveURI('readonly', 'pdf'),
+          document,
         )
+
+        expect(ret.error).toContain('Could not write to readonly file system.')
       } finally {
         isWritableFileSystemMock.mockRestore()
       }

@@ -2,9 +2,14 @@
 
 ## [Unreleased]
 
+### Breaking
+
+- VS Code v1.95.0 and later is now required ([#509](https://github.com/marp-team/marp-vscode/pull/509))
+
 ### Added
 
 - Highlight the slide based on the cursor position if `markdown.preview.markEditorSelection` is enabled ([#504](https://github.com/marp-team/marp-vscode/issues/504), [#506](https://github.com/marp-team/marp-vscode/pull/506))
+- Expose the export command into GitHub Copilot agent ([#507](https://github.com/marp-team/marp-vscode/issues/507), [#509](https://github.com/marp-team/marp-vscode/pull/509))
 
 ## v3.1.1 - 2025-03-14
 
