@@ -139,11 +139,15 @@ Default file type can choose by the `markdown.marp.exportType` setting.
 > [!NOTE]
 > A legacy setting `markdown.marp.chromePath` is deprecated since v2. Please use `markdown.marp.browserPath` instead.
 
-#### Integration to GitHub Copilot agent mode
+#### Integration with GitHub Copilot agent mode
 
 Marp for VS Code also provides the export tool for [GitHub Copilot agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode).
 
 By instructing to export Markdown in the specified file format, Copilot in the agent mode can process the export using preferences in the current workspace.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/docs/copilot-agent.png" alt="Integration with GitHub Copilot agent mode" width="240" />
+</p>
 
 <!--
 
