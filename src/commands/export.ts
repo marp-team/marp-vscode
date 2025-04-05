@@ -70,13 +70,13 @@ export interface ExportOptions {
 
 export interface ExportResult {
   uri: Uri
+  autoOpen?: boolean
   error?: string
 }
 
 export const doExport = async (
   uri: Uri,
   document: TextDocument,
-  { silent = false }: ExportOptions = {},
 ): Promise<ExportResult> => {
   let proxyServer: WorkspaceProxyServer | undefined
   let baseUrl: string | undefined
@@ -161,7 +161,7 @@ export const doExport = async (
         pptxEditable,
       }: {
         pptxEditable?: boolean
-      }) => {
+      }): Promise<ExportResult> => {
         const conf = await createConfigFile(document, {
           allowLocalFiles: !proxyServer,
           pdfNotes:
@@ -250,19 +250,11 @@ export const doExport = async (
           }
         }
 
-        if (!silent) {
-          if (
+        return {
+          uri,
+          autoOpen:
             marpConfiguration().get<boolean>('exportAutoOpen') &&
-            outputToLocalFS // Only local files can open in a relevant application
-          ) {
-            env.openExternal(uri)
-          } else {
-            // Show success message if the auto open preference is disabled, or
-            // the output is not local file: Remote path, Virtual file system, etc.
-            window.showInformationMessage(
-              `Marp slide deck was successfully exported to ${uri.toString()}.`,
-            )
-          }
+            outputToLocalFS, // Only local files can open in a relevant application
         }
       }
 
@@ -270,17 +262,16 @@ export const doExport = async (
 
       return { uri }
     } catch (e) {
-      const errorMessage = `Failure to export${(() => {
-        if (e instanceof MarpCLIError) return `. ${e.message}`
-        if (e instanceof Error) return `: [${e.name}] ${e.message}`
-        if (hasToString(e)) return `. ${e.toString()}`
+      return {
+        uri,
+        error: `Failure to export${(() => {
+          if (e instanceof MarpCLIError) return `. ${e.message}`
+          if (e instanceof Error) return `: [${e.name}] ${e.message}`
+          if (hasToString(e)) return `. ${e.toString()}`
 
-        return ' by unknown error.'
-      })()}`
-
-      if (!silent) window.showErrorMessage(errorMessage)
-
-      return { uri, error: errorMessage }
+          return ' by unknown error.'
+        })()}`,
+      }
     } finally {
       input.cleanup()
     }
@@ -312,15 +303,25 @@ export const saveDialog = async (document: TextDocument) => {
   })
 
   if (saveURI) {
-    await window.withProgress(
+    const result = await window.withProgress(
       {
         location: ProgressLocation.Notification,
         title: `Exporting Marp slide deck to ${saveURI.toString()}...`,
       },
-      async () => {
-        await doExport(saveURI, document)
-      },
+      async () => await doExport(saveURI, document),
     )
+
+    if (result.error) {
+      window.showErrorMessage(result.error)
+    } else if (result.autoOpen) {
+      env.openExternal(result.uri)
+    } else {
+      // Show success message if the auto open was disabled. It includes
+      // when the output is not local file: Remote path, Virtual file, etc.
+      window.showInformationMessage(
+        `Marp slide deck was successfully exported to ${result.uri.toString()}.`,
+      )
+    }
   }
 }
 

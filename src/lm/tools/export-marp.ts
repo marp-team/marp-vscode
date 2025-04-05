@@ -29,7 +29,6 @@ export class ExportMarpTool
     const result = await doExport(
       vscode.Uri.file(outputFilePath),
       await vscode.workspace.openTextDocument(vscode.Uri.file(inputFilePath)),
-      { silent: true },
     )
 
     return new vscode.LanguageModelToolResult([
