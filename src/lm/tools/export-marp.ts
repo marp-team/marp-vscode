@@ -1,3 +1,4 @@
+import path from 'node:path'
 import * as vscode from 'vscode'
 import { doExport } from '../../commands/export'
 
@@ -12,14 +13,14 @@ export class ExportMarpTool
   implements vscode.LanguageModelTool<ExportMarpToolParams>
 {
   prepareInvocation({
-    input: { outputFilePath },
+    input: { inputFilePath, outputFilePath },
   }: vscode.LanguageModelToolInvocationPrepareOptions<ExportMarpToolParams>) {
     return {
-      invocationMessage: 'Export Marp slide deck',
+      invocationMessage: 'Export Marp Slide Deck',
       confirmationMessages: {
-        title: 'Export Marp slide deck',
+        title: 'Export Marp Slide Deck',
         message: new vscode.MarkdownString(
-          `Are you sure you want to export the Marp slide deck to **${outputFilePath}**?`,
+          `Export "${path.basename(inputFilePath)}" to **"${outputFilePath}"**.`,
         ),
       },
     }
@@ -37,14 +38,16 @@ export class ExportMarpTool
     ).catch((error) => ({
       uri: outputUri,
       error:
-        error instanceof Error ? error.message : `Unknown error (${error})`,
+        error instanceof Error
+          ? error.message
+          : `Unknown error (${String(error)})`,
     }))
 
     return new vscode.LanguageModelToolResult([
       new vscode.LanguageModelTextPart(
         result.error
-          ? `Marp for VS Code extension has been tried to export the slide deck but failed. Following is the error message:\n\n${result.error}`
-          : `The Marp slide deck has been correctly exported to "${result.uri.toString()}".`,
+          ? `The export process failed. Error details:\n\n${result.error}`
+          : `The slide deck was successfully exported to "${result.uri.toString()}".`,
       ),
     ])
   }

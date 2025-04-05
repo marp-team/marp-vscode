@@ -275,7 +275,7 @@
     "languageModelTools": [
       {
         "name": "export_marp",
-        "displayName": "Export Marp slide deck",
+        "displayName": "Export Marp Slide Deck",
         "icon": "$(marp-brand)",
         "modelDescription": "Export Marp slide deck from given Markdown file to specific path. Export command will be invoked in the current workspace.",
         "canBeReferencedInPrompt": true,
@@ -289,7 +289,7 @@
             },
             "outputFilePath": {
               "type": "string",
-              "description": "An absolute path to the output file. The file extension must be one of the supported formats: `.html`, `.pdf`, `.pptx`, `.png`, or `.jpg` (`.jpeg`). If given the image format, the output file will be a single image of the first slide only."
+              "description": "An absolute path to the output file. The file extension must be one of the supported formats: `.html`, `.pdf`, `.pptx`, `.png`, and `.jpg` (`.jpeg`). If given the image format, the output file will be a single image of the first slide only."
             }
           },
           "required": [
