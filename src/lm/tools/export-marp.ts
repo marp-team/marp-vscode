@@ -26,10 +26,17 @@ export class ExportMarpTool
   async invoke({
     input: { inputFilePath, outputFilePath },
   }: vscode.LanguageModelToolInvocationOptions<ExportMarpToolParams>) {
+    const inputUri = vscode.Uri.file(inputFilePath)
+    const outputUri = vscode.Uri.file(outputFilePath)
+
     const result = await doExport(
-      vscode.Uri.file(outputFilePath),
-      await vscode.workspace.openTextDocument(vscode.Uri.file(inputFilePath)),
-    )
+      outputUri,
+      await vscode.workspace.openTextDocument(inputUri),
+    ).catch((error) => ({
+      uri: outputUri,
+      error:
+        error instanceof Error ? error.message : `Unknown error (${error})`,
+    }))
 
     return new vscode.LanguageModelToolResult([
       new vscode.LanguageModelTextPart(

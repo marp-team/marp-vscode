@@ -64,10 +64,6 @@ const chromiumRequiredExtensions = [
   ...extensions.jpeg,
 ] as string[]
 
-export interface ExportOptions {
-  silent?: boolean
-}
-
 export interface ExportResult {
   uri: Uri
   autoOpen?: boolean
@@ -258,9 +254,9 @@ export const doExport = async (
         }
       }
 
-      await runMarpCli({ pptxEditable: pptxEditableSmart ? true : undefined })
-
-      return { uri }
+      return await runMarpCli({
+        pptxEditable: pptxEditableSmart ? true : undefined,
+      })
     } catch (e) {
       return {
         uri,
