@@ -196,6 +196,14 @@ export const languages = {
   setTextDocumentLanguage: jest.fn(),
 }
 
+export class LanguageModelTextPart {
+  constructor(public value: string) {}
+}
+
+export class LanguageModelToolResult {
+  constructor(public content: LanguageModelTextPart[]) {}
+}
+
 export class MarkdownString {
   constructor(public value: string) {}
 
