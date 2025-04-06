@@ -385,7 +385,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/vscode": "~1.95.0",
     "@vscode/test-web": "^0.0.67",
-    "@vscode/vsce": "^3.2.2",
+    "@vscode/vsce": "^3.3.2",
     "abort-controller": "^3.0.0",
     "color-string": "^2.0.1",
     "dedent": "^1.5.3",
