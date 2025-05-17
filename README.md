@@ -130,6 +130,7 @@ You can also execute command from the Command Palette (<kbd>F1</kbd> or <kbd>Ctr
 - **PPTX** (PowerPoint document)
 - **PNG** (_First slide only)_
 - **JPEG** (_First slide only)_
+- **TXT** (_Notes only)_
 
 Default file type can choose by the `markdown.marp.exportType` setting.
 

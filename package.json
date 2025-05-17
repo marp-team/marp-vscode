@@ -156,7 +156,8 @@
             "pdf",
             "pptx",
             "png",
-            "jpeg"
+            "jpeg",
+            "txt"
           ],
           "default": "pdf",
           "description": "Sets default export type.",
@@ -165,7 +166,8 @@
             "PDF slide deck",
             "PowerPoint document",
             "PNG image (first slide only)",
-            "JPEG image (first slide only)"
+            "JPEG image (first slide only)",
+            "Text file (notes only)"
           ]
         },
         "markdown.marp.exportAutoOpen": {
@@ -288,7 +290,7 @@
             },
             "outputFilePath": {
               "type": "string",
-              "description": "An absolute path to the output file. The file extension must be one of the supported formats: `.html`, `.pdf`, `.pptx`, `.png`, and `.jpg` (`.jpeg`). If given the image format, the output file will be a single image of the first slide only."
+              "description": "An absolute path to the output file. The file extension must be one of the supported formats: `.html`, `.pdf`, `.pptx`, `.png`, `.jpg` (`.jpeg`) and `.txt`. If given the image format, the output file will be a single image of the first slide only."
             }
           },
           "required": [
