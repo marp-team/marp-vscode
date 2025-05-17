@@ -27,6 +27,7 @@ export enum Types {
   pptx = 'pptx',
   png = 'png',
   jpeg = 'jpeg',
+  txt = 'txt',
 }
 
 const extensions = {
@@ -35,6 +36,7 @@ const extensions = {
   [Types.pptx]: ['pptx'] as const,
   [Types.png]: ['png'] as const,
   [Types.jpeg]: ['jpg', 'jpeg'] as const,
+  [Types.txt]: ['txt'] as const,
 }
 
 const descriptions = {
@@ -43,6 +45,7 @@ const descriptions = {
   [Types.pptx]: 'PowerPoint document' as const,
   [Types.png]: 'PNG image (first slide only)' as const,
   [Types.jpeg]: 'JPEG image (first slide only)' as const,
+  [Types.txt]: 'Text file (notes only)' as const,
 }
 
 const browsers = {
