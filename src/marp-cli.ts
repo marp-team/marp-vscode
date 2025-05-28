@@ -117,7 +117,7 @@ export default async function runMarpCli(
 
   if (exitCode !== 0) {
     throw new MarpCLIError(
-      `Marp CLI throwed unexpected error with exit code ${exitCode}.`,
+      `Marp CLI threw unexpected error with exit code ${exitCode}.`,
     )
   }
 }

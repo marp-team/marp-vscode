@@ -44,7 +44,7 @@ describe('Utilities', () => {
 
       try {
         await expect(utils.fetch('https://example.com/')).rejects.toThrow(
-          'Failured fetching https://example.com/ (404)',
+          'Failed fetching https://example.com/ (404)',
         )
       } finally {
         fetchMock.mockRestore()

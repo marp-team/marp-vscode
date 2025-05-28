@@ -35,7 +35,7 @@ export const fetch = (url: string, { timeout = 5000 }: FetchOption = {}) => {
   return _fetchPonyfillInstance
     .fetch(url, { signal: controller.signal })
     .then((res) => {
-      if (!res.ok) throw new Error(`Failured fetching ${url} (${res.status})`)
+      if (!res.ok) throw new Error(`Failed fetching ${url} (${res.status})`)
       return res.text()
     })
     .finally(() => {
