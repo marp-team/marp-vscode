@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp Core to [v4.1.0](https://github.com/marp-team/marp-core/releases/tag/v4.1.0) ([#513](https://github.com/marp-team/marp-vscode/pull/513), [#515](https://github.com/marp-team/marp-vscode/pull/515))
+  - Transform Unicode 16 emojis into Twemoji images by default
+- Upgrade Marp CLI to [v4.2.1](https://github.com/marp-team/marp-cli/releases/tag/v4.2.1) ([#515](https://github.com/marp-team/marp-vscode/pull/515))
+- Upgrade development Node.js and dependent packages ([#515](https://github.com/marp-team/marp-vscode/pull/515))
+
 ## v3.2.0 - 2025-04-06
 
 ### Breaking
