@@ -37,7 +37,7 @@ export function register(
       const diagnostic = Object.assign(
         new Diagnostic(
           range,
-          `Shorthand for setting colors via Markdown image syntax is deprecated, and will be removed in future. Please replace to the scoped local direcitve <!-- _${directive}: "${url}" -->, or consider to use the scoped style.`,
+          `Shorthand for setting colors via Markdown image syntax is deprecated, and will be removed in future. Please replace to the scoped local directive <!-- _${directive}: "${url}" -->, or consider to use the scoped style.`,
           DiagnosticSeverity.Warning,
         ),
         {
@@ -75,7 +75,7 @@ export class DeprecatedColorSettingShorthand implements CodeActionProvider {
     doc: TextDocument,
   ): CodeAction {
     const act = new CodeAction(
-      `Replace to the scoped local direcitve: ${diag[diagnosticMeta].replacement}`,
+      `Replace to the scoped local directive: ${diag[diagnosticMeta].replacement}`,
       CodeActionKind.QuickFix,
     )
 
