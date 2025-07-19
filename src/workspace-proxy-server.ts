@@ -16,7 +16,7 @@ export const createWorkspaceProxyServer = async (
     port: 8192 + Math.floor(Math.random() * 10000),
   })
 
-  const app = express().get('*', async (req, res) => {
+  const app = express().get('*all', async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`)
     const vscodeUri = workspaceFolder.uri.with({
       fragment: url.hash,
