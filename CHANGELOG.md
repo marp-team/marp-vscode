@@ -9,6 +9,10 @@
 - Upgrade Marp CLI to [v4.2.1](https://github.com/marp-team/marp-cli/releases/tag/v4.2.1) ([#515](https://github.com/marp-team/marp-vscode/pull/515))
 - Upgrade development Node.js and dependent packages ([#515](https://github.com/marp-team/marp-vscode/pull/515))
 
+### Fixed
+
+- Fixed incorrect export result when exporting Markdown with non UTF-8 encoding (Required VS Code 1.100 or later: [#497](https://github.com/marp-team/marp-vscode/issues/497), [#510](https://github.com/marp-team/marp-vscode/pull/510))
+
 ## v3.2.0 - 2025-04-06
 
 ### Breaking
