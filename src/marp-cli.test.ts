@@ -86,6 +86,30 @@ describe('#createWorkFile', () => {
     )
   })
 
+  it('creates tmpfile when passed clean file but non UTF-8 encoding', async () => {
+    const workFile = await createWorkFile({
+      getText: jest.fn(() => 'example'),
+      isDirty: false,
+      uri: { scheme: 'file', fsPath: '/tmp/clean.md' },
+      encoding: 'utf16le',
+    } as any)
+
+    expect(
+      workFile.path.startsWith(path.join('/tmp', '.marp-vscode-tmp')),
+    ).toBe(true)
+
+    expect(workspace.fs.writeFile).toHaveBeenCalledWith(
+      expect.objectContaining({ fsPath: workFile.path }),
+      textEncoder.encode('example'),
+    )
+
+    await workFile.cleanup()
+    expect(workspace.fs.delete).toHaveBeenCalledWith(
+      expect.objectContaining({ fsPath: workFile.path }),
+      expect.any(Object),
+    )
+  })
+
   it('creates tmpfile to workspace root when failed creating to same dir', async () => {
     // Simulate that creation to same directory is not permitted
     const writeFileMock = jest
