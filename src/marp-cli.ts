@@ -26,8 +26,16 @@ export interface MarpCLIErrorHandler {
 }
 
 export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
+  // @ts-expect-error `encoding` is available in VS Code 1.100+ (remove this comment when updated the type definition of VS Code)
+  const { encoding } = doc
+  const encodingAPIavailable = !!encoding
+
   // Use a real file if posibble
-  if (doc.uri.scheme === 'file' && !doc.isDirty) {
+  if (
+    doc.uri.scheme === 'file' &&
+    !doc.isDirty &&
+    (!encodingAPIavailable || encoding === 'utf8' || encoding === 'utf8bom')
+  ) {
     return { path: doc.uri.fsPath, cleanup: () => Promise.resolve() }
   }
 
@@ -117,7 +125,7 @@ export default async function runMarpCli(
 
   if (exitCode !== 0) {
     throw new MarpCLIError(
-      `Marp CLI throwed unexpected error with exit code ${exitCode}.`,
+      `Marp CLI threw unexpected error with exit code ${exitCode}.`,
     )
   }
 }
