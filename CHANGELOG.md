@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Export presenter notes as `.txt` file ([#456](https://github.com/marp-team/marp-vscode/issues/456), [#512](https://github.com/marp-team/marp-vscode/pull/512) by [@noritaka1166](https://github.com/noritaka1166))
+
 ## v3.2.1 - 2025-07-19
 
 ### Changed
