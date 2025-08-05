@@ -1,28 +1,54 @@
 import { browser, type MarpCoreBrowser } from '@marp-team/marp-core/browser'
 
+interface MarpState {
+  browser: MarpCoreBrowser
+  overflowTracker: any
+}
+
 export default function preview() {
-  let marpState: boolean | undefined
-  let marpBrowser: MarpCoreBrowser | undefined
+  let marpState: MarpState | undefined = undefined
+
+  // Borrow postMessage from VS Code feature ;p
+  const postMessage =
+    (window as any).cspAlerter._messaging?.postMessage ||
+    (window as any).styleLoadingMonitor._poster?.postMessage
 
   // Detect update of DOM
   const updateCallback = () => {
     const marpVscode = document.getElementById('__marp-vscode')
-    const newMarpState = !!marpVscode
 
-    if (marpState !== newMarpState) {
-      document.body.classList.toggle('marp-vscode', newMarpState)
+    if (!!marpState !== !!marpVscode) {
+      document.body.classList.toggle('marp-vscode', !!marpVscode)
 
-      if (newMarpState) {
-        marpBrowser = browser()
+      if (marpVscode) {
+        marpState = {
+          browser: browser(),
+          overflowTracker: (() => {
+            // TODO: Implement overflow tracker
+            const postOverflowTrackerMessage = () => {
+              postMessage('marp-vscode.overflowTracker', { a: 123, b: 456 })
+            }
+
+            window.addEventListener('dblclick', postOverflowTrackerMessage)
+
+            return {
+              cleanup: () => {
+                window.removeEventListener(
+                  'dblclick',
+                  postOverflowTrackerMessage,
+                )
+              },
+            }
+          })(),
+        }
       } else {
-        marpBrowser?.cleanup()
-        marpBrowser = undefined
+        marpState?.browser.cleanup()
+        marpState?.overflowTracker.cleanup()
+        marpState = undefined
       }
-
-      marpState = newMarpState
     } else {
       // Required to modify <pre is="marp-pre"> to <marp-pre>.
-      if (newMarpState) marpBrowser?.update()
+      marpState?.browser.update()
     }
 
     if (marpState) {
