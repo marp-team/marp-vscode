@@ -4,6 +4,10 @@
 
 /* Override VS Code default CSS rules reverting to initial
    https://github.com/microsoft/vscode/blob/master/src/vs/workbench/contrib/webview/browser/pre/main.js#L53 */
+html:has(body.marp-vscode) {
+  padding: 0;
+}
+
 body.marp-vscode {
   padding: 0;
 }

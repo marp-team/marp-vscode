@@ -1,5 +1,5 @@
 import { Marp } from '@marp-team/marp-core'
-import { commands, workspace, window } from 'vscode'
+import { commands, Diagnostic, workspace } from 'vscode'
 import type { ExtensionContext, Uri, WebviewPanel } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as newMarpMarkdown from './commands/new-marp-markdown'
@@ -7,13 +7,17 @@ import * as openExtensionSettings from './commands/open-extension-settings'
 import * as showQuickPick from './commands/show-quick-pick'
 import * as toggleMarpFeature from './commands/toggle-marp-feature'
 import diagnostics from './diagnostics/'
+import { collection as previewDiagnosticsCollection } from './diagnostics/preview'
+import { generateDiagnostics } from './diagnostics/preview/slide-content-overflow'
 import languageProvider from './language/'
 import { registerLM } from './lm/lm'
 import { incompatiblePreviewExtensionsObserver } from './observer'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
+import contentSection from './plugins/content-section'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline, { rule as outlineRule } from './plugins/outline'
+import { isOverflowTrackerEvent } from './preview/overflow-tracker'
 import themes, { Themes } from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 
@@ -63,6 +67,7 @@ export const getExtendMarkdownIt = ({
 
         const marp = new Marp(marpCoreOptionForPreview(md.options))
           .use(customTheme)
+          .use(contentSection)
           .use(outline)
           .use(lineNumber)
 
@@ -116,26 +121,29 @@ export const getExtendMarkdownIt = ({
     }
 
     renderer.render = (tokens: any[], options: any, env: any) => {
-      // Pick up WebviewPanel managed by VS Code's Markdown preview
+      const currentDocument: Uri | undefined = env?.currentDocument
       const webviewPanel: WebviewPanel | undefined =
         env?.resourceProvider?._webviewPanel
+
+      const setDiagnostics = (diagnostics: Diagnostic[] | undefined) => {
+        if (currentDocument)
+          previewDiagnosticsCollection.set(currentDocument, diagnostics)
+      }
 
       if (webviewPanel && !activeWebviewPanels.has(webviewPanel)) {
         activeWebviewPanels.add(webviewPanel)
 
-        // Register message receiver from Marp for VS Code
+        // Register message receiver
         const marpForVSCodeReciever = webviewPanel.webview.onDidReceiveMessage(
-          (e: Record<'type', string>) => {
-            if (e.type === 'marp-vscode.overflowTracker') {
-              window.showInformationMessage(
-                `Overflow tracker message received: ${JSON.stringify(e)}`,
-              )
-            }
+          (e) => {
+            if (isOverflowTrackerEvent(e))
+              setDiagnostics(generateDiagnostics(e.overflowElements))
           },
         )
 
         webviewPanel.onDidDispose(
           () => {
+            setDiagnostics(undefined)
             activeWebviewPanels.delete(webviewPanel)
             marpForVSCodeReciever.dispose()
           },
@@ -146,7 +154,7 @@ export const getExtendMarkdownIt = ({
         subscriptions.push(marpForVSCodeReciever)
       }
 
-      // Marp
+      // markdown-it renderer
       const marp = md[marpVscode]
 
       if (marp) {
@@ -155,6 +163,8 @@ export const getExtendMarkdownIt = ({
         const html = markdown.renderer.render(tokens, markdown.options, env)
 
         return `<style id="__marp-vscode-style">${style}</style>${html}`
+      } else {
+        setDiagnostics(undefined)
       }
 
       return render.call(renderer, tokens, options, env)
@@ -170,6 +180,7 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
   registerLM(subscriptions)
 
   subscriptions.push(
+    previewDiagnosticsCollection,
     commands.registerCommand(exportCommand.command, exportCommand.default),
     commands.registerCommand(newMarpMarkdown.command, newMarpMarkdown.default),
     commands.registerCommand(

@@ -2,6 +2,6 @@
 .vscode-test-web/
 coverage/
 dist/
-lib/
-preview/
+/lib/
+/preview/
 node_modules

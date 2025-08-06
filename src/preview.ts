@@ -1,8 +1,9 @@
 import { browser, type MarpCoreBrowser } from '@marp-team/marp-core/browser'
+import { OverflowTracker } from './preview/overflow-tracker'
 
 interface MarpState {
   browser: MarpCoreBrowser
-  overflowTracker: any
+  overflowTracker: OverflowTracker | undefined
 }
 
 export default function preview() {
@@ -23,32 +24,18 @@ export default function preview() {
       if (marpVscode) {
         marpState = {
           browser: browser(),
-          overflowTracker: (() => {
-            // TODO: Implement overflow tracker
-            const postOverflowTrackerMessage = () => {
-              postMessage('marp-vscode.overflowTracker', { a: 123, b: 456 })
-            }
-
-            window.addEventListener('dblclick', postOverflowTrackerMessage)
-
-            return {
-              cleanup: () => {
-                window.removeEventListener(
-                  'dblclick',
-                  postOverflowTrackerMessage,
-                )
-              },
-            }
-          })(),
+          overflowTracker: postMessage
+            ? new OverflowTracker(postMessage)
+            : undefined,
         }
       } else {
         marpState?.browser.cleanup()
-        marpState?.overflowTracker.cleanup()
+        marpState?.overflowTracker?.cleanup()
         marpState = undefined
       }
     } else {
-      // Required to modify <pre is="marp-pre"> to <marp-pre>.
-      marpState?.browser.update()
+      marpState?.browser.update() // Required to modify <pre is="marp-pre"> to <marp-pre>.
+      marpState?.overflowTracker?.update()
     }
 
     if (marpState) {
