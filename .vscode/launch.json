@@ -35,7 +35,7 @@
       ]
     },
     {
-      "name": "Run with extenstions",
+      "name": "Run with extensions",
       "type": "extensionHost",
       "request": "launch",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
