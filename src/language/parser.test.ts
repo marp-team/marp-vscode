@@ -35,13 +35,13 @@ describe('Language parser', () => {
         .mockReturnValue('onDidCloseTextDocument' as any)
 
       try {
-        const subscriptons: Disposable[] = []
-        const parser = new LanguageParser(subscriptons)
+        const subscriptions: Disposable[] = []
+        const parser = new LanguageParser(subscriptions)
 
-        expect(subscriptons).toContain(parser)
-        expect(subscriptons).toContain('onDidChangeActiveTextEditor')
-        expect(subscriptons).toContain('onDidChangeTextDocument')
-        expect(subscriptons).toContain('onDidCloseTextDocument')
+        expect(subscriptions).toContain(parser)
+        expect(subscriptions).toContain('onDidChangeActiveTextEditor')
+        expect(subscriptions).toContain('onDidChangeTextDocument')
+        expect(subscriptions).toContain('onDidCloseTextDocument')
 
         expect(parser.activeEditor).toBe(textEditorMock)
       } finally {
