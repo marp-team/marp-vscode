@@ -361,7 +361,7 @@ describe('Language parser', () => {
   })
 
   describe('#dispose', () => {
-    it('disposes mapped datas', () => {
+    it('disposes mapped data', () => {
       const mapClearSpy = jest.spyOn(Map.prototype, 'clear')
       const document = {
         languageId: 'markdown',
