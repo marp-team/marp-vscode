@@ -31,11 +31,22 @@ export const isOverflowTrackerEvent = (
   Array.isArray(value.overflowElements)
 
 export class OverflowTracker {
+  private delay = 100
+
   constructor(private postMessage: PostMessage) {
     this.update()
   }
 
   update() {
+    // Make a short delay to ensure the DOM is stable. If not, the height of auto-scaled elements cannot detect correctly.
+    window.setTimeout(() => this.detectOverflowElements(), this.delay)
+  }
+
+  cleanup() {
+    // TODO: Currently it does no ops but implement cleaning up observers if used.
+  }
+
+  private detectOverflowElements() {
     const overflowElements: OverflowElementData[] = []
 
     for (const element of document.querySelectorAll(
@@ -54,9 +65,5 @@ export class OverflowTracker {
     this.postMessage<Omit<OverflowTrackerEvent, 'type'>>(eventType, {
       overflowElements,
     })
-  }
-
-  cleanup() {
-    // TODO: Currently it does no ops but implement cleaning up observers if used.
   }
 }
