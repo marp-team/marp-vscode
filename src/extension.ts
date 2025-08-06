@@ -23,6 +23,7 @@ import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 
 const shouldRefreshConfs = [
   'markdown.marp.breaks',
+  'markdown.marp.diagnostics.slideContentOverflow',
   'markdown.marp.enableHtml',
   'markdown.marp.html',
   'markdown.marp.mathTypesetting',
@@ -126,8 +127,15 @@ export const getExtendMarkdownIt = ({
         env?.resourceProvider?._webviewPanel
 
       const setDiagnostics = (diagnostics: Diagnostic[] | undefined) => {
-        if (currentDocument)
-          previewDiagnosticsCollection.set(currentDocument, diagnostics)
+        if (currentDocument) {
+          const targetDiagnostics = marpConfiguration().get<boolean>(
+            'diagnostics.slideContentOverflow',
+          )
+            ? diagnostics
+            : undefined
+
+          previewDiagnosticsCollection.set(currentDocument, targetDiagnostics)
+        }
       }
 
       if (webviewPanel && !activeWebviewPanels.has(webviewPanel)) {

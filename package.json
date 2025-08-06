@@ -134,20 +134,13 @@
           "default": "",
           "markdownDescription": "Configure the custom path for the installed browser using internally to export PDF, PPTX, and the image. The kind of browser is determined by `#markdown.marp.browser#`. When set to empty, Marp will find out a suitable installed browser automatically."
         },
-        "markdown.marp.html": {
-          "type": "string",
-          "enum": [
-            "off",
-            "default",
-            "all"
-          ],
-          "markdownEnumDescriptions": [
-            "Disable all HTML elements, including originally allowed HTML elements by Marp.",
-            "Enable only selectively enabled HTML elements by Marp. _([See the list of HTML elements](https://github.com/marp-team/marp-core/blob/main/src/html/allowlist.ts))_",
-            "Enable all HTML elements. This setting may become the slide rendering insecure."
-          ],
-          "default": "default",
-          "description": "Sets which HTML elements within Marp Markdown are enabled in rendered slides. If the workspace is not trusted, this setting treats as always \"off\"."
+        "markdown.marp.diagnostics.slideContentOverflow": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enables a diagnostic that warns when slide content overflows the safe area defined by the slide’s padding. This diagnostic is only available while the Markdown preview is open.",
+          "tags": [
+            "experimental"
+          ]
         },
         "markdown.marp.exportType": {
           "type": "string",
@@ -174,6 +167,21 @@
           "type": "boolean",
           "default": true,
           "description": "Automatically opens the exported file using the default application installed on your operating system."
+        },
+        "markdown.marp.html": {
+          "type": "string",
+          "enum": [
+            "off",
+            "default",
+            "all"
+          ],
+          "markdownEnumDescriptions": [
+            "Disable all HTML elements, including originally allowed HTML elements by Marp.",
+            "Enable only selectively enabled HTML elements by Marp. _([See the list of HTML elements](https://github.com/marp-team/marp-core/blob/main/src/html/allowlist.ts))_",
+            "Enable all HTML elements. This setting may become the slide rendering insecure."
+          ],
+          "default": "default",
+          "description": "Sets which HTML elements within Marp Markdown are enabled in rendered slides. If the workspace is not trusted, this setting treats as always \"off\"."
         },
         "markdown.marp.mathTypesetting": {
           "type": "string",
