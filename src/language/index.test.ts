@@ -48,7 +48,7 @@ describe('Language extension', () => {
       )
     })
 
-    it('clears decorations when dispoed the active editor', () => {
+    it('clears decorations when disposed the active editor', () => {
       const parser = languageParser()
       const editorMock = { setDecorations: jest.fn() }
 
