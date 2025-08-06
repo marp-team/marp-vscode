@@ -97,38 +97,38 @@ describe('Language parser', () => {
     expect(data).toBeTruthy()
     expect(data?.commentRanges).toHaveLength(2)
     expect(data?.frontMatterRange).toBeInstanceOf(Range)
-    expect(data?.directvies).toHaveLength(4)
+    expect(data?.directives).toHaveLength(4)
 
     // Range data
-    expect(data?.directvies[0].range.start).toMatchObject({
+    expect(data?.directives[0].range.start).toMatchObject({
       line: 1,
       character: 0,
     })
-    expect(data?.directvies[0].range.end).toMatchObject({
+    expect(data?.directives[0].range.end).toMatchObject({
       line: 1,
       character: 10,
     })
-    expect(data?.directvies[1].range.start).toMatchObject({
+    expect(data?.directives[1].range.start).toMatchObject({
       line: 2,
       character: 0,
     })
-    expect(data?.directvies[1].range.end).toMatchObject({
+    expect(data?.directives[1].range.end).toMatchObject({
       line: 2,
       character: 14,
     })
-    expect(data?.directvies[2].range.start).toMatchObject({
+    expect(data?.directives[2].range.start).toMatchObject({
       line: 7,
       character: 0,
     })
-    expect(data?.directvies[2].range.end).toMatchObject({
+    expect(data?.directives[2].range.end).toMatchObject({
       line: 7,
       character: 14,
     })
-    expect(data?.directvies[3].range.start).toMatchObject({
+    expect(data?.directives[3].range.start).toMatchObject({
       line: 9,
       character: 5,
     })
-    expect(data?.directvies[3].range.end).toMatchObject({
+    expect(data?.directives[3].range.end).toMatchObject({
       line: 9,
       character: 21,
     })
@@ -165,35 +165,35 @@ describe('Language parser', () => {
     const data = await parser.getParseData(document as any)
 
     expect(data).toBeTruthy()
-    expect(data?.directvies[0].range.start).toMatchObject({
+    expect(data?.directives[0].range.start).toMatchObject({
       line: 1,
       character: 0,
     })
-    expect(data?.directvies[0].range.end).toMatchObject({
+    expect(data?.directives[0].range.end).toMatchObject({
       line: 1,
       character: 10,
     })
-    expect(data?.directvies[1].range.start).toMatchObject({
+    expect(data?.directives[1].range.start).toMatchObject({
       line: 2,
       character: 0,
     })
-    expect(data?.directvies[1].range.end).toMatchObject({
+    expect(data?.directives[1].range.end).toMatchObject({
       line: 2,
       character: 14,
     })
-    expect(data?.directvies[2].range.start).toMatchObject({
+    expect(data?.directives[2].range.start).toMatchObject({
       line: 7,
       character: 0,
     })
-    expect(data?.directvies[2].range.end).toMatchObject({
+    expect(data?.directives[2].range.end).toMatchObject({
       line: 7,
       character: 14,
     })
-    expect(data?.directvies[3].range.start).toMatchObject({
+    expect(data?.directives[3].range.start).toMatchObject({
       line: 9,
       character: 5,
     })
-    expect(data?.directvies[3].range.end).toMatchObject({
+    expect(data?.directives[3].range.end).toMatchObject({
       line: 9,
       character: 21,
     })
@@ -241,7 +241,7 @@ describe('Language parser', () => {
 
     const data = await parser.getParseData(mockEvent.document as any)
     expect(data).toBeTruthy()
-    expect(data?.directvies).toHaveLength(1)
+    expect(data?.directives).toHaveLength(1)
   })
 
   it('emits activeEditorUpdated event if updated the content of active editor', () => {
@@ -260,7 +260,7 @@ describe('Language parser', () => {
     parser.on('activeEditorUpdated', (editor, data) => {
       expect(editor).toStrictEqual(window.activeTextEditor)
       expect(data).toBeTruthy()
-      expect(data?.directvies).toHaveLength(1)
+      expect(data?.directives).toHaveLength(1)
     })
 
     const [onDidChangeTextDocument] = eventSpy.mock.calls[0]

@@ -21,7 +21,7 @@ export interface LanguageParsedDirective {
 
 export interface LanguageParseData {
   commentRanges: Range[]
-  directvies: LanguageParsedDirective[]
+  directives: LanguageParsedDirective[]
   frontMatterRange?: Range
   version: number
 }
@@ -105,7 +105,7 @@ export class LanguageParser
 
     const parser = new DirectiveParser()
 
-    const directvies: LanguageParsedDirective[] = []
+    const directives: LanguageParsedDirective[] = []
     const commentRanges: Range[] = []
     let frontMatterRange: Range | undefined
 
@@ -119,7 +119,7 @@ export class LanguageParser
           const [start, end] = item.key.range
           const [, vEnd] = item.value?.range ?? item.key.range
 
-          directvies.push({
+          directives.push({
             info,
             keyRange: new Range(
               document.positionAt(start + offset),
@@ -137,7 +137,7 @@ export class LanguageParser
 
     const parseData = {
       commentRanges,
-      directvies,
+      directives,
       frontMatterRange,
       version: document.version,
     }
