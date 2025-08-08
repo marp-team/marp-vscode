@@ -132,7 +132,7 @@ export const doExport = async (
     const input = await createWorkFile(document)
 
     try {
-      const ouputExt = path.extname(uri.path)
+      const outputExt = path.extname(uri.path)
       const outputToLocalFS = uri.scheme === 'file'
 
       // NOTE: It may return `undefined` if VS Code does not know about the
@@ -148,12 +148,15 @@ export const doExport = async (
       const cliOutput = outputToLocalFS
         ? { path: uri.fsPath, isTmp: false }
         : {
-            path: path.join(tmpdir(), `marp-vscode-tmp-${nanoid()}${ouputExt}`),
+            path: path.join(
+              tmpdir(),
+              `marp-vscode-tmp-${nanoid()}${outputExt}`,
+            ),
             isTmp: true,
           }
 
       const pptxEditableSmart =
-        ouputExt === '.pptx' &&
+        outputExt === '.pptx' &&
         marpConfiguration().get<string>('pptx.editable') === 'smart'
 
       const runMarpCli = async ({
@@ -164,7 +167,7 @@ export const doExport = async (
         const conf = await createConfigFile(document, {
           allowLocalFiles: !proxyServer,
           pdfNotes:
-            ouputExt === '.pdf' &&
+            outputExt === '.pdf' &&
             marpConfiguration().get<boolean>('pdf.noteAnnotations'),
           pptxEditable,
         })

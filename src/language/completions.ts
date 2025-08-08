@@ -201,7 +201,7 @@ class CompletionProvider {
     if (this.isCursorOnDirective('size')) {
       let theme: string | undefined
 
-      for (const { info, value } of this.data.directvies) {
+      for (const { info, value } of this.data.directives) {
         if (info.name === 'theme' && value) theme = value
       }
 

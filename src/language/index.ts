@@ -12,11 +12,11 @@ export function register(subscriptions: Disposable[]) {
 
   languageParser
     .on('activeEditorDisposed', decorations.removeDecorations)
-    .on('activeEditorUpdated', (editor, { directvies }) => {
+    .on('activeEditorUpdated', (editor, { directives }) => {
       const directiveKeys: Range[] = []
       const globalDirectiveKeys: Range[] = []
 
-      for (const { info, keyRange } of directvies) {
+      for (const { info, keyRange } of directives) {
         directiveKeys.push(keyRange)
 
         if (info.type === DirectiveType.Global) {
@@ -33,7 +33,7 @@ export function register(subscriptions: Disposable[]) {
       provideHover: async (doc, pos) => {
         const parsedData = await languageParser.getParseData(doc)
 
-        for (const collected of parsedData?.directvies ?? []) {
+        for (const collected of parsedData?.directives ?? []) {
           if (collected.range.contains(pos)) {
             return new Hover(
               collected.info.markdownDescription,

@@ -30,7 +30,7 @@ export async function createWorkFile(doc: TextDocument): Promise<WorkFile> {
   const { encoding } = doc
   const encodingAPIavailable = !!encoding
 
-  // Use a real file if posibble
+  // Use a real file if possible
   if (
     doc.uri.scheme === 'file' &&
     !doc.isDirty &&
