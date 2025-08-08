@@ -11,8 +11,8 @@ export default function preview() {
 
   // Borrow postMessage from VS Code feature ;p
   const postMessage =
-    (window as any).cspAlerter._messaging?.postMessage ||
-    (window as any).styleLoadingMonitor._poster?.postMessage
+    (window as any).cspAlerter?._messaging?.postMessage ||
+    (window as any).styleLoadingMonitor?._poster?.postMessage
 
   // Detect update of DOM
   const updateCallback = () => {

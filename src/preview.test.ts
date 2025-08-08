@@ -1,8 +1,19 @@
 /** @jest-environment jsdom */
 import { browser } from '@marp-team/marp-core/browser'
+import type { MarpCoreBrowser } from '@marp-team/marp-core/browser'
 import preview from './preview'
+import { OverflowTracker } from './preview/overflow-tracker'
 
-jest.mock('@marp-team/marp-core/browser')
+jest.mock('@marp-team/marp-core/browser', () => ({
+  browser: jest.fn(() => {
+    const browserController = jest.fn()
+
+    return Object.assign(browserController, {
+      cleanup: browserController,
+      update: jest.fn(),
+    }) satisfies MarpCoreBrowser
+  }),
+}))
 
 beforeEach(() => {
   document.head.innerHTML = ''
@@ -70,24 +81,81 @@ describe('Preview HTML', () => {
     const emitUpdateEvent = () =>
       window.dispatchEvent(new CustomEvent('vscode.markdown.updateContent'))
 
-    describe('Marp Core browser context JS', () => {
-      it('calls browser script when activated and calls clean-up function when deactivated', () => {
-        const cleanup = jest.fn()
-        ;(browser as jest.Mock).mockImplementation(cleanup)
+    describe('Marp state', () => {
+      describe('Marp Core browser context JS', () => {
+        it('calls browser script when activated and calls clean-up function when deactivated', () => {
+          preview()
+          expect(document.body.classList.contains('marp-vscode')).toBe(false)
+          expect(browser).not.toHaveBeenCalled()
 
-        preview()
-        expect(document.body.classList.contains('marp-vscode')).toBe(false)
-        expect(browser).not.toHaveBeenCalled()
+          document.body.innerHTML = '<div id="__marp-vscode"></div>'
+          emitUpdateEvent()
+          expect(document.body.classList.contains('marp-vscode')).toBe(true)
+          expect(browser).toHaveBeenCalled()
 
-        document.body.innerHTML = '<div id="__marp-vscode"></div>'
-        emitUpdateEvent()
-        expect(document.body.classList.contains('marp-vscode')).toBe(true)
-        expect(browser).toHaveBeenCalled()
+          document.body.innerHTML = ''
+          emitUpdateEvent()
+          expect(document.body.classList.contains('marp-vscode')).toBe(false)
+          expect(browser).toHaveBeenCalled()
+        })
+      })
 
-        document.body.innerHTML = ''
-        emitUpdateEvent()
-        expect(document.body.classList.contains('marp-vscode')).toBe(false)
-        expect(cleanup).toHaveBeenCalled()
+      describe('Overflow tracker', () => {
+        const updateSpy = jest.spyOn(OverflowTracker.prototype, 'update')
+        const vscodeWindow: Window & {
+          cspAlerter?: {
+            _messaging: { postMessage: (type: string, data: unknown) => void }
+          }
+          styleLoadingMonitor?: {
+            _poster: { postMessage: (type: string, data: unknown) => void }
+          }
+        } = window
+
+        const cspAlerterGetter = jest.fn()
+        const styleLoadingMonitorGetter = jest.fn()
+
+        beforeEach(() => {
+          document.body.innerHTML = '<div id="__marp-vscode"></div>'
+
+          Object.defineProperties(window, {
+            cspAlerter: { configurable: true, get: cspAlerterGetter },
+            styleLoadingMonitor: {
+              configurable: true,
+              get: styleLoadingMonitorGetter,
+            },
+          }) satisfies typeof vscodeWindow
+        })
+
+        afterEach(() => {
+          delete vscodeWindow.cspAlerter
+          delete vscodeWindow.styleLoadingMonitor
+        })
+
+        it('does not create overflow tracker if the postMessage function in the global context was not available', () => {
+          expect(updateSpy).not.toHaveBeenCalled()
+          preview()
+          expect(updateSpy).not.toHaveBeenCalled()
+        })
+
+        it('creates overflow tracker if the postMessage function in window.cspAlerter was available', () => {
+          cspAlerterGetter.mockImplementation(() => ({
+            _messaging: { postMessage: jest.fn() },
+          }))
+
+          expect(updateSpy).not.toHaveBeenCalled()
+          preview()
+          expect(updateSpy).toHaveBeenCalled()
+        })
+
+        it('creates overflow tracker if the postMessage function in window.styleLoadingMonitor was available', () => {
+          styleLoadingMonitorGetter.mockImplementation(() => ({
+            _poster: { postMessage: jest.fn() },
+          }))
+
+          expect(updateSpy).not.toHaveBeenCalled()
+          preview()
+          expect(updateSpy).toHaveBeenCalled()
+        })
       })
     })
 
