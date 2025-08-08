@@ -39,11 +39,14 @@ describe('#activate', () => {
     globalState: createMemento(),
   })
 
-  it('contains #extendMarkdownIt', () => {
-    const { activate, extendMarkdownIt } = extension()
+  it('contains extendMarkdownIt with a return value of #getExtendMarkdownIt', () => {
+    const ext = extension()
+    const extendMarkdownItMock = jest.fn()
 
-    expect(activate(extContext())).toEqual(
-      expect.objectContaining({ extendMarkdownIt }),
+    jest.spyOn(ext, 'getExtendMarkdownIt').mockReturnValue(extendMarkdownItMock)
+
+    expect(ext.activate(extContext())).toEqual(
+      expect.objectContaining({ extendMarkdownIt: extendMarkdownItMock }),
     )
   })
 
@@ -67,8 +70,14 @@ describe('#activate', () => {
   })
 })
 
-describe('#extendMarkdownIt', () => {
+describe('#getExtendMarkdownIt', () => {
   const marpMd = (md: string) => `---\nmarp: true\n---\n\n${md}`
+  const subscriptions = []
+
+  it('returns a function for extending MarkdownIt', () => {
+    const extendMarkdownIt = extension().getExtendMarkdownIt({ subscriptions })
+    expect(extendMarkdownIt).toBeInstanceOf(Function)
+  })
 
   describe('Marp Core', () => {
     const baseMd = '# Hello :wave:\n\n<!-- header: Hi -->'
@@ -79,7 +88,7 @@ describe('#extendMarkdownIt', () => {
 
       for (const markdown of [baseMd, confusingMd]) {
         const html = extension()
-          .extendMarkdownIt(new markdownIt())
+          .getExtendMarkdownIt({ subscriptions })(new markdownIt())
           .render(markdown)
 
         expect(html).not.toContain('<div id="__marp-vscode">')
@@ -91,7 +100,7 @@ describe('#extendMarkdownIt', () => {
 
     it('uses Marp engine when enabled marp front-matter', () => {
       const html = extension()
-        .extendMarkdownIt(new markdownIt())
+        .getExtendMarkdownIt({ subscriptions })(new markdownIt())
         .render(marpMd(baseMd))
 
       expect(html).toContain('<div id="__marp-vscode">')
@@ -104,10 +113,10 @@ describe('#extendMarkdownIt', () => {
   describe('Plugins', () => {
     describe('Custom theme', () => {
       const marpCore = (markdown = ''): Marp => {
-        const { extendMarkdownIt, marpVscode } = extension()
+        const { getExtendMarkdownIt, marpVscode } = extension()
         const md = new markdownIt()
 
-        extendMarkdownIt(md).render(marpMd(markdown))
+        getExtendMarkdownIt({ subscriptions })(md).render(marpMd(markdown))
         return md[marpVscode]
       }
 
@@ -138,7 +147,9 @@ describe('#extendMarkdownIt', () => {
 
       it('adds code-line class and data-line attribute to DOM', () => {
         const doc = new DOMParser().parseFromString(
-          extension().extendMarkdownIt(new markdownIt()).render(markdown),
+          extension()
+            .getExtendMarkdownIt({ subscriptions })(new markdownIt())
+            .render(markdown),
           'text/html',
         )
 
@@ -158,7 +169,8 @@ describe('#extendMarkdownIt', () => {
   })
 
   describe('Workspace config', () => {
-    const md = (opts = {}) => extension().extendMarkdownIt(new markdownIt(opts))
+    const md = (opts = {}) =>
+      extension().getExtendMarkdownIt({ subscriptions })(new markdownIt(opts))
 
     describe('markdown.marp.breaks', () => {
       it('renders line-breaks when setting "on"', () => {
