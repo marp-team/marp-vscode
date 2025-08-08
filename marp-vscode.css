@@ -83,7 +83,7 @@ body.marp-vscode blockquote {
     right: 0;
     text-align: center;
     top: 0;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   #code-csp-warning:hover {

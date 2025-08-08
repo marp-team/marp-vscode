@@ -6,6 +6,11 @@
 
 - Export presenter notes as `.txt` file ([#456](https://github.com/marp-team/marp-vscode/issues/456), [#512](https://github.com/marp-team/marp-vscode/pull/512) by [@noritaka1166](https://github.com/noritaka1166))
 
+### Changed
+
+- Upgrade Marp CLI to [v4.2.2](https://github.com/marp-team/marp-cli/releases/tag/v4.2.2) ([#517](https://github.com/marp-team/marp-vscode/pull/517), [#524](https://github.com/marp-team/marp-vscode/pull/524))
+- Upgrade dependent packages to the latest version ([#524](https://github.com/marp-team/marp-vscode/pull/524))
+
 ## v3.2.1 - 2025-07-19
 
 ### Changed
