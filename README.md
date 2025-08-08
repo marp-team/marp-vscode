@@ -256,7 +256,7 @@ Some of settings are marked as experimental. These feature may be unstable and c
 
 You can enable the experimental feature to export PPTX with editable contents, based on [Marp CLI's corresponding experimental option](https://github.com/marp-team/marp-cli#experimental-generate-editable-pptx---pptx-editable). This feature requires to install both of the compatible browser and [LibreOffice Impress](https://www.libreoffice.org/).
 
-If set this setting as `smart`, Marp for VS Code will try to export into editable PPTX first, and then fallback to the regular PPTX export (non-editable) if failed.
+If set this setting as `smart`, Marp for VS Code will try to export into editable PPTX first, and then fall back to the regular PPTX export (non-editable) if failed.
 
 ### [`markdown.marp.strictPathResolutionDuringExport`](https://github.com/marp-team/marp-vscode/pull/367)
 

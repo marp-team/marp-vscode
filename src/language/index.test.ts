@@ -31,7 +31,7 @@ describe('Language extension', () => {
         'activeEditorUpdated',
         editorMock as any,
         {
-          directvies: [
+          directives: [
             { info: { type: DirectiveType.Global }, keyRange: dummyRangeG },
             { info: { type: DirectiveType.Local }, keyRange: dummyRangeL },
           ],
@@ -48,7 +48,7 @@ describe('Language extension', () => {
       )
     })
 
-    it('clears decorations when dispoed the active editor', () => {
+    it('clears decorations when the active editor is disposed', () => {
       const parser = languageParser()
       const editorMock = { setDecorations: jest.fn() }
 
@@ -106,7 +106,7 @@ describe('Language extension', () => {
       const getParseDataSpy = jest
         .spyOn(LanguageParser.prototype, 'getParseData')
         .mockResolvedValue({
-          directvies: [
+          directives: [
             { info: {}, range: ignoredRange },
             { info: {}, range },
           ],

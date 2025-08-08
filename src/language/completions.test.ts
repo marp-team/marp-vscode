@@ -384,7 +384,7 @@ describe('Auto completions', () => {
         }
       })
 
-      it('fallback to presets for the default theme if specified theme is not registered', async () => {
+      it('falls back to presets for the default theme if specified theme is not registered', async () => {
         const doc = setDocument('---\nmarp: true\ntheme: unknown\nsize: \n---')
         const list = (await provideCompletionItems()(
           doc,
