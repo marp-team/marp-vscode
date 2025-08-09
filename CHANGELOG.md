@@ -5,6 +5,7 @@
 ### Added
 
 - Export presenter notes as `.txt` file ([#456](https://github.com/marp-team/marp-vscode/issues/456), [#512](https://github.com/marp-team/marp-vscode/pull/512) by [@noritaka1166](https://github.com/noritaka1166))
+- Experimental `slide-content-overflow` diagnostic and opt-in setting: Warn when the content overflows the safe area ([#519](https://github.com/marp-team/marp-vscode/issues/519), [#523](https://github.com/marp-team/marp-vscode/pull/523))
 
 ### Changed
 
