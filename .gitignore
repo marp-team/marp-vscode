@@ -1,5 +1,5 @@
-lib/
-preview/
+/lib/
+/preview/
 *.vsix
 yarn.lock
 .vscode-test-web

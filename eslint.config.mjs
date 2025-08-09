@@ -78,9 +78,9 @@ export default tseslint.config(
       '.vscode-test-web/**/*',
       'coverage/**/*',
       'dist/**/*',
-      'lib/**/*',
+      './lib/**/*',
       'node_modules/**/*',
-      'preview/**/*',
+      './preview/**/*',
     ],
   },
 )

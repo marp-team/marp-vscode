@@ -5,7 +5,17 @@ import { Marp } from '@marp-team/marp-core'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
 import * as nodeFetch from 'node-fetch'
-import { Memento, Uri, commands, window, workspace, env } from 'vscode'
+import {
+  Memento,
+  Uri,
+  commands,
+  window,
+  workspace,
+  env,
+  Diagnostic,
+} from 'vscode'
+import type { Disposable } from 'vscode'
+import { eventType } from './preview/overflow-tracker'
 
 jest.mock('node-fetch')
 jest.mock('vscode')
@@ -14,14 +24,17 @@ jest.mock('./observer', () => ({
 }))
 
 let themes: (typeof import('./themes'))['default']
+let previewDiagnosticsCollection: typeof import('./diagnostics/preview').collection
 
 const extension = (): typeof import('./extension') => {
   let ext
 
   jest.isolateModules(() => {
-    // Shut up cache
-    ext = require('./extension') // eslint-disable-line @typescript-eslint/no-require-imports
-    themes = require('./themes').default // eslint-disable-line @typescript-eslint/no-require-imports
+    /* eslint-disable @typescript-eslint/no-require-imports -- Shut up cache */
+    ext = require('./extension')
+    themes = require('./themes').default
+    previewDiagnosticsCollection = require('./diagnostics/preview').collection
+    /* eslint-enable @typescript-eslint/no-require-imports */
   })
 
   return ext
@@ -39,11 +52,14 @@ describe('#activate', () => {
     globalState: createMemento(),
   })
 
-  it('contains #extendMarkdownIt', () => {
-    const { activate, extendMarkdownIt } = extension()
+  it('contains extendMarkdownIt with a return value of #getExtendMarkdownIt', () => {
+    const ext = extension()
+    const extendMarkdownItMock = jest.fn()
 
-    expect(activate(extContext())).toEqual(
-      expect.objectContaining({ extendMarkdownIt }),
+    jest.spyOn(ext, 'getExtendMarkdownIt').mockReturnValue(extendMarkdownItMock)
+
+    expect(ext.activate(extContext())).toEqual(
+      expect.objectContaining({ extendMarkdownIt: extendMarkdownItMock }),
     )
   })
 
@@ -67,8 +83,14 @@ describe('#activate', () => {
   })
 })
 
-describe('#extendMarkdownIt', () => {
+describe('#getExtendMarkdownIt', () => {
   const marpMd = (md: string) => `---\nmarp: true\n---\n\n${md}`
+  const subscriptions = []
+
+  it('returns a function for extending MarkdownIt', () => {
+    const extendMarkdownIt = extension().getExtendMarkdownIt({ subscriptions })
+    expect(extendMarkdownIt).toBeInstanceOf(Function)
+  })
 
   describe('Marp Core', () => {
     const baseMd = '# Hello :wave:\n\n<!-- header: Hi -->'
@@ -79,7 +101,7 @@ describe('#extendMarkdownIt', () => {
 
       for (const markdown of [baseMd, confusingMd]) {
         const html = extension()
-          .extendMarkdownIt(new markdownIt())
+          .getExtendMarkdownIt({ subscriptions })(new markdownIt())
           .render(markdown)
 
         expect(html).not.toContain('<div id="__marp-vscode">')
@@ -91,7 +113,7 @@ describe('#extendMarkdownIt', () => {
 
     it('uses Marp engine when enabled marp front-matter', () => {
       const html = extension()
-        .extendMarkdownIt(new markdownIt())
+        .getExtendMarkdownIt({ subscriptions })(new markdownIt())
         .render(marpMd(baseMd))
 
       expect(html).toContain('<div id="__marp-vscode">')
@@ -104,10 +126,10 @@ describe('#extendMarkdownIt', () => {
   describe('Plugins', () => {
     describe('Custom theme', () => {
       const marpCore = (markdown = ''): Marp => {
-        const { extendMarkdownIt, marpVscode } = extension()
+        const { getExtendMarkdownIt, marpVscode } = extension()
         const md = new markdownIt()
 
-        extendMarkdownIt(md).render(marpMd(markdown))
+        getExtendMarkdownIt({ subscriptions: [] })(md).render(marpMd(markdown))
         return md[marpVscode]
       }
 
@@ -138,7 +160,9 @@ describe('#extendMarkdownIt', () => {
 
       it('adds code-line class and data-line attribute to DOM', () => {
         const doc = new DOMParser().parseFromString(
-          extension().extendMarkdownIt(new markdownIt()).render(markdown),
+          extension()
+            .getExtendMarkdownIt({ subscriptions: [] })(new markdownIt())
+            .render(markdown),
           'text/html',
         )
 
@@ -155,10 +179,69 @@ describe('#extendMarkdownIt', () => {
         expect(doc.querySelector<HTMLElement>('h2')?.dataset.line).toBe('10')
       })
     })
+
+    describe('Content section', () => {
+      const render = (markdown: string) =>
+        new DOMParser().parseFromString(
+          extension()
+            .getExtendMarkdownIt({ subscriptions: [] })(new markdownIt())
+            .render(markdown),
+          'text/html',
+        )
+
+      it('adds data attributes about start and end line into `<section>` for the content', () => {
+        const doc = render(dedent`
+          ---
+          marp: true
+          ---
+
+          # Hello
+
+          ---
+
+          ## world!
+        `)
+
+        const sections = doc.querySelectorAll<HTMLElement>('section')
+        expect(sections).toHaveLength(2)
+
+        const [page1, page2] = sections
+        expect(page1.dataset.marpVscodeContentStartLine).toBe('0')
+        expect(page1.dataset.marpVscodeContentEndLine).toBe('5')
+        expect(page2.dataset.marpVscodeContentStartLine).toBe('6')
+        expect(page2.dataset.marpVscodeContentEndLine).toBe('9')
+      })
+
+      it("adds data attributes only to `<section>` for the content even if used additional layers in Marpit's inline SVG mode", () => {
+        const doc = render(dedent`
+          ---
+          marp: true
+          paginate: true
+          ---
+
+          # Hello
+
+          ![bg](https://example/image.png)
+        `)
+
+        const sections = doc.querySelectorAll<HTMLElement>('section')
+        expect(sections).not.toHaveLength(1) // Marpit makes 3 layers: Pagination, Contents, Backgrounds
+
+        const sectionsWithData = doc.querySelectorAll<HTMLElement>(
+          'section[data-marp-vscode-content-start-line][data-marp-vscode-content-end-line]',
+        )
+        expect(sectionsWithData).toHaveLength(1)
+
+        const [page] = sectionsWithData
+        expect(page.dataset.marpVscodeContentStartLine).toBe('0')
+        expect(page.dataset.marpVscodeContentEndLine).toBe('8')
+      })
+    })
   })
 
   describe('Workspace config', () => {
-    const md = (opts = {}) => extension().extendMarkdownIt(new markdownIt(opts))
+    const md = (opts = {}) =>
+      extension().getExtendMarkdownIt({ subscriptions })(new markdownIt(opts))
 
     describe('markdown.marp.breaks', () => {
       it('renders line-breaks when setting "on"', () => {
@@ -478,6 +561,149 @@ describe('#extendMarkdownIt', () => {
           } finally {
             wsFsReadfile.mockRestore()
           }
+        })
+      })
+    })
+
+    describe('Managing rendered WebView', () => {
+      const createVSCodeMdFeatures = () => {
+        const onDidReceiveMessage: Disposable = { dispose: jest.fn() }
+        const webviewPanel = {
+          webview: {
+            onDidReceiveMessage: jest.fn().mockReturnValue(onDidReceiveMessage),
+          },
+          onDidDispose: jest.fn(),
+        }
+
+        return {
+          currentDocument: Uri.parse('untitled:untitled-1'),
+          onDidReceiveMessage,
+          resourceProvider: { _webviewPanel: webviewPanel },
+          webviewPanel,
+        }
+      }
+
+      it('registers event receiver when a rendered webview was detected from resource provider in markdown-it env', () => {
+        const {
+          currentDocument,
+          onDidReceiveMessage,
+          webviewPanel,
+          resourceProvider,
+        } = createVSCodeMdFeatures()
+
+        const subscriptions = []
+        const md = extension().getExtendMarkdownIt({ subscriptions })(
+          new markdownIt(),
+        )
+
+        md.render('Test')
+        expect(subscriptions).toHaveLength(0)
+        expect(webviewPanel.webview.onDidReceiveMessage).not.toHaveBeenCalled()
+        expect(webviewPanel.onDidDispose).not.toHaveBeenCalled()
+
+        md.render('Test', { currentDocument, resourceProvider })
+        expect(subscriptions).toHaveLength(1)
+        expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalled()
+        expect(webviewPanel.onDidDispose).toHaveBeenCalled()
+
+        // Avoid double registration
+        md.render('Test', { currentDocument, resourceProvider })
+        expect(subscriptions).toHaveLength(1)
+        expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalledTimes(
+          1,
+        )
+        expect(webviewPanel.onDidDispose).toHaveBeenCalledTimes(1)
+
+        // Dispose webview
+        const mockedOnDidDispose = jest.mocked(webviewPanel.onDidDispose)
+        const [disposeCallback] = mockedOnDidDispose.mock.calls[0]
+        disposeCallback()
+        expect(onDidReceiveMessage.dispose).toHaveBeenCalled()
+
+        // After disposed, WebView can be re-registered
+        mockedOnDidDispose.mockClear()
+        subscriptions.splice(0, subscriptions.length)
+
+        md.render('Test', { currentDocument, resourceProvider })
+        expect(subscriptions).toHaveLength(1)
+        expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalled()
+        expect(webviewPanel.onDidDispose).toHaveBeenCalled()
+      })
+
+      describe('markdown.marp.diagnostics.slideContentOverflow', () => {
+        it('sets diagnostics if overflow tracker event received and configuration was enabled', () => {
+          setConfiguration({
+            'markdown.marp.diagnostics.slideContentOverflow': true,
+          })
+
+          const { currentDocument, webviewPanel, resourceProvider } =
+            createVSCodeMdFeatures()
+
+          const md = extension().getExtendMarkdownIt({ subscriptions: [] })(
+            new markdownIt(),
+          )
+
+          // If Marp rendering was disabled, diagnostics always set as undefined
+          md.render('Test', { currentDocument, resourceProvider })
+          expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalled()
+          expect(previewDiagnosticsCollection.set).toHaveBeenCalledWith(
+            currentDocument,
+            undefined,
+          )
+
+          // Simulate overflow tracker event from preview
+          const [receiveMessageCallback] = jest.mocked(
+            webviewPanel.webview.onDidReceiveMessage,
+          ).mock.calls[0]
+
+          jest.mocked(previewDiagnosticsCollection.set).mockClear()
+          receiveMessageCallback({
+            type: eventType,
+            overflowElements: [
+              { startLine: 0, endLine: 1 },
+              { startLine: 2, endLine: 4 },
+            ],
+          })
+
+          expect(previewDiagnosticsCollection.set).toHaveBeenCalledWith(
+            currentDocument,
+            [expect.any(Diagnostic), expect.any(Diagnostic)],
+          )
+        })
+
+        it('does not set diagnostics even if overflow tracker event received but configuration was disabled', () => {
+          setConfiguration({
+            'markdown.marp.diagnostics.slideContentOverflow': false,
+          })
+
+          const { currentDocument, webviewPanel, resourceProvider } =
+            createVSCodeMdFeatures()
+
+          const md = extension().getExtendMarkdownIt({ subscriptions: [] })(
+            new markdownIt(),
+          )
+
+          md.render('Test', { currentDocument, resourceProvider })
+          expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalled()
+
+          // Simulate overflow tracker event from preview
+          const [receiveMessageCallback] = jest.mocked(
+            webviewPanel.webview.onDidReceiveMessage,
+          ).mock.calls[0]
+
+          jest.mocked(previewDiagnosticsCollection.set).mockClear()
+          receiveMessageCallback({
+            type: eventType,
+            overflowElements: [
+              { startLine: 0, endLine: 1 },
+              { startLine: 2, endLine: 4 },
+            ],
+          })
+
+          expect(previewDiagnosticsCollection.set).toHaveBeenCalledWith(
+            currentDocument,
+            undefined, // No diagnostics set
+          )
         })
       })
     })

@@ -1,23 +1,29 @@
 import { Marp } from '@marp-team/marp-core'
-import { ExtensionContext, Uri, commands, workspace } from 'vscode'
+import { commands, Diagnostic, workspace } from 'vscode'
+import type { ExtensionContext, Uri, WebviewPanel } from 'vscode'
 import * as exportCommand from './commands/export'
 import * as newMarpMarkdown from './commands/new-marp-markdown'
 import * as openExtensionSettings from './commands/open-extension-settings'
 import * as showQuickPick from './commands/show-quick-pick'
 import * as toggleMarpFeature from './commands/toggle-marp-feature'
 import diagnostics from './diagnostics/'
+import { collection as previewDiagnosticsCollection } from './diagnostics/preview'
+import { generateDiagnostics } from './diagnostics/preview/slide-content-overflow'
 import languageProvider from './language/'
 import { registerLM } from './lm/lm'
 import { incompatiblePreviewExtensionsObserver } from './observer'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
+import contentSection from './plugins/content-section'
 import customTheme from './plugins/custom-theme'
 import lineNumber from './plugins/line-number'
 import outline, { rule as outlineRule } from './plugins/outline'
+import { isOverflowTrackerEvent } from './preview/overflow-tracker'
 import themes, { Themes } from './themes'
 import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 
 const shouldRefreshConfs = [
   'markdown.marp.breaks',
+  'markdown.marp.diagnostics.slideContentOverflow',
   'markdown.marp.enableHtml',
   'markdown.marp.html',
   'markdown.marp.mathTypesetting',
@@ -34,96 +40,146 @@ const applyRefreshedConfiguration = () => {
 
 export const marpVscode = Symbol('marp-vscode')
 
-export function extendMarkdownIt(md: any) {
-  const { parse, renderer } = md
-  const { render } = renderer
+export const getExtendMarkdownIt = ({
+  subscriptions,
+}: Pick<ExtensionContext, 'subscriptions'>) => {
+  const activeWebviewPanels = new Set<WebviewPanel>()
 
-  md.parse = (markdown: string, env: any) => {
-    // Generate tokens by Marp if enabled
-    if (detectMarpFromMarkdown(markdown)) {
-      // A messy resolution by finding matched document to resolve workspace or directory of Markdown
-      // https://github.com/microsoft/vscode/issues/84846
-      const baseFolder: Uri | undefined = (() => {
-        for (const document of workspace.textDocuments) {
-          if (
-            document.languageId === 'markdown' &&
-            document.getText().replace(/\u2028|\u2029/g, '') === markdown
-          ) {
-            return Themes.resolveBaseDirectoryForTheme(document)
+  return function markdownItMarpForVSCodePlugin(md: any) {
+    const { parse, renderer } = md
+    const { render } = renderer
+
+    md.parse = (markdown: string, env: any) => {
+      // Generate tokens by Marp if enabled
+      if (detectMarpFromMarkdown(markdown)) {
+        // A messy resolution by finding matched document to resolve workspace or directory of Markdown
+        // https://github.com/microsoft/vscode/issues/84846
+        const baseFolder: Uri | undefined = (() => {
+          for (const document of workspace.textDocuments) {
+            if (
+              document.languageId === 'markdown' &&
+              document.getText().replace(/\u2028|\u2029/g, '') === markdown
+            ) {
+              return Themes.resolveBaseDirectoryForTheme(document)
+            }
+          }
+          return undefined
+        })()
+
+        const marp = new Marp(marpCoreOptionForPreview(md.options))
+          .use(customTheme)
+          .use(contentSection)
+          .use(outline)
+          .use(lineNumber)
+
+        // Switch rules
+        if (!(marpConfiguration().get<boolean>('outlineExtension') ?? true)) {
+          marp.markdown.disable(outlineRule)
+        }
+
+        // Load custom themes
+        Promise.all(
+          themes.loadStyles(baseFolder).map((p) =>
+            p.then(
+              (theme) => theme.registered,
+              (e) => console.error(e),
+            ),
+          ),
+        ).then((registered) => {
+          if (registered.some((f) => f === true)) {
+            commands.executeCommand('markdown.preview.refresh')
+          }
+        })
+
+        for (const theme of themes.getRegisteredStyles(baseFolder)) {
+          try {
+            marp.themeSet.add(theme.css)
+          } catch (e) {
+            const msg = e instanceof Error ? ` (${e.message})` : ''
+
+            console.error(
+              `Failed to register custom theme from "${theme.path}".${msg}`,
+            )
           }
         }
-        return undefined
-      })()
 
-      const marp = new Marp(marpCoreOptionForPreview(md.options))
-        .use(customTheme)
-        .use(outline)
-        .use(lineNumber)
+        // Use image stabilizer, link renderer and link normalizer from VS Code
+        marp.markdown.renderer.rules.image = md.renderer.rules.image
+        marp.markdown.renderer.rules.link_open = md.renderer.rules.link_open
+        marp.markdown.normalizeLink = md.normalizeLink
 
-      // Switch rules
-      if (!(marpConfiguration().get<boolean>('outlineExtension') ?? true)) {
-        marp.markdown.disable(outlineRule)
+        // validateLink prefers Marp's default. If overridden by VS Code's it,
+        // does not return compatible result with the other Marp tools.
+        // marp.markdown.validateLink = md.validateLink
+
+        md[marpVscode] = marp
+        return marp.markdown.parse(markdown, env)
       }
 
-      // Load custom themes
-      Promise.all(
-        themes.loadStyles(baseFolder).map((p) =>
-          p.then(
-            (theme) => theme.registered,
-            (e) => console.error(e),
-          ),
-        ),
-      ).then((registered) => {
-        if (registered.some((f) => f === true)) {
-          commands.executeCommand('markdown.preview.refresh')
-        }
-      })
+      // Fallback to original instance if Marp was not enabled
+      md[marpVscode] = false
+      return parse.call(md, markdown, env)
+    }
 
-      for (const theme of themes.getRegisteredStyles(baseFolder)) {
-        try {
-          marp.themeSet.add(theme.css)
-        } catch (e) {
-          const msg = e instanceof Error ? ` (${e.message})` : ''
+    renderer.render = (tokens: any[], options: any, env: any) => {
+      const currentDocument: Uri | undefined = env?.currentDocument
+      const webviewPanel: WebviewPanel | undefined =
+        env?.resourceProvider?._webviewPanel
 
-          console.error(
-            `Failed to register custom theme from "${theme.path}".${msg}`,
+      const setDiagnostics = (diagnostics: Diagnostic[] | undefined) => {
+        if (currentDocument) {
+          const targetDiagnostics = marpConfiguration().get<boolean>(
+            'diagnostics.slideContentOverflow',
           )
+            ? diagnostics
+            : undefined
+
+          previewDiagnosticsCollection.set(currentDocument, targetDiagnostics)
         }
       }
 
-      // Use image stabilizer, link renderer and link normalizer from VS Code
-      marp.markdown.renderer.rules.image = md.renderer.rules.image
-      marp.markdown.renderer.rules.link_open = md.renderer.rules.link_open
-      marp.markdown.normalizeLink = md.normalizeLink
+      if (webviewPanel && !activeWebviewPanels.has(webviewPanel)) {
+        activeWebviewPanels.add(webviewPanel)
 
-      // validateLink prefers Marp's default. If overridden by VS Code's it,
-      // does not return compatible result with the other Marp tools.
-      // marp.markdown.validateLink = md.validateLink
+        // Register message receiver
+        const marpForVSCodeReceiver = webviewPanel.webview.onDidReceiveMessage(
+          (e) => {
+            if (isOverflowTrackerEvent(e))
+              setDiagnostics(generateDiagnostics(e.overflowElements))
+          },
+        )
 
-      md[marpVscode] = marp
-      return marp.markdown.parse(markdown, env)
+        webviewPanel.onDidDispose(
+          () => {
+            setDiagnostics(undefined)
+            activeWebviewPanels.delete(webviewPanel)
+            marpForVSCodeReceiver.dispose()
+          },
+          null,
+          subscriptions,
+        )
+
+        subscriptions.push(marpForVSCodeReceiver)
+      }
+
+      // markdown-it renderer
+      const marp = md[marpVscode]
+
+      if (marp) {
+        const { markdown } = marp
+        const style = marp.renderStyle(marp.lastGlobalDirectives.theme)
+        const html = markdown.renderer.render(tokens, markdown.options, env)
+
+        return `<style id="__marp-vscode-style">${style}</style>${html}`
+      } else {
+        setDiagnostics(undefined)
+      }
+
+      return render.call(renderer, tokens, options, env)
     }
 
-    // Fallback to original instance if Marp was not enabled
-    md[marpVscode] = false
-    return parse.call(md, markdown, env)
+    return md
   }
-
-  renderer.render = (tokens: any[], options: any, env: any) => {
-    const marp = md[marpVscode]
-
-    if (marp) {
-      const { markdown } = marp
-      const style = marp.renderStyle(marp.lastGlobalDirectives.theme)
-      const html = markdown.renderer.render(tokens, markdown.options, env)
-
-      return `<style id="__marp-vscode-style">${style}</style>${html}`
-    }
-
-    return render.call(renderer, tokens, options, env)
-  }
-
-  return md
 }
 
 export const activate = ({ subscriptions }: ExtensionContext) => {
@@ -132,6 +188,7 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
   registerLM(subscriptions)
 
   subscriptions.push(
+    previewDiagnosticsCollection,
     commands.registerCommand(exportCommand.command, exportCommand.default),
     commands.registerCommand(newMarpMarkdown.command, newMarpMarkdown.default),
     commands.registerCommand(
@@ -153,5 +210,5 @@ export const activate = ({ subscriptions }: ExtensionContext) => {
     incompatiblePreviewExtensionsObserver(),
   )
 
-  return { extendMarkdownIt }
+  return { extendMarkdownIt: getExtendMarkdownIt({ subscriptions }) }
 }

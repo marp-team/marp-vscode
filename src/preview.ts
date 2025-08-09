@@ -1,28 +1,41 @@
 import { browser, type MarpCoreBrowser } from '@marp-team/marp-core/browser'
+import { OverflowTracker } from './preview/overflow-tracker'
+
+interface MarpState {
+  browser: MarpCoreBrowser
+  overflowTracker: OverflowTracker | undefined
+}
 
 export default function preview() {
-  let marpState: boolean | undefined
-  let marpBrowser: MarpCoreBrowser | undefined
+  let marpState: MarpState | undefined = undefined
+
+  // Borrow postMessage from VS Code feature ;p
+  const postMessage =
+    (window as any).cspAlerter?._messaging?.postMessage ||
+    (window as any).styleLoadingMonitor?._poster?.postMessage
 
   // Detect update of DOM
   const updateCallback = () => {
     const marpVscode = document.getElementById('__marp-vscode')
-    const newMarpState = !!marpVscode
 
-    if (marpState !== newMarpState) {
-      document.body.classList.toggle('marp-vscode', newMarpState)
+    if (!!marpState !== !!marpVscode) {
+      document.body.classList.toggle('marp-vscode', !!marpVscode)
 
-      if (newMarpState) {
-        marpBrowser = browser()
+      if (marpVscode) {
+        marpState = {
+          browser: browser(),
+          overflowTracker: postMessage
+            ? new OverflowTracker(postMessage)
+            : undefined,
+        }
       } else {
-        marpBrowser?.cleanup()
-        marpBrowser = undefined
+        marpState?.browser.cleanup()
+        marpState?.overflowTracker?.cleanup()
+        marpState = undefined
       }
-
-      marpState = newMarpState
     } else {
-      // Required to modify <pre is="marp-pre"> to <marp-pre>.
-      if (newMarpState) marpBrowser?.update()
+      marpState?.browser.update() // Required to modify <pre is="marp-pre"> to <marp-pre>.
+      marpState?.overflowTracker?.update()
     }
 
     if (marpState) {
