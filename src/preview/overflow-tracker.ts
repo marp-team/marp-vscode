@@ -31,7 +31,7 @@ export const isOverflowTrackerEvent = (
   Array.isArray(value.overflowElements)
 
 export class OverflowTracker {
-  private delay = 100
+  private delay = 150
 
   constructor(private postMessage: PostMessage) {
     this.update()
@@ -52,8 +52,9 @@ export class OverflowTracker {
     for (const element of document.querySelectorAll(
       `section[${dataStartLine}][${dataEndLine}]`,
     )) {
-      const overflowPx = element.scrollHeight - element.clientHeight
-      if (overflowPx <= 0) continue
+      const overflowPxX = element.scrollWidth - element.clientWidth
+      const overflowPxY = element.scrollHeight - element.clientHeight
+      if (overflowPxX <= 0 && overflowPxY <= 0) continue
 
       const startLine = parseInt(element.getAttribute(dataStartLine) || '', 10)
       const endLine = parseInt(element.getAttribute(dataEndLine) || '', 10)

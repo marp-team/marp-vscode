@@ -129,7 +129,7 @@ describe('#getExtendMarkdownIt', () => {
         const { getExtendMarkdownIt, marpVscode } = extension()
         const md = new markdownIt()
 
-        getExtendMarkdownIt({ subscriptions })(md).render(marpMd(markdown))
+        getExtendMarkdownIt({ subscriptions: [] })(md).render(marpMd(markdown))
         return md[marpVscode]
       }
 
@@ -161,7 +161,7 @@ describe('#getExtendMarkdownIt', () => {
       it('adds code-line class and data-line attribute to DOM', () => {
         const doc = new DOMParser().parseFromString(
           extension()
-            .getExtendMarkdownIt({ subscriptions })(new markdownIt())
+            .getExtendMarkdownIt({ subscriptions: [] })(new markdownIt())
             .render(markdown),
           'text/html',
         )
@@ -177,6 +177,64 @@ describe('#getExtendMarkdownIt', () => {
         expect(doc.querySelector<HTMLElement>('h1')?.dataset.line).toBe('4')
         expect(doc.querySelector<HTMLElement>('p')?.dataset.line).toBe('6')
         expect(doc.querySelector<HTMLElement>('h2')?.dataset.line).toBe('10')
+      })
+    })
+
+    describe('Content section', () => {
+      const render = (markdown: string) =>
+        new DOMParser().parseFromString(
+          extension()
+            .getExtendMarkdownIt({ subscriptions: [] })(new markdownIt())
+            .render(markdown),
+          'text/html',
+        )
+
+      it('adds data attributes about start and end line into `<section>` for the content', () => {
+        const doc = render(dedent`
+          ---
+          marp: true
+          ---
+
+          # Hello
+
+          ---
+
+          ## world!
+        `)
+
+        const sections = doc.querySelectorAll<HTMLElement>('section')
+        expect(sections).toHaveLength(2)
+
+        const [page1, page2] = sections
+        expect(page1.dataset.marpVscodeContentStartLine).toBe('0')
+        expect(page1.dataset.marpVscodeContentEndLine).toBe('5')
+        expect(page2.dataset.marpVscodeContentStartLine).toBe('6')
+        expect(page2.dataset.marpVscodeContentEndLine).toBe('9')
+      })
+
+      it("adds data attributes only to `<section>` for the content even if used additional layers in Marpit's inline SVG mode", () => {
+        const doc = render(dedent`
+          ---
+          marp: true
+          paginate: true
+          ---
+
+          # Hello
+
+          ![bg](https://example/image.png)
+        `)
+
+        const sections = doc.querySelectorAll<HTMLElement>('section')
+        expect(sections).not.toHaveLength(1) // Marpit makes 3 layers: Pagination, Contents, Backgrounds
+
+        const sectionsWithData = doc.querySelectorAll<HTMLElement>(
+          'section[data-marp-vscode-content-start-line][data-marp-vscode-content-end-line]',
+        )
+        expect(sectionsWithData).toHaveLength(1)
+
+        const [page] = sectionsWithData
+        expect(page.dataset.marpVscodeContentStartLine).toBe('0')
+        expect(page.dataset.marpVscodeContentEndLine).toBe('8')
       })
     })
   })
