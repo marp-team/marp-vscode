@@ -109,6 +109,14 @@ Marp for VS Code can detect some basic problems in Marp directives. Diagnostics 
 [math global directive]: https://github.com/marp-team/marp-core#math-global-directive
 [size preset]: https://github.com/marp-team/marp-core/tree/main/themes#size-name-width-height
 
+##### Experimental diagnostics
+
+Some of diagnostics are experimental. You can enable or disable them in the extension settings. Refer to ["Experimental settings"](#experimental-settings).
+
+| Name                        | Description                                                                                     | [Quick Fix] |
+| :-------------------------- | :---------------------------------------------------------------------------------------------- | :---------: |
+| 🧪 `slide-content-overflow` | Warn when the slide content in a preview overflows the safe area defined by the slide’s padding |             |
+
 ### Export slide deck to HTML, PDF, PPTX, and image 🛡️
 
 We have integrated [Marp CLI][marp-cli] to export your deck into several formats.
@@ -149,18 +157,6 @@ By instructing to export Markdown in the specified file format, Copilot in the a
 <p align="center">
   <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/copilot-agent.png" alt="Integration with GitHub Copilot agent mode" width="280" />
 </p>
-
-<!--
-
-Developer note:
-
-Currently the export command can be accessible from GitHub Copilot Chat with `#exportMarp`, but this is not intended design. Do not mention to `#exportMarp` in README.
-
-Users may feel strange to attach the side-effect command like `#exportMarp` as the chat context, so we want to hide this command. However, the current VS Code API does not support splitting contributions for agent's tool and for references in the chat.
-
-https://github.com/microsoft/vscode/issues/245129#issuecomment-2767129358
-
--->
 
 ### Use custom theme CSS 🛡️
 
@@ -251,6 +247,12 @@ In the untrusted workspace, HTML elements in Marp Markdown will be always ignore
 ## Experimental settings
 
 Some of settings are marked as experimental. These feature may be unstable and change the spec in the future.
+
+### [`markdown.marp.diagnostics.slideContentOverflow`](https://github.com/marp-team/marp-vscode/issues/519)
+
+Enables a diagnostic that warns when slide content overflows the safe area defined by the slide’s padding. This diagnostic is only available while the Markdown preview is open.
+
+It is helpful for identifying some potential presentation issues, such as cropped content, excessive content on a single page, and an unnatural layouts.
 
 ### [`markdown.marp.pptx.editable`](https://github.com/marp-team/marp-vscode/pull/489)
 
