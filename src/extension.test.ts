@@ -5,7 +5,17 @@ import { Marp } from '@marp-team/marp-core'
 import dedent from 'dedent'
 import markdownIt from 'markdown-it'
 import * as nodeFetch from 'node-fetch'
-import { Memento, Uri, commands, window, workspace, env } from 'vscode'
+import {
+  Memento,
+  Uri,
+  commands,
+  window,
+  workspace,
+  env,
+  Diagnostic,
+} from 'vscode'
+import type { Disposable } from 'vscode'
+import { eventType } from './preview/overflow-tracker'
 
 jest.mock('node-fetch')
 jest.mock('vscode')
@@ -14,14 +24,17 @@ jest.mock('./observer', () => ({
 }))
 
 let themes: (typeof import('./themes'))['default']
+let previewDiagnosticsCollection: typeof import('./diagnostics/preview').collection
 
 const extension = (): typeof import('./extension') => {
   let ext
 
   jest.isolateModules(() => {
-    // Shut up cache
-    ext = require('./extension') // eslint-disable-line @typescript-eslint/no-require-imports
-    themes = require('./themes').default // eslint-disable-line @typescript-eslint/no-require-imports
+    /* eslint-disable @typescript-eslint/no-require-imports -- Shut up cache */
+    ext = require('./extension')
+    themes = require('./themes').default
+    previewDiagnosticsCollection = require('./diagnostics/preview').collection
+    /* eslint-enable @typescript-eslint/no-require-imports */
   })
 
   return ext
@@ -490,6 +503,149 @@ describe('#getExtendMarkdownIt', () => {
           } finally {
             wsFsReadfile.mockRestore()
           }
+        })
+      })
+    })
+
+    describe('Managing rendered WebView', () => {
+      const createVSCodeMdFeatures = () => {
+        const onDidReceiveMessage: Disposable = { dispose: jest.fn() }
+        const webviewPanel = {
+          webview: {
+            onDidReceiveMessage: jest.fn().mockReturnValue(onDidReceiveMessage),
+          },
+          onDidDispose: jest.fn(),
+        }
+
+        return {
+          currentDocument: Uri.parse('untitled:untitled-1'),
+          onDidReceiveMessage,
+          resourceProvider: { _webviewPanel: webviewPanel },
+          webviewPanel,
+        }
+      }
+
+      it('registers event receiver when a rendered webview was detected from resource provider in markdown-it env', () => {
+        const {
+          currentDocument,
+          onDidReceiveMessage,
+          webviewPanel,
+          resourceProvider,
+        } = createVSCodeMdFeatures()
+
+        const subscriptions = []
+        const md = extension().getExtendMarkdownIt({ subscriptions })(
+          new markdownIt(),
+        )
+
+        md.render('Test')
+        expect(subscriptions).toHaveLength(0)
+        expect(webviewPanel.webview.onDidReceiveMessage).not.toHaveBeenCalled()
+        expect(webviewPanel.onDidDispose).not.toHaveBeenCalled()
+
+        md.render('Test', { currentDocument, resourceProvider })
+        expect(subscriptions).toHaveLength(1)
+        expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalled()
+        expect(webviewPanel.onDidDispose).toHaveBeenCalled()
+
+        // Avoid double registration
+        md.render('Test', { currentDocument, resourceProvider })
+        expect(subscriptions).toHaveLength(1)
+        expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalledTimes(
+          1,
+        )
+        expect(webviewPanel.onDidDispose).toHaveBeenCalledTimes(1)
+
+        // Dispose webview
+        const mockedOnDidDispose = jest.mocked(webviewPanel.onDidDispose)
+        const [disposeCallback] = mockedOnDidDispose.mock.calls[0]
+        disposeCallback()
+        expect(onDidReceiveMessage.dispose).toHaveBeenCalled()
+
+        // After disposed, WebView can be re-registered
+        mockedOnDidDispose.mockClear()
+        subscriptions.splice(0, subscriptions.length)
+
+        md.render('Test', { currentDocument, resourceProvider })
+        expect(subscriptions).toHaveLength(1)
+        expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalled()
+        expect(webviewPanel.onDidDispose).toHaveBeenCalled()
+      })
+
+      describe('markdown.marp.diagnostics.slideContentOverflow', () => {
+        it('sets diagnostics if overflow tracker event received and configuration was enabled', () => {
+          setConfiguration({
+            'markdown.marp.diagnostics.slideContentOverflow': true,
+          })
+
+          const { currentDocument, webviewPanel, resourceProvider } =
+            createVSCodeMdFeatures()
+
+          const md = extension().getExtendMarkdownIt({ subscriptions: [] })(
+            new markdownIt(),
+          )
+
+          // If Marp rendering was disabled, diagnostics always set as undefined
+          md.render('Test', { currentDocument, resourceProvider })
+          expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalled()
+          expect(previewDiagnosticsCollection.set).toHaveBeenCalledWith(
+            currentDocument,
+            undefined,
+          )
+
+          // Simulate overflow tracker event from preview
+          const [receiveMessageCallback] = jest.mocked(
+            webviewPanel.webview.onDidReceiveMessage,
+          ).mock.calls[0]
+
+          jest.mocked(previewDiagnosticsCollection.set).mockClear()
+          receiveMessageCallback({
+            type: eventType,
+            overflowElements: [
+              { startLine: 0, endLine: 1 },
+              { startLine: 2, endLine: 4 },
+            ],
+          })
+
+          expect(previewDiagnosticsCollection.set).toHaveBeenCalledWith(
+            currentDocument,
+            [expect.any(Diagnostic), expect.any(Diagnostic)],
+          )
+        })
+
+        it('does not set diagnostics even if overflow tracker event received but configuration was disabled', () => {
+          setConfiguration({
+            'markdown.marp.diagnostics.slideContentOverflow': false,
+          })
+
+          const { currentDocument, webviewPanel, resourceProvider } =
+            createVSCodeMdFeatures()
+
+          const md = extension().getExtendMarkdownIt({ subscriptions: [] })(
+            new markdownIt(),
+          )
+
+          md.render('Test', { currentDocument, resourceProvider })
+          expect(webviewPanel.webview.onDidReceiveMessage).toHaveBeenCalled()
+
+          // Simulate overflow tracker event from preview
+          const [receiveMessageCallback] = jest.mocked(
+            webviewPanel.webview.onDidReceiveMessage,
+          ).mock.calls[0]
+
+          jest.mocked(previewDiagnosticsCollection.set).mockClear()
+          receiveMessageCallback({
+            type: eventType,
+            overflowElements: [
+              { startLine: 0, endLine: 1 },
+              { startLine: 2, endLine: 4 },
+            ],
+          })
+
+          expect(previewDiagnosticsCollection.set).toHaveBeenCalledWith(
+            currentDocument,
+            undefined, // No diagnostics set
+          )
         })
       })
     })

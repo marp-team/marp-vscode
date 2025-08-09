@@ -142,7 +142,7 @@ export const getExtendMarkdownIt = ({
         activeWebviewPanels.add(webviewPanel)
 
         // Register message receiver
-        const marpForVSCodeReciever = webviewPanel.webview.onDidReceiveMessage(
+        const marpForVSCodeReceiver = webviewPanel.webview.onDidReceiveMessage(
           (e) => {
             if (isOverflowTrackerEvent(e))
               setDiagnostics(generateDiagnostics(e.overflowElements))
@@ -153,13 +153,13 @@ export const getExtendMarkdownIt = ({
           () => {
             setDiagnostics(undefined)
             activeWebviewPanels.delete(webviewPanel)
-            marpForVSCodeReciever.dispose()
+            marpForVSCodeReceiver.dispose()
           },
           null,
           subscriptions,
         )
 
-        subscriptions.push(marpForVSCodeReciever)
+        subscriptions.push(marpForVSCodeReceiver)
       }
 
       // markdown-it renderer
