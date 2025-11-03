@@ -387,7 +387,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.28.0",
     "@eslint/js": "^9.32.0",
-    "@marp-team/marp-core": "^4.1.0",
+    "@marp-team/marp-core": "^4.2.0",
     "@types/color-string": "^1.5.5",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
