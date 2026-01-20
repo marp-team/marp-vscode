@@ -1,19 +1,607 @@
-// See https://go.microsoft.com/fwlink/?LinkId=733558
-// for the documentation about the tasks.json format
-{
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Build",
-      "type": "npm",
-      "script": "build",
-      "presentation": {
-        "reveal": "silent"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    }
-  ]
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KickOffer Pitch Deck (Full Visual)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 1. RESET & BASE */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0f172a;
+            color: #fff;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            gap: 40px;
+            /* 印刷時の設定 */
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* 2. SLIDE CONTAINER (FIXED 1280x720) */
+        .slide-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            break-inside: avoid;
+            page-break-inside: avoid;
+            page-break-after: always;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        /* 3. TYPE A: IMPACT (Full Screen) */
+        .type-a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .type-a .bg-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            z-index: 1;
+        }
+        .type-a .overlay {
+            position: absolute; inset: 0;
+            background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 90%);
+            z-index: 2;
+        }
+        .type-a .content {
+            position: relative;
+            z-index: 3;
+            max-width: 90%;
+        }
+        .type-a h1 {
+            font-size: 110px;
+            font-weight: 900;
+            line-height: 1.1;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            letter-spacing: -0.02em;
+        }
+        .type-a p {
+            font-size: 32px;
+            font-weight: 700;
+            color: #cbd5e1;
+            margin-top: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        /* 4. TYPE B: EXPLANATION (Optimized Layout) */
+        .type-b {
+            display: grid;
+            grid-template-columns: 480px 1fr;
+            background: #111;
+        }
+        .type-b .visual-side {
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 40px;
+            border-right: 1px solid #222;
+            height: 100%;
+        }
+        .type-b .text-side {
+            padding: 0 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+        .type-b h2 {
+            font-size: 52px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            color: #fff;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            position: relative;
+        }
+        .type-b h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 6px;
+            background: #3b82f6;
+            margin-top: 15px;
+        }
+        .type-b ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .type-b li {
+            font-size: 26px;
+            color: #d1d5db;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            font-weight: 700;
+        }
+        .type-b li i {
+            color: #3b82f6;
+            margin-top: 4px;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        .type-b .highlight-msg {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 6px solid #3b82f6;
+            color: #93c5fd;
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 1.4;
+        }
+
+        /* 5. SPECIFIC COMPONENTS */
+        .cause-box-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+        .cause-box {
+            background: #222;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .cause-box i { font-size: 32px; }
+        .cause-box p { font-size: 20px; font-weight: bold; margin: 0; }
+
+        .mockup-phone {
+            width: 220px;
+            height: 440px;
+            border: 6px solid #333;
+            border-radius: 24px;
+            background: #000;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .mockup-screen {
+            width: 100%; height: 100%;
+            background: #111;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-circle {
+            width: 320px;
+            height: 320px;
+            background: #222;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #444;
+        }
+
+        .biz-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 15px;
+        }
+        .biz-box {
+            width: 80%;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* UTILITIES */
+        .text-blue { color: #3b82f6; }
+        .text-red { color: #ef4444; }
+        .speaker-notes {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 1280px;
+        }
+        .note-label {
+            font-weight: bold; margin-right: 10px; color: #fff;
+        }
+
+        /* CONTROL BUTTONS */
+        .controls-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .btn {
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .print-btn {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .print-btn:hover { background-color: #2563eb; transform: scale(1.05); }
+
+        /* PRINT SETTINGS */
+        @media print {
+            @page {
+                size: 1280px 720px;
+                margin: 0;
+            }
+            body {
+                background: none;
+                padding: 0;
+                margin: 0;
+            }
+            .slide-wrapper {
+                box-shadow: none;
+                margin: 0;
+                break-after: page;
+                page-break-after: always;
+            }
+            .slide {
+                border: none;
+            }
+            .speaker-notes, .controls-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Controls -->
+    <div class="controls-container">
+        <button class="btn print-btn" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> PDF保存 (Ctrl+P)
+        </button>
+    </div>
+
+    <!-- 1. TITLE [Type A] -->
+    <div class="slide-wrapper">
+        <div class="slide type-a">
+            <img class="bg-image" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2074&auto=format&fit=crop" crossorigin="anonymous" alt="Map background" style="filter: brightness(0.4);">
+            <div class="overlay"></div>
+            <div class="content">
+                <h1 style="font-size: 130px; letter-spacing: -4px;">KickOffer</h1>
+                <p>REPRESENTATIVE: DAIKI ASA</p>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 1:</span>こんにちは。KickOffer代表の朝 大貴です。</div>
+    </div>
+
+    <!-- 2. ORIGIN [Type A] -->
+    <div class="slide-wrapper">
+        <div class="slide type-a">
+            <img class="bg-image" src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=2000&auto=format&fit=crop" crossorigin="anonymous" alt="Match background" style="filter: grayscale(100%) brightness(0.5);">
+            <div class="overlay"></div>
+            <div class="content">
+                <h1>14年間の夢</h1>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 2:</span>私は年中から高校3年生までの14年間、本気でプロサッカー選手を目指していました。</div>
+    </div>
+
+    <!-- 3. SETBACK [Type A] -->
+    <div class="slide-wrapper">
+        <div class="slide type-a">
+            <img class="bg-image" src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=2070&auto=format&fit=crop" crossorigin="anonymous" alt="Depressed player" style="filter: grayscale(100%) contrast(1.2) brightness(0.3);">
+            <div class="overlay" style="background: radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, rgba(0,0,0,0.9) 90%);"></div>
+            <div class="content">
+                <h1 class="text-red">実力不足</h1>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 3:</span>しかし、最後の全国大会、私はメンバーに選ばれませんでした。「実力不足」です。</div>
+    </div>
+
+    <!-- 4. ACTION [Type A] -->
+    <div class="slide-wrapper">
+        <div class="slide type-a">
+            <img class="bg-image" src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop" crossorigin="anonymous" alt="Taking notes" style="filter: brightness(0.4);">
+            <div class="overlay"></div>
+            <div class="content">
+                <h1 style="font-size: 140px; line-height: 1;">55<span style="font-size: 50px;">チーム</span></h1>
+                <h1 style="font-size: 140px; line-height: 1; border-top: 3px solid #fff;">150<span style="font-size: 50px;">人</span></h1>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 4:</span>夢を失った私は、EMCに入学し、都内のクラブ55カ所、150名へヒアリングを行いました。</div>
+    </div>
+
+    <!-- 5. DISCOVERY [Type A] -->
+    <div class="slide-wrapper">
+        <div class="slide type-a">
+            <img class="bg-image" src="https://images.unsplash.com/photo-1516733968668-dbdce39c4651?q=80&w=1974&auto=format&fit=crop" crossorigin="anonymous" alt="Confusion" style="filter: grayscale(100%) brightness(0.3);">
+            <div class="overlay"></div>
+            <div class="content">
+                <h1 style="font-size: 90px;">入るチームを<br>間違えた</h1>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 5:</span>直面したのは「入るチームを間違えた」という後悔。これが「ミスマッチ」です。</div>
+    </div>
+
+    <!-- 6. CAUSE [Type B] (Fixed Layout) -->
+    <div class="slide-wrapper">
+        <div class="slide type-b">
+            <div class="visual-side">
+                <div class="cause-box-container">
+                    <div class="cause-box">
+                        <i class="fa-solid fa-trophy text-blue"></i>
+                        <p>強さ</p>
+                    </div>
+                    <div class="cause-box">
+                        <i class="fa-solid fa-map-location-dot text-blue"></i>
+                        <p>近さ</p>
+                    </div>
+                    <div class="cause-box" style="border: 2px solid #ef4444; background: #331111;">
+                        <i class="fa-solid fa-comments text-red"></i>
+                        <p class="text-red">口コミ</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-side">
+                <h2>ブラックボックス化<br>した判断基準</h2>
+                <ul>
+                    <li><i class="fa-solid fa-xmark text-red"></i> チーム内部の雰囲気が不明</li>
+                    <li><i class="fa-solid fa-xmark text-red"></i> 指導方針が子供に合うか不明</li>
+                    <li><i class="fa-solid fa-xmark text-red"></i> リアルな費用が見えない</li>
+                </ul>
+                <div class="highlight-msg">
+                    「強さ」か「近さ」でしか選べない<br>情報不足の構造的問題
+                </div>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 6:</span>原因は判断基準が「強さ」か「近さ」しかないこと。中身が見えない状態で選ばざるを得ません。</div>
+    </div>
+
+    <!-- 7. SOLUTION [Type A] -->
+    <div class="slide-wrapper">
+        <div class="slide type-a">
+            <img class="bg-image" src="https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?q=80&w=2070&auto=format&fit=crop" crossorigin="anonymous" alt="Glowing Phone" style="filter: brightness(0.3);">
+            <div class="overlay" style="background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(0,0,0,0.9) 70%);"></div>
+            <div class="content">
+                <h1 style="color: #fff;">サッカー版<br><span class="text-blue">就活サイト</span></h1>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 7:</span>そこで開発したのが、KickOffer。「サッカー版の就活サイト」です。</div>
+    </div>
+
+    <!-- 8. FEATURES [Type B] (Fixed Layout) -->
+    <div class="slide-wrapper">
+        <div class="slide type-b" style="grid-template-columns: 450px 1fr;">
+            <div class="visual-side">
+                <div class="mockup-phone">
+                    <div class="mockup-screen">
+                        <div style="height: 40px; background: #333; margin-bottom: 20px; width: 100%;"></div>
+                        <i class="fa-solid fa-user-group text-blue" style="font-size: 60px; margin-bottom: 20px;"></i>
+                        <div style="font-size: 24px; font-weight: bold;">Match 98%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-side">
+                <h2 style="font-size: 48px;">3つの機能で<br>ミスマッチを防ぐ</h2>
+                <div style="display: grid; gap: 25px;">
+                    <div>
+                        <h3 style="color: #3b82f6; font-size: 28px; font-weight: 900; margin-bottom: 5px;"><i class="fa-solid fa-eye"></i> 可視化</h3>
+                        <p style="color: #aaa; font-size: 20px;">口コミ・費用・スタッフ情報の透明化</p>
+                    </div>
+                    <div>
+                        <h3 style="color: #3b82f6; font-size: 28px; font-weight: 900; margin-bottom: 5px;"><i class="fa-solid fa-magnifying-glass"></i> 相性検索</h3>
+                        <p style="color: #aaa; font-size: 20px;">「ドリブル重視」など性格で絞り込み</p>
+                    </div>
+                    <div>
+                        <h3 style="color: #3b82f6; font-size: 28px; font-weight: 900; margin-bottom: 5px;"><i class="fa-solid fa-paper-plane"></i> スカウト</h3>
+                        <p style="color: #aaa; font-size: 20px;">選択肢を広げるオファー機能</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 8:</span>1つ目は可視化。2つ目は相性検索。3つ目はスカウト機能です。</div>
+    </div>
+
+    <!-- 9. TRACTION (EFFORT) [Type A] -->
+    <div class="slide-wrapper">
+        <div class="slide type-a">
+            <img class="bg-image" src="https://images.unsplash.com/photo-1511886929837-354d827aae26?q=80&w=1964&auto=format&fit=crop" crossorigin="anonymous" alt="Muddy shoes" style="filter: grayscale(100%) brightness(0.4);">
+            <div class="overlay"></div>
+            <div class="content">
+                <h1>戦略的な<br><span class="text-blue">実行力</span></h1>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 9:</span>私たちの強みは、Web検索だけでは作れない「生きた信頼関係」を築く実行力です。</div>
+    </div>
+
+    <!-- 10. TRACTION (SHARE) [Type B] (Fixed Layout) -->
+    <div class="slide-wrapper">
+        <div class="slide type-b">
+            <div class="visual-side">
+                <div class="map-circle">
+                    <div style="position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 6px dashed #3b82f6; animation: spin 20s linear infinite;"></div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 16px; color: #aaa; font-weight: bold; margin-bottom: 5px;">NORTH TAMA</div>
+                        <div style="font-size: 80px; font-weight: 900; color: #fff; line-height: 1;">54<span style="font-size: 40px;">%</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-side">
+                <h2>エリアNo.1シェア</h2>
+                <ul>
+                    <li><i class="fa-solid fa-check text-blue"></i> 対象：北多摩地域</li>
+                    <li><i class="fa-solid fa-check text-blue"></i> 加盟：23 / 42チーム</li>
+                    <li><i class="fa-solid fa-check text-blue"></i> 期間：わずか半年で達成</li>
+                </ul>
+                <div class="highlight-msg">
+                    信頼関係の構築により<br>過半数のシェアを獲得
+                </div>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 10:</span>北多摩エリアに一点集中し、半年で54%のシェアを獲得しました。</div>
+    </div>
+
+    <!-- 11. BUSINESS MODEL [Type B] (Fixed Layout) -->
+    <div class="slide-wrapper">
+        <div class="slide type-b">
+            <div class="visual-side">
+                <div class="biz-stack">
+                    <div class="biz-box" style="background: #222;">保護者 (150万円/3年)</div>
+                    <i class="fa-solid fa-arrow-down text-blue" style="font-size: 24px;"></i>
+                    <div class="biz-box" style="background: #3b82f6; padding: 30px 10px; font-size: 22px; box-shadow: 0 0 20px rgba(59,130,246,0.5);">KickOffer Platform</div>
+                    <i class="fa-solid fa-arrow-up text-blue" style="font-size: 24px;"></i>
+                    <div class="biz-box" style="background: #222;">企業 (スポンサー)</div>
+                </div>
+            </div>
+            <div class="text-side">
+                <h2>経済圏の入り口</h2>
+                <ul>
+                    <li>
+                        <div>
+                            <strong style="color: #fff; font-size: 28px;">1. 実需収益</strong><br>
+                            合同練習会、進路個別相談
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong style="color: #fff; font-size: 28px;">2. 広告収益</strong><br>
+                            塾選び、用具購入のタイミング
+                        </div>
+                    </li>
+                </ul>
+                <div class="highlight-msg">
+                    ジュニアスポーツ投資の<br>「起点」を握る
+                </div>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 11:</span>巨大な支出の「入り口」となることで、実需と広告の2軸で収益化します。</div>
+    </div>
+
+    <!-- 12. LTV [Type B] (Fixed Layout) -->
+    <div class="slide-wrapper">
+        <div class="slide type-b">
+            <div class="visual-side">
+                <div style="position: relative; height: 400px; width: 6px; background: #333; margin-right: 30px;">
+                    <div style="position: absolute; left: -12px; top: 10%; width: 30px; height: 30px; background: #3b82f6; border-radius: 50%;"></div>
+                    <div style="position: absolute; left: -12px; bottom: 10%; width: 30px; height: 30px; background: #3b82f6; border-radius: 50%;"></div>
+                </div>
+                <div style="height: 400px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="margin-top: 30px;">
+                        <h3 style="color: #fff; font-size: 32px; font-weight: bold;">中学3年間</h3>
+                        <p style="color: #aaa; font-size: 18px;">デジタル日記・転部サポート</p>
+                    </div>
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #fff; font-size: 32px; font-weight: bold;">高校進学</h3>
+                        <p style="color: #aaa; font-size: 18px;">蓄積データをスカウト資料へ</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-side">
+                <h2>10年使える<br>インフラへ</h2>
+                <ul>
+                    <li><i class="fa-solid fa-clock text-blue"></i> 入団して終わりではない</li>
+                    <li><i class="fa-solid fa-database text-blue"></i> 成長データが「資産」になる</li>
+                    <li><i class="fa-solid fa-arrow-trend-up text-blue"></i> 次の進路選択でも活用</li>
+                </ul>
+                <div class="highlight-msg">
+                    一人の選手に<br>長く深く関わり続ける
+                </div>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 12:</span>3年間のデータは次の進路の武器となります。</div>
+    </div>
+
+    <!-- 13. ROADMAP [Type B] (Fixed Layout) -->
+    <div class="slide-wrapper">
+        <div class="slide type-b">
+            <div class="visual-side">
+                <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+                    <div style="width: 100px; height: 50px; background: #111; border: 1px solid #333;"></div>
+                    <div style="width: 180px; height: 50px; background: #222; border: 1px solid #333;"></div>
+                    <div style="width: 260px; height: 50px; background: #3b82f6; box-shadow: 0 0 20px rgba(59,130,246,0.6);"></div>
+                </div>
+            </div>
+            <div class="text-side">
+                <h2>展望：全国展開へ</h2>
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div>
+                        <strong class="text-blue" style="font-size: 24px;">Step 1</strong>
+                        <p style="color: #fff; font-size: 22px; font-weight: bold;">北多摩エリアでの黒字化</p>
+                    </div>
+                    <div>
+                        <strong class="text-blue" style="font-size: 24px;">Step 2</strong>
+                        <p style="color: #fff; font-size: 22px; font-weight: bold;">東京全域へ拡大・データ連携</p>
+                    </div>
+                    <div>
+                        <strong class="text-blue" style="font-size: 24px;">Step 3</strong>
+                        <p style="color: #fff; font-size: 22px; font-weight: bold;">全国展開・用具の最適提案</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 13:</span>まずは北多摩から東京、そして全国へ展開します。</div>
+    </div>
+
+    <!-- 14. CLOSING [Type A] -->
+    <div class="slide-wrapper">
+        <div class="slide type-a">
+            <img class="bg-image" src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=2070&auto=format&fit=crop" crossorigin="anonymous" alt="Smiling kids" style="filter: brightness(0.6);">
+            <div class="overlay"></div>
+            <div class="content">
+                <h1>新たな価値を<br><span class="text-blue">創造する</span></h1>
+            </div>
+        </div>
+        <div class="speaker-notes"><span class="note-label">Slide 14:</span>私たちはチーム選びを変え、サッカー界に新たな価値をもたらします。</div>
+    </div>
+
+</body>
+</html>
