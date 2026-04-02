@@ -258,11 +258,11 @@ It is helpful for identifying some potential presentation issues, such as croppe
 
 You can enable the experimental feature to export PPTX with editable contents, based on [Marp CLI's corresponding experimental option](https://github.com/marp-team/marp-cli#experimental-generate-editable-pptx---pptx-editable). When set to anything other than `off`, exporting to `.pptx` produces an editable file with selectable text, tables, and images instead of slide images.
 
-| Value | Engine | Requirements |
-|---|---|---|
-| `off` | — | Always exports non-editable (image-only) PPTX |
+| Value         | Engine              | Requirements                                                               |
+| ------------- | ------------------- | -------------------------------------------------------------------------- |
+| `off`         | —                   | Always exports non-editable (image-only) PPTX                              |
 | `libreoffice` | LibreOffice Impress | A compatible browser + [LibreOffice Impress](https://www.libreoffice.org/) |
-| `native` | DOM extraction | A compatible browser only (Chrome, Chromium, or Edge) |
+| `native`      | DOM extraction      | A compatible browser only (Chrome, Chromium, or Edge)                      |
 
 > Legacy values `on` and `smart` are still accepted for backward compatibility. `on` maps to `libreoffice`; `smart` maps to `libreoffice` with fallback enabled.
 

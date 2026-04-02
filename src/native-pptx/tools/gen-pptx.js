@@ -18,19 +18,31 @@ const fs = require('fs')
 /** Auto-detect Chrome/Chromium on the host system. */
 function findChrome() {
   try {
-    const { computeSystemExecutablePath, Browser, ChromeReleaseChannel } = require('@puppeteer/browsers')
+    const {
+      computeSystemExecutablePath,
+      Browser,
+      ChromeReleaseChannel,
+    } = require('@puppeteer/browsers')
     const platforms = { win32: 'win64', darwin: 'mac', linux: 'linux' }
     const platform = platforms[process.platform]
     if (!platform) return undefined
-    const p = computeSystemExecutablePath({ browser: Browser.CHROME, platform, channel: ChromeReleaseChannel.STABLE })
+    const p = computeSystemExecutablePath({
+      browser: Browser.CHROME,
+      platform,
+      channel: ChromeReleaseChannel.STABLE,
+    })
     if (fs.existsSync(p)) return p
-  } catch { /* not found */ }
+  } catch {
+    /* not found */
+  }
   return undefined
 }
 
 async function main() {
   const htmlPath = path.resolve(process.argv[2])
-  const outPath = path.resolve(process.argv[3] ?? htmlPath.replace(/\.html?$/i, '-native.pptx'))
+  const outPath = path.resolve(
+    process.argv[3] ?? htmlPath.replace(/\.html?$/i, '-native.pptx'),
+  )
   const browserPath = process.argv[4] ?? process.env.CHROME_PATH ?? findChrome()
 
   if (!fs.existsSync(htmlPath)) {
@@ -38,11 +50,20 @@ async function main() {
     process.exit(1)
   }
   if (!browserPath) {
-    console.error('Chrome not found. Set CHROME_PATH env var or pass as 3rd argument.')
+    console.error(
+      'Chrome not found. Set CHROME_PATH env var or pass as 3rd argument.',
+    )
     process.exit(1)
   }
 
-  const bundlePath = path.resolve(__dirname, '..', '..', '..', 'lib', 'native-pptx.cjs')
+  const bundlePath = path.resolve(
+    __dirname,
+    '..',
+    '..',
+    '..',
+    'lib',
+    'native-pptx.cjs',
+  )
   if (!fs.existsSync(bundlePath)) {
     console.error('lib/native-pptx.cjs not found. Run: npm run build')
     process.exit(1)

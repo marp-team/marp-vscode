@@ -40,14 +40,18 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
     //    from CSS gradients in background-image
     const bgImage = style.backgroundImage
     if (bgImage && bgImage !== 'none') {
-      const colorMatches = bgImage.match(/rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+(?:\s*,\s*[\d.]+)?\s*\)/g)
+      const colorMatches = bgImage.match(
+        /rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+(?:\s*,\s*[\d.]+)?\s*\)/g,
+      )
       if (colorMatches && colorMatches.length > 0) {
         // Use the last non-transparent color from the gradient stops
         for (let i = colorMatches.length - 1; i >= 0; i--) {
           const c = colorMatches[i]
           if (c !== 'rgba(0, 0, 0, 0)') {
             // Check alpha for rgba colors
-            const alphaMatch = c.match(/rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*([\d.]+)\s*\)/)
+            const alphaMatch = c.match(
+              /rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*([\d.]+)\s*\)/,
+            )
             if (!alphaMatch || parseFloat(alphaMatch[1]) > 0.1) {
               return c
             }
@@ -72,7 +76,8 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
     // Flex containers use justify-content for horizontal item alignment.
     // Map justify-content:center → textAlign:center so badge/label text is
     // horizontally centred in the PPTX text box.
-    if (textAlign === 'left' && style.justifyContent === 'center') textAlign = 'center'
+    if (textAlign === 'left' && style.justifyContent === 'center')
+      textAlign = 'center'
 
     return {
       color: style.color,
@@ -97,8 +102,11 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
     const alt = imgEl.alt ?? ''
     return !!(
       imgEl.classList?.contains('emoji') ||
-      (imgEl.src && (imgEl.src.includes('twemoji') || imgEl.src.includes('/emoji/'))) ||
-      (alt.length > 0 && alt.length <= 8 && /\p{Extended_Pictographic}/u.test(alt))
+      (imgEl.src &&
+        (imgEl.src.includes('twemoji') || imgEl.src.includes('/emoji/'))) ||
+      (alt.length > 0 &&
+        alt.length <= 8 &&
+        /\p{Extended_Pictographic}/u.test(alt))
     )
   }
 
@@ -116,7 +124,10 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
   //     break runs instead of literal newline characters in outgoing text.
   //   - Trailing break runs are trimmed so callers receive a clean run list.
   // -----------------------------------------------------------------
-  function extractTextRuns(element: Element, skipInlineBadges = false): TextRun[] {
+  function extractTextRuns(
+    element: Element,
+    skipInlineBadges = false,
+  ): TextRun[] {
     const runs: TextRun[] = []
 
     const elementStyle = getComputedStyle(element)
@@ -221,12 +232,18 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
           // parent paragraph's text flow.
           const bg = elStyle.backgroundColor
           const hasBg = bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)'
-          const alphaZero = hasBg && (() => {
-            const m = bg.match(/,\s*([\d.]+)\s*\)$/)
-            return m ? parseFloat(m[1]) === 0 : false
-          })()
-          const isBadge = hasBg && !alphaZero &&
-              (elStyle.display === 'inline-block' || elStyle.display === 'inline-flex' || elStyle.display === 'inline-grid')
+          const alphaZero =
+            hasBg &&
+            (() => {
+              const m = bg.match(/,\s*([\d.]+)\s*\)$/)
+              return m ? parseFloat(m[1]) === 0 : false
+            })()
+          const isBadge =
+            hasBg &&
+            !alphaZero &&
+            (elStyle.display === 'inline-block' ||
+              elStyle.display === 'inline-flex' ||
+              elStyle.display === 'inline-grid')
           if (isBadge) {
             if (skipInlineBadges) {
               // Isolated badge — text is rendered inside the badge shape, skip here
@@ -292,17 +309,17 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
     const containerSSLeft = containerRect.left - slideRect.left
     const leading = badgeShapes.filter((b) => b.x <= containerSSLeft + 8)
     if (leading.length === 0) return 0
-    const rightEdge = leading.reduce((max, b) => Math.max(max, b.x + b.width), containerSSLeft)
+    const rightEdge = leading.reduce(
+      (max, b) => Math.max(max, b.x + b.width),
+      containerSSLeft,
+    )
     return Math.max(0, rightEdge - containerSSLeft)
   }
 
   // -----------------------------------------------------------------
   // Helper: extract list items recursively
   // -----------------------------------------------------------------
-  function extractListItems(
-    list: Element,
-    level: number = 0,
-  ): ListItem[] {
+  function extractListItems(list: Element, level: number = 0): ListItem[] {
     const items: ListItem[] = []
 
     for (const child of Array.from(list.children)) {
@@ -318,7 +335,8 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
             if (text.trim() === '') continue
             const liStyle = getComputedStyle(child)
             const liBg = liStyle.backgroundColor
-            const liHasBg = !!liBg && liBg !== 'transparent' && liBg !== 'rgba(0, 0, 0, 0)'
+            const liHasBg =
+              !!liBg && liBg !== 'transparent' && liBg !== 'rgba(0, 0, 0, 0)'
             // Split on newlines so soft line-breaks in the markdown become breaks
             const segments = text.split('\n')
             for (let i = 0; i < segments.length; i++) {
@@ -393,7 +411,10 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
         runs.push({
           text,
           color: style.color,
-          fontSize: parseFloat(style.fontSize) || parseFloat(defaultStyle.fontSize) || 16,
+          fontSize:
+            parseFloat(style.fontSize) ||
+            parseFloat(defaultStyle.fontSize) ||
+            16,
           fontFamily: style.fontFamily || defaultStyle.fontFamily,
           bold: parseInt(style.fontWeight, 10) >= 600,
           italic: style.fontStyle === 'italic',
@@ -412,9 +433,10 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
   // -----------------------------------------------------------------
   // Helper: extract table data with inline text runs
   // -----------------------------------------------------------------
-  function extractTableData(
-    table: Element,
-  ): { rows: TableRow[]; colWidths: number[] } {
+  function extractTableData(table: Element): {
+    rows: TableRow[]
+    colWidths: number[]
+  } {
     const rows: TableRow[] = []
     let colWidths: number[] = []
 
@@ -471,7 +493,12 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
     const badges: SlideElement[] = []
     for (const el of Array.from(container.querySelectorAll('*'))) {
       const s = getComputedStyle(el as Element)
-      if (s.display !== 'inline-block' && s.display !== 'inline-flex' && s.display !== 'inline-grid') continue
+      if (
+        s.display !== 'inline-block' &&
+        s.display !== 'inline-flex' &&
+        s.display !== 'inline-grid'
+      )
+        continue
       const bg = s.backgroundColor
       if (!bg || bg === 'transparent') continue
       // Reject rgba() with alpha === 0 — handles both 'rgba(0, 0, 0, 0)' and
@@ -487,8 +514,12 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
       // visual background.  Keeping highlight on the text creates a visible
       // artefact (the highlight bleeds outside the shape) when font metrics
       // cause a slight positioning mismatch between the shape and the text box.
-      badgeRuns.forEach((r) => { if (!r.breakLine) r.backgroundColor = undefined })
-      const hasBadgeText = badgeRuns.some((r) => !r.breakLine && r.text.trim() !== '')
+      badgeRuns.forEach((r) => {
+        if (!r.breakLine) r.backgroundColor = undefined
+      })
+      const hasBadgeText = badgeRuns.some(
+        (r) => !r.breakLine && r.text.trim() !== '',
+      )
       badges.push({
         type: 'container',
         children: [],
@@ -528,9 +559,9 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
         imgEl.classList?.contains('emoji') ||
         imgEl.src?.includes('twemoji') ||
         imgEl.src?.includes('/emoji/')
-      ) continue
-      const cssFilter =
-        s.filter && s.filter !== 'none' ? s.filter : undefined
+      )
+        continue
+      const cssFilter = s.filter && s.filter !== 'none' ? s.filter : undefined
       images.push({
         type: 'image',
         src: imgEl.src,
@@ -549,10 +580,7 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
   // -----------------------------------------------------------------
   // Helper: walk child elements and classify them
   // -----------------------------------------------------------------
-  function walkElements(
-    parent: Element,
-    slideRect: DOMRect,
-  ): SlideElement[] {
+  function walkElements(parent: Element, slideRect: DOMRect): SlideElement[] {
     const elements: SlideElement[] = []
 
     for (const child of Array.from(parent.children)) {
@@ -563,7 +591,10 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
         continue
 
       // Skip Marp advanced background container (handled at slide level)
-      if ((child as HTMLElement).dataset?.marpitAdvancedBackgroundContainer !== undefined)
+      if (
+        (child as HTMLElement).dataset?.marpitAdvancedBackgroundContainer !==
+        undefined
+      )
         continue
 
       const rect = child.getBoundingClientRect()
@@ -581,7 +612,13 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
       const parentIsFlexOrGrid = /^(flex|inline-flex|grid|inline-grid)/.test(
         getComputedStyle(parent).display,
       )
-      if (!parentIsFlexOrGrid && tag !== 'img' && tag !== 'svg' && style.display === 'inline') continue
+      if (
+        !parentIsFlexOrGrid &&
+        tag !== 'img' &&
+        tag !== 'svg' &&
+        style.display === 'inline'
+      )
+        continue
 
       const base = {
         x: rect.left - slideRect.left,
@@ -603,11 +640,21 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
         // shifted right by the badge width to prevent textual overlap with the
         // badge shape.
         const headingBadgeShapes = extractInlineBadgeShapes(child, slideRect)
-        const headingLeadingOffset = computeLeadingOffset(headingBadgeShapes, rect, slideRect)
+        const headingLeadingOffset = computeLeadingOffset(
+          headingBadgeShapes,
+          rect,
+          slideRect,
+        )
         if (headingBadgeShapes.length > 0) elements.push(...headingBadgeShapes)
-        const headingRuns = extractTextRuns(child, headingBadgeShapes.length > 0)
+        const headingRuns = extractTextRuns(
+          child,
+          headingBadgeShapes.length > 0,
+        )
         // For isolated badges (no surrounding text), omit the empty heading.
-        if (headingBadgeShapes.length === 0 || headingRuns.some((r) => !r.breakLine && r.text.trim() !== '')) {
+        if (
+          headingBadgeShapes.length === 0 ||
+          headingRuns.some((r) => !r.breakLine && r.text.trim() !== '')
+        ) {
           elements.push({
             type: 'heading',
             level: parseInt(tag[1], 10),
@@ -617,10 +664,20 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
             width: Math.max(10, base.width - headingLeadingOffset),
             style: extractTextStyle(style),
             ...(borderBottomWidth > 0
-              ? { borderBottom: { width: borderBottomWidth, color: style.borderBottomColor } }
+              ? {
+                  borderBottom: {
+                    width: borderBottomWidth,
+                    color: style.borderBottomColor,
+                  },
+                }
               : {}),
             ...(borderLeftWidth > 0
-              ? { borderLeft: { width: borderLeftWidth, color: style.borderLeftColor } }
+              ? {
+                  borderLeft: {
+                    width: borderLeftWidth,
+                    color: style.borderLeftColor,
+                  },
+                }
               : {}),
           })
         }
@@ -631,7 +688,11 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
         // (at the paragraph's left edge), the paragraph text box is shifted
         // right to avoid overlap with the badge shape.
         const paraBadgeShapes = extractInlineBadgeShapes(child, slideRect)
-        const paraLeadingOffset = computeLeadingOffset(paraBadgeShapes, rect, slideRect)
+        const paraLeadingOffset = computeLeadingOffset(
+          paraBadgeShapes,
+          rect,
+          slideRect,
+        )
         if (paraBadgeShapes.length > 0) elements.push(...paraBadgeShapes)
         const runs = extractTextRuns(child, paraBadgeShapes.length > 0)
         // Only emit a paragraph if it has visible text; images are extracted below.
@@ -703,7 +764,10 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
               language: code?.className?.replace('language-', '') ?? '',
               runs: extractCodeRuns(codeTarget),
               ...base,
-              style: { ...extractTextStyle(style), backgroundColor: style.backgroundColor },
+              style: {
+                ...extractTextStyle(style),
+                backgroundColor: style.backgroundColor,
+              },
             })
           }
         } else {
@@ -730,8 +794,10 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
           img.classList?.contains('emoji') ||
           img.src?.includes('twemoji') ||
           img.src?.includes('/emoji/')
-        ) continue
-        const imgFilter = style.filter && style.filter !== 'none' ? style.filter : undefined
+        )
+          continue
+        const imgFilter =
+          style.filter && style.filter !== 'none' ? style.filter : undefined
         elements.push({
           type: 'image',
           src: img.src,
@@ -740,13 +806,19 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
           ...base,
           // Store page-absolute coords when cssFilter is set so the export
           // tool can screenshot the rendered (filtered) region via Puppeteer.
-          ...(imgFilter ? { cssFilter: imgFilter, pageX: rect.left, pageY: rect.top } : {}),
+          ...(imgFilter
+            ? { cssFilter: imgFilter, pageX: rect.left, pageY: rect.top }
+            : {}),
         })
       } else if (tag === 'blockquote') {
         const borderWidth = parseFloat(style.borderLeftWidth) || 0
         const borderColor = style.borderLeftColor
         const bqBadgeShapes = extractInlineBadgeShapes(child, slideRect)
-        const bqLeadingOffset = computeLeadingOffset(bqBadgeShapes, rect, slideRect)
+        const bqLeadingOffset = computeLeadingOffset(
+          bqBadgeShapes,
+          rect,
+          slideRect,
+        )
         if (bqBadgeShapes.length > 0) elements.push(...bqBadgeShapes)
         elements.push({
           type: 'blockquote',
@@ -755,7 +827,9 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
           x: base.x + bqLeadingOffset,
           width: Math.max(10, base.width - bqLeadingOffset),
           style: extractTextStyle(style),
-          ...(borderWidth > 0 ? { borderLeft: { width: borderWidth, color: borderColor } } : {}),
+          ...(borderWidth > 0
+            ? { borderLeft: { width: borderWidth, color: borderColor } }
+            : {}),
         })
         elements.push(...extractNestedImages(child, slideRect))
       } else if (tag === 'svg') {
@@ -780,7 +854,11 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
         }
       } else if (tag === 'header' || tag === 'footer') {
         const hfBadgeShapes = extractInlineBadgeShapes(child, slideRect)
-        const hfLeadingOffset = computeLeadingOffset(hfBadgeShapes, rect, slideRect)
+        const hfLeadingOffset = computeLeadingOffset(
+          hfBadgeShapes,
+          rect,
+          slideRect,
+        )
         if (hfBadgeShapes.length > 0) elements.push(...hfBadgeShapes)
         elements.push({
           type: tag,
@@ -799,7 +877,8 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
         // Detect CSS border-left (used for note-box bar decorations)
         const borderLeftWidth = parseFloat(style.borderLeftWidth) || 0
         const borderLeftStyle = style.borderLeftStyle
-        const hasBorderLeft = borderLeftWidth > 0 && borderLeftStyle !== 'none' && !hasBorder
+        const hasBorderLeft =
+          borderLeftWidth > 0 && borderLeftStyle !== 'none' && !hasBorder
         // Detect visible box-shadow (used for card / elevated components)
         const boxShadow = style.boxShadow
         const hasBoxShadow = !!boxShadow && boxShadow !== 'none'
@@ -807,7 +886,9 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
           !!style.backgroundColor &&
           style.backgroundColor !== 'transparent' &&
           style.backgroundColor !== 'rgba(0, 0, 0, 0)' &&
-          !style.backgroundColor.match(/rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*0(?:\.0+)?\s*\)/)
+          !style.backgroundColor.match(
+            /rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*0(?:\.0+)?\s*\)/,
+          )
         const blockChildren = walkElements(child, slideRect)
 
         const containerStyle = {
@@ -817,7 +898,12 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
             : {}),
           ...(borderRadius > 0 ? { borderRadius } : {}),
           ...(hasBorderLeft
-            ? { borderLeft: { width: borderLeftWidth, color: style.borderLeftColor } }
+            ? {
+                borderLeft: {
+                  width: borderLeftWidth,
+                  color: style.borderLeftColor,
+                },
+              }
             : {}),
           ...(hasBoxShadow ? { boxShadow: true } : {}),
         }
@@ -907,13 +993,13 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
       // them as content.  Extracting them creates phantom banners in PPTX that
       // don't match the user's intent.
       const rawContent = ps.content
-      if (!rawContent || rawContent === 'none' || rawContent === 'normal') continue
+      if (!rawContent || rawContent === 'none' || rawContent === 'normal')
+        continue
       // Skip empty-string content (e.g. content: '""', "''", or '' wrapped in quotes)
       const stripped = rawContent.replace(/^["']|["']$/g, '').trim()
       if (stripped === '') continue
       const bg = ps.backgroundColor
-      if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)')
-        continue
+      if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') continue
       // Parse dimensions — pseudo-elements use width/height from CSS
       const w = parseFloat(ps.width) || 0
       const h = parseFloat(ps.height) || 0
@@ -969,21 +1055,21 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
   // For `paginate: false`, Marp still emits one top-level <section> per slide
   // under <svg data-marpit-svg><foreignObject>..., but without pagination data.
   // -----------------------------------------------------------------
-  const allSections = Array.from(
-    root.querySelectorAll('section'),
-  ).filter((section) => {
-    // Ignore nested sections inside slide content. Slide root sections are the
-    // outermost section elements in the rendered Marp document.
-    if (section.parentElement?.closest('section')) return false
+  const allSections = Array.from(root.querySelectorAll('section')).filter(
+    (section) => {
+      // Ignore nested sections inside slide content. Slide root sections are the
+      // outermost section elements in the rendered Marp document.
+      if (section.parentElement?.closest('section')) return false
 
-    // Standard Marp output: section under svg > foreignObject
-    if (section.parentElement?.tagName.toLowerCase() === 'foreignobject') {
-      return true
-    }
+      // Standard Marp output: section under svg > foreignObject
+      if (section.parentElement?.tagName.toLowerCase() === 'foreignobject') {
+        return true
+      }
 
-    // Test fixtures and simple DOMs may place the slide section directly.
-    return section.hasAttribute('data-marpit-pagination')
-  })
+      // Test fixtures and simple DOMs may place the slide section directly.
+      return section.hasAttribute('data-marpit-pagination')
+    },
+  )
 
   // Group sections by pagination number, tracking layers
   const slideGroups = new Map<

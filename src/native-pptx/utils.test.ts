@@ -48,12 +48,20 @@ describe('cleanFontFamily', () => {
   })
 
   it('skips system font aliases and finds the real font', () => {
-    expect(cleanFontFamily('-apple-system, "Noto Sans JP", sans-serif')).toBe('Noto Sans JP')
-    expect(cleanFontFamily('-apple-system, BlinkMacSystemFont, "Meiryo", sans-serif')).toBe('Meiryo')
+    expect(cleanFontFamily('-apple-system, "Noto Sans JP", sans-serif')).toBe(
+      'Noto Sans JP',
+    )
+    expect(
+      cleanFontFamily(
+        '-apple-system, BlinkMacSystemFont, "Meiryo", sans-serif',
+      ),
+    ).toBe('Meiryo')
   })
 
   it('falls back to generic family when no real font is found', () => {
-    expect(cleanFontFamily('-apple-system, BlinkMacSystemFont, sans-serif')).toBe('Calibri')
+    expect(
+      cleanFontFamily('-apple-system, BlinkMacSystemFont, sans-serif'),
+    ).toBe('Calibri')
   })
 
   it('prefers Japanese font candidates for CJK text', () => {
@@ -145,13 +153,21 @@ describe('isTransparent', () => {
 
 describe('parseCssUrl', () => {
   it('extracts URL from url() value', () => {
-    expect(parseCssUrl('url("https://example.com/bg.png")')).toBe('https://example.com/bg.png')
-    expect(parseCssUrl("url('file:///C:/images/bg.jpg')")).toBe('file:///C:/images/bg.jpg')
-    expect(parseCssUrl('url(data:image/png;base64,abc123)')).toBe('data:image/png;base64,abc123')
+    expect(parseCssUrl('url("https://example.com/bg.png")')).toBe(
+      'https://example.com/bg.png',
+    )
+    expect(parseCssUrl("url('file:///C:/images/bg.jpg')")).toBe(
+      'file:///C:/images/bg.jpg',
+    )
+    expect(parseCssUrl('url(data:image/png;base64,abc123)')).toBe(
+      'data:image/png;base64,abc123',
+    )
   })
 
   it('handles url() without quotes', () => {
-    expect(parseCssUrl('url(https://example.com/bg.png)')).toBe('https://example.com/bg.png')
+    expect(parseCssUrl('url(https://example.com/bg.png)')).toBe(
+      'https://example.com/bg.png',
+    )
   })
 
   it('returns undefined for "none" or empty string', () => {
@@ -164,7 +180,9 @@ describe('parseCssUrl', () => {
 describe('sanitizeText', () => {
   it('returns normal text unchanged', () => {
     expect(sanitizeText('Hello World')).toBe('Hello World')
-    expect(sanitizeText('Mixed \u3042\u30A2 text')).toBe('Mixed \u3042\u30A2 text')
+    expect(sanitizeText('Mixed \u3042\u30A2 text')).toBe(
+      'Mixed \u3042\u30A2 text',
+    )
   })
 
   it('preserves tabs and newlines', () => {
@@ -185,7 +203,9 @@ describe('sanitizeText', () => {
   it('preserves ZWJ emoji sequences', () => {
     // U+200D (Zero Width Joiner) must NOT be stripped because it composes
     // multi-codepoint emoji (e.g. 🧑\u200D💻 → 🧑‍💻 as a single glyph)
-    expect(sanitizeText('\u{1F9D1}\u200D\u{1F4BB}')).toBe('\u{1F9D1}\u200D\u{1F4BB}')
+    expect(sanitizeText('\u{1F9D1}\u200D\u{1F4BB}')).toBe(
+      '\u{1F9D1}\u200D\u{1F4BB}',
+    )
     expect(sanitizeText('Hello \u{1F9D1}\u200D\u{1F4BB} World')).toBe(
       'Hello \u{1F9D1}\u200D\u{1F4BB} World',
     )

@@ -12,10 +12,10 @@ LibreOffice or any external office converter.
 
 Before this module, marp-vscode had two PPTX export code paths:
 
-| Mode | Mechanism | Limitation |
-|------|-----------|------------|
-| **Non-editable** | Marp HTML → Puppeteer → PNG screenshot per slide → pptxgenjs background image | Text is a bitmap — not selectable or editable |
-| **Editable (LibreOffice)** | Marp HTML → Puppeteer → PDF → `soffice --headless` PDF import → PPTX | Requires LibreOffice (experimental) |
+| Mode                       | Mechanism                                                                     | Limitation                                    |
+| -------------------------- | ----------------------------------------------------------------------------- | --------------------------------------------- |
+| **Non-editable**           | Marp HTML → Puppeteer → PNG screenshot per slide → pptxgenjs background image | Text is a bitmap — not selectable or editable |
+| **Editable (LibreOffice)** | Marp HTML → Puppeteer → PDF → `soffice --headless` PDF import → PPTX          | Requires LibreOffice (experimental)           |
 
 Some context on the history:
 
@@ -53,13 +53,13 @@ browser has already computed the final values. Custom HTML (`flex`, `grid`,
 
 All of the following alternatives were considered and rejected:
 
-| Approach | Rejected because |
-|----------|-----------------|
-| A: HTML parse + theme colour DB | Cannot compute `flex`/`grid` layout; DB requires maintenance per theme update |
-| B: Markdown AST → pptxgenjs | No theme colour information in AST; custom HTML blocks are opaque |
-| C: PNG background + text overlay | Same Puppeteer dependency but lower editability |
-| D: Direct Open XML construction | Re-implements what PptxGenJS already abstracts |
-| E: PDF → pptxgenjs | PDF text extraction quality is poor; no improvement over the LibreOffice path |
+| Approach                         | Rejected because                                                              |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| A: HTML parse + theme colour DB  | Cannot compute `flex`/`grid` layout; DB requires maintenance per theme update |
+| B: Markdown AST → pptxgenjs      | No theme colour information in AST; custom HTML blocks are opaque             |
+| C: PNG background + text overlay | Same Puppeteer dependency but lower editability                               |
+| D: Direct Open XML construction  | Re-implements what PptxGenJS already abstracts                                |
+| E: PDF → pptxgenjs               | PDF text extraction quality is poor; no improvement over the LibreOffice path |
 
 ---
 
@@ -82,15 +82,15 @@ src/native-pptx/index.ts  ◄── entry point                       │
 
 ### File map
 
-| File | Role |
-|------|------|
-| `index.ts` | Pipeline orchestration: browser launch → DOM extract → rasterize → build PPTX |
-| `dom-walker.ts` | `extractSlides()` — runs **in the browser via `page.evaluate()`**; reads DOM, returns `SlideData[]` |
+| File                             | Role                                                                                                                         |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `index.ts`                       | Pipeline orchestration: browser launch → DOM extract → rasterize → build PPTX                                                |
+| `dom-walker.ts`                  | `extractSlides()` — runs **in the browser via `page.evaluate()`**; reads DOM, returns `SlideData[]`                          |
 | `dom-walker-script.generated.ts` | Compiled IIFE string of `dom-walker.ts` — injected via `addScriptTag` (regenerate with `npm run generate:dom-walker-script`) |
-| `slide-builder.ts` | `buildPptx()` + `placeElement()` — maps `SlideData[]` to PptxGenJS API calls |
-| `types.ts` | Shared TypeScript types (`SlideData`, `SlideElement`, `TextRun`, …) |
-| `browser.ts` | Chrome/Chromium auto-detection utilities |
-| `utils.ts` | `pxToInches`, `rgbToHex`, `pxToPoints`, `cleanFontFamily`, `sanitizeText` |
+| `slide-builder.ts`               | `buildPptx()` + `placeElement()` — maps `SlideData[]` to PptxGenJS API calls                                                 |
+| `types.ts`                       | Shared TypeScript types (`SlideData`, `SlideElement`, `TextRun`, …)                                                          |
+| `browser.ts`                     | Chrome/Chromium auto-detection utilities                                                                                     |
+| `utils.ts`                       | `pxToInches`, `rgbToHex`, `pxToPoints`, `cleanFontFamily`, `sanitizeText`                                                    |
 
 ### Why `dom-walker-script.generated.ts`?
 
@@ -160,7 +160,7 @@ clamped — overflow is intentional for split-layout backgrounds.
 When a heading has `border-left` (common in themes as a vertical accent bar),
 `slide-builder.ts` draws the colour rectangle **before** the text box and shifts
 the text box right by the border width (`x + bw`, `w - bw`). This mirrors the
-same pattern used for `<blockquote>`, ensuring the decorative bar is *behind*
+same pattern used for `<blockquote>`, ensuring the decorative bar is _behind_
 the text in the PPTX z-order and that text does not visually overlap the bar.
 
 ### ZWJ emoji sequence preservation
@@ -174,7 +174,7 @@ into two separate glyphs (🧑 + 💻).
 ### Leading-badge heading offset (`computeLeadingOffset`)
 
 Inline badge shapes (`.step`, `.badge-current`, etc.) are extracted as separate
-PptxGenJS shapes. When a badge sits at the *left edge* of a heading or paragraph
+PptxGenJS shapes. When a badge sits at the _left edge_ of a heading or paragraph
 box ("leading badge"), the text box is shifted right by the badge's width so
 that text does not render on top of the shape. `computeLeadingOffset` computes
 this offset by finding badge shapes whose `x` is within 8px of the container's
@@ -184,22 +184,22 @@ left edge.
 
 ## Supported elements
 
-| Element | Fidelity | Notes |
-|---------|----------|-------|
-| Slide background (solid colour) | ◎ | Extracted via `getComputedStyle` |
-| Slide background (image / CSS filter) | ◎ | Rasterized by Puppeteer |
-| Heading H1–H6 | ◎ | Inline run styling, border-bottom/left |
-| Paragraph | ◎ | Multiple runs with bold/italic/underline/link |
-| Bulleted / numbered list | ◎ | Nested lists, tight-list emoji bullets |
-| Table | ◎ | Per-cell style, colour, alignment |
-| Code block | ○ | Syntax-highlighted runs preserved |
-| Image (URL / data URI / file://) | ◎ | Natural size with aspect ratio |
-| Mermaid diagram (SVG) | ◎ | Rasterized to PNG |
-| Blockquote | ○ | Left border bar + text |
-| Header / Footer | ◎ | Absolute coordinate placement |
-| Presenter notes | ◎ | Both raw-Marpit and bespoke-HTML formats |
-| CSS gradient background | △ | Simplified to solid colour |
-| CSS `transform` / `clip-path` | △ | Ignored; elements placed at rect coordinates |
+| Element                               | Fidelity | Notes                                         |
+| ------------------------------------- | -------- | --------------------------------------------- |
+| Slide background (solid colour)       | ◎        | Extracted via `getComputedStyle`              |
+| Slide background (image / CSS filter) | ◎        | Rasterized by Puppeteer                       |
+| Heading H1–H6                         | ◎        | Inline run styling, border-bottom/left        |
+| Paragraph                             | ◎        | Multiple runs with bold/italic/underline/link |
+| Bulleted / numbered list              | ◎        | Nested lists, tight-list emoji bullets        |
+| Table                                 | ◎        | Per-cell style, colour, alignment             |
+| Code block                            | ○        | Syntax-highlighted runs preserved             |
+| Image (URL / data URI / file://)      | ◎        | Natural size with aspect ratio                |
+| Mermaid diagram (SVG)                 | ◎        | Rasterized to PNG                             |
+| Blockquote                            | ○        | Left border bar + text                        |
+| Header / Footer                       | ◎        | Absolute coordinate placement                 |
+| Presenter notes                       | ◎        | Both raw-Marpit and bespoke-HTML formats      |
+| CSS gradient background               | △        | Simplified to solid colour                    |
+| CSS `transform` / `clip-path`         | △        | Ignored; elements placed at rect coordinates  |
 
 ---
 
@@ -290,13 +290,13 @@ npx jest
 
 ### Test file overview
 
-| Test file | What it covers |
-|-----------|---------------|
-| `index.test.ts` | Pipeline orchestration: browser lifecycle, CSS injection, script injection, evaluate call, buffer return |
-| `dom-walker.test.ts` | `extractSlides()`: slides from SVG/inline HTML, backgrounds, element classification, tables, lists, presenter notes (both formats) |
+| Test file               | What it covers                                                                                                                                 |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index.test.ts`         | Pipeline orchestration: browser lifecycle, CSS injection, script injection, evaluate call, buffer return                                       |
+| `dom-walker.test.ts`    | `extractSlides()`: slides from SVG/inline HTML, backgrounds, element classification, tables, lists, presenter notes (both formats)             |
 | `slide-builder.test.ts` | `buildPptx()` / `placeElement()`: heading/paragraph/list/table/code/image/blockquote placement, text-height clamping, image overflow exemption |
-| `browser.test.ts` | `findChrome()`: platform detection, path resolution |
-| `utils.test.ts` | `pxToInches`, `rgbToHex`, `pxToPoints`, `cleanFontFamily`, `sanitizeText` |
+| `browser.test.ts`       | `findChrome()`: platform detection, path resolution                                                                                            |
+| `utils.test.ts`         | `pxToInches`, `rgbToHex`, `pxToPoints`, `cleanFontFamily`, `sanitizeText`                                                                      |
 
 ---
 

@@ -35,15 +35,16 @@ theme: default
 This is a normal paragraph text. Verify that writing a long line without breaks does not cause errors.
 
 <!-- Japanese text intentionally kept for CJK rendering test: mixed Japanese/English -->
+
 日本語と English が混在していても問題ないことを確認します。
 
 ---
 
 # Slide 3: Inline decorations
 
-**Bold text** and *italic text* and `inline code` and ~~strikethrough~~ test.
+**Bold text** and _italic text_ and `inline code` and ~~strikethrough~~ test.
 
-**Bold** followed by *italic*, and **bold with *nested italic* inside** is also tested.
+**Bold** followed by _italic_, and **bold with _nested italic_ inside** is also tested.
 
 [Hyperlink](https://github.com/marp-team/marp-vscode) placed on the same line as text.
 
@@ -81,11 +82,12 @@ All tests passed ✅
 
 Task complete — please verify **✅ Important task**.
 
-**🚀 Deploy** through *⚠️ Warning check* — the full flow.
+**🚀 Deploy** through _⚠️ Warning check_ — the full flow.
 
 Emoji in lists:
+
 - ✅ Completed task
-- 🔄 In-progress task  
+- 🔄 In-progress task
 - ⏳ Pending task
 - ❌ Failed task
 
@@ -106,12 +108,12 @@ function greet(name: string): string {
 
 # Slide 7: Table
 
-| Column 1 (left-aligned) | Column 2 (center-aligned) | Column 3 (right-aligned) |
-|:------------|:-------------:|-------------:|
-| Cell A1 | Cell A2 | Cell A3 |
-| **Bold** cell | `Code` cell | *Italic* cell |
-| Cell with long text content | Medium | Short |
-| Last row | Last row 2 | Last row 3 |
+| Column 1 (left-aligned)     | Column 2 (center-aligned) | Column 3 (right-aligned) |
+| :-------------------------- | :-----------------------: | -----------------------: |
+| Cell A1                     |          Cell A2          |                  Cell A3 |
+| **Bold** cell               |        `Code` cell        |            _Italic_ cell |
+| Cell with long text content |          Medium           |                    Short |
+| Last row                    |        Last row 2         |               Last row 3 |
 
 ---
 
@@ -409,19 +411,19 @@ Content line 3
 > blockquote  
 > test
 
-> Blockquote containing **bold**, *italic*, and `code`
+> Blockquote containing **bold**, _italic_, and `code`
 
 ---
 
 # Slide 25: Table (complex cells)
 
-| Step | Responsible Agent | Input | Output |
-|:---:|:---:|:---|:---|
-| 1 | Estimator | Spec document | Estimate sheet |
-| 2 | **Design** | Estimate + Requirements | Design doc |
-| 3 | Test Design | Design doc | Test case list |
-| 4 | `dev-planner` | TC + Design doc | Implementation plan |
-| 5 | Review ✅ | PR + Design doc | Review results |
+| Step | Responsible Agent | Input                   | Output              |
+| :--: | :---------------: | :---------------------- | :------------------ |
+|  1   |     Estimator     | Spec document           | Estimate sheet      |
+|  2   |    **Design**     | Estimate + Requirements | Design doc          |
+|  3   |    Test Design    | Design doc              | Test case list      |
+|  4   |   `dev-planner`   | TC + Design doc         | Implementation plan |
+|  5   |     Review ✅     | PR + Design doc         | Review results      |
 
 ---
 
@@ -429,13 +431,18 @@ Content line 3
 
 ```javascript
 // Very long single line of code — wrapping/clipping test
-const veryLongVariableName = someFunction({ key1: 'value1', key2: 'value2', key3: 'value3', key4: 'value4' })
+const veryLongVariableName = someFunction({
+  key1: 'value1',
+  key2: 'value2',
+  key3: 'value3',
+  key4: 'value4',
+})
 
 // Code with comments
 const config = {
-  apiKey: process.env.API_KEY,  // Loaded from environment variable
-  timeout: 30000,               // Timeout: 30 seconds
-  retries: 3                    // Retry count
+  apiKey: process.env.API_KEY, // Loaded from environment variable
+  timeout: 30000, // Timeout: 30 seconds
+  retries: 3, // Retry count
 }
 ```
 
@@ -519,7 +526,7 @@ Verify the SVG is correctly converted as an image.
 
 ## Heading H2 ✅
 
-**Bold** *Italic* `code` ~~strikethrough~~ [Link](https://example.com) Emoji🎉
+**Bold** _Italic_ `code` ~~strikethrough~~ [Link](https://example.com) Emoji🎉
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
 <div style="border: 1px solid #ccc; border-radius: 8px; padding: 12px;">
@@ -538,9 +545,9 @@ const x = 1
 <div>
 
 | Col A | Col B |
-|:----|----:|
-| Val 1 | 100 |
-| Val 2 | 200 |
+| :---- | ----: |
+| Val 1 |   100 |
+| Val 2 |   200 |
 
 > Blockquote text
 
@@ -593,7 +600,7 @@ Complete: <span style="background:#38a169;color:white;padding:2px 10px;border-ra
 
 # Slide 35: Background image filter (![bg grayscale]) ← Important bug verification
 
-**This background uses _backgroundImage (CSS background-image).**
+**This background uses \_backgroundImage (CSS background-image).**
 Background image test without filter. Verify that text is not displayed twice.
 
 ---
@@ -807,7 +814,6 @@ This slide uses `var(--brand)` and `var(--accent)`. Test whether pseudo-elements
 
 Text color specified with `var(--ink)`: <span style="color: var(--ink);">This text is dark.</span>
 
-
 ---
 
 <!-- _class: gradient-accent border-heading -->
@@ -855,12 +861,12 @@ table th:nth-child(5), table td:nth-child(5) { background: #d1fae5 !important; c
 section { font-size: 20px; }
 </style>
 
-| Tool | Category | Before | After | Verdict |
-|:------|:-------|:------:|:------:|:----:|
-| Tool A | Code completion | Manual input | Auto-complete | ◎ |
-| Tool B | Review | Manual check | Auto-detect | ○ |
-| Tool C | Test generation | Manual write | Auto-generate | ◎ |
-| Tool D | Documentation | Manual update | Semi-auto | △ |
+| Tool   | Category        |    Before     |     After     | Verdict |
+| :----- | :-------------- | :-----------: | :-----------: | :-----: |
+| Tool A | Code completion | Manual input  | Auto-complete |    ◎    |
+| Tool B | Review          | Manual check  |  Auto-detect  |    ○    |
+| Tool C | Test generation | Manual write  | Auto-generate |    ◎    |
+| Tool D | Documentation   | Manual update |   Semi-auto   |    △    |
 
 **Column 3 (blue), column 4 (red), and column 5 (green) should be colour-coded.**
 
@@ -951,11 +957,11 @@ Normal paragraph text follows the note box.
 
 Normal paragraph text (no letter-spacing). The difference in character spacing from the heading should be visible.
 
-|  | Setting | Effect |
-|:--|:-----|:-----|
-| h1 | 0.04em | Wider spacing |
-| h2 | 0.04em | Wider spacing |
-| p | none | Default |
+|     | Setting | Effect        |
+| :-- | :------ | :------------ |
+| h1  | 0.04em  | Wider spacing |
+| h2  | 0.04em  | Wider spacing |
+| p   | none    | Default       |
 
 ---
 
@@ -1121,11 +1127,11 @@ th { background-color: #27ae60; color: white; }
 
 ## Theme-colour vertical decoration
 
-| Item | Current | Target |
-|------|---------|--------|
-| **Test automation** | Partial | Full coverage |
-| **CI integration** | Manual trigger | Automated |
-| **Deploy** | Weekly manual | Daily auto |
+| Item                | Current        | Target        |
+| ------------------- | -------------- | ------------- |
+| **Test automation** | Partial        | Full coverage |
+| **CI integration**  | Manual trigger | Automated     |
+| **Deploy**          | Weekly manual  | Daily auto    |
 
 ---
 
@@ -1168,4 +1174,3 @@ section h2 {
 
 Three filters applied simultaneously to the background image: blur + brightness + grayscale.
 Foreground text is displayed with a border-left vertical decoration heading.
-

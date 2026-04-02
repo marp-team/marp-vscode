@@ -18,9 +18,9 @@ jest.mock('@puppeteer/browsers', () => ({
 }))
 
 const mockedExistsSync = existsSync as jest.MockedFunction<typeof existsSync>
-const {
-  computeSystemExecutablePath: mockedCompute,
-} = jest.requireMock('@puppeteer/browsers') as {
+const { computeSystemExecutablePath: mockedCompute } = jest.requireMock(
+  '@puppeteer/browsers',
+) as {
   computeSystemExecutablePath: jest.Mock
 }
 

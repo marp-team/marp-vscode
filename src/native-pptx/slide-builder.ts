@@ -1,6 +1,12 @@
 import { fileURLToPath } from 'node:url'
 import PptxGenJS from 'pptxgenjs'
-import type { SlideData, SlideElement, TextRun, ListItem, TextStyle } from './types'
+import type {
+  SlideData,
+  SlideElement,
+  TextRun,
+  ListItem,
+  TextStyle,
+} from './types'
 import {
   rgbToHex,
   cleanFontFamily,
@@ -25,7 +31,8 @@ function resolveImageSource(url: string): { data?: string; path?: string } {
  */
 function computeLineSpacing(style: TextStyle): number | undefined {
   const { lineHeight, fontSize } = style
-  if (!lineHeight || !fontSize || lineHeight <= 0 || fontSize <= 0) return undefined
+  if (!lineHeight || !fontSize || lineHeight <= 0 || fontSize <= 0)
+    return undefined
   const m = lineHeight / fontSize
   if (m < 0.5 || m > 4) return undefined
   return Math.round(m * 100) / 100
@@ -46,7 +53,9 @@ function computeCharSpacing(style: TextStyle): number | undefined {
  * Returns 0 (no inset) when the style has no padding fields.
  * The margin array is [top, right, bottom, left] in points.
  */
-function computeTextInset(style: TextStyle): [number, number, number, number] | 0 {
+function computeTextInset(
+  style: TextStyle,
+): [number, number, number, number] | 0 {
   const pt = (style.paddingTop ?? 0) * 0.75
   const pr = (style.paddingRight ?? 0) * 0.75
   const pb = (style.paddingBottom ?? 0) * 0.75
@@ -107,7 +116,13 @@ export function buildPptx(slides: SlideData[]): PptxGenJS {
         const y = pxToInches(bg.y)
         const w = pxToInches(bg.width)
         const h = pxToInches(bg.height)
-        const imgOpts: PptxGenJS.ImageProps = { x, y, w, h, ...resolveImageSource(bg.url) }
+        const imgOpts: PptxGenJS.ImageProps = {
+          x,
+          y,
+          w,
+          h,
+          ...resolveImageSource(bg.url),
+        }
         slide.addImage(imgOpts)
       }
     }
@@ -162,7 +177,9 @@ export function placeElement(
     case 'heading': {
       // Draw border-left bar FIRST (z-order: behind text)
       const headingBorderW =
-        el.borderLeft && el.borderLeft.width > 0 ? pxToInches(el.borderLeft.width) : 0
+        el.borderLeft && el.borderLeft.width > 0
+          ? pxToInches(el.borderLeft.width)
+          : 0
       if (headingBorderW > 0) {
         slide.addShape('rect', {
           x,
@@ -174,18 +191,21 @@ export function placeElement(
         })
       }
       // Draw text shifted right so it doesn't overlap the border-left bar
-      slide.addText(el.runs.map((r) => toTextProps(r)), {
-        x: x + headingBorderW,
-        y,
-        w: Math.max(0.01, w - headingBorderW),
-        h,
-        margin: 0,
-        valign: 'top',
-        align: el.style.textAlign as PptxGenJS.HAlign,
-        lineSpacingMultiple: computeLineSpacing(el.style),
-        paraSpaceBefore: 0,
-        charSpacing: computeCharSpacing(el.style),
-      })
+      slide.addText(
+        el.runs.map((r) => toTextProps(r)),
+        {
+          x: x + headingBorderW,
+          y,
+          w: Math.max(0.01, w - headingBorderW),
+          h,
+          margin: 0,
+          valign: 'top',
+          align: el.style.textAlign as PptxGenJS.HAlign,
+          lineSpacingMultiple: computeLineSpacing(el.style),
+          paraSpaceBefore: 0,
+          charSpacing: computeCharSpacing(el.style),
+        },
+      )
       // Draw border-bottom as a thin filled rectangle directly below the heading
       if (el.borderBottom && el.borderBottom.width > 0) {
         const bh = pxToInches(el.borderBottom.width)
@@ -202,34 +222,40 @@ export function placeElement(
     }
 
     case 'paragraph':
-      slide.addText(el.runs.map((r) => toTextProps(r)), {
-        x,
-        y,
-        w,
-        h,
-        margin: computeTextInset(el.style),
-        valign: el.valign ?? 'top',
-        align: el.style.textAlign as PptxGenJS.HAlign,
-        lineSpacingMultiple: computeLineSpacing(el.style),
-        paraSpaceBefore: 0,
-        charSpacing: computeCharSpacing(el.style),
-      })
+      slide.addText(
+        el.runs.map((r) => toTextProps(r)),
+        {
+          x,
+          y,
+          w,
+          h,
+          margin: computeTextInset(el.style),
+          valign: el.valign ?? 'top',
+          align: el.style.textAlign as PptxGenJS.HAlign,
+          lineSpacingMultiple: computeLineSpacing(el.style),
+          paraSpaceBefore: 0,
+          charSpacing: computeCharSpacing(el.style),
+        },
+      )
       break
 
     case 'header':
     case 'footer':
-      slide.addText(el.runs.map((r) => toTextProps(r)), {
-        x,
-        y,
-        w,
-        h,
-        margin: 0,
-        valign: 'top',
-        align: el.style.textAlign as PptxGenJS.HAlign,
-        lineSpacingMultiple: computeLineSpacing(el.style),
-        paraSpaceBefore: 0,
-        charSpacing: computeCharSpacing(el.style),
-      })
+      slide.addText(
+        el.runs.map((r) => toTextProps(r)),
+        {
+          x,
+          y,
+          w,
+          h,
+          margin: 0,
+          valign: 'top',
+          align: el.style.textAlign as PptxGenJS.HAlign,
+          lineSpacingMultiple: computeLineSpacing(el.style),
+          paraSpaceBefore: 0,
+          charSpacing: computeCharSpacing(el.style),
+        },
+      )
       break
 
     case 'blockquote':
@@ -242,20 +268,46 @@ export function placeElement(
           h,
           fill: { color: rgbToHex(el.borderLeft.color) },
         })
-        slide.addText(el.runs.map((r) => toTextProps(r)), {
-          x: x + bw,
-          y,
-          w: w - bw,
-          h,
-          margin: 0,
-          valign: 'top',
-          align: el.style.textAlign as PptxGenJS.HAlign,
-          lineSpacingMultiple: computeLineSpacing(el.style),
-          paraSpaceBefore: 0,
-          charSpacing: computeCharSpacing(el.style),
-        })
+        slide.addText(
+          el.runs.map((r) => toTextProps(r)),
+          {
+            x: x + bw,
+            y,
+            w: w - bw,
+            h,
+            margin: 0,
+            valign: 'top',
+            align: el.style.textAlign as PptxGenJS.HAlign,
+            lineSpacingMultiple: computeLineSpacing(el.style),
+            paraSpaceBefore: 0,
+            charSpacing: computeCharSpacing(el.style),
+          },
+        )
       } else {
-        slide.addText(el.runs.map((r) => toTextProps(r)), {
+        slide.addText(
+          el.runs.map((r) => toTextProps(r)),
+          {
+            x,
+            y,
+            w,
+            h,
+            margin: 0,
+            valign: 'top',
+            align: el.style.textAlign as PptxGenJS.HAlign,
+            lineSpacingMultiple: computeLineSpacing(el.style),
+            paraSpaceBefore: 0,
+            charSpacing: computeCharSpacing(el.style),
+          },
+        )
+      }
+      break
+
+    case 'list':
+      slide.addText(
+        el.items.flatMap((item, index) =>
+          toListTextProps(item, el.ordered, index < el.items.length - 1),
+        ),
+        {
           x,
           y,
           w,
@@ -266,25 +318,8 @@ export function placeElement(
           lineSpacingMultiple: computeLineSpacing(el.style),
           paraSpaceBefore: 0,
           charSpacing: computeCharSpacing(el.style),
-        })
-      }
-      break
-
-    case 'list':
-      slide.addText(el.items.flatMap((item, index) =>
-        toListTextProps(item, el.ordered, index < el.items.length - 1),
-      ), {
-        x,
-        y,
-        w,
-        h,
-        margin: 0,
-        valign: 'top',
-        align: el.style.textAlign as PptxGenJS.HAlign,
-        lineSpacingMultiple: computeLineSpacing(el.style),
-        paraSpaceBefore: 0,
-        charSpacing: computeCharSpacing(el.style),
-      })
+        },
+      )
       break
 
     case 'table':
@@ -299,8 +334,14 @@ export function placeElement(
               if (!isTransparent(cell.style.backgroundColor)) {
                 cellOpts.fill = { color: rgbToHex(cell.style.backgroundColor) }
               }
-              if (cell.style.borderColor && !isTransparent(cell.style.borderColor)) {
-                cellOpts.border = { pt: 1, color: rgbToHex(cell.style.borderColor) }
+              if (
+                cell.style.borderColor &&
+                !isTransparent(cell.style.borderColor)
+              ) {
+                cellOpts.border = {
+                  pt: 1,
+                  color: rgbToHex(cell.style.borderColor),
+                }
               }
               return {
                 text: cell.runs.map((r) => ({
@@ -312,7 +353,8 @@ export function placeElement(
                       r.fontFamily ?? cell.style.fontFamily,
                       r.text,
                     ),
-                    bold: r.bold ?? cell.isHeader ?? (cell.style.fontWeight >= 600),
+                    bold:
+                      r.bold ?? cell.isHeader ?? cell.style.fontWeight >= 600,
                     italic: r.italic,
                   },
                 })),
@@ -330,8 +372,14 @@ export function placeElement(
             if (!isTransparent(cell.style.backgroundColor)) {
               cellOpts.fill = { color: rgbToHex(cell.style.backgroundColor) }
             }
-            if (cell.style.borderColor && !isTransparent(cell.style.borderColor)) {
-              cellOpts.border = { pt: 1, color: rgbToHex(cell.style.borderColor) }
+            if (
+              cell.style.borderColor &&
+              !isTransparent(cell.style.borderColor)
+            ) {
+              cellOpts.border = {
+                pt: 1,
+                color: rgbToHex(cell.style.borderColor),
+              }
             }
             return { text: sanitizeText(cell.text), options: cellOpts }
           }),
@@ -342,7 +390,9 @@ export function placeElement(
           w,
           autoPage: false,
           // Preserve HTML column proportions when per-column widths are available
-          ...(el.colWidths && el.colWidths.length > 0 && el.colWidths.every((cw) => cw > 0)
+          ...(el.colWidths &&
+          el.colWidths.length > 0 &&
+          el.colWidths.every((cw) => cw > 0)
             ? {
                 colW: el.colWidths.map((cw) => pxToInches(cw)),
               }
@@ -382,7 +432,13 @@ export function placeElement(
     }
 
     case 'image': {
-      const imgOpts: PptxGenJS.ImageProps = { x, y, w, h, ...resolveImageSource(el.src) }
+      const imgOpts: PptxGenJS.ImageProps = {
+        x,
+        y,
+        w,
+        h,
+        ...resolveImageSource(el.src),
+      }
       slide.addImage(imgOpts)
       break
     }
@@ -395,7 +451,8 @@ export function placeElement(
       const borderLeft = el.style?.borderLeft
       const hasBoxShadow = el.style?.boxShadow === true
       const hasBackground = !isTransparent(bg)
-      const hasBorder = borderWidth > 0 && !!borderColor && !isTransparent(borderColor)
+      const hasBorder =
+        borderWidth > 0 && !!borderColor && !isTransparent(borderColor)
 
       // Determine effective line (border) for the shape.
       // box-shadow → thin grey line to simulate card elevation.
@@ -411,15 +468,15 @@ export function placeElement(
         // rectRadius is 0-1: convert px radius relative to the smaller dimension
         const minDim = Math.min(el.width, el.height)
         const rectRadius =
-          borderRadius > 0 ? Math.min(0.5, borderRadius / (minDim / 2)) : undefined
+          borderRadius > 0
+            ? Math.min(0.5, borderRadius / (minDim / 2))
+            : undefined
         slide.addShape(shapeType as PptxGenJS.ShapeType, {
           x,
           y,
           w,
           h,
-          fill: hasBackground
-            ? { color: rgbToHex(bg!) }
-            : { type: 'none' },
+          fill: hasBackground ? { color: rgbToHex(bg!) } : { type: 'none' },
           ...(lineStyle ? { line: lineStyle } : {}),
           ...(rectRadius !== undefined ? { rectRadius } : {}),
         })
@@ -440,18 +497,25 @@ export function placeElement(
       // extractInlineBadgeShapes captures badge text directly so it aligns
       // perfectly with the badge background shape, avoiding the misalignment
       // that occurs when text is placed from the parent paragraph's text flow.
-      if (el.runs && el.runs.length > 0 && el.runs.some((r) => !r.breakLine && r.text.trim() !== '')) {
-        slide.addText(el.runs.map((r) => toTextProps(r)), {
-          x,
-          y,
-          w,
-          h,
-          margin: 0,
-          valign: 'middle',
-          align: 'center',
-          lineSpacingMultiple: 1,
-          paraSpaceBefore: 0,
-        })
+      if (
+        el.runs &&
+        el.runs.length > 0 &&
+        el.runs.some((r) => !r.breakLine && r.text.trim() !== '')
+      ) {
+        slide.addText(
+          el.runs.map((r) => toTextProps(r)),
+          {
+            x,
+            y,
+            w,
+            h,
+            margin: 0,
+            valign: 'middle',
+            align: 'center',
+            lineSpacingMultiple: 1,
+            paraSpaceBefore: 0,
+          },
+        )
       }
       // Recursively place children.
       // When the container has a visible background, strip redundant highlight
@@ -464,7 +528,11 @@ export function placeElement(
         for (const child of el.children ?? []) {
           if ('runs' in child && Array.isArray((child as any).runs)) {
             for (const r of (child as any).runs as TextRun[]) {
-              if (!r.breakLine && r.backgroundColor && rgbToHex(r.backgroundColor) === bgHex) {
+              if (
+                !r.breakLine &&
+                r.backgroundColor &&
+                rgbToHex(r.backgroundColor) === bgHex
+              ) {
                 r.backgroundColor = undefined
               }
             }

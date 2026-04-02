@@ -18,10 +18,13 @@ const { pathToFileURL } = require('url')
 async function main() {
   const htmlPath = process.argv[2]
   const chromePath =
-    process.argv[3] || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+    process.argv[3] ||
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
 
   if (!htmlPath) {
-    console.error('Usage: node src/native-pptx/tools/diagnose-pptx.js <marp-html-path> [chrome-path]')
+    console.error(
+      'Usage: node src/native-pptx/tools/diagnose-pptx.js <marp-html-path> [chrome-path]',
+    )
     process.exit(1)
   }
 
@@ -44,11 +47,15 @@ async function main() {
   const generatedContent = fs.readFileSync(domWalkerScriptPath, 'utf-8')
   // Match both template literal and string literal formats
   let domWalkerScript
-  const tmplMatch = generatedContent.match(/export const DOM_WALKER_SCRIPT = `([\s\S]+?)`;/)
+  const tmplMatch = generatedContent.match(
+    /export const DOM_WALKER_SCRIPT = `([\s\S]+?)`;/,
+  )
   if (tmplMatch) {
     domWalkerScript = tmplMatch[1]
   } else {
-    const strMatch = generatedContent.match(/export const DOM_WALKER_SCRIPT = "([\s\S]+?)"\s*$/)
+    const strMatch = generatedContent.match(
+      /export const DOM_WALKER_SCRIPT = "([\s\S]+?)"\s*$/,
+    )
     if (strMatch) {
       // Unescape the JSON-style string
       domWalkerScript = JSON.parse(`"${strMatch[1]}"`)
@@ -69,7 +76,12 @@ async function main() {
   const browser = await puppeteer.launch({
     executablePath: chromePath,
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+    ],
   })
 
   try {
@@ -91,7 +103,9 @@ async function main() {
     console.log(`  Slides: ${slides.length}`)
     for (let i = 0; i < slides.length; i++) {
       const s = slides[i]
-      console.log(`  Slide ${i + 1}: ${s.elements.length} elements, bg=${s.background}`)
+      console.log(
+        `  Slide ${i + 1}: ${s.elements.length} elements, bg=${s.background}`,
+      )
       for (const el of s.elements) {
         const summary =
           el.type === 'heading'
@@ -109,7 +123,9 @@ async function main() {
                       : el.type === 'container'
                         ? `container(${el.children?.length ?? 0} children)`
                         : el.type
-        console.log(`    - ${summary}  [${Math.round(el.x)},${Math.round(el.y)} ${Math.round(el.width)}x${Math.round(el.height)}]`)
+        console.log(
+          `    - ${summary}  [${Math.round(el.x)},${Math.round(el.y)} ${Math.round(el.width)}x${Math.round(el.height)}]`,
+        )
       }
     }
   } finally {

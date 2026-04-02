@@ -142,7 +142,10 @@ describe('extractSlides', () => {
     mockRect(h1, { left: 70, top: 80, width: 1140, height: 60 })
 
     const restore = mockStyles([
-      [section, { backgroundColor: 'rgb(255, 255, 255)', backgroundImage: 'none' }],
+      [
+        section,
+        { backgroundColor: 'rgb(255, 255, 255)', backgroundImage: 'none' },
+      ],
       [h1, { fontSize: '40px', fontWeight: '700', color: 'rgb(34, 68, 102)' }],
     ])
 
@@ -264,9 +267,7 @@ describe('walkElements (via extractSlides)', () => {
   })
 
   it('classifies list elements as list', () => {
-    const { section } = setupSlide(
-      '<ul><li>Item 1</li><li>Item 2</li></ul>',
-    )
+    const { section } = setupSlide('<ul><li>Item 1</li><li>Item 2</li></ul>')
     const ul = section.querySelector('ul')!
     const lis = section.querySelectorAll('li')
 
@@ -725,7 +726,9 @@ describe('extractTableData (via extractSlides)', () => {
 
     const slides = extractSlides()
     const tableEl = slides[0].elements[0] as any
-    expect(tableEl.rows[0].cells[0].style.fontFamily).toBe('"Noto Sans JP", sans-serif')
+    expect(tableEl.rows[0].cells[0].style.fontFamily).toBe(
+      '"Noto Sans JP", sans-serif',
+    )
 
     restore()
   })
@@ -751,7 +754,9 @@ describe('extractTableData (via extractSlides)', () => {
       [table, {}],
       [c1, {}],
       [c2, {}],
-      ...Array.from(table.querySelectorAll('td')).map((c) => [c, {}] as [Element, Record<string, string>]),
+      ...Array.from(table.querySelectorAll('td')).map(
+        (c) => [c, {}] as [Element, Record<string, string>],
+      ),
     ])
 
     const slides = extractSlides()
@@ -784,7 +789,9 @@ describe('Marp Inline SVG mode section deduplication', () => {
     const sections = document.querySelectorAll('section')
     const h1 = document.querySelector('h1')!
     const figure = document.getElementById('bg-figure')!
-    const bgContainer = document.querySelector('[data-marpit-advanced-background-container]')!
+    const bgContainer = document.querySelector(
+      '[data-marpit-advanced-background-container]',
+    )!
 
     for (const s of Array.from(sections)) {
       mockRect(s, { left: 0, top: 0, width: 1280, height: 720 })
@@ -794,17 +801,25 @@ describe('Marp Inline SVG mode section deduplication', () => {
     const originalCS = globalThis.getComputedStyle
     const styleMap = new Map<Element, Record<string, string>>()
     for (const s of Array.from(sections)) {
-      styleMap.set(s, { ...defaultStyles, backgroundColor: 'rgb(255,255,255)', backgroundImage: 'none' })
+      styleMap.set(s, {
+        ...defaultStyles,
+        backgroundColor: 'rgb(255,255,255)',
+        backgroundImage: 'none',
+      })
     }
     styleMap.set(h1, { ...defaultStyles, fontSize: '32px', fontWeight: '700' })
-    styleMap.set(figure, { ...defaultStyles, backgroundImage: 'url("bg-image.png")', filter: 'none' })
+    styleMap.set(figure, {
+      ...defaultStyles,
+      backgroundImage: 'url("bg-image.png")',
+      filter: 'none',
+    })
     styleMap.set(bgContainer, { ...defaultStyles })
-
     ;(globalThis as any).getComputedStyle = (target: Element) => {
       const styles = styleMap.get(target) ?? defaultStyles
       return new Proxy({} as CSSStyleDeclaration, {
         get(_t, prop: string) {
-          if (prop === 'getPropertyValue') return (name: string) => styles[name] ?? ''
+          if (prop === 'getPropertyValue')
+            return (name: string) => styles[name] ?? ''
           return styles[prop] ?? ''
         },
       })
@@ -818,7 +833,6 @@ describe('Marp Inline SVG mode section deduplication', () => {
     // Background image should be extracted from the figure as BgImageData[]
     expect(slides[0].backgroundImages).toHaveLength(1)
     expect(slides[0].backgroundImages[0].url).toBe('bg-image.png')
-
     ;(globalThis as any).getComputedStyle = originalCS
   })
 
@@ -850,7 +864,10 @@ describe('findBackgroundColor (via extractSlides)', () => {
     mockRect(p, { left: 0, top: 0, width: 600, height: 24 })
 
     const restore = mockStyles([
-      [section, { backgroundColor: 'rgba(0, 0, 0, 0)', backgroundImage: 'none' }],
+      [
+        section,
+        { backgroundColor: 'rgba(0, 0, 0, 0)', backgroundImage: 'none' },
+      ],
       [p, {}],
     ])
 
@@ -882,10 +899,14 @@ describe('findBackgroundColor (via extractSlides)', () => {
     mockRect(p, { left: 0, top: 0, width: 600, height: 24 })
 
     const restore = mockStyles([
-      [section, {
-        backgroundColor: 'rgba(0, 0, 0, 0)',
-        backgroundImage: 'linear-gradient(135deg, rgba(15, 108, 189, 0.09), rgba(15, 108, 189, 0) 45%), linear-gradient(rgb(245, 251, 255) 0%, rgb(255, 255, 255) 75%)',
-      }],
+      [
+        section,
+        {
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          backgroundImage:
+            'linear-gradient(135deg, rgba(15, 108, 189, 0.09), rgba(15, 108, 189, 0) 45%), linear-gradient(rgb(245, 251, 255) 0%, rgb(255, 255, 255) 75%)',
+        },
+      ],
       [p, {}],
     ])
 
@@ -913,11 +934,13 @@ describe('findBackgroundColor (via extractSlides)', () => {
     const sectionStyles = {
       ...defaultStyles,
       backgroundColor: 'rgba(0, 0, 0, 0)',
-      backgroundImage: 'linear-gradient(rgb(245, 251, 255) 0%, rgb(255, 255, 255) 75%)',
+      backgroundImage:
+        'linear-gradient(rgb(245, 251, 255) 0%, rgb(255, 255, 255) 75%)',
     }
     const sectionProxy = new Proxy({} as CSSStyleDeclaration, {
       get(_t, prop: string) {
-        if (prop === 'getPropertyValue') return (name: string) => sectionStyles[name] ?? ''
+        if (prop === 'getPropertyValue')
+          return (name: string) => sectionStyles[name] ?? ''
         return sectionStyles[prop] ?? ''
       },
     })
@@ -925,7 +948,8 @@ describe('findBackgroundColor (via extractSlides)', () => {
     const pStyles = { ...defaultStyles }
     const pProxy = new Proxy({} as CSSStyleDeclaration, {
       get(_t, prop: string) {
-        if (prop === 'getPropertyValue') return (name: string) => pStyles[name] ?? ''
+        if (prop === 'getPropertyValue')
+          return (name: string) => pStyles[name] ?? ''
         return pStyles[prop] ?? ''
       },
     })
@@ -933,7 +957,6 @@ describe('findBackgroundColor (via extractSlides)', () => {
     const map = new Map<Element, CSSStyleDeclaration>()
     map.set(section, sectionProxy)
     map.set(p, pProxy)
-
     ;(globalThis as any).getComputedStyle = (target: Element) => {
       if (target === document.body) return bodyProxy
       return map.get(target) ?? originalBodyGetCS(target)
@@ -943,7 +966,6 @@ describe('findBackgroundColor (via extractSlides)', () => {
     // Should NOT pick up body's black background
     expect(slides[0].background).not.toBe('rgb(0, 0, 0)')
     expect(slides[0].background).toBe('rgb(255, 255, 255)')
-
     ;(globalThis as any).getComputedStyle = originalBodyGetCS
   })
 })
@@ -1006,7 +1028,7 @@ describe('blockquote border (via extractSlides)', () => {
     const slides = extractSlides()
     const el = slides[0].elements[0] as any
     // Expect: [run'First', breakLine, run'Second'] (no trailing break)
-    const texts = el.runs.map((r: any) => r.breakLine ? '\n' : r.text)
+    const texts = el.runs.map((r: any) => (r.breakLine ? '\n' : r.text))
     expect(texts).toEqual(['First', '\n', 'Second'])
 
     restore()
@@ -1031,7 +1053,10 @@ describe('code syntax highlighting (via extractSlides)', () => {
       [section, { backgroundColor: 'rgb(255,255,255)' }],
       [pre, { backgroundColor: 'rgb(40, 44, 52)', fontSize: '14px' }],
       [code, { color: 'rgb(200, 200, 200)', fontSize: '14px' }],
-      [span, { color: 'rgb(198, 120, 221)', fontSize: '14px', fontWeight: '700' }],
+      [
+        span,
+        { color: 'rgb(198, 120, 221)', fontSize: '14px', fontWeight: '700' },
+      ],
     ])
 
     const slides = extractSlides()
@@ -1077,9 +1102,7 @@ describe('extractTextRuns — backgroundColor (via extractSlides)', () => {
   })
 
   it('inline elements without background-color have no backgroundColor', () => {
-    const { section } = setupSlide(
-      '<p id="t">Normal <em>Italic</em> text</p>',
-    )
+    const { section } = setupSlide('<p id="t">Normal <em>Italic</em> text</p>')
     const p = document.getElementById('t')!
     const em = p.querySelector('em')!
 
@@ -1087,7 +1110,14 @@ describe('extractTextRuns — backgroundColor (via extractSlides)', () => {
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
       [p, { display: 'block' }],
-      [em, { display: 'inline', fontStyle: 'italic', backgroundColor: 'rgba(0, 0, 0, 0)' }],
+      [
+        em,
+        {
+          display: 'inline',
+          fontStyle: 'italic',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+        },
+      ],
     ])
 
     const slides = extractSlides()
@@ -1193,7 +1223,15 @@ describe('heading border extraction (via extractSlides)', () => {
     mockRect(h1, { left: 0, top: 0, width: 600, height: 50 })
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [h1, { fontSize: '40px', fontWeight: '700', borderBottomWidth: '0px', borderLeftWidth: '0px' }],
+      [
+        h1,
+        {
+          fontSize: '40px',
+          fontWeight: '700',
+          borderBottomWidth: '0px',
+          borderLeftWidth: '0px',
+        },
+      ],
     ])
 
     const slides = extractSlides()
@@ -1223,7 +1261,12 @@ describe('SVG element extraction (via extractSlides)', () => {
     ])
 
     ;(svg as any).getBoundingClientRect = () => ({
-      left: 10, top: 20, width: 200, height: 100, right: 210, bottom: 120,
+      left: 10,
+      top: 20,
+      width: 200,
+      height: 100,
+      right: 210,
+      bottom: 120,
     })
 
     const slides = extractSlides()
@@ -1259,12 +1302,39 @@ describe('preserving display:inline children in flex container (via extractSlide
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
       [flexDiv, { display: 'flex', alignItems: 'center' }],
-      [badge, { display: 'inline', backgroundColor: 'rgb(0, 102, 204)', color: 'rgb(255,255,255)', borderRadius: '50%', fontSize: '14px', fontFamily: 'Arial', fontWeight: '700', textAlign: 'left', lineHeight: '14px' }],
-      [label, { display: 'inline', color: 'rgb(0,0,0)', fontSize: '16px', fontFamily: 'Arial', fontWeight: '400', textAlign: 'left', lineHeight: '24px', backgroundColor: 'rgba(0,0,0,0)' }],
+      [
+        badge,
+        {
+          display: 'inline',
+          backgroundColor: 'rgb(0, 102, 204)',
+          color: 'rgb(255,255,255)',
+          borderRadius: '50%',
+          fontSize: '14px',
+          fontFamily: 'Arial',
+          fontWeight: '700',
+          textAlign: 'left',
+          lineHeight: '14px',
+        },
+      ],
+      [
+        label,
+        {
+          display: 'inline',
+          color: 'rgb(0,0,0)',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          fontWeight: '400',
+          textAlign: 'left',
+          lineHeight: '24px',
+          backgroundColor: 'rgba(0,0,0,0)',
+        },
+      ],
     ])
 
     const slides = extractSlides()
-    const container = slides[0].elements.find((e: any) => e.type === 'container') as any
+    const container = slides[0].elements.find(
+      (e: any) => e.type === 'container',
+    ) as any
     expect(container).toBeDefined()
 
     // Verify label span is also included as a paragraph in children
@@ -1279,31 +1349,34 @@ describe('preserving display:inline children in flex container (via extractSlide
   })
 
   it('display:inline-flex badge span has paragraph with valign:middle', () => {
-    const { section } = setupSlide(
-      '<span id="badge">1</span>',
-    )
+    const { section } = setupSlide('<span id="badge">1</span>')
     const badge = section.querySelector('#badge')!
 
     mockRect(badge, { left: 10, top: 10, width: 32, height: 32 })
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [badge, {
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgb(0, 102, 204)',
-        color: 'rgb(255,255,255)',
-        borderRadius: '16px',
-        fontSize: '14px',
-        fontFamily: 'Arial',
-        fontWeight: '700',
-        textAlign: 'left',
-        lineHeight: '14px',
-      }],
+      [
+        badge,
+        {
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgb(0, 102, 204)',
+          color: 'rgb(255,255,255)',
+          borderRadius: '16px',
+          fontSize: '14px',
+          fontFamily: 'Arial',
+          fontWeight: '700',
+          textAlign: 'left',
+          lineHeight: '14px',
+        },
+      ],
     ])
 
     const slides = extractSlides()
-    const para = slides[0].elements.find((e: any) => e.type === 'paragraph') as any
+    const para = slides[0].elements.find(
+      (e: any) => e.type === 'paragraph',
+    ) as any
     expect(para).toBeDefined()
     expect(para.valign).toBe('middle')
 
@@ -1328,9 +1401,46 @@ describe('extractListItems — emoji img directly inside tight list li (via extr
     mockRect(li, { left: 0, top: 0, width: 600, height: 30 })
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [ul, { display: 'block', fontSize: '16px', fontFamily: 'Arial', color: 'rgb(0,0,0)', fontWeight: '400', fontStyle: 'normal', textAlign: 'left', lineHeight: '24px' }],
-      [li, { display: 'list-item', fontSize: '16px', fontFamily: 'Arial', color: 'rgb(0,0,0)', fontWeight: '400', fontStyle: 'normal', textAlign: 'left', lineHeight: '24px' }],
-      [img, { display: 'inline', fontSize: '16px', fontFamily: 'Arial', color: 'rgb(0,0,0)', fontWeight: '400', fontStyle: 'normal', textAlign: 'left', lineHeight: '24px', backgroundColor: 'rgba(0,0,0,0)' }],
+      [
+        ul,
+        {
+          display: 'block',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          color: 'rgb(0,0,0)',
+          fontWeight: '400',
+          fontStyle: 'normal',
+          textAlign: 'left',
+          lineHeight: '24px',
+        },
+      ],
+      [
+        li,
+        {
+          display: 'list-item',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          color: 'rgb(0,0,0)',
+          fontWeight: '400',
+          fontStyle: 'normal',
+          textAlign: 'left',
+          lineHeight: '24px',
+        },
+      ],
+      [
+        img,
+        {
+          display: 'inline',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          color: 'rgb(0,0,0)',
+          fontWeight: '400',
+          fontStyle: 'normal',
+          textAlign: 'left',
+          lineHeight: '24px',
+          backgroundColor: 'rgba(0,0,0,0)',
+        },
+      ],
     ])
 
     const slides = extractSlides()
@@ -1338,7 +1448,9 @@ describe('extractListItems — emoji img directly inside tight list li (via extr
     expect(list).toBeDefined()
 
     const item = list.items[0]
-    const texts = item.runs.filter((r: any) => !r.breakLine).map((r: any) => r.text)
+    const texts = item.runs
+      .filter((r: any) => !r.breakLine)
+      .map((r: any) => r.text)
     expect(texts).toContain('request')
     expect(texts).toContain('👉')
     expect(texts).toContain('analysis')
@@ -1358,15 +1470,57 @@ describe('extractListItems — emoji img directly inside tight list li (via extr
     mockRect(li, { left: 0, top: 0, width: 600, height: 30 })
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [ul, { display: 'block', fontSize: '16px', fontFamily: 'Arial', color: 'rgb(0,0,0)', fontWeight: '400', fontStyle: 'normal', textAlign: 'left', lineHeight: '24px' }],
-      [li, { display: 'list-item', fontSize: '16px', fontFamily: 'Arial', color: 'rgb(0,0,0)', fontWeight: '400', fontStyle: 'normal', textAlign: 'left', lineHeight: '24px' }],
-      ...imgs.map(img => [img, { display: 'inline', fontSize: '16px', fontFamily: 'Arial', color: 'rgb(0,0,0)', fontWeight: '400', fontStyle: 'normal', textAlign: 'left', lineHeight: '24px', backgroundColor: 'rgba(0,0,0,0)' }] as [Element, Record<string, string>]),
+      [
+        ul,
+        {
+          display: 'block',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          color: 'rgb(0,0,0)',
+          fontWeight: '400',
+          fontStyle: 'normal',
+          textAlign: 'left',
+          lineHeight: '24px',
+        },
+      ],
+      [
+        li,
+        {
+          display: 'list-item',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          color: 'rgb(0,0,0)',
+          fontWeight: '400',
+          fontStyle: 'normal',
+          textAlign: 'left',
+          lineHeight: '24px',
+        },
+      ],
+      ...imgs.map(
+        (img) =>
+          [
+            img,
+            {
+              display: 'inline',
+              fontSize: '16px',
+              fontFamily: 'Arial',
+              color: 'rgb(0,0,0)',
+              fontWeight: '400',
+              fontStyle: 'normal',
+              textAlign: 'left',
+              lineHeight: '24px',
+              backgroundColor: 'rgba(0,0,0,0)',
+            },
+          ] as [Element, Record<string, string>],
+      ),
     ])
 
     const slides = extractSlides()
     const list = slides[0].elements.find((e: any) => e.type === 'list') as any
     const item = list.items[0]
-    const texts = item.runs.filter((r: any) => !r.breakLine).map((r: any) => r.text)
+    const texts = item.runs
+      .filter((r: any) => !r.breakLine)
+      .map((r: any) => r.text)
     expect(texts.filter((t: string) => t === '👉')).toHaveLength(2)
     expect(texts).toContain('A')
     expect(texts).toContain('B')
@@ -1388,23 +1542,28 @@ describe('extractTextStyle justify-content:center mapping (via extractSlides)', 
     mockRect(badge, { left: 10, top: 10, width: 32, height: 32 })
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [badge, {
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'left',  // CSS textAlign is left, justifyContent drives centering
-        backgroundColor: 'rgb(0, 102, 204)',
-        color: 'rgb(255,255,255)',
-        borderRadius: '16px',
-        fontSize: '14px',
-        fontFamily: 'Arial',
-        fontWeight: '700',
-        lineHeight: '14px',
-      }],
+      [
+        badge,
+        {
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'left', // CSS textAlign is left, justifyContent drives centering
+          backgroundColor: 'rgb(0, 102, 204)',
+          color: 'rgb(255,255,255)',
+          borderRadius: '16px',
+          fontSize: '14px',
+          fontFamily: 'Arial',
+          fontWeight: '700',
+          lineHeight: '14px',
+        },
+      ],
     ])
 
     const slides = extractSlides()
-    const para = slides[0].elements.find((e: any) => e.type === 'paragraph') as any
+    const para = slides[0].elements.find(
+      (e: any) => e.type === 'paragraph',
+    ) as any
     expect(para).toBeDefined()
     expect(para.style.textAlign).toBe('center')
 
@@ -1431,27 +1590,33 @@ describe('extractInlineBadgeShapes — inline-block badge inside paragraph (via 
 
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [para, {
-        display: 'block',
-        fontSize: '16px',
-        fontFamily: 'Arial',
-        fontWeight: '400',
-        color: 'rgb(0,0,0)',
-        lineHeight: '22px',
-        textAlign: 'left',
-        backgroundColor: 'rgba(0,0,0,0)',
-      }],
-      [badge, {
-        display: 'inline-block',
-        backgroundColor: 'rgb(0,102,204)',
-        color: 'rgb(255,255,255)',
-        borderRadius: '999px',
-        fontSize: '14px',
-        fontFamily: 'Arial',
-        fontWeight: '700',
-        textAlign: 'center',
-        lineHeight: '14px',
-      }],
+      [
+        para,
+        {
+          display: 'block',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          fontWeight: '400',
+          color: 'rgb(0,0,0)',
+          lineHeight: '22px',
+          textAlign: 'left',
+          backgroundColor: 'rgba(0,0,0,0)',
+        },
+      ],
+      [
+        badge,
+        {
+          display: 'inline-block',
+          backgroundColor: 'rgb(0,102,204)',
+          color: 'rgb(255,255,255)',
+          borderRadius: '999px',
+          fontSize: '14px',
+          fontFamily: 'Arial',
+          fontWeight: '700',
+          textAlign: 'center',
+          lineHeight: '14px',
+        },
+      ],
     ])
 
     const slides = extractSlides()
@@ -1474,8 +1639,8 @@ describe('extractInlineBadgeShapes — inline-block badge inside paragraph (via 
     // Paragraph text box is shifted right to start after the badge
     // para.left=50, badge.width=50 → para x = 50+50=100, width = 600-50=550
     const paragraph = elements[paragraphIdx] as any
-    expect(paragraph.x).toBe(100)           // offset by badge width
-    expect(paragraph.width).toBe(550)        // reduced by badge width
+    expect(paragraph.x).toBe(100) // offset by badge width
+    expect(paragraph.width).toBe(550) // reduced by badge width
 
     // Badge text '01' NOT in paragraph runs
     const badgeInPara = paragraph.runs?.find((r: any) => r.text === '01')
@@ -1498,29 +1663,35 @@ describe('extractInlineBadgeShapes — inline-block badge inside paragraph (via 
 
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [para, {
-        display: 'block',
-        fontSize: '16px',
-        fontFamily: 'Arial',
-        fontWeight: '400',
-        color: 'rgb(0,0,0)',
-        lineHeight: '22px',
-        textAlign: 'left',
-        backgroundColor: 'rgba(0,0,0,0)',
-      }],
-      [badge, {
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgb(220,53,69)',
-        color: 'rgb(255,255,255)',
-        borderRadius: '999px',
-        fontSize: '14px',
-        fontFamily: 'Arial',
-        fontWeight: '700',
-        textAlign: 'center',
-        lineHeight: '14px',
-      }],
+      [
+        para,
+        {
+          display: 'block',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          fontWeight: '400',
+          color: 'rgb(0,0,0)',
+          lineHeight: '22px',
+          textAlign: 'left',
+          backgroundColor: 'rgba(0,0,0,0)',
+        },
+      ],
+      [
+        badge,
+        {
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgb(220,53,69)',
+          color: 'rgb(255,255,255)',
+          borderRadius: '999px',
+          fontSize: '14px',
+          fontFamily: 'Arial',
+          fontWeight: '700',
+          textAlign: 'center',
+          lineHeight: '14px',
+        },
+      ],
     ])
 
     const slides = extractSlides()
@@ -1556,29 +1727,35 @@ describe('extractInlineBadgeShapes — inline-block badge inside paragraph (via 
 
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [heading, {
-        display: 'block',
-        fontSize: '32px',
-        fontFamily: 'Arial',
-        fontWeight: '700',
-        color: 'rgb(0,0,0)',
-        lineHeight: '40px',
-        textAlign: 'left',
-        backgroundColor: 'rgba(0,0,0,0)',
-        borderBottomWidth: '0px',
-        borderLeftWidth: '0px',
-      }],
-      [badge, {
-        display: 'inline-block',
-        backgroundColor: 'rgb(200,50,50)',
-        color: 'rgb(255,255,255)',
-        borderRadius: '999px',
-        fontSize: '18px',
-        fontFamily: 'Arial',
-        fontWeight: '700',
-        textAlign: 'center',
-        lineHeight: '18px',
-      }],
+      [
+        heading,
+        {
+          display: 'block',
+          fontSize: '32px',
+          fontFamily: 'Arial',
+          fontWeight: '700',
+          color: 'rgb(0,0,0)',
+          lineHeight: '40px',
+          textAlign: 'left',
+          backgroundColor: 'rgba(0,0,0,0)',
+          borderBottomWidth: '0px',
+          borderLeftWidth: '0px',
+        },
+      ],
+      [
+        badge,
+        {
+          display: 'inline-block',
+          backgroundColor: 'rgb(200,50,50)',
+          color: 'rgb(255,255,255)',
+          borderRadius: '999px',
+          fontSize: '18px',
+          fontFamily: 'Arial',
+          fontWeight: '700',
+          textAlign: 'center',
+          lineHeight: '18px',
+        },
+      ],
     ])
 
     const slides = extractSlides()
@@ -1621,12 +1798,38 @@ describe('extractInlineBadgeShapes — inline-block badge inside paragraph (via 
 
     const restore = mockStyles([
       [section, { backgroundColor: 'rgb(255,255,255)' }],
-      [para, { display: 'block', fontSize: '16px', fontFamily: 'Arial', fontWeight: '400', color: 'rgb(0,0,0)', lineHeight: '24px', textAlign: 'left', backgroundColor: 'rgba(0,0,0,0)' }],
-      [span, { display: 'inline-block', backgroundColor: 'rgba(0,0,0,0)', color: 'rgb(0,0,0)', fontSize: '16px', fontFamily: 'Arial', fontWeight: '400', textAlign: 'left', lineHeight: '24px' }],
+      [
+        para,
+        {
+          display: 'block',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          fontWeight: '400',
+          color: 'rgb(0,0,0)',
+          lineHeight: '24px',
+          textAlign: 'left',
+          backgroundColor: 'rgba(0,0,0,0)',
+        },
+      ],
+      [
+        span,
+        {
+          display: 'inline-block',
+          backgroundColor: 'rgba(0,0,0,0)',
+          color: 'rgb(0,0,0)',
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          fontWeight: '400',
+          textAlign: 'left',
+          lineHeight: '24px',
+        },
+      ],
     ])
 
     const slides = extractSlides()
-    const containerEl = slides[0].elements.find((e: any) => e.type === 'container')
+    const containerEl = slides[0].elements.find(
+      (e: any) => e.type === 'container',
+    )
     expect(containerEl).toBeUndefined()
 
     restore()

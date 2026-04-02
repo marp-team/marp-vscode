@@ -19,10 +19,10 @@ export function rgbToHex(rgb: string | undefined): string {
 // Generic CSS font families and system aliases → PowerPoint fallback
 const genericFontMap: Record<string, string> = {
   'sans-serif': 'Calibri',
-  'serif': 'Cambria',
-  'monospace': 'Courier New',
-  'cursive': 'Calibri',
-  'fantasy': 'Calibri',
+  serif: 'Cambria',
+  monospace: 'Courier New',
+  cursive: 'Calibri',
+  fantasy: 'Calibri',
   'ui-sans-serif': 'Calibri',
   'ui-serif': 'Cambria',
   'ui-monospace': 'Courier New',
@@ -51,7 +51,7 @@ const macOnlyFonts = new Set([
 const knownSystemFonts: Record<string, string> = {
   'segoe ui': 'Segoe UI',
   'helvetica neue': 'Arial',
-  'helvetica': 'Arial',
+  helvetica: 'Arial',
 }
 
 const japaneseFontPattern =
@@ -138,7 +138,9 @@ export function isTransparent(color: string | undefined): boolean {
   if (!color) return true
   if (color === 'transparent') return true
   // Match rgba with alpha ≤ 0.01
-  const match = color.match(/rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*([\d.]+)\s*\)/)
+  const match = color.match(
+    /rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*([\d.]+)\s*\)/,
+  )
   if (match) return parseFloat(match[1]) <= 0.01
   return false
 }
@@ -160,5 +162,8 @@ export function sanitizeText(text: string): string {
   // NOTE: U+200D (Zero Width Joiner) is intentionally preserved because it composes
   // multi-codepoint emoji sequences (e.g. 🧑\u200D💻 → 🧑‍💻). Stripping it splits
   // the sequence into two separate glyphs in the PPTX output.
-  return text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\u200B\u200C\u2060]/g, '')
+  return text.replace(
+    /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\u200B\u200C\u2060]/g,
+    '',
+  )
 }

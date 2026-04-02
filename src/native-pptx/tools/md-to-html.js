@@ -8,7 +8,9 @@ const { resolve, dirname } = require('node:path')
 
 const [, , inputArg, outputArg] = process.argv
 if (!inputArg || !outputArg) {
-  console.error('Usage: node src/native-pptx/tools/md-to-html.js <input.md> <output.html>')
+  console.error(
+    'Usage: node src/native-pptx/tools/md-to-html.js <input.md> <output.html>',
+  )
   process.exit(1)
 }
 
@@ -55,4 +57,7 @@ ${html}
   console.log(`Written: ${outputPath}`)
 }
 
-main().catch(e => { console.error(e); process.exit(1) })
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})

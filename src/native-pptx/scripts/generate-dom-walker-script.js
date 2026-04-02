@@ -34,10 +34,7 @@ const output = `// AUTO-GENERATED FILE — Do not edit manually.
 export const DOM_WALKER_SCRIPT = ${JSON.stringify(wrappedCode)}
 `
 
-const outPath = path.resolve(
-  __dirname,
-  '../dom-walker-script.generated.ts',
-)
+const outPath = path.resolve(__dirname, '../dom-walker-script.generated.ts')
 fs.writeFileSync(outPath, output)
 
 console.log('Generated: src/native-pptx/dom-walker-script.generated.ts')

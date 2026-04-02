@@ -33,8 +33,7 @@ jest.mock('./slide-builder', () => ({
 
 // Mock the generated dom-walker script (string constant)
 jest.mock('./dom-walker-script.generated', () => ({
-  DOM_WALKER_SCRIPT:
-    'globalThis.extractSlides = function() { return []; };',
+  DOM_WALKER_SCRIPT: 'globalThis.extractSlides = function() { return []; };',
 }))
 
 describe('generateNativePptx', () => {

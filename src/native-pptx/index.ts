@@ -3,7 +3,12 @@ import { pathToFileURL } from 'node:url'
 import puppeteer, { type Browser, type Page } from 'puppeteer-core'
 import { DOM_WALKER_SCRIPT } from './dom-walker-script.generated'
 import { buildPptx } from './slide-builder'
-import type { BgImageData, ImageElement, SlideData, SlideElement } from './types'
+import type {
+  BgImageData,
+  ImageElement,
+  SlideData,
+  SlideElement,
+} from './types'
 
 export interface NativePptxOptions {
   /** Absolute path to the HTML file rendered by Marp CLI. */
@@ -95,7 +100,11 @@ export async function generateNativePptx(
 
     // Diagnostic dump: save extracted data as JSON for comparing HTML → JSON → PPTX
     if (opts.debugJsonPath) {
-      await writeFile(opts.debugJsonPath, JSON.stringify(slides, null, 2), 'utf-8')
+      await writeFile(
+        opts.debugJsonPath,
+        JSON.stringify(slides, null, 2),
+        'utf-8',
+      )
     }
 
     // Build PPTX from extracted data
@@ -145,11 +154,16 @@ interface SlideRasterizeJob {
  * Navigate to each slide, optionally manipulate visibility, then screenshot
  * every target clip region and store the base64 result via onCapture.
  */
-async function rasterizeSlideTargets(page: Page, jobs: SlideRasterizeJob[]): Promise<void> {
+async function rasterizeSlideTargets(
+  page: Page,
+  jobs: SlideRasterizeJob[],
+): Promise<void> {
   if (jobs.length === 0) return
 
   for (const { slideIdx, targets, setup, teardown } of jobs) {
-    await page.evaluate((n: number) => { window.location.hash = '#' + n }, slideIdx + 1)
+    await page.evaluate((n: number) => {
+      window.location.hash = '#' + n
+    }, slideIdx + 1)
     await new Promise<void>((r) => setTimeout(r, NAVIGATION_SETTLE_MS))
 
     // If any target uses slide-relative coordinates, query the current
@@ -160,8 +174,9 @@ async function rasterizeSlideTargets(page: Page, jobs: SlideRasterizeJob[]): Pro
     let slideOriginY = 0
     if (targets.some((t) => t.slideRelative)) {
       const origin = await page.evaluate((n: number) => {
-        const sec = Array.from(document.querySelectorAll<HTMLElement>('section'))
-          .find((s) => s.getAttribute('data-marpit-pagination') === String(n))
+        const sec = Array.from(
+          document.querySelectorAll<HTMLElement>('section'),
+        ).find((s) => s.getAttribute('data-marpit-pagination') === String(n))
         if (!sec) return { x: 0, y: 0 }
         const r = sec.getBoundingClientRect()
         return { x: r.left, y: r.top }
@@ -183,16 +198,25 @@ async function rasterizeSlideTargets(page: Page, jobs: SlideRasterizeJob[]): Pro
           : clip
         if (effectiveClip.width <= 0 || effectiveClip.height <= 0) continue
         try {
-          const raw = await page.screenshot({ type: 'png', clip: effectiveClip })
-          onCapture('data:image/png;base64,' + Buffer.from(raw).toString('base64'))
-        } catch { /* skip — element may be off-screen */ }
+          const raw = await page.screenshot({
+            type: 'png',
+            clip: effectiveClip,
+          })
+          onCapture(
+            'data:image/png;base64,' + Buffer.from(raw).toString('base64'),
+          )
+        } catch {
+          /* skip — element may be off-screen */
+        }
       }
     } finally {
       if (teardown) await teardown(page, slideIdx)
     }
   }
 
-  await page.evaluate(() => { window.location.hash = '#1' })
+  await page.evaluate(() => {
+    window.location.hash = '#1'
+  })
   await new Promise<void>((r) => setTimeout(r, POST_RASTERIZE_SETTLE_MS))
 }
 
@@ -205,33 +229,53 @@ const ADVANCED_LAYERS_SELECTOR =
 
 async function hideAdvancedLayers(page: Page): Promise<void> {
   await page.evaluate((sel) => {
-    document.querySelectorAll(sel).forEach((el) =>
-      (el as HTMLElement).style.setProperty('visibility', 'hidden', 'important'))
+    document
+      .querySelectorAll(sel)
+      .forEach((el) =>
+        (el as HTMLElement).style.setProperty(
+          'visibility',
+          'hidden',
+          'important',
+        ),
+      )
   }, ADVANCED_LAYERS_SELECTOR)
 }
 
 async function restoreAdvancedLayers(page: Page): Promise<void> {
   await page.evaluate((sel) => {
-    document.querySelectorAll(sel).forEach((el) =>
-      (el as HTMLElement).style.removeProperty('visibility'))
+    document
+      .querySelectorAll(sel)
+      .forEach((el) => (el as HTMLElement).style.removeProperty('visibility'))
   }, ADVANCED_LAYERS_SELECTOR)
 }
 
-async function hideSectionChildren(page: Page, slideIdx: number): Promise<void> {
+async function hideSectionChildren(
+  page: Page,
+  slideIdx: number,
+): Promise<void> {
   await page.evaluate((n: number) => {
     const sec = document.querySelector(`section[data-marpit-pagination="${n}"]`)
     if (!sec) return
     Array.from(sec.children).forEach((el) =>
-      (el as HTMLElement).style.setProperty('visibility', 'hidden', 'important'))
+      (el as HTMLElement).style.setProperty(
+        'visibility',
+        'hidden',
+        'important',
+      ),
+    )
   }, slideIdx + 1)
 }
 
-async function restoreSectionChildren(page: Page, slideIdx: number): Promise<void> {
+async function restoreSectionChildren(
+  page: Page,
+  slideIdx: number,
+): Promise<void> {
   await page.evaluate((n: number) => {
     const sec = document.querySelector(`section[data-marpit-pagination="${n}"]`)
     if (!sec) return
     Array.from(sec.children).forEach((el) =>
-      (el as HTMLElement).style.removeProperty('visibility'))
+      (el as HTMLElement).style.removeProperty('visibility'),
+    )
   }, slideIdx + 1)
 }
 
@@ -243,21 +287,28 @@ function buildFilteredBgJobs(slides: SlideData[]): SlideRasterizeJob[] {
   return slides.flatMap((s, i): SlideRasterizeJob[] => {
     const bgs = (s.backgroundImages ?? []).filter((b) => b.cssFilter)
     if (bgs.length === 0) return []
-    return [{
-      slideIdx: i,
-      targets: bgs.map((bg): RasterizeTarget => ({
-        clip: {
-          x: Math.round(bg.x),
-          y: Math.round(bg.y),
-          width: Math.round(bg.width),
-          height: Math.round(bg.height),
-        },
-        slideRelative: true,
-        onCapture(dataUrl) { bg.url = dataUrl; delete bg.cssFilter },
-      })),
-      setup: (p) => hideAdvancedLayers(p),
-      teardown: (p) => restoreAdvancedLayers(p),
-    }]
+    return [
+      {
+        slideIdx: i,
+        targets: bgs.map(
+          (bg): RasterizeTarget => ({
+            clip: {
+              x: Math.round(bg.x),
+              y: Math.round(bg.y),
+              width: Math.round(bg.width),
+              height: Math.round(bg.height),
+            },
+            slideRelative: true,
+            onCapture(dataUrl) {
+              bg.url = dataUrl
+              delete bg.cssFilter
+            },
+          }),
+        ),
+        setup: (p) => hideAdvancedLayers(p),
+        teardown: (p) => restoreAdvancedLayers(p),
+      },
+    ]
   })
 }
 
@@ -265,20 +316,34 @@ function buildCssFallbackBgJobs(slides: SlideData[]): SlideRasterizeJob[] {
   return slides.flatMap((s, i): SlideRasterizeJob[] => {
     const bgs = (s.backgroundImages ?? []).filter((b) => b.fromCssFallback)
     if (bgs.length === 0) return []
-    return [{
-      slideIdx: i,
-      targets: bgs.map((bg): RasterizeTarget => ({
-        clip: { x: 0, y: 0, width: Math.round(s.width), height: Math.round(s.height) },
-        slideRelative: true,
-        onCapture(dataUrl) { bg.url = dataUrl; delete bg.fromCssFallback },
-      })),
-      setup: (p, idx) => hideSectionChildren(p, idx),
-      teardown: (p, idx) => restoreSectionChildren(p, idx),
-    }]
+    return [
+      {
+        slideIdx: i,
+        targets: bgs.map(
+          (bg): RasterizeTarget => ({
+            clip: {
+              x: 0,
+              y: 0,
+              width: Math.round(s.width),
+              height: Math.round(s.height),
+            },
+            slideRelative: true,
+            onCapture(dataUrl) {
+              bg.url = dataUrl
+              delete bg.fromCssFallback
+            },
+          }),
+        ),
+        setup: (p, idx) => hideSectionChildren(p, idx),
+        teardown: (p, idx) => restoreSectionChildren(p, idx),
+      },
+    ]
   })
 }
 
-function collectFilteredContentImages(elements: SlideElement[]): ImageElement[] {
+function collectFilteredContentImages(
+  elements: SlideElement[],
+): ImageElement[] {
   const result: ImageElement[] = []
   for (const el of elements ?? []) {
     if (el.type === 'image' && el.cssFilter) result.push(el)
@@ -289,23 +354,32 @@ function collectFilteredContentImages(elements: SlideElement[]): ImageElement[] 
   return result
 }
 
-function buildFilteredContentImageJobs(slides: SlideData[]): SlideRasterizeJob[] {
+function buildFilteredContentImageJobs(
+  slides: SlideData[],
+): SlideRasterizeJob[] {
   return slides.flatMap((s, i): SlideRasterizeJob[] => {
     const imgs = collectFilteredContentImages(s.elements)
     if (imgs.length === 0) return []
-    return [{
-      slideIdx: i,
-      targets: imgs.map((img): RasterizeTarget => ({
-        clip: {
-          x: Math.round(img.x),
-          y: Math.round(img.y),
-          width: Math.round(img.width),
-          height: Math.round(img.height),
-        },
-        slideRelative: true,
-        onCapture(dataUrl) { img.src = dataUrl; delete img.cssFilter },
-      })),
-    }]
+    return [
+      {
+        slideIdx: i,
+        targets: imgs.map(
+          (img): RasterizeTarget => ({
+            clip: {
+              x: Math.round(img.x),
+              y: Math.round(img.y),
+              width: Math.round(img.width),
+              height: Math.round(img.height),
+            },
+            slideRelative: true,
+            onCapture(dataUrl) {
+              img.src = dataUrl
+              delete img.cssFilter
+            },
+          }),
+        ),
+      },
+    ]
   })
 }
 
@@ -324,19 +398,26 @@ function buildRasterizeImageJobs(slides: SlideData[]): SlideRasterizeJob[] {
   return slides.flatMap((s, i): SlideRasterizeJob[] => {
     const imgs = collectRasterizeImages(s.elements)
     if (imgs.length === 0) return []
-    return [{
-      slideIdx: i,
-      targets: imgs.map((img): RasterizeTarget => ({
-        clip: {
-          x: Math.round(img.x),
-          y: Math.round(img.y),
-          width: Math.round(img.width),
-          height: Math.round(img.height),
-        },
-        slideRelative: true,
-        onCapture(dataUrl) { img.src = dataUrl; delete img.rasterize },
-      })),
-    }]
+    return [
+      {
+        slideIdx: i,
+        targets: imgs.map(
+          (img): RasterizeTarget => ({
+            clip: {
+              x: Math.round(img.x),
+              y: Math.round(img.y),
+              width: Math.round(img.width),
+              height: Math.round(img.height),
+            },
+            slideRelative: true,
+            onCapture(dataUrl) {
+              img.src = dataUrl
+              delete img.rasterize
+            },
+          }),
+        ),
+      },
+    ]
   })
 }
 
@@ -367,20 +448,26 @@ function buildPartialBgJobs(slides: SlideData[]): SlideRasterizeJob[] {
       return !isFullSlide
     })
     if (bgs.length === 0) return []
-    return [{
-      slideIdx: i,
-      targets: bgs.map((bg): RasterizeTarget => ({
-        clip: {
-          x: Math.round(bg.x),
-          y: Math.round(bg.y),
-          width: Math.round(bg.width),
-          height: Math.round(bg.height),
-        },
-        slideRelative: true,
-        onCapture(dataUrl) { bg.url = dataUrl },
-      })),
-      setup: (p) => hideAdvancedLayers(p),
-      teardown: (p) => restoreAdvancedLayers(p),
-    }]
+    return [
+      {
+        slideIdx: i,
+        targets: bgs.map(
+          (bg): RasterizeTarget => ({
+            clip: {
+              x: Math.round(bg.x),
+              y: Math.round(bg.y),
+              width: Math.round(bg.width),
+              height: Math.round(bg.height),
+            },
+            slideRelative: true,
+            onCapture(dataUrl) {
+              bg.url = dataUrl
+            },
+          }),
+        ),
+        setup: (p) => hideAdvancedLayers(p),
+        teardown: (p) => restoreAdvancedLayers(p),
+      },
+    ]
   })
 }

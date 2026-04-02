@@ -6,10 +6,21 @@ for (let si = 0; si < j.length; si++) {
   function findTables(elements, prefix) {
     for (const e of elements) {
       if (e.type === 'table') {
-        console.log(prefix + 'Slide ' + (si + 1) + ': table ' + e.rows.length + ' rows')
+        console.log(
+          prefix + 'Slide ' + (si + 1) + ': table ' + e.rows.length + ' rows',
+        )
         e.rows.forEach((r, ri) => {
           r.cells.forEach((c, ci) => {
-            console.log('  [' + ri + ',' + ci + '] text="' + c.text.substring(0, 50).replace(/\n/g, '\\n') + '" runs=' + c.runs.length)
+            console.log(
+              '  [' +
+                ri +
+                ',' +
+                ci +
+                '] text="' +
+                c.text.substring(0, 50).replace(/\n/g, '\\n') +
+                '" runs=' +
+                c.runs.length,
+            )
           })
         })
       }
@@ -28,9 +39,22 @@ for (let si = 0; si < j.length; si++) {
   function findLists(elements, prefix) {
     for (const e of elements) {
       if (e.type === 'list') {
-        console.log(prefix + 'Slide ' + (si + 1) + ': list ' + (e.ordered ? 'OL' : 'UL') + ' ' + e.items.length + ' items')
+        console.log(
+          prefix +
+            'Slide ' +
+            (si + 1) +
+            ': list ' +
+            (e.ordered ? 'OL' : 'UL') +
+            ' ' +
+            e.items.length +
+            ' items',
+        )
         e.items.forEach((it, ii) => {
-          const txt = it.runs.map(r => r.text).join('').substring(0, 50).replace(/\n/g, '\\n')
+          const txt = it.runs
+            .map((r) => r.text)
+            .join('')
+            .substring(0, 50)
+            .replace(/\n/g, '\\n')
           console.log('  [' + ii + '] level=' + it.level + ' "' + txt + '"')
         })
       }

@@ -1,6 +1,16 @@
 ﻿import { fileURLToPath } from 'node:url'
-import { buildPptx, placeElement, toTextProps, toListTextProps } from './slide-builder'
-import type { SlideData, HeadingElement, ListElement, ImageElement } from './types'
+import {
+  buildPptx,
+  placeElement,
+  toTextProps,
+  toListTextProps,
+} from './slide-builder'
+import type {
+  SlideData,
+  HeadingElement,
+  ListElement,
+  ImageElement,
+} from './types'
 
 // pptxgenjs creates a real object; we spy on its methods to verify calls.
 // We do NOT jest.mock('pptxgenjs') so that buildPptx() internally
@@ -458,7 +468,8 @@ describe('placeElement — image', () => {
   })
 
   it('handles data: URI without error', () => {
-    const dataUri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+    const dataUri =
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
     const pptx = buildSlideWithImage(dataUri)
     expect(pptx).toBeDefined()
   })
@@ -492,7 +503,15 @@ describe('buildPptx — background handling', () => {
   it('handles background image without error', () => {
     const slide: SlideData = {
       ...minimalSlide,
-      backgroundImages: [{ url: 'https://example.com/bg.png', x: 0, y: 0, width: 1280, height: 720 }],
+      backgroundImages: [
+        {
+          url: 'https://example.com/bg.png',
+          x: 0,
+          y: 0,
+          width: 1280,
+          height: 720,
+        },
+      ],
     }
     const pptx = buildPptx([slide])
     expect(pptx).toBeDefined()
@@ -501,7 +520,15 @@ describe('buildPptx — background handling', () => {
   it('handles data: URI background image without error', () => {
     const slide: SlideData = {
       ...minimalSlide,
-      backgroundImages: [{ url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==', x: 0, y: 0, width: 1280, height: 720 }],
+      backgroundImages: [
+        {
+          url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==',
+          x: 0,
+          y: 0,
+          width: 1280,
+          height: 720,
+        },
+      ],
     }
     const pptx = buildPptx([slide])
     expect(pptx).toBeDefined()
@@ -529,7 +556,14 @@ describe('placeElement — table with transparent cells', () => {
               cells: [
                 {
                   text: 'Header',
-                  runs: [{ text: 'Header', color: 'rgb(0, 0, 0)', fontSize: 16, bold: true }],
+                  runs: [
+                    {
+                      text: 'Header',
+                      color: 'rgb(0, 0, 0)',
+                      fontSize: 16,
+                      bold: true,
+                    },
+                  ],
                   isHeader: true,
                   style: {
                     color: 'rgb(0, 0, 0)',
@@ -684,7 +718,12 @@ describe('placeElement — code with syntax runs', () => {
           text: 'const x = 1;',
           language: 'javascript',
           runs: [
-            { text: 'const', color: 'rgb(198, 120, 221)', fontSize: 14, bold: true },
+            {
+              text: 'const',
+              color: 'rgb(198, 120, 221)',
+              fontSize: 14,
+              bold: true,
+            },
             { text: ' x = ', color: 'rgb(200, 200, 200)', fontSize: 14 },
             { text: '1', color: 'rgb(209, 154, 102)', fontSize: 14 },
             { text: ';', color: 'rgb(200, 200, 200)', fontSize: 14 },
@@ -820,7 +859,9 @@ describe('placeElement — heading border-left text offset', () => {
     const el: any = {
       type: 'heading',
       level: 2,
-      runs: [{ text: 'Section heading', color: 'rgb(41,128,185)', fontSize: 30 }],
+      runs: [
+        { text: 'Section heading', color: 'rgb(41,128,185)', fontSize: 30 },
+      ],
       x: 70,
       y: 52,
       width: 1140,
@@ -843,7 +884,9 @@ describe('placeElement — heading border-left text offset', () => {
     const el: any = {
       type: 'heading',
       level: 2,
-      runs: [{ text: 'Section heading', color: 'rgb(41,128,185)', fontSize: 30 }],
+      runs: [
+        { text: 'Section heading', color: 'rgb(41,128,185)', fontSize: 30 },
+      ],
       x: 70,
       y: 52,
       width: 1140,
@@ -853,8 +896,10 @@ describe('placeElement — heading border-left text offset', () => {
     }
     placeElement(mockSlide, el, 1280, 720)
 
-    const addShapeOrder = (mockSlide.addShape as jest.Mock).mock.invocationCallOrder[0]
-    const addTextOrder = (mockSlide.addText as jest.Mock).mock.invocationCallOrder[0]
+    const addShapeOrder = (mockSlide.addShape as jest.Mock).mock
+      .invocationCallOrder[0]
+    const addTextOrder = (mockSlide.addText as jest.Mock).mock
+      .invocationCallOrder[0]
     // shape (border bar) must be drawn before text so text renders on top
     expect(addShapeOrder).toBeLessThan(addTextOrder)
   })
@@ -981,8 +1026,19 @@ describe('placeElement — lineSpacingMultiple from CSS line-height', () => {
     const el: any = {
       type: 'paragraph',
       // CJK text intentionally used to test font rendering path
-      runs: [{ text: 'Test', color: 'rgb(0,0,0)', fontSize: 16, fontFamily: 'Arial', bold: false }],
-      x: 0, y: 0, width: 600, height: 40,
+      runs: [
+        {
+          text: 'Test',
+          color: 'rgb(0,0,0)',
+          fontSize: 16,
+          fontFamily: 'Arial',
+          bold: false,
+        },
+      ],
+      x: 0,
+      y: 0,
+      width: 600,
+      height: 40,
       style: { ...baseStyle, fontSize: 16, lineHeight: 24 }, // 24/16 = 1.5
     }
     placeElement(mockSlide, el, 1280, 720)
@@ -995,8 +1051,19 @@ describe('placeElement — lineSpacingMultiple from CSS line-height', () => {
     const el: any = {
       type: 'heading',
       level: 2,
-      runs: [{ text: 'Heading', color: 'rgb(0,0,0)', fontSize: 32, fontFamily: 'Arial', bold: true }],
-      x: 0, y: 0, width: 600, height: 60,
+      runs: [
+        {
+          text: 'Heading',
+          color: 'rgb(0,0,0)',
+          fontSize: 32,
+          fontFamily: 'Arial',
+          bold: true,
+        },
+      ],
+      x: 0,
+      y: 0,
+      width: 600,
+      height: 60,
       style: { ...baseStyle, fontSize: 32, lineHeight: 40 }, // 40/32 = 1.25
     }
     placeElement(mockSlide, el, 1280, 720)
@@ -1009,8 +1076,25 @@ describe('placeElement — lineSpacingMultiple from CSS line-height', () => {
     const el: any = {
       type: 'list',
       ordered: false,
-      items: [{ text: 'item', level: 0, runs: [{ text: 'item', color: 'rgb(0,0,0)', fontSize: 16, fontFamily: 'Arial', bold: false }] }],
-      x: 0, y: 0, width: 600, height: 40,
+      items: [
+        {
+          text: 'item',
+          level: 0,
+          runs: [
+            {
+              text: 'item',
+              color: 'rgb(0,0,0)',
+              fontSize: 16,
+              fontFamily: 'Arial',
+              bold: false,
+            },
+          ],
+        },
+      ],
+      x: 0,
+      y: 0,
+      width: 600,
+      height: 40,
       style: { ...baseStyle, fontSize: 16, lineHeight: 22 }, // 22/16 = 1.375
     }
     placeElement(mockSlide, el, 1280, 720)
@@ -1022,8 +1106,19 @@ describe('placeElement — lineSpacingMultiple from CSS line-height', () => {
     const mockSlide = makeMockSlide() as any
     const el: any = {
       type: 'paragraph',
-      runs: [{ text: 'Test', color: 'rgb(0,0,0)', fontSize: 16, fontFamily: 'Arial', bold: false }],
-      x: 0, y: 0, width: 600, height: 40,
+      runs: [
+        {
+          text: 'Test',
+          color: 'rgb(0,0,0)',
+          fontSize: 16,
+          fontFamily: 'Arial',
+          bold: false,
+        },
+      ],
+      x: 0,
+      y: 0,
+      width: 600,
+      height: 40,
       style: { ...baseStyle, fontSize: 16, lineHeight: 0 }, // lineHeight=0 → undefined
     }
     placeElement(mockSlide, el, 1280, 720)
@@ -1052,16 +1147,32 @@ describe('placeElement — container child highlight strip', () => {
     const childParagraph: any = {
       type: 'paragraph',
       runs: [
-        { text: 'same color', color: 'rgb(0,0,0)', fontSize: 16, backgroundColor: 'rgb(52,152,219)' },
-        { text: 'different', color: 'rgb(0,0,0)', fontSize: 16, backgroundColor: 'rgb(241,196,15)' },
+        {
+          text: 'same color',
+          color: 'rgb(0,0,0)',
+          fontSize: 16,
+          backgroundColor: 'rgb(52,152,219)',
+        },
+        {
+          text: 'different',
+          color: 'rgb(0,0,0)',
+          fontSize: 16,
+          backgroundColor: 'rgb(241,196,15)',
+        },
       ],
-      x: 80, y: 100, width: 400, height: 30,
+      x: 80,
+      y: 100,
+      width: 400,
+      height: 30,
       style: { textAlign: 'left', fontSize: 16, lineHeight: 0 },
     }
     const el: any = {
       type: 'container',
       children: [childParagraph],
-      x: 70, y: 90, width: 500, height: 200,
+      x: 70,
+      y: 90,
+      width: 500,
+      height: 200,
       style: { backgroundColor: 'rgb(52, 152, 219)' },
     }
     placeElement(mockSlide, el, 1280, 720)
@@ -1077,15 +1188,26 @@ describe('placeElement — container child highlight strip', () => {
     const childParagraph: any = {
       type: 'paragraph',
       runs: [
-        { text: 'highlighted', color: 'rgb(0,0,0)', fontSize: 16, backgroundColor: 'rgb(241,196,15)' },
+        {
+          text: 'highlighted',
+          color: 'rgb(0,0,0)',
+          fontSize: 16,
+          backgroundColor: 'rgb(241,196,15)',
+        },
       ],
-      x: 80, y: 100, width: 400, height: 30,
+      x: 80,
+      y: 100,
+      width: 400,
+      height: 30,
       style: { textAlign: 'left', fontSize: 16, lineHeight: 0 },
     }
     const el: any = {
       type: 'container',
       children: [childParagraph],
-      x: 70, y: 90, width: 500, height: 200,
+      x: 70,
+      y: 90,
+      width: 500,
+      height: 200,
       style: { backgroundColor: 'transparent' },
     }
     placeElement(mockSlide, el, 1280, 720)

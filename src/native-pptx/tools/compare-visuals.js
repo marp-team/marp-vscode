@@ -18,14 +18,24 @@ const { pathToFileURL } = require('url')
 
 /** Auto-detect Chrome/Chromium on the host system. */
 function findChrome() {
-  const { computeSystemExecutablePath, Browser, ChromeReleaseChannel } = require('@puppeteer/browsers')
+  const {
+    computeSystemExecutablePath,
+    Browser,
+    ChromeReleaseChannel,
+  } = require('@puppeteer/browsers')
   const platforms = { win32: 'win64', darwin: 'mac', linux: 'linux' }
   const platform = platforms[process.platform]
   if (!platform) return undefined
   try {
-    const p = computeSystemExecutablePath({ browser: Browser.CHROME, platform, channel: ChromeReleaseChannel.STABLE })
+    const p = computeSystemExecutablePath({
+      browser: Browser.CHROME,
+      platform,
+      channel: ChromeReleaseChannel.STABLE,
+    })
     if (fs.existsSync(p)) return p
-  } catch { /* not found */ }
+  } catch {
+    /* not found */
+  }
   return undefined
 }
 
@@ -37,10 +47,19 @@ async function main() {
   const pptxPath = path.resolve(process.argv[3])
   const chromePath = process.argv[4] ?? process.env.CHROME_PATH ?? findChrome()
 
-  if (!fs.existsSync(htmlPath)) { console.error('HTML not found:', htmlPath); process.exit(1) }
-  if (!fs.existsSync(pptxPath)) { console.error('PPTX not found:', pptxPath); process.exit(1) }
+  if (!fs.existsSync(htmlPath)) {
+    console.error('HTML not found:', htmlPath)
+    process.exit(1)
+  }
+  if (!fs.existsSync(pptxPath)) {
+    console.error('PPTX not found:', pptxPath)
+    process.exit(1)
+  }
 
-  const outDir = path.join(path.dirname(htmlPath), 'compare-' + path.basename(htmlPath, '.html'))
+  const outDir = path.join(
+    path.dirname(htmlPath),
+    'compare-' + path.basename(htmlPath, '.html'),
+  )
   fs.mkdirSync(outDir, { recursive: true })
   console.log('Output dir:', outDir)
 
@@ -49,7 +68,12 @@ async function main() {
   const browser = await puppeteer.launch({
     executablePath: chromePath,
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+    ],
   })
 
   let htmlSlideCount = 0
@@ -59,23 +83,26 @@ async function main() {
     await page.goto(pathToFileURL(htmlPath).href, { waitUntil: 'networkidle0' })
 
     // Let bespoke.js finish initializing
-    await new Promise(r => setTimeout(r, 500))
+    await new Promise((r) => setTimeout(r, 500))
 
     // Force all bespoke fragments visible so screenshots show full slide content
     await page.addStyleTag({
-      content: '[data-bespoke-marp-fragment=inactive]{visibility:visible!important;opacity:1!important}',
+      content:
+        '[data-bespoke-marp-fragment=inactive]{visibility:visible!important;opacity:1!important}',
     })
     // Hide bespoke On-Screen Controller (navigation arrows/buttons) so they
     // never appear in screenshots. No-op for static non-bespoke HTMLs.
     await page.addStyleTag({
-      content: '[data-bespoke-marp-osc]{display:none!important}.bespoke-marp-osc{display:none!important}',
+      content:
+        '[data-bespoke-marp-osc]{display:none!important}.bespoke-marp-osc{display:none!important}',
     })
 
     // Count slides via bespoke or fallback DOM query
     const slideCount = await page.evaluate(() => {
-      if (window.bespoke && window.bespoke.slides) return window.bespoke.slides.length
+      if (window.bespoke && window.bespoke.slides)
+        return window.bespoke.slides.length
       const svgSections = document.querySelectorAll(
-        'svg[data-marpit-svg] foreignobject section:not([data-marpit-advanced-background])'
+        'svg[data-marpit-svg] foreignobject section:not([data-marpit-advanced-background])',
       )
       if (svgSections.length > 0) return svgSections.length
       return document.querySelectorAll('section[data-marpit-pagination]').length
@@ -86,16 +113,23 @@ async function main() {
 
     for (let i = 0; i < slideCount; i++) {
       // Navigate directly to slide N via URL hash — skips fragment animation offsets
-      await page.evaluate(n => { window.location.hash = '#' + n }, i + 1)
+      await page.evaluate((n) => {
+        window.location.hash = '#' + n
+      }, i + 1)
       // Wait for hash navigation to settle
-      await new Promise(r => setTimeout(r, 300))
+      await new Promise((r) => setTimeout(r, 300))
 
-      const slidePng = path.join(outDir, `html-slide-${String(i + 1).padStart(3, '0')}.png`)
-      await page.screenshot({ path: slidePng, clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT } })
+      const slidePng = path.join(
+        outDir,
+        `html-slide-${String(i + 1).padStart(3, '0')}.png`,
+      )
+      await page.screenshot({
+        path: slidePng,
+        clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+      })
       process.stdout.write(`  HTML slide ${i + 1}/${slideCount} saved\r`)
     }
     console.log('\n  HTML slides done.')
-
   } finally {
     await browser.close()
   }
@@ -133,15 +167,23 @@ try {
 `
   fs.writeFileSync(psScriptPath, psScript, 'utf-8')
 
-  const psResult = spawnSync('powershell', [
-    '-ExecutionPolicy', 'Bypass',
-    '-File', psScriptPath,
-    '-PptxPath', pptxPath,
-    '-OutDir', outDir,
-  ], {
-    encoding: 'utf-8',
-    timeout: 300000,  // 5 minutes (increased from 2 min for large decks)
-  })
+  const psResult = spawnSync(
+    'powershell',
+    [
+      '-ExecutionPolicy',
+      'Bypass',
+      '-File',
+      psScriptPath,
+      '-PptxPath',
+      pptxPath,
+      '-OutDir',
+      outDir,
+    ],
+    {
+      encoding: 'utf-8',
+      timeout: 300000, // 5 minutes (increased from 2 min for large decks)
+    },
+  )
   if (psResult.stdout) console.log(psResult.stdout)
   if (psResult.stderr) console.error('  PS STDERR:', psResult.stderr)
 
@@ -160,11 +202,17 @@ try {
    * the content is entirely correct.  7.5% is calibrated to the observed
    * font-metric noise floor; anything above it indicates a real layout defect.
    */
-  const FAIL_THRESHOLD = 0.075  // >7.5% different pixels → FAIL (content defect)
-  const WARN_THRESHOLD = 0.01   // >1% → WARN (font rendering noise)
+  const FAIL_THRESHOLD = 0.075 // >7.5% different pixels → FAIL (content defect)
+  const WARN_THRESHOLD = 0.01 // >1% → WARN (font rendering noise)
 
-  const htmlSlides = fs.readdirSync(outDir).filter(f => f.startsWith('html-slide-')).sort()
-  const pptxSlides = fs.readdirSync(outDir).filter(f => f.startsWith('pptx-slide-')).sort()
+  const htmlSlides = fs
+    .readdirSync(outDir)
+    .filter((f) => f.startsWith('html-slide-'))
+    .sort()
+  const pptxSlides = fs
+    .readdirSync(outDir)
+    .filter((f) => f.startsWith('pptx-slide-'))
+    .sort()
 
   const maxSlides = Math.max(htmlSlides.length, pptxSlides.length)
   if (maxSlides === 0) {
@@ -199,15 +247,19 @@ try {
       const diff = new PNG({ width: w, height: h })
 
       // Crop to common size if needed
-      let data1 = img1.data, data2 = img2.data
+      let data1 = img1.data,
+        data2 = img2.data
       if (img1.width !== w || img1.height !== h) {
         // Reallocate with correct size
         const tmp = new PNG({ width: w, height: h })
         for (let y = 0; y < h; y++)
           for (let x = 0; x < w; x++) {
-            const s = (y * img1.width + x) * 4, d = (y * w + x) * 4
-            tmp.data[d] = img1.data[s]; tmp.data[d+1] = img1.data[s+1]
-            tmp.data[d+2] = img1.data[s+2]; tmp.data[d+3] = img1.data[s+3]
+            const s = (y * img1.width + x) * 4,
+              d = (y * w + x) * 4
+            tmp.data[d] = img1.data[s]
+            tmp.data[d + 1] = img1.data[s + 1]
+            tmp.data[d + 2] = img1.data[s + 2]
+            tmp.data[d + 3] = img1.data[s + 3]
           }
         data1 = tmp.data
       }
@@ -215,20 +267,32 @@ try {
         const tmp = new PNG({ width: w, height: h })
         for (let y = 0; y < h; y++)
           for (let x = 0; x < w; x++) {
-            const s = (y * img2.width + x) * 4, d = (y * w + x) * 4
-            tmp.data[d] = img2.data[s]; tmp.data[d+1] = img2.data[s+1]
-            tmp.data[d+2] = img2.data[s+2]; tmp.data[d+3] = img2.data[s+3]
+            const s = (y * img2.width + x) * 4,
+              d = (y * w + x) * 4
+            tmp.data[d] = img2.data[s]
+            tmp.data[d + 1] = img2.data[s + 1]
+            tmp.data[d + 2] = img2.data[s + 2]
+            tmp.data[d + 3] = img2.data[s + 3]
           }
         data2 = tmp.data
       }
 
-      const numDiff = pixelmatch(data1, data2, diff.data, w, h, { threshold: 0.1 })
+      const numDiff = pixelmatch(data1, data2, diff.data, w, h, {
+        threshold: 0.1,
+      })
       const diffPct = numDiff / (w * h)
-      const status = diffPct > FAIL_THRESHOLD ? 'FAIL' : diffPct > WARN_THRESHOLD ? 'WARN' : 'OK'
+      const status =
+        diffPct > FAIL_THRESHOLD
+          ? 'FAIL'
+          : diffPct > WARN_THRESHOLD
+            ? 'WARN'
+            : 'OK'
 
       fs.writeFileSync(diffImgPath, PNG.sync.write(diff))
       slideResults.push({ n, status, diffPct })
-      process.stdout.write(`  Slide ${pad}: ${status} (${(diffPct * 100).toFixed(2)}% diff)\n`)
+      process.stdout.write(
+        `  Slide ${pad}: ${status} (${(diffPct * 100).toFixed(2)}% diff)\n`,
+      )
     } catch (e) {
       slideResults.push({ n, status: 'FAIL', diffPct: 1 })
       console.warn(`  Slide ${pad}: pixel diff failed — ${e.message}`)
@@ -236,26 +300,43 @@ try {
   }
 
   // Print summary
-  const fails = slideResults.filter(r => r.status === 'FAIL')
-  const warns = slideResults.filter(r => r.status === 'WARN')
-  const oks   = slideResults.filter(r => r.status === 'OK')
+  const fails = slideResults.filter((r) => r.status === 'FAIL')
+  const warns = slideResults.filter((r) => r.status === 'WARN')
+  const oks = slideResults.filter((r) => r.status === 'OK')
   console.log(`\n=== DIFF SUMMARY ===`)
-  console.log(`  FAIL: ${fails.length}  WARN: ${warns.length}  OK: ${oks.length}  MISSING: ${slideResults.filter(r=>r.status==='MISSING').length}`)
-  if (fails.length > 0) console.log(`  FAILed slides: ${fails.map(r => r.n).join(', ')}`)
-  if (warns.length > 0) console.log(`  WARNed slides: ${warns.map(r => r.n).join(', ')}`)
+  console.log(
+    `  FAIL: ${fails.length}  WARN: ${warns.length}  OK: ${oks.length}  MISSING: ${slideResults.filter((r) => r.status === 'MISSING').length}`,
+  )
+  if (fails.length > 0)
+    console.log(`  FAILed slides: ${fails.map((r) => r.n).join(', ')}`)
+  if (warns.length > 0)
+    console.log(`  WARNed slides: ${warns.map((r) => r.n).join(', ')}`)
 
   // Generate an HTML comparison report
-  const STATUS_COLOR = { FAIL: '#f44', WARN: '#fa0', OK: '#4c4', MISSING: '#aaa' }
+  const STATUS_COLOR = {
+    FAIL: '#f44',
+    WARN: '#fa0',
+    OK: '#4c4',
+    MISSING: '#aaa',
+  }
   const rows = []
   for (let i = 0; i < maxSlides; i++) {
     const n = i + 1
     const pad = String(n).padStart(3, '0')
     const htmlImg = htmlSlides[i] ? `html-slide-${pad}.png` : null
     const pptxImg = pptxSlides[i] ? `pptx-slide-${pad}.png` : null
-    const diffImg = fs.existsSync(path.join(outDir, `diff-slide-${pad}.png`)) ? `diff-slide-${pad}.png` : null
-    const result = slideResults.find(r => r.n === n) ?? { status: 'MISSING', diffPct: 1 }
+    const diffImg = fs.existsSync(path.join(outDir, `diff-slide-${pad}.png`))
+      ? `diff-slide-${pad}.png`
+      : null
+    const result = slideResults.find((r) => r.n === n) ?? {
+      status: 'MISSING',
+      diffPct: 1,
+    }
     const bgColor = STATUS_COLOR[result.status]
-    const diffLabel = result.status === 'MISSING' ? 'MISSING' : `${result.status} (${(result.diffPct * 100).toFixed(2)}%)`
+    const diffLabel =
+      result.status === 'MISSING'
+        ? 'MISSING'
+        : `${result.status} (${(result.diffPct * 100).toFixed(2)}%)`
     rows.push(`
     <tr>
       <td style="padding:4px;font-weight:bold;vertical-align:middle;background:${bgColor};color:#fff;text-align:center">
@@ -304,8 +385,8 @@ try {
   <span class="badge FAIL">FAIL ${fails.length}</span>
   <span class="badge WARN">WARN ${warns.length}</span>
   <span class="badge OK">OK ${oks.length}</span>
-  ${fails.length > 0 ? `<br><strong>Failed slides:</strong> ${fails.map(r => `<a href="#slide-${r.n}">${r.n}</a>`).join(', ')}` : ''}
-  ${warns.length > 0 ? `<br><strong>Warning slides:</strong> ${warns.map(r => `<a href="#slide-${r.n}">${r.n}</a>`).join(', ')}` : ''}
+  ${fails.length > 0 ? `<br><strong>Failed slides:</strong> ${fails.map((r) => `<a href="#slide-${r.n}">${r.n}</a>`).join(', ')}` : ''}
+  ${warns.length > 0 ? `<br><strong>Warning slides:</strong> ${warns.map((r) => `<a href="#slide-${r.n}">${r.n}</a>`).join(', ')}` : ''}
 </div>
 <table>
   <thead>
@@ -326,10 +407,15 @@ try {
   const reportPath = path.join(outDir, 'compare-report.html')
   fs.writeFileSync(reportPath, reportHtml, 'utf-8')
   console.log('\nComparison report:', reportPath)
-  console.log(`  ${maxSlides} slides compared (HTML: ${htmlSlides.length}, PPTX: ${pptxSlides.length})`)
+  console.log(
+    `  ${maxSlides} slides compared (HTML: ${htmlSlides.length}, PPTX: ${pptxSlides.length})`,
+  )
 
   // Exit with non-zero code if any FAIL so CI/loops can detect regressions
   if (fails.length > 0) process.exit(1)
 }
 
-main().catch(e => { console.error(e); process.exit(1) })
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})
