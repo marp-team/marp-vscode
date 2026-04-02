@@ -10,9 +10,9 @@
  * standalone IIFE that can be safely injected into any browser context.
  * The compiled code is embedded as a string constant in a TypeScript module.
  */
+const fs = require('node:fs')
+const path = require('node:path')
 const esbuild = require('esbuild')
-const fs = require('fs')
-const path = require('path')
 
 const result = esbuild.buildSync({
   entryPoints: [path.resolve(__dirname, '../dom-walker.ts')],

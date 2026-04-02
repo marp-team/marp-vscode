@@ -1,8 +1,8 @@
 const pixelmatchMod = require('pixelmatch')
 const pixelmatch = pixelmatchMod.default || pixelmatchMod
 const { PNG } = require('pngjs')
-const fs = require('fs')
-const path = require('path')
+const fs = require('node:fs')
+const path = require('node:path')
 const FAIL_T = 0.075,
   WARN_T = 0.01 // 7.5%: font-metric noise floor for HTML→PPTX
 const dir = 'C:/Temp/compare-test-pptx-export'

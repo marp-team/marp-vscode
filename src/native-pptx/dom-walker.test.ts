@@ -1,6 +1,6 @@
-﻿// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-const { JSDOM } = require('jsdom')
+﻿ 
 import { extractSlides } from './dom-walker'
+const { JSDOM } = require('jsdom')
 
 // ---------------------------------------------------------------------------
 // Manual JSDOM setup (jest-environment-jsdom hangs with jest 30 + node 22)
@@ -72,7 +72,7 @@ const defaultStyles: Record<string, string> = {
  * specified elements. Other elements fall through to the original implementation.
  */
 function mockStyles(
-  mappings: Array<[Element, Record<string, string>]>,
+  mappings: [Element, Record<string, string>][],
 ): () => void {
   const original = globalThis.getComputedStyle
   const map = new Map<Element, CSSStyleDeclaration>()

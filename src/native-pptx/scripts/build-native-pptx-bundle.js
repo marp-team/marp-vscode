@@ -10,8 +10,8 @@
  * (puppeteer-core, pptxgenjs) are kept external so they resolve from
  * node_modules at runtime.
  */
+const path = require('node:path')
 const esbuild = require('esbuild')
-const path = require('path')
 
 esbuild.buildSync({
   entryPoints: [path.resolve(__dirname, '../index.ts')],

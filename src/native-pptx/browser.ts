@@ -16,7 +16,7 @@ import {
  * @param explicitPath - An explicit path to a browser binary (overrides detection)
  */
 export function detectBrowserPath(
-  preference: string = 'auto',
+  preference = 'auto',
   explicitPath?: string,
 ): string | undefined {
   if (explicitPath && existsSync(explicitPath)) return explicitPath
@@ -24,7 +24,7 @@ export function detectBrowserPath(
   const platform = detectPlatform()
   if (!platform) return undefined
 
-  const candidates: Array<{ browser: Browser; channel: ChromeReleaseChannel }> =
+  const candidates: { browser: Browser; channel: ChromeReleaseChannel }[] =
     []
 
   if (preference === 'chrome' || preference === 'auto') {

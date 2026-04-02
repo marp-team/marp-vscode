@@ -11,10 +11,10 @@
  *   compare-NNN.png     — side-by-side diff image (HTML left | PPTX right)
  *   compare-report.md   — textual summary of diff areas
  */
-const path = require('path')
-const fs = require('fs')
-const { execSync, spawnSync } = require('child_process')
-const { pathToFileURL } = require('url')
+const { execSync, spawnSync } = require('node:child_process')
+const fs = require('node:fs')
+const path = require('node:path')
+const { pathToFileURL } = require('node:url')
 
 /** Auto-detect Chrome/Chromium on the host system. */
 function findChrome() {

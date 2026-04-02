@@ -12,8 +12,8 @@
  * lives in src/native-pptx/ and is bundled into lib/native-pptx.cjs by
  * src/native-pptx/scripts/build-native-pptx-bundle.js.
  */
-const path = require('path')
-const fs = require('fs')
+const fs = require('node:fs')
+const path = require('node:path')
 
 /** Auto-detect Chrome/Chromium on the host system. */
 function findChrome() {

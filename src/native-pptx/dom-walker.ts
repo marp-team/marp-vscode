@@ -319,7 +319,7 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
   // -----------------------------------------------------------------
   // Helper: extract list items recursively
   // -----------------------------------------------------------------
-  function extractListItems(list: Element, level: number = 0): ListItem[] {
+  function extractListItems(list: Element, level = 0): ListItem[] {
     const items: ListItem[] = []
 
     for (const child of Array.from(list.children)) {
@@ -438,7 +438,7 @@ export function extractSlides(root: ParentNode = document): SlideData[] {
     colWidths: number[]
   } {
     const rows: TableRow[] = []
-    let colWidths: number[] = []
+    const colWidths: number[] = []
 
     for (const tr of Array.from(table.querySelectorAll('tr'))) {
       const cells: TableCell[] = []

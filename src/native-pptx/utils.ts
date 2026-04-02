@@ -162,6 +162,7 @@ export function sanitizeText(text: string): string {
   // NOTE: U+200D (Zero Width Joiner) is intentionally preserved because it composes
   // multi-codepoint emoji sequences (e.g. 🧑\u200D💻 → 🧑‍💻). Stripping it splits
   // the sequence into two separate glyphs in the PPTX output.
+  // eslint-disable-next-line no-control-regex
   return text.replace(
     /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\u200B\u200C\u2060]/g,
     '',

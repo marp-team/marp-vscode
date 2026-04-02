@@ -1,4 +1,4 @@
-const j = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf-8'))
+const j = JSON.parse(require('node:fs').readFileSync(process.argv[2], 'utf-8'))
 
 // Tables
 for (let si = 0; si < j.length; si++) {

@@ -11,9 +11,9 @@
  * This script runs the DOM walker in Chrome outside of VS Code,
  * allowing quick iteration on fidelity improvements.
  */
-const path = require('path')
-const fs = require('fs')
-const { pathToFileURL } = require('url')
+const fs = require('node:fs')
+const path = require('node:path')
+const { pathToFileURL } = require('node:url')
 
 async function main() {
   const htmlPath = process.argv[2]
