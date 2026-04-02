@@ -256,9 +256,28 @@ It is helpful for identifying some potential presentation issues, such as croppe
 
 ### [`markdown.marp.pptx.editable`](https://github.com/marp-team/marp-vscode/pull/489)
 
-You can enable the experimental feature to export PPTX with editable contents, based on [Marp CLI's corresponding experimental option](https://github.com/marp-team/marp-cli#experimental-generate-editable-pptx---pptx-editable). This feature requires to install both of the compatible browser and [LibreOffice Impress](https://www.libreoffice.org/).
+You can enable the experimental feature to export PPTX with editable contents, based on [Marp CLI's corresponding experimental option](https://github.com/marp-team/marp-cli#experimental-generate-editable-pptx---pptx-editable). When set to anything other than `off`, exporting to `.pptx` produces an editable file with selectable text, tables, and images instead of slide images.
 
-If set this setting as `smart`, Marp for VS Code will try to export into editable PPTX first, and then fall back to the regular PPTX export (non-editable) if failed.
+| Value | Engine | Requirements |
+|---|---|---|
+| `off` | — | Always exports non-editable (image-only) PPTX |
+| `libreoffice` | LibreOffice Impress | A compatible browser + [LibreOffice Impress](https://www.libreoffice.org/) |
+| `native` | DOM extraction | A compatible browser only (Chrome, Chromium, or Edge) |
+
+> Legacy values `on` and `smart` are still accepted for backward compatibility. `on` maps to `libreoffice`; `smart` maps to `libreoffice` with fallback enabled.
+
+#### Fallback on failure (`markdown.marp.pptx.editable.fallback`)
+
+When this boolean setting is enabled (default: `false`), a failed editable export automatically retries as an image-only PPTX instead of showing an error. This applies to both the `libreoffice` and `native` engines.
+
+#### Native editable PPTX (`native`)
+
+The `native` engine renders slides as HTML via Marp CLI, opens the result in a headless browser, and extracts computed layout and styles via the DOM. It then builds a PPTX with editable text, tables, lists, images, and containers using [pptxgenjs](https://github.com/gitbrent/PptxGenJS). LibreOffice is not required.
+
+Most Marp features are supported — including custom themes, scoped styles, `html: true` elements, and background images. CSS filters and complex background directives are rasterized to preserve visual fidelity.
+
+> [!NOTE]
+> Font rendering differences between the browser and PowerPoint may cause minor layout shifts. These are cosmetic and do not affect content accuracy.
 
 ### [`markdown.marp.strictPathResolutionDuringExport`](https://github.com/marp-team/marp-vscode/pull/367)
 

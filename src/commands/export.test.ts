@@ -108,7 +108,7 @@ describe('#saveDialog', () => {
 
     expect(window.showSaveDialog).toHaveBeenCalledWith(
       expect.objectContaining({
-        defaultUri: expect.objectContaining({ fsPath: '/tmp/test.pdf' }),
+        defaultUri: expect.objectContaining({ path: '/tmp/test.pdf' }),
       }),
     )
   })
@@ -135,7 +135,7 @@ describe('#saveDialog', () => {
       .calls[0][0]
 
     expect(defaultUri).toStrictEqual(
-      expect.objectContaining({ fsPath: '/tmp/test.pptx' }),
+      expect.objectContaining({ path: '/tmp/test.pptx' }),
     )
     expect(Object.values(filters)[0]).toStrictEqual(['pptx'])
   })
@@ -365,7 +365,18 @@ describe('#doExport', () => {
 
     afterEach(() => marpCliMock?.mockRestore())
 
-    it('enables pptxEditable option while exporting PPTX when the setting is "on"', async () => {
+    it('enables pptxEditable option while exporting PPTX when the setting is "libreoffice"', async () => {
+      setConfiguration({ 'markdown.marp.pptx.editable': 'libreoffice' })
+
+      const optionGeneratorSpy = jest.spyOn(option, 'marpCoreOptionForCLI')
+      await exportModule.doExport(saveURI('file', 'pptx'), document)
+      expect(optionGeneratorSpy).toHaveBeenCalledTimes(1)
+
+      const ret = await optionGeneratorSpy.mock.results[0].value
+      expect(ret).toStrictEqual(expect.objectContaining({ pptxEditable: true }))
+    })
+
+    it('treats legacy "on" as "libreoffice"', async () => {
       setConfiguration({ 'markdown.marp.pptx.editable': 'on' })
 
       const optionGeneratorSpy = jest.spyOn(option, 'marpCoreOptionForCLI')
@@ -376,7 +387,7 @@ describe('#doExport', () => {
       expect(ret).toStrictEqual(expect.objectContaining({ pptxEditable: true }))
     })
 
-    it('enables pptxEditable option while exporting PPTX when the setting is "smart"', async () => {
+    it('enables pptxEditable option while exporting PPTX when the setting is "smart" (legacy)', async () => {
       setConfiguration({ 'markdown.marp.pptx.editable': 'smart' })
 
       const optionGeneratorSpy = jest.spyOn(option, 'marpCoreOptionForCLI')
@@ -389,7 +400,7 @@ describe('#doExport', () => {
       expect(ret).toStrictEqual(expect.objectContaining({ pptxEditable: true }))
     })
 
-    it('retries exporting with disabling pptxEditable option when the setting is "smart" and failed the first export', async () => {
+    it('retries exporting with disabling pptxEditable option when the setting is "smart" (legacy) and failed the first export', async () => {
       setConfiguration({ 'markdown.marp.pptx.editable': 'smart' })
 
       marpCliMock.mockRejectedValueOnce(new Error('Failed to export'))
@@ -409,6 +420,48 @@ describe('#doExport', () => {
       expect(second).toStrictEqual(
         expect.objectContaining({ pptxEditable: false }),
       )
+    })
+
+    it('retries exporting with disabling pptxEditable option when pptx.editable.fallback is true and first export fails', async () => {
+      setConfiguration({
+        'markdown.marp.pptx.editable': 'libreoffice',
+        'markdown.marp.pptx.editable.fallback': true,
+      })
+
+      marpCliMock.mockRejectedValueOnce(new Error('Failed to export'))
+
+      const optionGeneratorSpy = jest.spyOn(option, 'marpCoreOptionForCLI')
+      await exportModule.doExport(saveURI('file', 'pptx'), document)
+
+      expect(marpCliMock).toHaveBeenCalledTimes(2)
+      expect(optionGeneratorSpy).toHaveBeenCalledTimes(2)
+
+      const first = await optionGeneratorSpy.mock.results[0].value
+      expect(first).toStrictEqual(
+        expect.objectContaining({ pptxEditable: true }),
+      )
+
+      const second = await optionGeneratorSpy.mock.results[1].value
+      expect(second).toStrictEqual(
+        expect.objectContaining({ pptxEditable: false }),
+      )
+    })
+
+    it('does not retry when pptx.editable.fallback is false and export fails', async () => {
+      setConfiguration({
+        'markdown.marp.pptx.editable': 'libreoffice',
+        'markdown.marp.pptx.editable.fallback': false,
+      })
+
+      marpCliMock.mockRejectedValueOnce(new Error('Failed to export'))
+
+      const result = await exportModule.doExport(
+        saveURI('file', 'pptx'),
+        document,
+      )
+
+      expect(marpCliMock).toHaveBeenCalledTimes(1)
+      expect(result.error).toContain('Failed to export')
     })
   })
 

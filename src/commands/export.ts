@@ -1,3 +1,4 @@
+import { writeFile as fsWriteFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { nanoid } from 'nanoid'
@@ -15,6 +16,8 @@ import marpCli, {
   createWorkFile,
   MarpCLIError,
 } from '../marp-cli'
+import { detectBrowserPath } from '../native-pptx/browser'
+import { generateNativePptx } from '../native-pptx/index'
 import { marpConfiguration, unlink, hasToString } from '../utils'
 import {
   createWorkspaceProxyServer,
@@ -155,9 +158,127 @@ export const doExport = async (
             isTmp: true,
           }
 
-      const pptxEditableSmart =
-        outputExt === '.pptx' &&
-        marpConfiguration().get<string>('pptx.editable') === 'smart'
+      const pptxEditableMode =
+        marpConfiguration().get<string>('pptx.editable') ?? 'off'
+
+      // Backward compat: 'on' maps to 'libreoffice', 'smart' maps to 'libreoffice' + fallback
+      const normalizedEditableMode = (() => {
+        switch (pptxEditableMode) {
+          case 'on':
+          case 'smart':
+            return 'libreoffice'
+          default:
+            return pptxEditableMode
+        }
+      })()
+
+      // Retry as image-only if editable export fails.
+      const pptxEditableFallback =
+        pptxEditableMode === 'smart' ||
+        (['libreoffice', 'native'].includes(normalizedEditableMode) &&
+          (marpConfiguration().get<boolean>('pptx.editable.fallback') ?? false))
+
+      // LibreOffice-based editable PPTX
+      const pptxEditableLibre =
+        outputExt === '.pptx' && normalizedEditableMode === 'libreoffice'
+
+      // Whether the native pipeline failed and needs to fall back to image-only
+      let nativePipelineFailed = false
+
+      // Native editable PPTX: render HTML via marp-cli, then extract DOM and build PPTX
+      if (outputExt === '.pptx' && normalizedEditableMode === 'native') {
+        // Place the temporary HTML next to the source Markdown so that
+        // relative asset paths (images, etc.) resolve correctly when
+        // the HTML is opened via file:// URL in Puppeteer.
+        const htmlTmpPath = path.join(
+          path.dirname(input.path),
+          `.marp-vscode-native-pptx-${nanoid()}.html`,
+        )
+
+        const conf = await createConfigFile(document, {
+          allowLocalFiles: !proxyServer,
+        })
+
+        try {
+          // Step 1: Export to HTML using marp-cli
+          await marpCli(
+            ['-c', conf.path, input.path, '-o', htmlTmpPath],
+            { baseUrl },
+            {
+              onCLIError: ({ error, codes }) => {
+                if (error.errorCode === codes.NOT_FOUND_BROWSER) {
+                  throw new MarpCLIError(
+                    'It requires to install a suitable browser for exporting.',
+                  )
+                }
+              },
+            },
+          )
+
+          // Step 2: Detect browser for DOM extraction
+          const browserPref =
+            marpConfiguration().get<string>('browser') ?? 'auto'
+          const browserPathPref = marpConfiguration().get<string>('browserPath')
+          const browserPath = detectBrowserPath(browserPref, browserPathPref)
+
+          if (!browserPath) {
+            throw new MarpCLIError(
+              'Could not detect a browser for native PPTX export. Please set "markdown.marp.browserPath".',
+            )
+          }
+
+          // Step 3: Generate editable PPTX from HTML
+          // When debug is enabled, dump extracted JSON next to the PPTX output
+          const debugJsonPath = process.env.MARP_PPTX_DEBUG
+            ? htmlTmpPath.replace(/\.html$/, '.slides.json')
+            : undefined
+          const pptxBuffer = await generateNativePptx({
+            htmlPath: htmlTmpPath,
+            browserPath,
+            debugJsonPath,
+          })
+
+          // Step 4: Write the PPTX output
+          if (outputToLocalFS) {
+            await fsWriteFile(uri.fsPath, pptxBuffer)
+          } else {
+            const tmpPptxPath = path.join(
+              tmpdir(),
+              `.marp-vscode-native-pptx-out-${nanoid()}.pptx`,
+            )
+            await fsWriteFile(tmpPptxPath, pptxBuffer)
+            const tmpPptxUri = Uri.file(tmpPptxPath)
+            try {
+              await workspace.fs.copy(tmpPptxUri, uri, { overwrite: true })
+            } finally {
+              try {
+                await unlink(tmpPptxUri)
+              } catch {
+                /* no ops */
+              }
+            }
+          }
+        } catch (e) {
+          if (!pptxEditableFallback) throw e
+          nativePipelineFailed = true
+        } finally {
+          conf.cleanup()
+          try {
+            await unlink(Uri.file(htmlTmpPath))
+          } catch {
+            /* no ops */
+          }
+        }
+
+        if (!nativePipelineFailed) {
+          return {
+            uri,
+            autoOpen:
+              marpConfiguration().get<boolean>('exportAutoOpen') &&
+              outputToLocalFS,
+          }
+        }
+      }
 
       const runMarpCli = async ({
         pptxEditable,
@@ -228,7 +349,7 @@ export const doExport = async (
             },
           )
         } catch (e) {
-          if (pptxEditableSmart && pptxEditable === true) {
+          if (pptxEditableFallback && pptxEditable === true) {
             return await runMarpCli({ pptxEditable: false })
           }
           throw e
@@ -260,8 +381,12 @@ export const doExport = async (
         }
       }
 
+      if (nativePipelineFailed) {
+        return await runMarpCli({ pptxEditable: false })
+      }
+
       return await runMarpCli({
-        pptxEditable: pptxEditableSmart ? true : undefined,
+        pptxEditable: pptxEditableLibre ? true : undefined,
       })
     } catch (e) {
       return {
