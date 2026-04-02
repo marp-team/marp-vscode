@@ -229,16 +229,24 @@
           "type": "string",
           "enum": [
             "off",
-            "on",
-            "smart"
+            "libreoffice",
+            "native"
           ],
           "default": "off",
-          "markdownDescription": "Sets whether make editable or not when exporting to PowerPoint document. You should install both of the browser and [LibreOffice Impress](https://libreoffice.org/) to export the editable PPTX. Please note that the editable PPTX output may fail to convert or be generated with an incomplete layout depending on the slide content.",
+          "markdownDescription": "Controls the engine for editable PPTX export. When set to anything other than `off`, exporting to `.pptx` produces an editable file with selectable text, tables, and images instead of slide images.",
           "markdownEnumDescriptions": [
-            "Always export non-editable PPTX. It has full visual reproducibillity and presenter note support.",
-            "Always export editable PPTX. Please note that the editable PPTX may fail to convert or be generated with an incomplete layout depending on the slide content.",
-            "Try to export editable PPTX first, and fallback to non-editable PPTX if failed."
+            "Always export non-editable (image-only) PPTX.",
+            "Editable engine: [LibreOffice Impress](https://libreoffice.org/). Requires both a compatible browser and LibreOffice.",
+            "Editable engine: native DOM extraction. Only a compatible browser (Chrome, Chromium, or Edge) is required."
           ],
+          "tags": [
+            "experimental"
+          ]
+        },
+        "markdown.marp.pptx.editable.fallback": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "When enabled, if the editable PPTX export fails, the export automatically falls back to an image-only PPTX instead of showing an error. Applies to both the LibreOffice (`on`) and native DOM extraction (`native`) engines.",
           "tags": [
             "experimental"
           ]
@@ -361,8 +369,10 @@
     }
   },
   "scripts": {
-    "build": "webpack --env production",
-    "build:node": "webpack --env production --env target=node",
+    "generate:dom-walker-script": "node src/native-pptx/scripts/generate-dom-walker-script.js",
+    "build:native-pptx": "node src/native-pptx/scripts/build-native-pptx-bundle.js",
+    "build": "npm run generate:dom-walker-script && npm run build:native-pptx && webpack --env production",
+    "build:node": "npm run generate:dom-walker-script && webpack --env production --env target=node",
     "build:preview": "webpack --env production --env target=preview",
     "build:web": "webpack --env production --env target=web",
     "check:audit": "npm audit",
@@ -380,8 +390,8 @@
     "version": "curl https://raw.githubusercontent.com/marp-team/actions/v1/lib/scripts/version.js | node && git add -A CHANGELOG.md",
     "vsce:publish": "vsce publish",
     "vscode:prepublish": "run-s preversion build",
-    "watch": "webpack --watch",
-    "watch:node": "webpack --watch --env target=node,preview",
+    "watch": "npm run generate:dom-walker-script && webpack --watch",
+    "watch:node": "npm run generate:dom-walker-script && webpack --watch --env target=node,preview",
     "watch:web": "webpack --watch --env target=web,preview"
   },
   "devDependencies": {
@@ -420,6 +430,8 @@
     "npm-run-all2": "^8.0.4",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
     "portfinder": "^1.0.38",
     "prettier": "^3.8.1",
     "process": "^0.11.10",
@@ -442,7 +454,9 @@
     "yaml": "^2.8.2"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^4.3.1"
+    "@marp-team/marp-cli": "^4.3.1",
+    "pptxgenjs": "^4.0.1",
+    "puppeteer-core": "^24.40.0"
   },
   "overrides": {
     "yauzl": "^3.2.1"
