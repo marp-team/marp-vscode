@@ -1,5 +1,4 @@
-﻿ 
-import { extractSlides } from './dom-walker'
+﻿import { extractSlides } from './dom-walker'
 const { JSDOM } = require('jsdom')
 
 // ---------------------------------------------------------------------------
@@ -71,9 +70,7 @@ const defaultStyles: Record<string, string> = {
  * Patch `getComputedStyle` so that it returns mocked style objects for the
  * specified elements. Other elements fall through to the original implementation.
  */
-function mockStyles(
-  mappings: [Element, Record<string, string>][],
-): () => void {
+function mockStyles(mappings: [Element, Record<string, string>][]): () => void {
   const original = globalThis.getComputedStyle
   const map = new Map<Element, CSSStyleDeclaration>()
 

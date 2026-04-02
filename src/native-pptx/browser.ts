@@ -24,8 +24,7 @@ export function detectBrowserPath(
   const platform = detectPlatform()
   if (!platform) return undefined
 
-  const candidates: { browser: Browser; channel: ChromeReleaseChannel }[] =
-    []
+  const candidates: { browser: Browser; channel: ChromeReleaseChannel }[] = []
 
   if (preference === 'chrome' || preference === 'auto') {
     candidates.push({
