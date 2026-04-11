@@ -259,6 +259,11 @@
             "type": "string"
           }
         },
+        "markdown.marp.diagrams.mermaid": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enables rendering of Mermaid diagrams in fenced code blocks (```mermaid)."
+        },
         "markdown.marp.enableHtml": {
           "type": "boolean",
           "default": false,
@@ -415,6 +420,7 @@
     "jest-junit": "^16.0.0",
     "lodash.debounce": "^4.0.8",
     "markdown-it": "^14.1.1",
+    "mermaid": "^11.14.0",
     "nanoid": "^5.1.6",
     "npm-check-updates": "^19.6.3",
     "npm-run-all2": "^8.0.4",

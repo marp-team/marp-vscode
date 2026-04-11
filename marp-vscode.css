@@ -98,3 +98,26 @@ body.marp-vscode blockquote {
     display: none;
   }
 }
+
+/* Mermaid diagram styles */
+.mermaid {
+  text-align: center;
+  width: 100%;
+  background: transparent;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+}
+
+.mermaid-error {
+  color: #c00;
+  background: #fee;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  max-width: 100%;
+}

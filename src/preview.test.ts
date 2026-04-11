@@ -15,6 +15,14 @@ jest.mock('@marp-team/marp-core/browser', () => ({
   }),
 }))
 
+jest.mock('mermaid', () => ({
+  __esModule: true,
+  default: {
+    initialize: jest.fn(),
+    render: jest.fn().mockResolvedValue({ svg: '<svg></svg>' }),
+  },
+}))
+
 beforeEach(() => {
   document.head.innerHTML = ''
   document.body.innerHTML = ''

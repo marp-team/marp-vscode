@@ -1,5 +1,14 @@
 import { browser, type MarpCoreBrowser } from '@marp-team/marp-core/browser'
+import mermaid from 'mermaid'
 import { OverflowTracker } from './preview/overflow-tracker'
+
+// Prevent mermaid from auto-processing .mermaid elements on DOMContentLoaded.
+// Must be called before DOM is ready, at module scope.
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'default',
+  securityLevel: 'strict',
+})
 
 interface MarpState {
   browser: MarpCoreBrowser
@@ -41,6 +50,7 @@ export default function preview() {
     if (marpState) {
       if (marpVscode) forceUpgradeCustomElements(marpVscode)
       removeStyles()
+      renderMermaidDiagrams()
     } else {
       restoreStyles()
     }
@@ -79,6 +89,32 @@ const forceUpgradeCustomElements = (target: Element) => {
       '[marp-vscode] Custom element has been upgraded forcibly:',
       outerHTML.slice(0, outerHTML.indexOf('>') + 1 || undefined),
     )
+  })
+}
+
+let mermaidIdCounter = 0
+
+const renderMermaidDiagrams = () => {
+  const containers = document.querySelectorAll<HTMLElement>(
+    '.mermaid:not([data-mermaid-rendered])',
+  )
+
+  containers.forEach(async (container) => {
+    container.setAttribute('data-mermaid-rendered', 'true')
+
+    const source = container.textContent?.trim()
+    if (!source) return
+
+    const id = `marp-mermaid-${mermaidIdCounter++}`
+
+    try {
+      const { svg } = await mermaid.render(id, source)
+      container.innerHTML = svg
+    } catch (e) {
+      container.innerHTML = `<pre class="mermaid-error">Mermaid error: ${
+        e instanceof Error ? e.message : String(e)
+      }</pre>`
+    }
   })
 }
 

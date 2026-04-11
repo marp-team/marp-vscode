@@ -15,6 +15,7 @@ import { incompatiblePreviewExtensionsObserver } from './observer'
 import { marpCoreOptionForPreview, clearMarpCoreOptionCache } from './option'
 import contentSection from './plugins/content-section'
 import customTheme from './plugins/custom-theme'
+import diagramPlugin from './plugins/diagrams'
 import lineNumber from './plugins/line-number'
 import outline, { rule as outlineRule } from './plugins/outline'
 import { isOverflowTrackerEvent } from './preview/overflow-tracker'
@@ -24,6 +25,7 @@ import { detectMarpFromMarkdown, marpConfiguration } from './utils'
 const shouldRefreshConfs = [
   'markdown.marp.breaks',
   'markdown.marp.diagnostics.slideContentOverflow',
+  'markdown.marp.diagrams.mermaid',
   'markdown.marp.enableHtml',
   'markdown.marp.html',
   'markdown.marp.mathTypesetting',
@@ -107,6 +109,11 @@ export const getExtendMarkdownIt = ({
         marp.markdown.renderer.rules.image = md.renderer.rules.image
         marp.markdown.renderer.rules.link_open = md.renderer.rules.link_open
         marp.markdown.normalizeLink = md.normalizeLink
+
+        // Apply diagram plugin for Mermaid code blocks
+        if (marpConfiguration().get<boolean>('diagrams.mermaid') ?? true) {
+          diagramPlugin(marp.markdown)
+        }
 
         // validateLink prefers Marp's default. If overridden by VS Code's it,
         // does not return compatible result with the other Marp tools.
