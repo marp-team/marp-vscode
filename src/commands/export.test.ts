@@ -8,6 +8,7 @@ import * as exportModule from './export'
 const exportCommand = exportModule.default
 
 jest.mock('fs')
+jest.mock('open')
 jest.mock('vscode')
 jest.mock('../workspace-proxy-server', () => ({
   createWorkspaceProxyServer: jest.fn().mockResolvedValue({
