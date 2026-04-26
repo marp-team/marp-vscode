@@ -436,6 +436,7 @@
     "nanoid": "^5.1.9",
     "npm-check-updates": "^21.0.3",
     "npm-run-all2": "^8.0.4",
+    "open": "^11.0.0",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "portfinder": "^1.0.38",
