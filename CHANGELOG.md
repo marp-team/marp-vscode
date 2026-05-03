@@ -10,6 +10,10 @@
 
 - Upgrade Node.js and dependent packages ([#557](https://github.com/marp-team/marp-vscode/pull/557))
 
+### Fixed
+
+- Fix auto-open failure on Windows when a file path contains non-ASCII characters ([#516](https://github.com/marp-team/marp-vscode/issues/516), [#556](https://github.com/marp-team/marp-vscode/issues/556), [#558](https://github.com/marp-team/marp-vscode/pull/558))
+
 ## v3.4.1 - 2026-03-16
 
 ### Fixed
