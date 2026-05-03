@@ -1,5 +1,7 @@
 import * as marpCliModule from '@marp-team/marp-cli'
+import open from 'open'
 import { commands, env, window, workspace } from 'vscode'
+import type { Uri } from 'vscode'
 import * as marpCli from '../marp-cli'
 import * as option from '../option'
 import { createWorkspaceProxyServer } from '../workspace-proxy-server'
@@ -190,6 +192,30 @@ describe('#saveDialog', () => {
       await exportModule.saveDialog(document)
       expect(window.showInformationMessage).not.toHaveBeenCalled()
       expect(env.openExternal).toHaveBeenCalledWith(saveURI)
+    })
+
+    it('opens exported file with non-ASCII path by open module on Windows', async () => {
+      const { platform: originalPlatform } = process
+      const nonAsciiSaveURI = {
+        scheme: 'file',
+        fsPath: 'C:\\Users\\marp\\演示\\발표\\スライドの資料.pdf',
+        toString: () =>
+          'file:///C:/Users/marp/%E6%BC%94%E7%A4%BA/%EB%B0%9C%ED%91%9C/%E3%82%B9%E3%83%A9%E3%82%A4%E3%83%89%E3%81%AE%E8%B3%87%E6%96%99.pdf',
+      } as const
+
+      exportResult.autoOpen = true
+      exportResult.uri = nonAsciiSaveURI as unknown as Uri
+
+      try {
+        Object.defineProperty(process, 'platform', { value: 'win32' })
+
+        await exportModule.saveDialog(document)
+
+        expect(open).toHaveBeenCalledWith(nonAsciiSaveURI.fsPath)
+        expect(env.openExternal).not.toHaveBeenCalled()
+      } finally {
+        Object.defineProperty(process, 'platform', { value: originalPlatform })
+      }
     })
 
     it('opens in integrated browser tab when doExport() returns autoOpen config for tab', async () => {
