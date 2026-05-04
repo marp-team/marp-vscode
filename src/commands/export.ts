@@ -1,7 +1,6 @@
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { nanoid } from 'nanoid'
-import open from 'open'
 import {
   commands,
   env,
@@ -361,7 +360,7 @@ export const saveDialog = async (document: TextDocument) => {
           result.uri.scheme === 'file' &&
           result.uri.toString().includes('%')
         ) {
-          await open(result.uri.fsPath)
+          await (await import('open')).default(result.uri.fsPath)
         } else {
           env.openExternal(result.uri)
         }
