@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix broken bundle on Windows by making the `open` module an external dependency ([#559](https://github.com/marp-team/marp-vscode/issues/559), [#561](https://github.com/marp-team/marp-vscode/pull/561))
+
 ## v3.5.0 - 2026-05-03
 
 ### Added
