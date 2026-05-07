@@ -460,7 +460,7 @@
     "yaml": "^2.8.3"
   },
   "dependencies": {
-    "@marp-team/marp-cli": "^4.3.1",
+    "@marp-team/marp-cli": "^4.4.0",
     "open": "^11.0.0"
   }
 }
