@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Security
+
+- Fix theme path traversal check incorrectly passing for specific directory structures ([#567](https://github.com/marp-team/marp-vscode/issues/567), [#568](https://github.com/marp-team/marp-vscode/pull/568))
+
 ## v3.5.1 - 2026-05-04
 
 ### Fixed

@@ -483,13 +483,20 @@ describe('#getExtendMarkdownIt', () => {
           .spyOn(workspace.fs, 'readFile')
           .mockResolvedValue(new TextEncoder().encode(css))
 
+        /*
+         * /test/path
+         *   ├── {workspace} ← VS Code opened workspace folder
+         *   │   └── markdown.md
+         *   └── workspace.css ← ❌ Out of workspace so expected not to load
+         */
         try {
-          setConfiguration({ 'markdown.marp.themes': ['../test.css'] })
+          setConfiguration({ 'markdown.marp.themes': ['../workspace.css'] })
 
           const markdown = md()
-          markdown.normalizeLink = (url) => path.resolve(baseDir, url)
+          const workspaceDir = path.resolve(baseDir, 'workspace') // /test/path/workspace
 
-          await Promise.all(themes.loadStyles(Uri.parse(baseDir)))
+          await Promise.all(themes.loadStyles(Uri.file(workspaceDir)))
+          expect(readFileMock).not.toHaveBeenCalled()
           expect(
             markdown.render(marpMd('<!--theme: example-->')),
           ).not.toContain(css)

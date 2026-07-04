@@ -131,7 +131,10 @@ export class Themes {
         const targetUri = Uri.joinPath(rootUri, p)
 
         // Prevent directory traversal
-        if (targetUri.path.startsWith(rootUri.path)) {
+        if (
+          targetUri.path === rootUri.path ||
+          targetUri.path.startsWith(`${rootUri.path}/`)
+        ) {
           normalizedPaths.add(targetUri)
         }
       }
