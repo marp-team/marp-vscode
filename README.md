@@ -148,14 +148,14 @@ Default file type can choose by the `markdown.marp.exportType` setting.
 > [!NOTE]
 > A legacy setting `markdown.marp.chromePath` is deprecated since v2. Please use `markdown.marp.browserPath` instead.
 
-#### Integration with GitHub Copilot agent mode
+#### Integration with AI agent
 
-Marp for VS Code also provides the export tool for [GitHub Copilot agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode).
+Marp for VS Code also provides [the export tool](https://code.visualstudio.com/docs/chat/chat-tools) to [VS Code built-in AI agent](https://code.visualstudio.com/docs/agents/overview).
 
-By instructing to export Markdown in the specified file format, Copilot in the agent mode can process the export using preferences in the current workspace.
+By instructing in chat to export Markdown in the specified file format, AI agent can process the export using preferences in the current workspace.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/copilot-agent.png" alt="Integration with GitHub Copilot agent mode" width="280" />
+  <img src="https://raw.githubusercontent.com/marp-team/marp-vscode/main/docs/copilot-agent.png" alt="Integration with AI agent" width="280" />
 </p>
 
 ### Use custom theme CSS 🛡️
@@ -231,7 +231,7 @@ Some features that may met malicious are restricted in the untrusted workspace/w
 
 Features may be restricted are marked by the shield icon 🛡️ in this documentation. Marp for VS Code is available even if the current workspace is not trusted but you can use only a basic Marp preview and IntelliSense.
 
-[workspace trust]: https://code.visualstudio.com/docs/editor/workspace-trust
+[workspace trust]: https://code.visualstudio.com/docs/editing/workspaces/workspace-trust
 
 #### HTML elements in Markdown 🛡️
 
@@ -263,8 +263,6 @@ Use [VS Code integrated browser](https://code.visualstudio.com/docs/debugtest/in
 - `window`: The exported HTML will open in VS Code integrated browser as a new window.
 
 Key features provided by the [Marp CLI `bespoke` template](https://github.com/marp-team/marp-cli#bespoke-template-default), such as [fragmented list](https://marpit.marp.app/fragmented-list) support, presenter view, and [transitions](https://github.com/marp-team/marp-cli/blob/main/docs/bespoke-transitions/README.md), also work in the VS Code integrated browser.
-
-The only exception is full-screen toggle: VS Code denies a permission for the full-screen view. Therefore, _if you are giving a presentation using the entire monitor, you should turn off this setting to use a browser._
 
 ### [`markdown.marp.pptx.editable`](https://github.com/marp-team/marp-vscode/pull/489)
 

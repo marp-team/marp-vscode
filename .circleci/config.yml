@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  codecov: codecov/codecov@5.0.3
+  codecov: codecov/codecov@6.0.0
 
 executors:
   node:
@@ -116,6 +116,13 @@ jobs:
     steps:
       - test
 
+  unit-electron42:
+    executor:
+      name: node
+      version: '24.15.0'
+    steps:
+      - test
+
 workflows:
   test:
     jobs:
@@ -132,6 +139,10 @@ workflows:
             - audit
             - lint
       - unit-electron39:
+          requires:
+            - audit
+            - lint
+      - unit-electron42:
           requires:
             - audit
             - lint
