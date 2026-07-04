@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp Core to [v4.3.1](https://github.com/marp-team/marp-core/releases/tag/v4.3.1) ([#569](https://github.com/marp-team/marp-vscode/pull/569))
+  - Including Marpit [v3.2.2](https://github.com/marp-team/marpit/releases/v3.2.2): Make `<h1>` style normalization overloadable using the universal selector `*` ([#549](https://github.com/marp-team/marp-vscode/issues/549))
+- Upgrade Marp CLI to [v4.4.1](https://github.com/marp-team/marp-cli/releases/tag/v4.4.1) ([#562](https://github.com/marp-team/marp-vscode/pull/562), [#569](https://github.com/marp-team/marp-vscode/pull/569))
+- Upgrade Node.js and dependent packages ([#569](https://github.com/marp-team/marp-vscode/pull/569))
+
 ### Security
 
 - Fix theme path traversal check incorrectly passing for specific directory structures ([#567](https://github.com/marp-team/marp-vscode/issues/567), [#568](https://github.com/marp-team/marp-vscode/pull/568))
