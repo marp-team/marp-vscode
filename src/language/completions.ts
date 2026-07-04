@@ -287,25 +287,23 @@ class CompletionProvider {
 
           return d.allowed.includes(this.definedIn)
         })
-        .map(
-          (d): CompletionItem => ({
-            detail: `${d.type} directive${scoped ? ' [Scoped]' : ''}`,
-            documentation: new MarkdownString(
-              d.description + '\n\n' + d.markdownDetails.value,
-              true,
-            ),
-            insertText: generateInsertText(d.name),
-            kind: CompletionItemKind.Property,
-            label: d.name,
-            range,
-            command: d.completable
-              ? {
-                  command: 'editor.action.triggerSuggest',
-                  title: 'Trigger suggest',
-                }
-              : undefined,
-          }),
-        ),
+        .map((d): CompletionItem => ({
+          detail: `${d.type} directive${scoped ? ' [Scoped]' : ''}`,
+          documentation: new MarkdownString(
+            d.description + '\n\n' + d.markdownDetails.value,
+            true,
+          ),
+          insertText: generateInsertText(d.name),
+          kind: CompletionItemKind.Property,
+          label: d.name,
+          range,
+          command: d.completable
+            ? {
+                command: 'editor.action.triggerSuggest',
+                title: 'Trigger suggest',
+              }
+            : undefined,
+        })),
     )
   }
 
