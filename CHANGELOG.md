@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Marp Core to [v4.4.0](https://github.com/marp-team/marp-core/releases/tag/v4.4.0) ([#571](https://github.com/marp-team/marp-vscode/pull/571))
+  - It may introduce a minor breaking change in the custom style for `gaia` theme. [Check out this PR](https://github.com/marp-team/marp-core/pull/424).
+- Upgrade Marp CLI to [v4.5.0](https://github.com/marp-team/marp-cli/releases/tag/v4.5.0) ([#571](https://github.com/marp-team/marp-vscode/pull/571))
+  - Improved PDF rendering compatibility with macOS Firefox (`"markdown.marp.browser": "firefox"`)
+- Upgrade Node.js and dependent packages ([#571](https://github.com/marp-team/marp-vscode/pull/571))
+
 ## v3.5.2 - 2026-07-04
 
 ### Changed
