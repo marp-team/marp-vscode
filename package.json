@@ -206,7 +206,7 @@
             "window"
           ],
           "default": "off",
-          "markdownDescription": "Use [VS Code integrated browser](https://code.visualstudio.com/docs/debugtest/integrated-browser) to open the exported HTML file when `#markdown.marp.exportAutoOpen#` is enabled. Please note that it requires VS Code v1.109+, and the full-screen view is restricted by the integrated browser.",
+          "markdownDescription": "Use [VS Code integrated browser](https://code.visualstudio.com/docs/debugtest/integrated-browser) to open the exported HTML file when `#markdown.marp.exportAutoOpen#` is enabled. It requires VS Code v1.109+.",
           "enumDescriptions": [
             "Use the default browser installed on your OS.",
             "Open in the integrated browser as a new tab.",
