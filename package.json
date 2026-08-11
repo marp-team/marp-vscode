@@ -464,5 +464,9 @@
   "dependencies": {
     "@marp-team/marp-cli": "^4.5.0",
     "open": "^11.0.0"
+  },
+  "allowScripts": {
+    "keytar@7.9.0": true,
+    "@vscode/vsce-sign@2.0.6": true
   }
 }
