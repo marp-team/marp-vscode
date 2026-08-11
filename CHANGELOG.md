@@ -4,7 +4,7 @@
 
 ## v3.6.1 - 2026-08-11
 
-## Fixed
+### Fixed
 
 - Hide copy buttons in every code block provided by the VS Code preview when the Marp preview is enabled ([#573](https://github.com/marp-team/marp-vscode/issues/573), [#574](https://github.com/marp-team/marp-vscode/pull/574))
 
