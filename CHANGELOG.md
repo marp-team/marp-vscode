@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Node.js and dependent packages ([#575](https://github.com/marp-team/marp-vscode/pull/575))
+
 ## v3.6.0 - 2026-07-18
 
 ### Changed
