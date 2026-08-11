@@ -28,6 +28,10 @@ body.marp-vscode blockquote {
   border-color: unset;
 }
 
+body.marp-vscode .code-block-copy-button {
+  display: none !important;
+}
+
 @media screen {
   body.marp-vscode {
     overflow-y: scroll;

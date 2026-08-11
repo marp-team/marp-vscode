@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## Fixed
+
+- Hide copy buttons in every code block provided by the VS Code preview when the Marp preview is enabled ([#573](https://github.com/marp-team/marp-vscode/issues/573), [#574](https://github.com/marp-team/marp-vscode/pull/574))
+
 ### Changed
 
 - Upgrade Node.js and dependent packages ([#575](https://github.com/marp-team/marp-vscode/pull/575))
